@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/nested/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Nested Hives - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Nested Hives";
+        var mkdocs_page_input_path = "nested.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/nested/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../introduction/">Introduction</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Messages</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hive/">Hive</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../mycroft/">Mycroft</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">HiveMind</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nodes/">Nodes</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Nested Hives</a>
+    <ul class="current">
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>HiveMind &raquo;</li>
+      <li>Nested Hives</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="nested-hives">Nested Hives</h1>
+<p>HiveMind is a suite of programs and thin clients that distribute an instance of Mycroft. One AI, many devices.</p>
+<p>A Hive is defined by providing at least one instance of HiveMind-core, which is most commonly run as companionware alongside Mycroft-core. It and nodes like it can serve as a Hive's "brain." In a tree diagram, this node is at the top.</p>
+<p>A <strong>node</strong> is any device or software client connected to a Hive.</p>
+<p>While a node is serving as a Hive's "brain," it is referred to as that Hive's <strong>master node</strong>.</p>
+<p>Nodes can have clients of their own. A specific node and all its clients, including clients of clients, constitute a <strong>cluster</strong>. Clusters within clusters are called <strong>subclusters</strong>.</p>
+<p>A <strong>satellite</strong> is a node with I/O capabilities, such as the HiveMind Voice Satellite, our reference implementation for a voice client.</p>
+<p>A <strong>slave</strong> is a node with limited functionality, which cannot issue instructions. Examples include sensors, displays, buttons, or, in software terms, echo clients and connection testers.</p>
+<hr />
+<p>Say we share a house. We each have an AI, with a primary instance of Mycroft. My AI's name is John, and yours is Jane.</p>
+<p>As housemates, we share most of our IoT devices. We want John and Jane each to be able to control our smart home, but I don't want you to be able to control John, and you don't want me to control Jane.</p>
+<p>No problem! We give the house a Hive of its own, with at least one instance of Mycroft. Call it George. Hives can be nested, so we have John and Jane connect to George as clients. They can talk <em>to</em> George, but they can't talk to each other, except <em>through</em> George (and only when George deigns to pass the message along.)</p>
+<p>Now, when I tell John to mess with the lights, John will go through George. When you tell Jane to set the temperature, Jane will go through George. When you have guests, you might allow them to use George directly, or, while they're visiting, nest their personal Hive under George!</p>
+<p>Because Hives can be "cut" as immediately as they can be nested, it makes sense to think of Jane and John as separate Hives of their own, even while they're also part of George's cluster. From George's perspective, John and Jane are <em>subclusters</em>; from John's and Jane's perspectives, while they are nested, George is <em>master</em>. However, as soon as they split, they are once again their own masters. You might even have some devices isolated from George. Those devices wouldn't see themselves as part of a subcluster. They'd see themselves as part of Jane's cluster, with Jane as master, full stop.</p>
+<p>Auto-discovery (configurable) is used to facilitate joining, leaving, and nesting Hives. Once you've configured your devices, you can nest and decouple Hives as often as you like!</p>
+<p><strong>Note:</strong> "Parallel" nesting, such as having Jane nested beneath both George and a second master <em>at the same time</em>, is roadmapped, but not yet supported. This would, for example, enable Jane to remain in ordinary communication with George while you're at work, <em>and</em> let Jane communicate with the Hive controlling your workplace. No ETA, as the developers have many higher priorities.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../nodes/" class="btn btn-neutral float-left" title="Nodes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../nodes/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Home";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/";
+      </script>
+    
+    <script src="js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="introduction/">Introduction</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Messages</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="hive/">Hive</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="mycroft/">Mycroft</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">HiveMind</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="nodes/">Nodes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="nested/">Nested Hives</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="hivemind-community-documentation">HiveMind Community Documentation</h1>
+<p>Welcome to the HiveMind Community Docs!</p>
+<p><img alt="" src="https://github.com/JarbasHiveMind/HiveMind-assets/raw/master/logo/hivemind-512.png" /></p>
+<p>HiveMind is a community-developed superset or extension of <a href="https://openvoiceos.github.io/community-docs">OpenVoiceOS</a> the open-source voice operating system.</p>
+<p>With HiveMind, you can extend one (or more, but usually just one!) instance of Mycroft to as many devices as you want, including devices that can't ordinarily run Mycroft!</p>
+<p>HiveMind's developers have successfully connected to Mycroft from a PinePhone, a 2009 MacBook, and a Raspberry Pi 0, among other devices. Mycroft itself usually runs on our desktop computers or our home servers, but you can use any Mycroft-branded device, or <a href="https://github.com/OpenVoiceOS/">OpenVoiceOS</a>, as your central unit.</p>
+<p>Join <a href="https://matrix.to/#/#jarbashivemind:matrix.org">Hivemind Matrix chat</a> for general news, support and chit chat</p>
+<h1 id="getting-started">Getting started</h1>
+<p>At this moment development is in early stages, but mostly stable. Functionality is limited to basic questions and answers, but only because we haven't implemented the bit that lets Mycroft re-activate the mic to continue a discussion. </p>
+<p>Full tutorials will follow later. For now, you wanna do this:</p>
+<ol>
+<li>Clone this repo onto the computer or device that's running Mycroft.</li>
+<li>Note the scripts in the <code>examples</code> folder. These are enough to spin up your Hive and connect to Mycroft from another device.</li>
+<li>Edit <code>examples/add_keys.py</code> to create names and keys for your devices. You can use HiveMind without encryption, but it's discouraged for security reasons. (NOTE: HiveMind uses AES, so keys need to be exactly 16 characters long. This is far more secure than it sounds. Your bank probably uses it. So does the United States government, for some purposes.)</li>
+<li>Ensure Mycroft is running.</li>
+<li>Run <code>examples/mycroft_master.py</code>. Your Hive is now running, and you're ready to connect. See <a href="https://github.com/JarbasHiveMind/HiveMind-core/wiki/Nodes">here</a> to find a client or terminal (ideally the Voice Satellite). You will need to know the hostname or IP address of the computer or device running Mycroft, and you'll also need the device name and key you created earlier.</li>
+</ol>
+<p>The main configuration can be found at</p>
+<pre><code>'~/.cache/json_database/HivemindCore.json'
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="introduction/" class="btn btn-neutral float-right" title="Introduction">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+      <span><a href="introduction/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme_extra.js" defer></script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.4.0
+Build Date UTC : 2022-10-13 23:05:58.320524+00:00
+-->
