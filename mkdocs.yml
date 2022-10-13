@@ -1,5 +1,5 @@
 site_name: Documentation
-site_url: https://JarbasHiveMind.github.io/community-docs
+site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
 nav:
     - Home: index.md
     - Introduction: introduction.md
