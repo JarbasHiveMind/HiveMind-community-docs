@@ -1,0 +1,14 @@
+site_name: Documentation
+site_url: https://JarbasHiveMind.github.io/community-docs
+nav:
+    - Home: index.md
+    - Introduction: introduction.md
+    - Messages:
+      - Hive: hive.md
+      - Mycroft: mycroft.md
+    - HiveMind:
+      - Terminology: terminology.md
+      - Nodes: nodes.md
+      - Nested Hives: nested.md
+
+theme: readthedocs
