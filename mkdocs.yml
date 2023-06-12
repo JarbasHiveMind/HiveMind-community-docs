@@ -2,14 +2,15 @@ site_name: Documentation
 site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
 nav:
     - Home: index.md
-    - Introduction: introduction.md
-    - ELI5: eli5.md
-    - Protocol: protocol.md
-    - Nested Hives: nested.md
-    - Bridges: nested.md
-    - Messages:
-      - Hive: hive.md
-      - Mycroft: mycroft.md
-    - Nodes: nodes.md
+    - About:
+      - Introduction: introduction.md
+      - ELI5: eli5.md
+      - Protocol: protocol.md
+      - Nested Hives: nested.md
+      - Bridges: nested.md
+    - Developers:
+      - Nodes: nodes.md
+      - Hive Messages: hive.md
+      - OVOS Messages: mycroft.md
 
 theme: readthedocs
