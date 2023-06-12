@@ -77,9 +77,6 @@ A missing `destination` or if the `destination` is set to `None` is interpreted 
 - intent service will `.reply` to the original utterance message
 - all skill/intent service messages are `.forward` (from previous intent service `.reply`)
 - skills sending their own messages might not respect this :warning: 
-- ovos-core audio backends do not account for context at all :warning: :skull: but [ovos-core does!](https://github.com/OpenVoiceOS/ovos-core/commit/c1003945b7abd5860bc9443bfa21709205c45fc2)
-- ovos-core can not load more than one language at a time :warning: but [ovos-core can!](https://github.com/OpenVoiceOS/ovos-core/commit/7e43162a7440c182adc3bbac242486644995b003), this is relevant to the hivemind because each node can be in a different language
-- [ovos-core ensures](https://github.com/OpenVoiceOS/ovos-core/commit/26aaadc676b69ef970b911f53b10c54b9e0461f2) `skill_id` is always present in the message.context, ovos-core does not  :warning:
-- `converse`/`get_response` support is limited, the context is lost :warning: [ovos-core is working on it](https://github.com/OpenVoiceOS/ovos-core/commit/26aaadc676b69ef970b911f53b10c54b9e0461f2#diff-0d891356bfaa5c316f1565e9f4e3da6e193d8878c4a23bb1853c7c4f019c4581L507)
+- `converse`/`get_response` support is limited, the context is lost :warning: [ovos-core is working on it](https://github.com/OpenVoiceOS/ovos-bus-client/blob/dev/ovos_bus_client/session.py)
 - in the context of the Hivemind skills might keep a shared state between clients, eg. a client may enable [parrot mode](https://github.com/JarbasSkills/skill-parrot) for everyone  :warning: :skull: 
 - scheduled events support is limited, the context is lost :warning:
