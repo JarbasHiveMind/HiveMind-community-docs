@@ -1,6 +1,8 @@
 # Protocol
 
-In the fascinating world of the Hivemind, a network of interconnected intelligent agents, the ability to exchange information and commands seamlessly is made possible through the Hivemind Protocol. This blog post delves into the intricacies of the protocol, particularly focusing on the concept of nested Hiveminds. By understanding the inner workings of the protocol and the possibilities it unlocks, we gain insight into the potential of distributed AI systems.
+In the fascinating world of the Hivemind, a network of interconnected intelligent agents, the ability to exchange information and commands seamlessly is made possible through the Hivemind Protocol.
+This document delves into the intricacies of the protocol, particularly focusing on the concept of nested Hiveminds.
+By understanding the inner workings of the protocol and the possibilities it unlocks, we gain insight into the potential of distributed AI systems.
 
 ## Terminology
 
@@ -43,9 +45,7 @@ The `ESCALATE` message is an essential multi-hop message that travels from a sla
 
 ### Propagate Message
 
-The \`PROPAGATE
-
-\` message is a versatile multi-hop message that flows both from a master to its slaves and vice versa. This message type enables a master to send a message to all its direct connections, ensuring that the message reaches every relevant node within the hive. Propagate messages are instrumental in disseminating critical information or commands throughout the network, enabling comprehensive collaboration and coordination.
+The `PROPAGATE` message is a versatile multi-hop message that flows both from a master to its slaves and vice versa. This message type enables a master to send a message to all its direct connections, ensuring that the message reaches every relevant node within the hive. Propagate messages are instrumental in disseminating critical information or commands throughout the network, enabling comprehensive collaboration and coordination.
 
 ## Conclusion
 
