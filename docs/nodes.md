@@ -23,7 +23,7 @@ WIP - different existing or planned hivemind nodes, most of this does not exist 
 
 ## LocalHive
 
-The LocalHive is a hardened mycroft skills service, the mycroft messagebus is replaced with a hivemind connection
+The LocalHive is a hardened ovos-core, the OVOS messagebus is replaced with a hivemind connection
 
 https://github.com/JarbasHiveMind/LocalHive
 
@@ -38,9 +38,9 @@ _"security as a requirement, not a feature"_
 - by default skills only register and trigger intents, nothing else
 - each skill can run in it's own .venv with it's own requirements
 
-LocalHive is built on top of HolmesV and **can not coexist with mycroft-core, it replaces it**, be sure to use a dedicated .venv
+LocalHive is built on top of HolmesV and **can not coexist with ovos-core, it replaces it**, be sure to use a dedicated .venv
 
-The default terminals can connect to LocalHive as long as they are running on same device, the full mycroft stack can be replaced with the equivalent terminal, this is the recommended way to run mycroft in a dedicated device
+The default terminals can connect to LocalHive as long as they are running on same device, the full OVOS stack can be replaced with the equivalent terminal, this is the recommended way to run OVOS in a dedicated device
 
 ## wormhole node
 

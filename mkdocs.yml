@@ -3,12 +3,12 @@ site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
 nav:
     - Home: index.md
     - Introduction: introduction.md
+    - Protocol: protocol.md
+    - Nested Hives: nested.md
+    - Bridges: nested.md
     - Messages:
       - Hive: hive.md
       - Mycroft: mycroft.md
-    - HiveMind:
-      - Terminology: terminology.md
-      - Nodes: nodes.md
-      - Nested Hives: nested.md
+    - Nodes: nodes.md
 
 theme: readthedocs

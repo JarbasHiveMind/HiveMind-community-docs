@@ -1,12 +1,12 @@
 # Message types
 
-The HiveMind can be seen as a global Mycroft bus shared across devices, but not everyone gets every message!
+The HiveMind can be seen as a global OpenVoiceOS bus shared across devices, but not everyone gets every message!
 
 Messages consist of 2 parts, a `message_type` and a `payload`.
 
 The `message_type` defines how the message is routed. Each node may ignore specific `message_type`s (either globally or per client) depending on its configuration.
 
-The payload can be another `HiveMessage`, a Mycroft `Message`, or even binary, depending on the `message_type`.
+The payload can be another `HiveMessage`, a OpenVoiceOS `Message`, or even binary, depending on the `message_type`.
 
 - [Message types](#message-types)
   * [Payload Messages](#payload-messages)
@@ -19,17 +19,17 @@ The payload can be another `HiveMessage`, a Mycroft `Message`, or even binary, d
 
 ## Payload Messages
 
-the payload of these messages is a mycroft `Message` object 
+the payload of these messages is a OVOS `Message` object
 
 #### Bus
 
 `BUS` is single hop and flows from `slave -> master` and `master -> slave`
 
-when master receives a `BUS` message, it will check it's global `whitelist/blacklist` and slave permissions, if the slave is authorized to inject that message in the `mycroft-core` messagebus then it will be injected. Any messages from master's `mycroft-core` that are a direct response to the injected message will be forwarded back to the slave
+when master receives a `BUS` message, it will check it's global `whitelist/blacklist` and slave permissions, if the slave is authorized to inject that message in the `ovos-core` messagebus then it will be injected. Any messages from master's `ovos-core` that are a direct response to the injected message will be forwarded back to the slave
 
 Permissions can be defined as a combination of `msg_type`, `intent_type`, `skill_id`, `accessKey` and `ip_address` rules
 
-you can find the dedicated page on how these messages are handled by mycroft [here](https://github.com/JarbasHiveMind/HiveMind-core/wiki/Mycroft-Messages)
+you can find the dedicated page on how these messages are handled by OVOS [here](https://github.com/JarbasHiveMind/HiveMind-core/wiki/Mycroft-Messages)
 
 ![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/bus.gif)
 
@@ -47,9 +47,9 @@ The most common example will be injecting a user utterance and receiving the res
 
 `SHARED_BUS` is single hop and flows from `slave -> master`
 
-the master passively monitors everything going on the slave `mycroft-core` instance's `messagebus`
+the master passively monitors everything going on the slave `ovos-core` instance's `messagebus`
 
-`SHARED_BUS` needs to be explicitly enabled in the slave device configuration, by default the `mycroft-core` bus is not shared
+`SHARED_BUS` needs to be explicitly enabled in the slave device configuration, by default the `ovos-core` bus is not shared
 
 in the case of terminals, messages of the type `BUS` are injected in their master, these will also be forwarded as `SHARED_BUS` to the next master
 
