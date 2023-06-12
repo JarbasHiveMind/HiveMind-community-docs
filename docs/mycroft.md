@@ -1,6 +1,6 @@
 # OpenVoiceOS Messages
 
-The mycroft-bus is considered an internal and private websocket for [minds](https://github.com/JarbasHiveMind/HiveMind-core/wiki/Terminology), clients do not connect directly to it.
+The OpenVoiceOS messagebus is considered an internal and private websocket for [minds](https://github.com/JarbasHiveMind/HiveMind-core/wiki/Terminology), clients do not connect directly to it.
 
 A mind will inject its own context about the originating clients,  only responses to the client message will be forwarded, this provides client isolation. 
 
@@ -43,7 +43,7 @@ bus.emit(Message('recognizer_loop:utterance', data,
 						  'source': "remote_service"))
 ```
 
-original PR https://github.com/MycroftAI/ovos-core/pull/2461
+original PR https://github.com/MycroftAI/mycroft-core/pull/2461
 
 ## Sources
 

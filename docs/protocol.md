@@ -9,8 +9,8 @@ By understanding the inner workings of the protocol and the possibilities it unl
 Before we delve into the depths of the Hivemind Protocol, let's familiarize ourselves with some key terms used within the ecosystem:
 
 - **Node**: A device or software client connected to the Hivemind network.
-- **Mind**: A node that actively listens for connections and provides the functionality of Mycroft-core.
-- **Fakecroft**: A mind that imitates Mycroft-core without actually running it, potentially located within another mind in the chain or not using Mycroft-core at all.
+- **Mind**: A node that actively listens for connections and provides the functionality of ovos-core.
+- **Fakecroft**: A mind that imitates ovos-core without actually running it, potentially located within another mind in the chain or not using ovos-core at all.
 - **Slave**: A mind that connects to another mind and accepts commands from it.
 - **Terminal**: A user-facing node that connects to a mind but doesn't accept connections itself.
 - **Bridge**: A node that links an external service to a mind.
@@ -21,15 +21,15 @@ Now, let's explore the different message types introduced by the Hivemind Protoc
 
 ## Payload Messages
 
-Payload messages contain a Mycroft `Message` object, serving as a container for information or commands.
+Payload messages contain a OpenVoiceOS `Message` object, serving as a container for information or commands.
 
 ### Bus Message
 
-The `BUS` message facilitates single-hop communication, flowing between slaves and masters. When a master receives a `BUS` message, it examines its global whitelist/blacklist and slave permissions. If the slave is authorized to inject the message into the Mycroft-core message bus, the message is injected accordingly. Subsequently, any direct responses from the master's Mycroft-core, triggered by the injected message, are forwarded back to the originating slave. The permissions can be defined based on criteria such as message type, intent type, skill ID, access key, and IP address rules.
+The `BUS` message facilitates single-hop communication, flowing between slaves and masters. When a master receives a `BUS` message, it examines its global whitelist/blacklist and slave permissions. If the slave is authorized to inject the message into the ovos-core message bus, the message is injected accordingly. Subsequently, any direct responses from the master's ovos-core, triggered by the injected message, are forwarded back to the originating slave. The permissions can be defined based on criteria such as message type, intent type, skill ID, access key, and IP address rules.
 
 ### Shared Bus Message
 
-The `SHARED_BUS` message is designed for single-hop communication, exclusively flowing from a slave to a master. In this scenario, the master passively monitors the Mycroft-core message bus on the slave device. It is important to note that the `SHARED_BUS` functionality needs to be explicitly enabled in the slave device configuration, as the default behavior does not involve sharing the Mycroft-core bus. In the case of terminals, messages of type `BUS` are injected into their respective masters and are simultaneously forwarded as `SHARED_BUS` messages to the subsequent masters in the hierarchy.
+The `SHARED_BUS` message is designed for single-hop communication, exclusively flowing from a slave to a master. In this scenario, the master passively monitors the ovos-core message bus on the slave device. It is important to note that the `SHARED_BUS` functionality needs to be explicitly enabled in the slave device configuration, as the default behavior does not involve sharing the ovos-core bus. In the case of terminals, messages of type `BUS` are injected into their respective masters and are simultaneously forwarded as `SHARED_BUS` messages to the subsequent masters in the hierarchy.
 
 ## Transport Messages
 

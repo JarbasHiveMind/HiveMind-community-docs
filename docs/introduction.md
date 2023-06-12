@@ -20,7 +20,7 @@ _____
 
 Since the hivemind is focused on OVOS, let's start there
 
-- step 1: install [ovos-core](https://github.com/MycroftAI/ovos-core) / own a [mycroft device](https://www.kickstarter.com/projects/aiforeveryone/mycroft-mark-ii-the-open-voice-assistant) / install a [project shipping mycroft](https://github.com/ChanceNCounter/awesome-mycroft-community#distributions-images-projects-shipping-mycroft)
+- step 1: install [ovos-core](https://github.com/OpenVoiceOS/ovos-core) / own a [mycroft device](https://www.kickstarter.com/projects/aiforeveryone/mycroft-mark-ii-the-open-voice-assistant) / install a [project shipping mycroft](https://github.com/ChanceNCounter/awesome-mycroft-community#distributions-images-projects-shipping-mycroft)
 - step 2: run [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core/blob/dev/examples/mycroft_master.py) in that device
 - step 3: :tada:
 
@@ -58,7 +58,7 @@ ______________
 
 #### the hivemind encrypts the messagebus
 
-I have seen many people host OVOS in the cloud, but the messagebus in unencrypted and doesn't even [support ssl](https://github.com/MycroftAI/ovos-core/pull/1148), a common solution is to setup nginx and/or [smartgic docker image](https://github.com/OpenVoiceOS/ovos-docker)
+I have seen many people host OVOS in the cloud, but the messagebus in unencrypted and doesn't even [support ssl](https://github.com/MycroftAI/mycroft-core/pull/1148), a common solution is to setup nginx and/or [smartgic docker image](https://github.com/OpenVoiceOS/ovos-docker)
 
 hivemind supports ssl connections, and will even auto generate self signed certificates, however self signed certificates are [unsafe](https://en.wikipedia.org/wiki/Man-in-the-middle_attack)
 
@@ -163,7 +163,7 @@ sometimes the skill is trustworthy, but dangerous
 this can accidentally break other skills and over time get out of sync with ovos-core if not maintained, but some skills can be bad on purpose and cause a lot of damage
 
 - step 1: install [bus bricker skill](https://github.com/EvilJarbas/BusBrickerSkill)
-- step 2: as soon as OVOS loads this skill everything stops workings, [related issue](https://github.com/MycroftAI/ovos-core/issues/2905)
+- step 2: as soon as OVOS loads this skill everything stops workings, [related issue](https://github.com/MycroftAI/mycroft-core/issues/2905)
 - step 3: :x: obviously EVIL
 
 the [LocalHive](https://github.com/JarbasHiveMind/LocalHive) allows loading skills as if they were a hive node, they are completely isolated from each other and can run in their own container or .venv
