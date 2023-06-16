@@ -12,5 +12,6 @@ nav:
       - Nodes: nodes.md
       - Hive Messages: hive.md
       - OVOS Messages: mycroft.md
+      - Registry: registry.md
 
 theme: readthedocs
