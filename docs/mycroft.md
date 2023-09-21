@@ -16,7 +16,7 @@ From the POV of the Hivemind you can [replace ovos-core with anything](https://g
   * [Destinations](#destinations)
   * [Skills](#skills)
 
-![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/ef6e18c9-bf7e-4c38-9767-f7571bf563a2)
+![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/fb241c4d-ca84-4b47-b917-b398b16f93bd)
 
 ## Message
 
