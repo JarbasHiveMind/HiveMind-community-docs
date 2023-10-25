@@ -1,6 +1,6 @@
 
 
-HiveMind makes heavy use of OVOS technology as imported libraries, additionally client libraries are provided that implement the HiveMind protocol
+HiveMind makes heavy use of OVOS technology as imported libraries, additional client libraries are provided that implement the HiveMind protocol
 
 ### Libraries
 
