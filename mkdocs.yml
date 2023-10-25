@@ -6,12 +6,13 @@ nav:
       - ELI5: eli5.md
       - Create a Hive: nodes.md
       - Protocol: protocol.md
-      - Nested Hives: nested.md
-      - Bridges: bridges.md
     - Developers:
       - Libraries: devs.md
       - OpenVoiceOS: introduction.md
       - Hive Messages: hive.md
       - OVOS Messages: mycroft.md
+    - ChatGPT was here:
+      - Nested Hives: nested.md
+      - Bridges: bridges.md
 
 theme: readthedocs
