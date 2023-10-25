@@ -6,5 +6,5 @@ HiveMind makes heavy use of OVOS technology as imported libraries, additional cl
 
 If you are implementing a client from scratch, these libraries might be of interest
 
-- [HiveMind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client)
-- [HiveMindJs](https://github.com/JarbasHiveMind/HiveMind-js)
+- [HiveMind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) (python)
+- [HiveMindJs](https://github.com/JarbasHiveMind/HiveMind-js) (javascript)
