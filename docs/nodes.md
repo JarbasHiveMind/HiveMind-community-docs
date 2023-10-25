@@ -34,13 +34,6 @@ A bridge connects some existing service to a Mind, it is like a terminal but dep
 - [Twitch Bridge](https://github.com/OpenJarbas/HiveMind-twitch-bridge)
 - [DeltaChat Bridge](https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge)
 
-### Libraries
-
-If you are implementing a client from scratch, these libraries might be of interest
-
-- [HiveMind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client)
-- [HiveMindJs](https://github.com/JarbasHiveMind/HiveMind-js)
-
 
 ### Nested Hives
 

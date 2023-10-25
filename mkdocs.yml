@@ -4,12 +4,13 @@ nav:
     - Home: index.md
     - About:
       - ELI5: eli5.md
-      - Introduction: introduction.md
       - Create a Hive: nodes.md
       - Protocol: protocol.md
       - Nested Hives: nested.md
       - Bridges: nested.md
     - Developers:
+      - Libraries: devs.md
+      - OpenVoiceOS: introduction.md
       - Hive Messages: hive.md
       - OVOS Messages: mycroft.md
 
