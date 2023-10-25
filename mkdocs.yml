@@ -7,7 +7,7 @@ nav:
       - Create a Hive: nodes.md
       - Protocol: protocol.md
       - Nested Hives: nested.md
-      - Bridges: nested.md
+      - Bridges: bridges.md
     - Developers:
       - Libraries: devs.md
       - OpenVoiceOS: introduction.md
