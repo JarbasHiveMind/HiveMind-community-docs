@@ -15,7 +15,7 @@ Once you have at least 1 Mind in your hive you can start connecting things to it
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/fb241c4d-ca84-4b47-b917-b398b16f93bd)
 
 
-### Terminals
+### Terminals / Satellites
 
 A terminal is something that allows you to interact with your hive, it connects to a Mind setup in the previous step
 
