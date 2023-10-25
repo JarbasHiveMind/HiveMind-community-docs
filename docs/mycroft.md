@@ -16,8 +16,6 @@ From the POV of the Hivemind you can [replace ovos-core with anything](https://g
   * [Destinations](#destinations)
   * [Skills](#skills)
 
-![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/fb241c4d-ca84-4b47-b917-b398b16f93bd)
-
 ## Message
 
 A OpenVoiceOS message consists of a json payload, it contains a `type` , some `data` and a `context`.
