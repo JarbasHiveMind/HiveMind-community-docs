@@ -12,6 +12,7 @@ nav:
       - OpenVoiceOS: introduction.md
       - Home Assistant: homeassistant.md
       - OVOS Persona: persona.md
+      - DeltaChat: deltachat.md
     - Developers:
       - Libraries: devs.md
       - Hive Messages: hive.md
