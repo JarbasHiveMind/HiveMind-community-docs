@@ -29,6 +29,7 @@ A terminal is something that allows you to interact with your hive, it connects 
 
 A bridge connects some existing service to a Mind, it is like a terminal but depends on some intermediate service
 
+- [Matrix Bridge](https://github.com/JarbasHiveMind/HiveMind-matrix-bridge)
 - [Mattermost Bridge](https://github.com/OpenJarbas/HiveMind_mattermost_bridge)
 - [HackChat Bridge](https://github.com/OpenJarbas/HiveMind-HackChatBridge)
 - [Twitch Bridge](https://github.com/OpenJarbas/HiveMind-twitch-bridge)
