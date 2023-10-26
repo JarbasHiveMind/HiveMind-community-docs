@@ -8,10 +8,11 @@ nav:
       - Pairing: pairing.md
       - Protocol: protocol.md
       - Auto Discovery: presence.md
+    - Integrations:
+      - OpenVoiceOS: introduction.md
       - Home Assistant: homeassistant.md
     - Developers:
       - Libraries: devs.md
-      - OpenVoiceOS: introduction.md
       - Hive Messages: hive.md
       - OVOS Messages: mycroft.md
     - ChatGPT was here:
