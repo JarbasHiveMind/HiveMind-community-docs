@@ -1,12 +1,8 @@
-# Hivemind Persona
+# Persona
 
 this is a hivemind Master node, but it is running [ovos-persona](https://github.com/OpenVoiceOS/ovos-persona) instead of connecting to ovos-core
 
 you can use this to expose chatbots and LLMs via hivemind, all clients should be compatible (eg, voice-sat)
-
-# Running
-
-`hivemind-persona --persona path/to/persona.json`
 
 ## ChatGPT
 
