@@ -7,6 +7,8 @@ nav:
       - Terminology: terminology.md
       - Pairing: pairing.md
       - Protocol: protocol.md
+      - Auto Discovery: presence.md
+      - Home Assistant: homeassistant.md
     - Developers:
       - Libraries: devs.md
       - OpenVoiceOS: introduction.md
