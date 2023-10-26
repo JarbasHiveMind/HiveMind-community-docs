@@ -32,6 +32,7 @@ The `BROADCAST` message plays a crucial role in multi-hop communication, flowing
 
 ![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/broadcast.gif)
 
+A Mind may decide to broadcast a message at any time
 
 ### Escalate Message
 
@@ -39,6 +40,26 @@ The `ESCALATE` message is an essential multi-hop message that travels from a sla
 
 ![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/escalate.gif)
 
+the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) package provides an utility to connect to a Mind and escalate a message
+
+```bash
+$ hivemind-client propagate --help
+Usage: hivemind-client propagate [OPTIONS]
+
+  propagate a single mycroft message
+
+Options:
+  --key TEXT       HiveMind access key (default read from identity file)
+  --password TEXT  HiveMind password (default read from identity file)
+  --host TEXT      HiveMind host (default read from identity file)
+  --port INTEGER   HiveMind port number (default: 5678)
+  --siteid TEXT    location identifier for message.context  (default read from
+                   identity file)
+  --msg TEXT       ovos message type to inject
+  --payload TEXT   ovos message.data json
+  --help           Show this message and exit.
+
+```
 
 ### Propagate Message
 
@@ -46,3 +67,23 @@ The `PROPAGATE` message is a versatile multi-hop message that flows both from a 
 
 ![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/propagate.gif)
 
+the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) package provides an utility to connect to a Mind and propagate a message
+
+```bash
+$ hivemind-client propagate --help
+Usage: hivemind-client propagate [OPTIONS]
+
+  propagate a single mycroft message
+
+Options:
+  --key TEXT       HiveMind access key (default read from identity file)
+  --password TEXT  HiveMind password (default read from identity file)
+  --host TEXT      HiveMind host (default read from identity file)
+  --port INTEGER   HiveMind port number (default: 5678)
+  --siteid TEXT    location identifier for message.context  (default read from
+                   identity file)
+  --msg TEXT       ovos message type to inject
+  --payload TEXT   ovos message.data json
+  --help           Show this message and exit.
+
+```
