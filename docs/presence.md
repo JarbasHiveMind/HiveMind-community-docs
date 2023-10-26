@@ -26,13 +26,13 @@ Usage: hivemind-presence announce [OPTIONS]
   Advertise node in the local network
 
 Options:
-  --port INTEGER      HiveMind port number (default: 5678)
-  --name TEXT         friendly device name (default: HiveMind-Node)
-  --service TEXT      HiveMind service type (default: HiveMind-websocket)
-  --zeroconf BOOLEAN  advertise via zeroconf
-  --upnp BOOLEAN      advertise via UPNP
-  --ssl BOOLEAN       report ssl support
-  --help              Show this message and exit.
+  --port INTEGER       HiveMind port number (default: 5678)
+  --name TEXT          friendly device name (default: HiveMind-Node)
+  --service-type TEXT  HiveMind service type (default: HiveMind-websocket)
+  --zeroconf BOOLEAN   advertise via zeroconf (default: True)
+  --upnp BOOLEAN       advertise via UPNP (default: False)
+  --help               Show this message and exit.
+
 ```
 
 Scan for HiveMind nodes in your lan via UpnP and Zeroconf
@@ -44,11 +44,10 @@ Usage: hivemind-presence scan [OPTIONS]
   scan for hivemind nodes in the local network
 
 Options:
-  --zeroconf BOOLEAN  scan via zeroconf
-  --upnp BOOLEAN      scan via UPNP
-  --help              Show this message and exit.
-
-
+  --zeroconf BOOLEAN   scan via zeroconf (default: True)
+  --upnp BOOLEAN       scan via UPNP (default: False)
+  --service-type TEXT  HiveMind service type (default: HiveMind-websocket)
+  --help               Show this message and exit.
 ```
 
 ```
