@@ -30,7 +30,7 @@ custom_components/hivemind/notify.py
 
 create credentials and allow the speak message to be injected hivemind side
 
-![](https://user-images.githubusercontent.com/25036977/247607592-754c3635-d16c-4e97-8203-fae973dbd722.png)
+![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/06281d21-dcd5-48ef-9b7f-4fa94820f89f)
 
 ## Configuration
 
