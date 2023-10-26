@@ -3,7 +3,6 @@ site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
 nav:
     - Home: index.md
     - About:
-      - ELI5: eli5.md
       - Create a Hive: nodes.md
       - Protocol: protocol.md
     - Developers:
@@ -12,6 +11,7 @@ nav:
       - Hive Messages: hive.md
       - OVOS Messages: mycroft.md
     - ChatGPT was here:
+      - ELI5: eli5.md
       - Nested Hives: nested.md
       - Bridges: bridges.md
 

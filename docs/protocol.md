@@ -1,8 +1,6 @@
 # Protocol
 
-In the fascinating world of the Hivemind, a network of interconnected intelligent agents, the ability to exchange information and commands seamlessly is made possible through the Hivemind Protocol.
-This document delves into the intricacies of the protocol, particularly focusing on the concept of nested Hiveminds.
-By understanding the inner workings of the protocol and the possibilities it unlocks, we gain insight into the potential of distributed AI systems.
+The ability to exchange information and commands seamlessly is made possible through the Hivemind Protocol.
 
 ## Terminology
 
@@ -61,8 +59,3 @@ The `PROPAGATE` message is a versatile multi-hop message that flows both from a 
 
 ![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/propagate.gif)
 
-
-
-## Conclusion
-
-The Hivemind Protocol, with its diverse range of message types, serves as the backbone of communication within nested Hiveminds. By understanding and harnessing the power of these messages, nodes within the network can collaborate seamlessly, exchanging information, commands, and responses. As the field of distributed AI continues to evolve, the Hivemind Protocol messages will undoubtedly play a pivotal role in shaping the future of intelligent systems. With each advancement, the potential for innovative applications and the realization of a truly interconnected AI ecosystem becomes increasingly tangible. The nested Hivemind represents a compelling paradigm for distributed AI, unlocking new possibilities and paving the way for exciting developments in the field.
