@@ -4,6 +4,7 @@ nav:
     - Home: index.md
     - About:
       - Create a Hive: nodes.md
+      - Pairing: pairing.md
       - Protocol: protocol.md
     - Developers:
       - Libraries: devs.md
