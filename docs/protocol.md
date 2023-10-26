@@ -43,10 +43,10 @@ The `ESCALATE` message is an essential multi-hop message that travels from a sla
 the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) package provides an utility to connect to a Mind and escalate a message
 
 ```bash
-$ hivemind-client propagate --help
-Usage: hivemind-client propagate [OPTIONS]
+$ hivemind-client escalate --help
+Usage: hivemind-client escalate [OPTIONS]
 
-  propagate a single mycroft message
+  escalate a single mycroft message
 
 Options:
   --key TEXT       HiveMind access key (default read from identity file)
