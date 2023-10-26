@@ -14,6 +14,34 @@ The `BUS` message facilitates single-hop communication, flowing between slaves a
 
 ![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/bus.gif)
 
+Terminal applications such as the voice-sat usually inject natural language queries from users, others applications such as the Home Assistant integration may inject other messages if authorized to do so
+
+you can authorize message_types via the [hivemind-core]() package
+
+```bash
+$hivemind-core allow-msg "speak"
+```
+
+the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) package provides an utility to connect to a Mind and send a bus message
+
+```bash
+$ hivemind-client send-mycroft --help
+Usage: hivemind-client send-mycroft [OPTIONS]
+
+  send a single mycroft message
+
+Options:
+  --key TEXT       HiveMind access key (default read from identity file)
+  --password TEXT  HiveMind password (default read from identity file)
+  --host TEXT      HiveMind host (default read from identity file)
+  --port INTEGER   HiveMind port number (default: 5678)
+  --siteid TEXT    location identifier for message.context  (default read from
+                   identity file)
+  --msg TEXT       ovos message type to inject
+  --payload TEXT   ovos message.data json
+  --help           Show this message and exit.
+
+```
 
 ### Shared Bus Message
 
