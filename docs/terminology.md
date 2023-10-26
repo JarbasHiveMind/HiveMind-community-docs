@@ -1,9 +1,12 @@
-# Terminology
+## Terminology
 
-- `node` - anything connected to the hivemind, or listening for hivemind connections
-- `mind` - a `node` that is listening for connections and providing ovos-core
-    - `fakecroft` a `mind` that is not running ovos-core but pretends to be (might be running in a different `mind` further in the chain or not use ovos-core at all)
-- `terminal` - user facing `node` that connects to some `mind` and does not itself accept connections
-- `bridge` - `node` that connects some external service to a `mind`
-- `hive` - a collection of interconnected `node`s
-- `master mind` - the top level `node` of a `hive`, not connected to anything but receiving connections
+Before we delve into the depths of the Hivemind Protocol, let's familiarize ourselves with some key terms used within the ecosystem:
+
+- **Node**: A device or software client connected to the Hivemind network.
+- **Mind**: A node that actively listens for connections and provides the functionality of ovos-core.
+- **Fakecroft**: A mind that imitates ovos-core without actually running it, potentially located within another mind in the chain or not using ovos-core at all.
+- **Slave**: A mind that connects to another mind and accepts commands from it.
+- **Terminal**: A user-facing node that connects to a mind but doesn't accept connections itself.
+- **Bridge**: A node that links an external service to a mind.
+- **Hive**: A collection of interconnected nodes forming a collaborative network.
+- **Master Mind**: The highest-level node in a hive that is not connected to any other nodes but receives connections from them.
