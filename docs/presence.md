@@ -1,6 +1,7 @@
 # Auto Discovery
 
-[Hivemind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) is an utility to enable auto discovery of HiveMind nodes in your network
+[Hivemind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) is an utility to enable auto discovery of
+HiveMind nodes in your network
 
 ## Command line usage
 
@@ -14,8 +15,7 @@ Options:
 Commands:
   announce  Advertise node in the local network
   scan      scan for hivemind nodes in the local network
-  ```
-
+```
 
 Announce your HiveMind node in your lan via UpnP and Zeroconf
 
@@ -33,11 +33,11 @@ Options:
   --upnp BOOLEAN      advertise via UPNP
   --ssl BOOLEAN       report ssl support
   --help              Show this message and exit.
- ```
+```
 
 Scan for HiveMind nodes in your lan via UpnP and Zeroconf
 
- ```
+```
 $ hivemind-presence scan --help
 Usage: hivemind-presence scan [OPTIONS]
 
