@@ -4,6 +4,11 @@ this is a hivemind Master node, but it is running [ovos-persona](https://github.
 
 you can use this to expose chatbots and LLMs via hivemind, all clients should be compatible (eg, voice-sat)
 
+## Install
+
+Install from [Github](https://github.com/JarbasHiveMind/hivemind-persona)
+
+
 ## ChatGPT
 
 Install the [OpenAI solver](https://github.com/OpenVoiceOS/ovos-solver-plugin-openai-persona/)

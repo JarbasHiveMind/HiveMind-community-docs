@@ -62,14 +62,13 @@ I have seen many people host OVOS in the cloud, but the messagebus in unencrypte
 
 hivemind supports ssl connections, and will even auto generate self signed certificates, however self signed certificates are [unsafe](https://en.wikipedia.org/wiki/Man-in-the-middle_attack)
 
-managing ssl certificates at home can get messy really fast, as part of the [registration process](https://github.com/JarbasHiveMind/HiveMind-core/blob/dev/examples/add_keys.py) you can set an optional  `crypto_key` (must be 16 chars in lenght) and the hivemind will [AES encrypt](https://github.com/JarbasHiveMind/HiveMind-core/blob/dev/jarbas_hive_mind/utils/__init__.py#L137) every payload. This makes ssl essentially optional
+managing ssl certificates at home can get messy really fast, as part of the [registration process](https://jarbashivemind.github.io/HiveMind-community-docs/pairing/) the hivemind will AES encrypt every payload. This makes ssl essentially optional
 
 - step 1: install the [local webchat](https://github.com/JarbasHiveMind/HiveMind-webchat)
 - step 2: open `http://{ip_address}:9090` in your browser
 - step 3: :tada:
 
-NOTE: currently this `crypto_key` is assumed to be pre shared out of band to ensure a human in the loop, there will be [other options](https://github.com/JarbasHiveMind/poorman_handshake) coming soon
-
+NOTE: currently device `password` is assumed to be pre shared out of band to ensure a human in the loop
 ______________
 
 #### the hivemind authenticates the messagebus
@@ -82,23 +81,7 @@ the message bus is [a privacy nightmare and should be closed from the outside wo
 
 By default the hivemind requires authentication, think of this like the token you would be given for any http api, unregistered clients can not connect to the hivemind
 
-This is the registration step mentioned earlier
-
-```python
-from jarbas_hive_mind.database import ClientDatabase
-
-name = "JarbasCliTerminal"
-access_key = "something that uniquely identifies the client"
-mail = "jarbasaai@mailfence.com"
-
-with ClientDatabase() as db:
-    db.add_client(name, mail, access_key)
-```
-
-There are [plans](https://github.com/JarbasHiveMind/HiveMind-core/issues/16) for [command](https://github.com/JarbasHiveMind/HiveMind-core/issues/17) line [utils](https://github.com/JarbasHiveMind/HiveMind-core/issues/18) for this registration process, currently you need to run python code or edit the [json_database](https://github.com/HelloChatterbox/json_database) manually
-
-NOTE: username and email are placeholders and not currently used for anything, username can be used to provide a human readable string but it does not need to be unique and can change in every connection, in the future these may be used to better support keys shared across devices
-
+This is why hivemind has a [registration process](https://jarbashivemind.github.io/HiveMind-community-docs/pairing/)
 
 ______________
 
@@ -127,8 +110,6 @@ I don't care about hackers and privacy, its all in my super safe network, Why no
 When you use the android app you will notice that you get the answers from any question asked in the actual OVOS device in your phone, and that your device speaks everything you ask from the phone out loud.
 
 this is solved by including proper metadata in the bus message.context, you can read more about how ovos-core routes messages internally in [the wiki](https://github.com/JarbasHiveMind/HiveMind-core/wiki/(ovos-core)-message-routing). each connected client only receives what it should, not everything
-
-
 
 ______________
 
@@ -165,6 +146,7 @@ this can accidentally break other skills and over time get out of sync with ovos
 - step 1: install [bus bricker skill](https://github.com/EvilJarbas/BusBrickerSkill)
 - step 2: as soon as OVOS loads this skill everything stops workings, [related issue](https://github.com/MycroftAI/mycroft-core/issues/2905)
 - step 3: :x: obviously EVIL
+
 
 the [LocalHive](https://github.com/JarbasHiveMind/LocalHive) allows loading skills as if they were a hive node, they are completely isolated from each other and can run in their own container or .venv
 

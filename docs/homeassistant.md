@@ -6,6 +6,10 @@
 | -------- |-----------------------------------------------------|
 | `notify` | Send a notification to a HiveMind Voice Assistant   |
 
+## Install
+
+Using HACS install from [Github](https://github.com/JarbasHiveMind/hivemind-home-assistant-notify)
+
 ## Manual Installation
 
 1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
