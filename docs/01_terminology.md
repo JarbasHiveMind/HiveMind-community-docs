@@ -24,9 +24,10 @@ Before we delve into the depths of the Hivemind Protocol, let's familiarize ours
 
 ![img_5.png](img_5.png)
 
-- **Slave**: A mind that connects to another mind and **always accepts** [BUS messages](./04_protocol.md) from it.
+- **Slave**: A mind that connects to another mind and **always accepts** [BUS messages](./04_protocol.md) from it. 
 
 ![img_2.png](img_2.png)
+NOTE: A Terminal is like a Slave, but it is NOT a Mind
 
 - **Master Mind**: The highest-level node in a hive that is not connected to any other nodes but receives connections from other nodes.
 
