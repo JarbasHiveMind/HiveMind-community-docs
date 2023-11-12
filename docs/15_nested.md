@@ -2,18 +2,6 @@
 
 In the realm of interconnected intelligent agents, the Hivemind ecosystem has revolutionized the way AI systems collaborate and communicate. Through the concept of nested Hiveminds, the possibilities for distributed AI have expanded significantly. In this blog post, we will delve into the intricacies of nested Hiveminds, exploring the potential they offer for seamless control and coordination of multiple devices and AI instances.
 
-## Understanding Hivemind Terminology
-
-Before we dive into the fascinating world of nested Hiveminds, let's familiarize ourselves with some key terms used within the Hivemind ecosystem:
-
-- **Hive**: A Hive refers to a collection of interconnected nodes forming a collaborative network. At the core of a Hive lies hivemind-core, which serves as the brain of the Hive.
-- **Node**: A Node represents any device or software client connected to a Hive. It can be a standalone AI instance or a device with specific capabilities, such as sensors or displays.
-- **Master Node**: The Master Node serves as the brain of a Hive, responsible for controlling and coordinating the connected nodes within the Hive. It is the highest-level node in the Hive's hierarchy.
-- **Cluster**: A Cluster comprises a specific node and all its clients, including clients of clients. It represents a group of interconnected devices within a Hive.
-- **Subcluster**: When clusters are nested within other clusters, they are referred to as Subclusters. These nested structures enable hierarchical organization and control within the Hivemind ecosystem.
-- **Satellite**: A Satellite is a node with I/O capabilities, typically used as a voice client within the Hivemind framework.
-- **Slave**: A Slave node follows instructions from a Master Node. It can be a sensor, a display, or even a full OpenVoiceOS instance dedicated to specific skills. Clusters within a Hive can be considered Slaves to their respective Master Nodes.
-
 ## Nested Hiveminds in Action
 
 To illustrate the power of nested Hiveminds, let's consider a scenario where two housemates, let's call them John and Jane, each have their own AI assistant running on OpenVoiceOS, named John and Jane, respectively.
@@ -30,7 +18,7 @@ Nested Hiveminds offer a dynamic and adaptable environment for managing AI syste
 
 AI instances and devices.
 
-## Expanding Usage Examples
+## Usage Examples
 
 Let's further explore the practical applications of nested Hiveminds by introducing another scenario. Imagine that John and Jane have a guest staying with them, and this guest, Bob, also has his own AI assistant. To provide Bob with access to the shared smart home functionalities, they allow Bob's AI assistant to connect to the George Hive as a client.
 
@@ -40,7 +28,7 @@ Furthermore, consider a scenario where John and Jane have children. They can cre
 
 Nested Hiveminds offer a versatile framework for managing multiple AI assistants and customizing their capabilities based on individual needs and preferences. By configuring access permissions and setting up appropriate firewalls, users can create an ecosystem that ensures privacy, security, and personalized experiences for each participant.
 
-## Exploring the Future of Nested Hiveminds
+## The Future of Nested Hiveminds
 
 While the current implementation of nested Hiveminds focuses on a linear hierarchy, the developers have outlined plans for parallel nesting. This means that in the future, it will be possible to have a node, such as Jane, nested beneath multiple Masters simultaneously. This parallel nesting will enable enhanced communication and collaboration, allowing nodes to interact with multiple Hives at the same time.
 
