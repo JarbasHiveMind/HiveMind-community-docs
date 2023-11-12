@@ -1,7 +1,7 @@
 site_name: Documentation
 site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
 nav:
-    - Home: 0_index.md
+    - Home: 00_index.md
     - About:
       - Create a Hive: 01_create.md
       - Terminology: 02_terminology.md
