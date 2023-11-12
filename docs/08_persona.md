@@ -4,7 +4,7 @@ this is a hivemind Master node, but it is running [ovos-persona](https://github.
 
 you can use this to expose chatbots and LLMs via hivemind, all clients should be compatible (eg, voice-sat)
 
-![img_12.png](img_12.png)
+![img_13.png](img_13.png)
 
 ## Install
 
