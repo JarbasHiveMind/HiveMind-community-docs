@@ -44,4 +44,4 @@ Read along to learn more about Nested Hives and the Protocol
 
 ** This is a work in progress
 
-![img_14.png](img_14.png)
+![img_15.png](img_15.png)
