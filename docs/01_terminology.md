@@ -32,6 +32,6 @@ Before we delve into the depths of the Hivemind Protocol, let's familiarize ours
 
 ![img_6.png](img_6.png)
 
-- **Hive Mind**: The collection of all Master Minds in the world
+- **The Collective**: The collection of all Master Minds in the world
 
 ![img_7.png](img_7.png)
