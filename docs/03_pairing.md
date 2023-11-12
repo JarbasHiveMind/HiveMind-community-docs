@@ -68,16 +68,7 @@ Options:
 
 Data over sound for HiveMind
 
-hivemind-core and hivemind-voice-sat provide hivemind-ggwave support
-
-- manually exchanged string [via browser](https://jarbashivemind.github.io/hivemind-ggwave/)
-  
-<iframe src="https://jarbashivemind.github.io/hivemind-ggwave"></iframe>
-
-
-- with a [talking button](https://github.com/ggerganov/ggwave/discussions/27)
-
-<video src="https://user-images.githubusercontent.com/1991296/166411509-5e1b9bcb-3655-40b1-9dc3-9bec72889dcf.mp4" width="320"></video>
+hivemind-core and hivemind-voice-sat have hivemind-ggwave support
 
 pre-requisites:
 
@@ -93,7 +84,7 @@ workflow:
 
 - when launching hivemind-core take note of the provided code, eg `HMPSWD:ce357a6b59f6b1f9`
 
-- copy paste the code and emit it via ggwave (see above)
+- copy paste the code and emit it via ggwave (see below)
 
 - the voice satellite will decode the password, generate an access key and send it back via ggwave
 
@@ -102,3 +93,12 @@ workflow:
 - satellite devices get the ack then connect to received host
 
 ![img_9.png](img_9.png)
+
+
+- manually exchanged string [via browser](https://jarbashivemind.github.io/hivemind-ggwave/)
+  
+<iframe src="https://jarbashivemind.github.io/hivemind-ggwave"></iframe>
+
+- with a [talking button](https://github.com/ggerganov/ggwave/discussions/27)
+
+<video src="https://user-images.githubusercontent.com/1991296/166411509-5e1b9bcb-3655-40b1-9dc3-9bec72889dcf.mp4" width="320"></video>
