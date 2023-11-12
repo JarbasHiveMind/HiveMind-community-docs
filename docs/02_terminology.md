@@ -6,7 +6,7 @@ Before we delve into the depths of the Hivemind Protocol, let's familiarize ours
 
 ![img.png](img.png)
 
-- **Mind**: A node that actively listens for connections and understands natural language commands. communicates via [BUS messages](./04_protocol.md)
+- **Mind**: A node that actively listens for connections and understands natural language commands. communicates via [BUS messages](./04_protocol.md), **authenticates** other nodes, **isolates** messages per client, and **authorizes** individual messagwa
 
 ![img_1.png](img_1.png)
 
@@ -20,7 +20,7 @@ Before we delve into the depths of the Hivemind Protocol, let's familiarize ours
 
 ![img_4.png](img_4.png)
 
-- **Slave**: A mind that connects to another mind and always accepts [BUS messages](./04_protocol.md) from it.
+- **Slave**: A mind that connects to another mind and **always accepts** [BUS messages](./04_protocol.md) from it.
 
 ![img_2.png](img_2.png)
 
