@@ -40,6 +40,8 @@ A bridge connects some existing service to a Mind, it is like a terminal but dep
 
 Now that you have a basic hive setup, you can add more Minds to it and connect them to each other.
 
-Read about Nested Hives and the Protocol 
+Read along to learn more about Nested Hives and the Protocol 
 
 ** This is a work in progress
+
+![img_10.png](img_10.png)
