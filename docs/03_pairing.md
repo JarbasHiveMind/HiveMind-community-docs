@@ -76,7 +76,7 @@ hivemind-core and hivemind-voice-sat provide hivemind-ggwave support
 
 - with a [talking button](https://github.com/ggerganov/ggwave/discussions/27)
 
-https://user-images.githubusercontent.com/1991296/166411509-5e1b9bcb-3655-40b1-9dc3-9bec72889dcf.mp4
+![img_8.png](https://user-images.githubusercontent.com/1991296/166411509-5e1b9bcb-3655-40b1-9dc3-9bec72889dcf.mp4)
 
 pre-requisites:
 
