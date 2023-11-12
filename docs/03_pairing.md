@@ -71,8 +71,8 @@ Data over sound for HiveMind
 hivemind-core and hivemind-voice-sat provide hivemind-ggwave support
 
 - manually exchanged string [via browser](https://jarbashivemind.github.io/hivemind-ggwave/)
-
-![img_8.png](img_8.png)
+  
+<iframe src="https://jarbashivemind.github.io/hivemind-ggwave"></iframe>
 
 - with a [talking button](https://github.com/ggerganov/ggwave/discussions/27)
 
