@@ -101,3 +101,4 @@ workflow:
 
 - satellite devices get the ack then connect to received host
 
+![img_9.png](img_9.png)
