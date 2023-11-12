@@ -10,10 +10,7 @@ Before we delve into the depths of the Hivemind Protocol, let's familiarize ours
 
 ![img_1.png](img_1.png)
 
-- **Fakecroft**: A mind that imitates ovos-core without actually running it.
-- **Slave**: A mind that connects to another mind and accepts BUS commands from it.
-
-![img_2.png](img_2.png)
+- **Fakecroft**: A mind that imitates ovos-core without actually running it. usually only handles a subset of BUS messages
 
 - **Terminal**: A user-facing node that connects to a mind but doesn't accept connections itself.
 
@@ -22,6 +19,10 @@ Before we delve into the depths of the Hivemind Protocol, let's familiarize ours
 - **Bridge**: A node that links an external service to a mind.
 
 ![img_4.png](img_4.png)
+
+- **Slave**: A mind that connects to another mind and accepts BUS commands from it.
+
+![img_2.png](img_2.png)
 
 - **Hive**: A collection of interconnected nodes forming a collaborative network.
 
