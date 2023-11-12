@@ -16,7 +16,7 @@ The `BUS` message facilitates single-hop communication, flowing **between slaves
 
 Terminal applications such as the voice-sat usually inject natural language queries from users, others applications such as the Home Assistant integration may inject other messages if authorized to do so
 
-you can authorize message_types via the [hivemind-core]() package
+you can authorize message_types via the [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core/) package
 
 ```bash
 $hivemind-core allow-msg "speak"

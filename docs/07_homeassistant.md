@@ -34,6 +34,12 @@ custom_components/hivemind/notify.py
 
 create credentials and allow the speak message to be injected hivemind side
 
+you can authorize message_types via the [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core/) package
+
+```bash
+$hivemind-core allow-msg "speak"
+```
+
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/06281d21-dcd5-48ef-9b7f-4fa94820f89f)
 
 ## Configuration

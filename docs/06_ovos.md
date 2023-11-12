@@ -1,6 +1,6 @@
-# What is the HiveMind ?
+# OpenVoiceOS - HiveMind's Natural Language Backbone
 
-The hivemind can be used to build many things, theres some jargon and lots of stuff potentially going on, let's explore what it can do, and by the end hopefully you will understand what it is
+HiveMind can be used to build many things, theres some jargon and lots of stuff potentially going on, let's explore what it can do, and by the end hopefully you will understand how it relates to OpenVoiceOS
 
 - [the hivemind is a OVOS add-on](#the-hivemind-is-a-ovos-add-on)
 - [the hivemind connects devices](#the-hivemind-connects-devices)
