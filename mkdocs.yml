@@ -1,26 +1,26 @@
 site_name: Documentation
 site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
 nav:
-    - Home: index.md
+    - Home: 0_index.md
     - About:
-      - Create a Hive: nodes.md
-      - Terminology: terminology.md
-      - Pairing: pairing.md
-      - Protocol: protocol.md
-      - Auto Discovery: presence.md
+      - Create a Hive: 01_create.md
+      - Terminology: 02_terminology.md
+      - Pairing: 03_pairing.md
+      - Protocol: 04_protocol.md
+      - Auto Discovery: 05_presence.md
     - Integrations:
-      - OpenVoiceOS: introduction.md
-      - Home Assistant: homeassistant.md
-      - OVOS Persona: persona.md
-      - Matrix: matrix.md
-      - DeltaChat: deltachat.md
+      - OpenVoiceOS: 06_ovos.md
+      - Home Assistant: 07_homeassistant.md
+      - OVOS Persona: 08_persona.md
+      - Matrix: 09_matrix.md
+      - DeltaChat: 10_deltachat.md
     - Developers:
-      - Libraries: devs.md
-      - Hive Messages: hive.md
-      - OVOS Messages: mycroft.md
+      - Libraries: 11_devs.md
+      - Hive Messages: 12_hive.md
+      - OVOS Messages: 13_mycroft.md
     - ChatGPT was here:
-      - ELI5: eli5.md
-      - Nested Hives: nested.md
-      - Bridges: bridges.md
+      - ELI5: 14_eli5.md
+      - Nested Hives: 15_nested.md
+      - Bridges: 16_bridges.md
 
 theme: readthedocs
