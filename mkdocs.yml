@@ -8,9 +8,10 @@ nav:
       - Pairing: 03_pairing.md
       - Protocol: 04_protocol.md
       - Auto Discovery: 05_presence.md
-      - LocalHive: 14_localhive.md
+      - NestedHives: 15_nested.md
     - Integrations:
       - OpenVoiceOS: 06_ovos.md
+      - LocalHive: 14_localhive.md
       - Home Assistant: 07_homeassistant.md
       - OVOS Persona: 08_persona.md
       - Matrix: 09_matrix.md
