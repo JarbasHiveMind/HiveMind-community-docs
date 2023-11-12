@@ -93,7 +93,7 @@ workflow:
 
 - when launching hivemind-core take note of the provided code, eg `HMPSWD:ce357a6b59f6b1f9`
 
-- go to https://jarbashivemind.github.io/hivemind-ggwave and emit the code
+- copy paste the code and emit it via ggwave (see above)
 
 - the voice satellite will decode the password, generate an access key and send it back via ggwave
 
