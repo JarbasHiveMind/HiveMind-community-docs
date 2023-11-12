@@ -35,13 +35,3 @@ A bridge connects some existing service to a Mind, it is like a terminal but dep
 - [Twitch Bridge](https://github.com/OpenJarbas/HiveMind-twitch-bridge)
 - [DeltaChat Bridge](https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge)
 
-
-### Nested Hives
-
-Now that you have a basic hive setup, you can add more Minds to it and connect them to each other.
-
-Read along to learn more about Nested Hives and the Protocol 
-
-** This is a work in progress
-
-![img_15.png](img_15.png)
