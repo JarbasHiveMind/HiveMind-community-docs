@@ -3,8 +3,8 @@ site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
 nav:
     - Home: 00_index.md
     - About:
-      - Create a Hive: 01_create.md
-      - Terminology: 02_terminology.md
+      - Terminology: 01_terminology.md
+      - Create a Hive: 02_create.md
       - Pairing: 03_pairing.md
       - Protocol: 04_protocol.md
       - Auto Discovery: 05_presence.md
