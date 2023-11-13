@@ -25,6 +25,5 @@ nav:
       - OVOS Messages: 13_mycroft.md
     - ChatGPT was here:
       - ELI5: gpt_eli5.md
-      - Bridges: gpt_bridges.md
 
 theme: readthedocs
