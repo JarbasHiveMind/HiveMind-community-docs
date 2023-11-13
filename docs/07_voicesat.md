@@ -4,6 +4,8 @@ OpenVoiceOS Satellite, connect to HiveMind
 
 Built on top of [ovos-dinkum-listener](https://github.com/OpenVoiceOS/ovos-dinkum-listener), [ovos-audio](https://openvoiceos.github.io/ovos-technical-manual/audio_service/) and [PHAL](https://openvoiceos.github.io/ovos-technical-manual/PHAL/)
 
+![img_17.png](img_17.png)
+
 ## Install
 
 Install dependencies (if needed)
