@@ -12,9 +12,9 @@ To illustrate the power of nested Hiveminds, let's consider a scenario where two
 
 While sharing a house and most of their IoT devices, Mom and Dad want to ensure that their AI assistants can control the smart home individually without interfering with each other's commands. To achieve this, they create a Hive for their house, naming it George, with at least one instance of OpenVoiceOS acting as the brain.
 
-![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/1da8c4f5-243b-4b58-9465-e59612d5d74e)
-
 Mom and Dad then connect their AI assistants, John and Jane, as clients to the George Hive. This setup allows John and Jane to communicate with George individually but not directly with each other. Instead, their messages pass through George, which acts as an intermediary, ensuring proper communication flow.
+
+![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/1da8c4f5-243b-4b58-9465-e59612d5d74e)
 
 Now, when Dad instructs his AI assistant to adjust the lights, the message goes through George. Similarly, when Mom asks her AI assistant to set the temperature, the command is routed through George. George becomes the central point of control for the shared devices, enabling independent control for John and Jane.
 
@@ -26,7 +26,9 @@ This flexibility allows for easy integration and disconnection of Hives as requi
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/283298ec-8ecc-431c-9742-f7b627f0d570)
 
 Nested Hiveminds offer a dynamic and adaptable environment for managing AI systems and devices. 
+
 It is important to note that as soon as a Hive is decoupled, such as when  Mom and Dad split their Hives, they become their own independent Masters again. 
+
 This hierarchical organization, with clusters nested within a Master Hive, provides a scalable and efficient framework for controlling AI instances and devices.
 
 ## Permissions
@@ -41,7 +43,9 @@ Furthermore, consider a scenario where John and Jane have children. They can cre
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/217b4185-7e1b-46f0-af83-b3c097ff2b5f)
 
-Nested Hiveminds offer a versatile framework for managing multiple AI assistants and customizing their capabilities based on individual needs and preferences. By configuring access permissions and setting up appropriate firewalls, users can create an ecosystem that ensures privacy, security, and personalized experiences for each participant.
+Nested Hiveminds offer a versatile framework for managing multiple AI assistants and customizing their capabilities based on individual needs and preferences. 
+
+By configuring access permissions and setting up appropriate firewalls, users can create an ecosystem that ensures privacy, security, and personalized experiences for each participant.
 
 
 ![img_15.png](img_15.png)
