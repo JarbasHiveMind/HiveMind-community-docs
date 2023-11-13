@@ -2,7 +2,8 @@
 
 [DeltaChat](https://delta.chat/en/) bridge 
 
-![img.png](https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge/raw/master/img.png)
+![img_16.png](img_16.png)
+
 
 ## Install
 
@@ -11,10 +12,10 @@ $ pip install HiveMind-deltachat-bridge
 ```
 ## Usage
 
-If host is not provided auto discovery will be used
+![img.png](https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge/raw/master/img.png)
 
 ```bash
-$ HiveMind-deltachat-bridge --help
+$ gm-deltachat-bridge --help
 
 usage: __main__.py [-h] --access_key ACCESS_KEY --email EMAIL --password
                    PASSWORD [--crypto_key CRYPTO_KEY] [--name NAME]
