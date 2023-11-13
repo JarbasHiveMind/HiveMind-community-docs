@@ -1,8 +1,76 @@
 # OpenVoiceOS - HiveMind's Natural Language Backbone
 
-HiveMind can be used to build many things, theres some jargon and lots of stuff potentially going on, let's explore what it can do, and by the end hopefully you will understand how it relates to OpenVoiceOS
 
 ![img_11.png](img_11.png)
+
+HiveMind can be used to build many things, theres some jargon and lots of stuff potentially going on, let's explore what it can do, and by the end hopefully you will understand how it relates to OpenVoiceOS
+
+## Install
+
+Install from [Github](https://github.com/JarbasHiveMind/HiveMind-core/)
+
+## Usage
+
+```
+$ hivemind-core --help
+Usage: hivemind-core [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  add-client     add credentials for a client
+  delete-client  remove credentials for a client
+  list-clients   list clients and credentials
+  listen         start listening for HiveMind connections
+
+
+$ hivemind-core add-client --help
+Usage: hivemind-core add-client [OPTIONS] [NAME] [ACCESS_KEY] [PASSWORD]
+                                [CRYPTO_KEY]
+
+  add credentials for a client
+
+Options:
+  --help  Show this message and exit.
+
+
+
+$ hivemind-core listen --help
+Usage: hivemind-core listen [OPTIONS]
+
+  start listening for HiveMind connections
+
+Options:
+  --host TEXT       HiveMind host
+  --port INTEGER    HiveMind port number
+  --ssl BOOLEAN     use wss://
+  --cert_dir TEXT   HiveMind SSL certificate directory
+  --cert_name TEXT  HiveMind SSL certificate file name
+  --help            Show this message and exit.
+
+
+$ hivemind-core delete-client --help
+Usage: hivemind-core delete-client [OPTIONS] NODE_ID
+
+  remove credentials for a client
+
+Options:
+  --help  Show this message and exit.
+
+
+$ hivemind-core list-clients --help
+Usage: hivemind-core list-clients [OPTIONS]
+
+  list clients and credentials
+
+Options:
+  --help  Show this message and exit.
+
+```
+
+## Why
+
 
 - [the hivemind is a OVOS add-on](#the-hivemind-is-a-ovos-add-on)
 - [the hivemind connects devices](#the-hivemind-connects-devices)
