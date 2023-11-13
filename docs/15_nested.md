@@ -16,6 +16,8 @@ Mom and Dad then connect their AI assistants, John and Jane, as clients to the G
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/1da8c4f5-243b-4b58-9465-e59612d5d74e)
 
+It is important to note that as soon as a Hive is decoupled, such as when  Mom and Dad split their Hives, they become their own independent Masters again. 
+
 Now, when Dad instructs his AI assistant to adjust the lights, the message goes through George. Similarly, when Mom asks her AI assistant to set the temperature, the command is routed through George. George becomes the central point of control for the shared devices, enabling independent control for John and Jane.
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/e0634651-ab97-475a-bf7e-5cef68235c40)
@@ -27,8 +29,6 @@ This flexibility allows for easy integration and disconnection of Hives as requi
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/4b3e04ed-cc06-4405-a7e8-4e8b22dfb0cf)
 
 Nested Hiveminds offer a dynamic and adaptable environment for managing AI systems and devices. 
-
-It is important to note that as soon as a Hive is decoupled, such as when  Mom and Dad split their Hives, they become their own independent Masters again. 
 
 This hierarchical organization, with clusters nested within a Master Hive, provides a scalable and efficient framework
 
