@@ -6,7 +6,7 @@ Before we delve into the depths of the Hivemind Protocol, let's familiarize ours
 
 ![img.png](img.png)
 
-- **Mind**: A node that actively listens for connections and understands natural language commands. communicates via [BUS messages](./04_protocol.md), **authenticates** other nodes, **isolates** connections, and **authorizes** individual messages
+- **Mind**: A node that actively listens for connections and understands natural language commands. Minds communicate via [BUS messages](./04_protocol.md), **authenticate** other nodes, **isolate** connections, and **authorize** individual messages
 
 ![img_1.png](img_1.png)
 
