@@ -1,6 +1,8 @@
 # DeltaChat Bridge
 
-[DeltaChat](https://delta.chat/en/) bridge 
+[Delta Chat](https://delta.chat/en/) is a messaging app that works over e-mail
+
+End-to-End Encryption using [Autocrypt](https://autocrypt.org/) and [CounterMITM](https://countermitm.readthedocs.io/en/latest/new.html) protocols, with multiple security audits.
 
 ![img_12.png](img_12.png)
 
