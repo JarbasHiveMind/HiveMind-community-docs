@@ -20,10 +20,11 @@ Now, when Dad instructs his AI assistant to adjust the lights, the message goes 
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/6217ac9b-fed5-44f7-9ff2-82d0400431f9)
 
-Moreover, if guests visit their house, Mom and Dad can grant them access to George directly, for example by using the voice satellites around the house, or they can nest their personal Hives under George temporarily. 
+Moreover, if guests visit their house, Mom and Dad can grant them access to George directly, for example by using the voice satellites around the house, or they can create a guest Hive under George temporarily. 
+
 This flexibility allows for easy integration and disconnection of Hives as required.
 
-![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/283298ec-8ecc-431c-9742-f7b627f0d570)
+![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/4b3e04ed-cc06-4405-a7e8-4e8b22dfb0cf)
 
 Nested Hiveminds offer a dynamic and adaptable environment for managing AI systems and devices. 
 
@@ -37,7 +38,7 @@ Let's further explore the practical applications of nested Hiveminds by introduc
 
 However, Mom and Dad want to ensure that Bob's AI assistant has limited permissions within their ecosystem. They configure hivemind-core, acting as a firewall, to restrict Bob's assistant from placing orders or accessing sensitive information from Mom and Dad. This fine-grained control ensures that the guest AI operates within defined boundaries, maintaining privacy and security for all parties involved.
 
-![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/ab30f7a6-886b-4ee2-b92f-54fafb83f29f)
+![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/ae8530d6-a465-4ae6-b556-b3f50562d810)
 
 Furthermore, consider a scenario where Mom and Dad have children. They can create a separate nested assistant for their kids, granting them access to specific functionalities suitable for their age and requirements. This nested assistant for the kids would have limited permissions and tailored interactions, providing a safe and engaging AI experience while keeping their privacy intact.
 
