@@ -10,7 +10,7 @@ Before we delve into the depths of the Hivemind Protocol, let's familiarize ours
 
 ![img_1.png](img_1.png)
 
-- **Fakecroft**: A mind that imitates ovos-core without actually running it. usually only handles a subset of [BUS messages](./04_protocol.md)
+- **Fakecroft**: A mind that imitates ovos-core without actually running it. usually only handles a subset of [BUS messages](./04_protocol.md), usually only `"speak"` and `"recognizer_loop:utterance"`
 
 - **Terminal**: A user-facing node that connects to a mind but doesn't accept connections itself.
 

@@ -29,7 +29,9 @@ when master receives a `BUS` message, it will check it's global `whitelist/black
 
 Permissions can be defined as a combination of `msg_type`, `intent_type`, `skill_id`, `accessKey` and `ip_address` rules
 
-you can find the dedicated page on how these messages are handled by OVOS [here](https://github.com/JarbasHiveMind/HiveMind-core/wiki/Mycroft-Messages)
+you can find the dedicated page on how these messages are handled by OVOS [here](./13_mycroft.md)
+
+Valid payloads for OVOS can be found [here](https://github.com/OpenVoiceOS/message_spec)
 
 ![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/bus.gif)
 
