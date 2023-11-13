@@ -6,11 +6,11 @@ Before we delve into the depths of the Hivemind Protocol, let's familiarize ours
 
 ![img.png](img.png)
 
-- **Mind**: A node that actively listens for connections and understands natural language commands. communicates via [BUS messages](./04_protocol.md), **authenticates** other nodes, **isolates** messages per client, and **authorizes** individual messagwa
+- **Mind**: A node that actively listens for connections and understands natural language commands. communicates via [BUS messages](./04_protocol.md), **authenticates** other nodes, **isolates** connections, and **authorizes** individual messages
 
 ![img_1.png](img_1.png)
 
-- **Fakecroft**: A mind that imitates ovos-core without actually running it. usually only handles a subset of [BUS messages](./04_protocol.md), usually only `"speak"` and `"recognizer_loop:utterance"`
+- **Fakecroft**: A mind that imitates ovos-core without actually running it. often only handles a subset of [BUS messages](./04_protocol.md), usually only `"speak"` and `"recognizer_loop:utterance"`
 
 - **Terminal**: A user-facing node that connects to a mind but doesn't accept connections itself.
 
