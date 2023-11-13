@@ -33,19 +33,18 @@ This hierarchical organization, with clusters nested within a Master Hive, provi
 
 ## Permissions
 
-Let's further explore the practical applications of nested Hiveminds by introducing another scenario. Imagine that John and Jane have a guest staying with them, and this guest, Bob, also has his own AI assistant. To provide Bob with access to the shared smart home functionalities, they allow Bob's AI assistant to connect to the George Hive as a client.
+Let's further explore the practical applications of nested Hiveminds by introducing another scenario. Imagine that Mom and Dad have a guest staying with them, and this guest, Bob, also has his own AI assistant. To provide Bob with access to the shared smart home functionalities, they allow Bob's AI assistant to connect to the George Hive as a client.
 
-However, John and Jane want to ensure that Bob's AI assistant has limited permissions within their ecosystem. They configure the hivemind-core, acting as a firewall, to restrict Bob's assistant from placing orders or accessing sensitive information from John and Jane. This fine-grained control ensures that the guest AI operates within defined boundaries, maintaining privacy and security for all parties involved.
+However, Mom and Dad want to ensure that Bob's AI assistant has limited permissions within their ecosystem. They configure hivemind-core, acting as a firewall, to restrict Bob's assistant from placing orders or accessing sensitive information from Mom and Dad. This fine-grained control ensures that the guest AI operates within defined boundaries, maintaining privacy and security for all parties involved.
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/ab30f7a6-886b-4ee2-b92f-54fafb83f29f)
 
-Furthermore, consider a scenario where John and Jane have children. They can create a separate nested assistant for their kids, granting them access to specific functionalities suitable for their age and requirements. This nested assistant for the kids would have limited permissions and tailored interactions, providing a safe and engaging AI experience while keeping their privacy intact.
+Furthermore, consider a scenario where Mom and Dad have children. They can create a separate nested assistant for their kids, granting them access to specific functionalities suitable for their age and requirements. This nested assistant for the kids would have limited permissions and tailored interactions, providing a safe and engaging AI experience while keeping their privacy intact.
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/217b4185-7e1b-46f0-af83-b3c097ff2b5f)
 
 Nested Hiveminds offer a versatile framework for managing multiple AI assistants and customizing their capabilities based on individual needs and preferences. 
 
 By configuring access permissions and setting up appropriate firewalls, users can create an ecosystem that ensures privacy, security, and personalized experiences for each participant.
-
 
 ![img_15.png](img_15.png)
