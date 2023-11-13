@@ -14,7 +14,7 @@ $ pip install HiveMind-deltachat-bridge
 ![img.png](https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge/raw/master/img.png)
 
 ```bash
-$ gm-deltachat-bridge --help
+$ hm-deltachat-bridge --help
 
 usage: __main__.py [-h] --access_key ACCESS_KEY --email EMAIL --password
                    PASSWORD [--crypto_key CRYPTO_KEY] [--name NAME]
@@ -32,5 +32,3 @@ optional arguments:
   --host HOST           HiveMind host
   --port PORT           HiveMind port number
 ```
-
-NOTE: you only need to provide the password the first time you connect
