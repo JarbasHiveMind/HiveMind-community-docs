@@ -30,7 +30,7 @@ Nested Hiveminds offer a dynamic and adaptable environment for managing AI syste
 
 It is important to note that as soon as a Hive is decoupled, such as when  Mom and Dad split their Hives, they become their own independent Masters again. 
 
-This hierarchical organization, with clusters nested within a Master Hive, provides a scalable and efficient framework for controlling AI instances and devices.
+This hierarchical organization, with clusters nested within a Master Hive, provides a scalable and efficient framework
 
 ## Permissions
 

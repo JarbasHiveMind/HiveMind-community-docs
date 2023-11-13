@@ -5,10 +5,10 @@ nav:
     - About:
       - Terminology: 01_terminology.md
       - Create a Hive: 02_create.md
+      - Nested Hives: 15_nested.md
       - Pairing: 03_pairing.md
       - Protocol: 04_protocol.md
       - Auto Discovery: 05_presence.md
-      - NestedHives: 15_nested.md
     - Minds:
       - OpenVoiceOS: 06_ovos.md
       - OVOS Persona: 08_persona.md
