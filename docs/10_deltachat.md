@@ -2,8 +2,7 @@
 
 [DeltaChat](https://delta.chat/en/) bridge 
 
-![img_16.png](img_16.png)
-
+![img_17.png](img_17.png)
 
 ## Install
 
