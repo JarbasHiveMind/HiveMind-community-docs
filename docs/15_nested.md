@@ -12,7 +12,7 @@ To illustrate the power of nested Hiveminds, let's consider a scenario where two
 
 While sharing a house and most of their IoT devices, Mom and Dad want to ensure that their AI assistants can control the smart home individually without interfering with each other's commands. To achieve this, they create a Hive for their house, naming it George, with at least one instance of OpenVoiceOS acting as the brain.
 
-Mom and Dad then connect their AI assistants, John and Jane, as clients to the George Hive. This setup allows John and Jane to communicate with George individually but not directly with each other. Instead, their messages pass through George, which acts as an intermediary, ensuring proper communication flow.
+Mom and Dad then connect their AI assistants, John and Jane, as clients to the George Hive. This setup allows John and Jane to communicate with George individually but not directly with each other. Instead, their messages pass through George, which acts as an intermediary, ensuring proper communication flow. John is connected to Dad's phone and calendar, it knows Dad's favorite songs. This ensures George is not bothered with personal data, and that Dad has a personalized experience. The same holds true for Jane and Mom, Alarms and Music Playlists don't get mixed together
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/1da8c4f5-243b-4b58-9465-e59612d5d74e)
 
