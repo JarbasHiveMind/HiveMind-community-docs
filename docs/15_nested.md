@@ -18,7 +18,7 @@ Mom and Dad then connect their AI assistants, John and Jane, as clients to the G
 
 Now, when Dad instructs his AI assistant to adjust the lights, the message goes through George. Similarly, when Mom asks her AI assistant to set the temperature, the command is routed through George. George becomes the central point of control for the shared devices, enabling independent control for John and Jane.
 
-![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/6217ac9b-fed5-44f7-9ff2-82d0400431f9)
+![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/e0634651-ab97-475a-bf7e-5cef68235c40)
 
 Moreover, if guests visit their house, Mom and Dad can grant them access to George directly, for example by using the voice satellites around the house, or they can create a guest Hive under George temporarily. 
 
