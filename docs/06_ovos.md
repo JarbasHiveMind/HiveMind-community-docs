@@ -3,7 +3,7 @@
 
 ![img_11.png](img_11.png)
 
-HiveMind can be used to build many things, theres some jargon and lots of stuff potentially going on, let's explore what it can do, and by the end hopefully you will understand how it relates to OpenVoiceOS
+Hivemind-core is the reference integrations with OpenVoiceOS
 
 ## Install
 
@@ -70,6 +70,8 @@ Options:
 ```
 
 ## Why
+
+HiveMind can be used to build many things, theres some jargon and lots of stuff potentially going on, let's explore what it can do, and by the end hopefully you will understand how it relates to OpenVoiceOS
 
 
 - [the hivemind is a OVOS add-on](#the-hivemind-is-a-ovos-add-on)
