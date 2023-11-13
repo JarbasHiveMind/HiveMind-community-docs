@@ -2,9 +2,12 @@
 
 What is it?
 
-[Matrix](https://matrix.org/) works a little like email, but instantaneous and secure:
+[Matrix](https://matrix.org/) is a chat protocol, it works a little like email, but instantaneous and secure:
+
 - You need to register an account at a provider
+
 - Whatever your provider is, you can talk to people using other providers
+
 - In the same way you can use Outlook or Thunderbird with the same email account, you can use different Matrix apps for the same Matrix account.
 
 
