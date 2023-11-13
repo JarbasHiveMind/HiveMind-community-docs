@@ -1,6 +1,6 @@
 # HomeAssistant Integration
 
-![img_14.png](img_14.png)
+![img_17.png](img_17.png)
 
 **This component will set up the following actions.**
 
