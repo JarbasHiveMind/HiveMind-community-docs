@@ -4,9 +4,9 @@ You can register clients in a Mind via command line or via audio
 
 ## Command Line
 
-hivemind-core provides a command line interface
+hivemind-core provides a command line interface to manage client permissions
 
-```
+```bash
 $ hivemind-core --help
 Usage: hivemind-core [OPTIONS] COMMAND [ARGS]...
 
@@ -15,11 +15,13 @@ Options:
 
 Commands:
   add-client     add credentials for a client
+  allow-msg      allow message types sent from a client
   delete-client  remove credentials for a client
   list-clients   list clients and credentials
   listen         start listening for HiveMind connections
+```
 
-
+```shell
 $ hivemind-core add-client --help
 Usage: hivemind-core add-client [OPTIONS] [NAME] [ACCESS_KEY] [PASSWORD]
                                 [CRYPTO_KEY]
@@ -28,23 +30,9 @@ Usage: hivemind-core add-client [OPTIONS] [NAME] [ACCESS_KEY] [PASSWORD]
 
 Options:
   --help  Show this message and exit.
+```
 
-
-
-$ hivemind-core listen --help
-Usage: hivemind-core listen [OPTIONS]
-
-  start listening for HiveMind connections
-
-Options:
-  --host TEXT       HiveMind host
-  --port INTEGER    HiveMind port number
-  --ssl BOOLEAN     use wss://
-  --cert_dir TEXT   HiveMind SSL certificate directory
-  --cert_name TEXT  HiveMind SSL certificate file name
-  --help            Show this message and exit.
-
-
+```shell
 $ hivemind-core delete-client --help
 Usage: hivemind-core delete-client [OPTIONS] NODE_ID
 
@@ -52,8 +40,9 @@ Usage: hivemind-core delete-client [OPTIONS] NODE_ID
 
 Options:
   --help  Show this message and exit.
+```
 
-
+```shell
 $ hivemind-core list-clients --help
 Usage: hivemind-core list-clients [OPTIONS]
 
@@ -62,6 +51,16 @@ Usage: hivemind-core list-clients [OPTIONS]
 Options:
   --help  Show this message and exit.
 
+```
+
+```shell
+$ hivemind-core allow-msg --help
+Usage: hivemind-core allow-msg [OPTIONS] MSG_TYPE [NODE_ID]
+
+  allow message types sent from a client
+
+Options:
+  --help  Show this message and exit.
 ```
 
 ## HiveMind GGWave

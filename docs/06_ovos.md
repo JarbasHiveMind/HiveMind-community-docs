@@ -11,7 +11,7 @@ Install from [Github](https://github.com/JarbasHiveMind/HiveMind-core/)
 
 ## Usage
 
-Everything is done via the `hivemind-core` command
+Everything is done via the `hivemind-core` command, see [pairing](./03_pairing.md) for more info
 
 ```shell
 $ hivemind-core --help
@@ -29,17 +29,6 @@ Commands:
 ```
 
 ```shell
-$ hivemind-core add-client --help
-Usage: hivemind-core add-client [OPTIONS] [NAME] [ACCESS_KEY] [PASSWORD]
-                                [CRYPTO_KEY]
-
-  add credentials for a client
-
-Options:
-  --help  Show this message and exit.
-```
-
-```shell
 $ hivemind-core listen --help
 Usage: hivemind-core listen [OPTIONS]
 
@@ -54,35 +43,7 @@ Options:
   --help            Show this message and exit.
 ```
 
-```shell
-$ hivemind-core delete-client --help
-Usage: hivemind-core delete-client [OPTIONS] NODE_ID
 
-  remove credentials for a client
-
-Options:
-  --help  Show this message and exit.
-```
-
-```shell
-$ hivemind-core list-clients --help
-Usage: hivemind-core list-clients [OPTIONS]
-
-  list clients and credentials
-
-Options:
-  --help  Show this message and exit.
-```
-
-```shell
-$ hivemind-core allow-msg --help
-Usage: hivemind-core allow-msg [OPTIONS] MSG_TYPE [NODE_ID]
-
-  allow message types sent from a client
-
-Options:
-  --help  Show this message and exit.
-```
 ## Why
 
 HiveMind can be used to build many things, theres some jargon and lots of stuff potentially going on, let's explore what it can do, and by the end hopefully you will understand how it relates to OpenVoiceOS
