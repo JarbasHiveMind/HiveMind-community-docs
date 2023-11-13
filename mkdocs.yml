@@ -9,11 +9,14 @@ nav:
       - Protocol: 04_protocol.md
       - Auto Discovery: 05_presence.md
       - NestedHives: 15_nested.md
-    - Integrations:
+    - Minds:
       - OpenVoiceOS: 06_ovos.md
       - LocalHive: 14_localhive.md
-      - Home Assistant: 07_homeassistant.md
       - OVOS Persona: 08_persona.md
+    - Terminals:
+      - Voice Satellite: 07_voicesat.md
+      - Home Assistant: 07_homeassistant.md
+    - Bridges:
       - Matrix: 09_matrix.md
       - DeltaChat: 10_deltachat.md
     - Developers:
