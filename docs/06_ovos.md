@@ -126,7 +126,9 @@ can we connect the android app using hivemind?
 
 Does this mean we can turn any OVOS thingy in a hivemind node? we are getting there...
 
-
+- isolation
+- authentication
+- NO ENCRYPTION  :x:
 ______________
 
 

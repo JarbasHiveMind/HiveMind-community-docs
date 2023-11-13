@@ -1,10 +1,13 @@
 # HomeAssistant Integration
 
+![img_14.png](img_14.png)
+
 **This component will set up the following actions.**
 
 | Platform | Description                                         |
 | -------- |-----------------------------------------------------|
 | `notify` | Send a notification to a HiveMind Voice Assistant   |
+
 
 ## Install
 
