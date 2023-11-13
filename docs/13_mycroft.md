@@ -58,7 +58,9 @@ Output capable services are ovos-audio (TTS, music...)
 TTS checks the message context if it's the intended target for the message and will only speak in the following conditions:
 
 - Explicitly targeted i.e. the `destination` is native_source (default: `"audio")`
+
 - `destination` is set to `None`
+
 - `destination` is missing completely
 
 The idea is that for example when the android app is used to access OpenVoiceOS the device at home shouldn't start to speak.
@@ -72,6 +74,7 @@ A missing `destination` or if the `destination` is set to `None` is interpreted 
 ovos-core is responsible for managing the routing context, skills do not usually need to worry about any of this
 
 - intent service will `.reply` to the original utterance message
+
 - all skill/intent service messages are `.forward` (from previous intent service `.reply`)
 
 ### Skills 
@@ -81,5 +84,7 @@ OpenVoiceOS skills can do anything, if you are developing/installing a mission c
 If a skill emits it's own bus messages it needs to keep `message.context` around
 
 **Common issues**:
+
 - skills sending their own messages might not keep message.context or wrongly `.reply` to it 
+
 - in the context of the Hivemind skills might not be [Session](https://github.com/OpenVoiceOS/ovos-bus-client/blob/dev/ovos_bus_client/session.py) aware and keep a shared state between clients, eg. a client may enable [parrot mode](https://github.com/JarbasSkills/skill-parrot) for everyone 
