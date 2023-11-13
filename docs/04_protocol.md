@@ -18,6 +18,8 @@ Terminal applications such as the voice-sat usually inject natural language quer
 
 you can authorize message_types via the [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core/) package
 
+Reference BUS payloads for OVOS can be found [here](https://github.com/OpenVoiceOS/message_spec)
+
 ```bash
 $hivemind-core allow-msg "speak"
 ```
