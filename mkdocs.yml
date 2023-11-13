@@ -11,8 +11,8 @@ nav:
       - NestedHives: 15_nested.md
     - Minds:
       - OpenVoiceOS: 06_ovos.md
-      - LocalHive: 14_localhive.md
       - OVOS Persona: 08_persona.md
+      - LocalHive: 14_localhive.md
     - Terminals:
       - Voice Satellite: 07_voicesat.md
       - Home Assistant: 07_homeassistant.md
