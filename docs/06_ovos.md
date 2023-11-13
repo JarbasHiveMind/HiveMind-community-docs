@@ -12,9 +12,7 @@ HiveMind can be used to build many things, theres some jargon and lots of stuff 
 - [the hivemind safely exposes OVOS to the web](#the-hivemind-safely-exposes-ovos-to-the-web)
 - [the hivemind isolates the messagebus](#the-hivemind-isolates-the-messagebus)
 - [the hivemind is a protocol that transparently integrates with OVOS](#the-hivemind-is-a-protocol-that-transparently-integrates-with-ovos)
-- [the hivemind provides skill isolation](#the-hivemind-provides-skill-isolation)
 - [the hivemind can be used to integrate OVOS with any platform](#the-hivemind-can-be-used-to-integrate-ovos-with-any-platform)
-- [the hivemind is a set of permissively licensed libraries](#the-hivemind-is-a-set-of-permissively-licensed-libraries)
 
 _____
 
@@ -131,33 +129,6 @@ Does this mean we can turn any OVOS thingy in a hivemind node? we are getting th
 
 ______________
 
-#### the hivemind provides skill isolation
-
-
-You have probably ran into bad warnings about installing skills from outside the marketplace, you should pay attention to them!
-
-sometimes the skill is trustworthy, but dangerous
-
-- step 1: install [monkey patcher skill]()
-- step 2: OVOS got new features!
-- step 3: :tada:
-- step 4: :x: a skill changed ovos-core at runtime (?)
-
-this can accidentally break other skills and over time get out of sync with ovos-core if not maintained, but some skills can be bad on purpose and cause a lot of damage
-
-- step 1: install [bus bricker skill](https://github.com/EvilJarbas/BusBrickerSkill)
-- step 2: as soon as OVOS loads this skill everything stops workings, [related issue](https://github.com/MycroftAI/mycroft-core/issues/2905)
-- step 3: :x: obviously EVIL
-
-
-the [LocalHive](https://github.com/JarbasHiveMind/LocalHive) allows loading skills as if they were a hive node, they are completely isolated from each other and can run in their own container or .venv
-
-NOTES:
-- skills with conflicting requirements can coexist
-- skills can be packaged by package managers
-- :exclamation: **LocalHive replaces ovos-core**
-
-______________
 
 #### the hivemind can be used to integrate OVOS with any platform
 
@@ -185,19 +156,3 @@ How can you use the hivemind to integrate with an existing service, maybe it's f
 - step 2: create skills to provide support to your users
      - TIP: add a greeting and help command
 - step 3 :tada: **OVOS is a chatbot**
-
-
-_____
-
-
-#### the hivemind is a set of permissively licensed libraries
-
-If you already have an application that interacts with the messagebus how hard is it to make it use the hivemind?
-
-- step 1: replace all OVOS bus connections with [hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind_websocket_client/) (python) or [HiveMindJS](https://github.com/JarbasHiveMind/HiveMind-js) (javascript)
-- step 2: hope there arent any bugs
-- step 3 :tada:
-
-______________
-
-
