@@ -45,15 +45,28 @@ See configuration from [ovos-dinkum-listener](https://github.com/OpenVoiceOS/ovo
 ### Plugins
 
 Voice Sat supports plugins for:
+
 - Microphone
-- VAD
-- WakeWord
-- STT
+
+- [VAD](https://openvoiceos.github.io/ovos-technical-manual/vad_plugins/)
+
+- [WakeWord](https://openvoiceos.github.io/ovos-technical-manual/ww_plugins/)
+
+- [STT](https://openvoiceos.github.io/ovos-technical-manual/stt_plugins/)
+
 - Audio Transformers
+
 - Dialog Transformers
-- TTS
+
+- [G2P](https://openvoiceos.github.io/ovos-technical-manual/g2p_plugins/)
+
+- [TTS](https://openvoiceos.github.io/ovos-technical-manual/tts_plugins/)
+
+- [Audio Service](https://openvoiceos.github.io/ovos-technical-manual/audio_plugins/)
+
 - TTS Transformers
-- PHAL
+
+- [PHAL](https://openvoiceos.github.io/ovos-technical-manual/PHAL/)
 
 
 You can optimize your voice satellite for a variety of platforms by selecting different plugin combinations
