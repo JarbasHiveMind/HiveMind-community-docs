@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/06_ovos/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>OpenVoiceOS - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "OpenVoiceOS";
+        var mkdocs_page_input_path = "06_ovos.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/06_ovos/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_create/">Create a Hive</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Minds</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">OpenVoiceOS</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#install">Install</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#why">Why</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#the-hivemind-is-a-ovos-add-on">the hivemind is a OVOS add-on</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#the-hivemind-connects-devices">the hivemind connects devices</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#the-hivemind-decentralizes-ovos-core">the hivemind decentralizes ovos-core</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#the-hivemind-encrypts-the-messagebus">the hivemind encrypts the messagebus</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#the-hivemind-authenticates-the-messagebus">the hivemind authenticates the messagebus</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#the-hivemind-safely-exposes-ovos-to-the-web">the hivemind safely exposes OVOS to the web</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#the-hivemind-isolates-the-messagebus">the hivemind isolates the messagebus</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#the-hivemind-is-a-protocol-that-transparently-integrates-with-ovos">the hivemind is a protocol that transparently integrates with OVOS</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#the-hivemind-can-be-used-to-integrate-ovos-with-any-platform">the hivemind can be used to integrate OVOS with any platform</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">OVOS Persona</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../14_localhive/">LocalHive</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Terminals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Bridges</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_hive/">Hive Messages</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Minds</li>
+      <li class="breadcrumb-item active">OpenVoiceOS</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="openvoiceos-hiveminds-natural-language-backbone">OpenVoiceOS - HiveMind's Natural Language Backbone</h1>
+<p><img alt="img_11.png" src="../img_11.png" /></p>
+<p>Hivemind-core is the reference integrations with OpenVoiceOS</p>
+<h2 id="install">Install</h2>
+<p>Install from <a href="https://github.com/JarbasHiveMind/HiveMind-core/">Github</a></p>
+<h2 id="usage">Usage</h2>
+<p>Everything is done via the <code>hivemind-core</code> command, see <a href="../03_pairing/">pairing</a> for more info</p>
+<pre><code class="language-shell">$ hivemind-core --help
+Usage: hivemind-core [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  add-client     add credentials for a client
+  allow-msg      allow message types sent from a client
+  delete-client  remove credentials for a client
+  list-clients   list clients and credentials
+  listen         start listening for HiveMind connections
+</code></pre>
+<pre><code class="language-shell">$ hivemind-core listen --help
+Usage: hivemind-core listen [OPTIONS]
+
+  start listening for HiveMind connections
+
+Options:
+  --host TEXT       HiveMind host
+  --port INTEGER    HiveMind port number
+  --ssl BOOLEAN     use wss://
+  --cert_dir TEXT   HiveMind SSL certificate directory
+  --cert_name TEXT  HiveMind SSL certificate file name
+  --help            Show this message and exit.
+</code></pre>
+<h2 id="why">Why</h2>
+<p>HiveMind can be used to build many things, theres some jargon and lots of stuff potentially going on, let's explore what it can do, and by the end hopefully you will understand how it relates to OpenVoiceOS</p>
+<ul>
+<li><a href="#the-hivemind-is-a-ovos-add-on">the hivemind is a OVOS add-on</a></li>
+<li><a href="#the-hivemind-connects-devices">the hivemind connects devices</a></li>
+<li><a href="#the-hivemind-decentralizes-ovos-core">the hivemind decentralizes ovos-core</a></li>
+<li><a href="#the-hivemind-encrypts-the-messagebus">the hivemind encrypts the messagebus</a></li>
+<li><a href="#the-hivemind-authenticates-the-messagebus">the hivemind authenticates the messagebus</a></li>
+<li><a href="#the-hivemind-safely-exposes-ovos-to-the-web">the hivemind safely exposes OVOS to the web</a></li>
+<li><a href="#the-hivemind-isolates-the-messagebus">the hivemind isolates the messagebus</a></li>
+<li><a href="#the-hivemind-is-a-protocol-that-transparently-integrates-with-ovos">the hivemind is a protocol that transparently integrates with OVOS</a></li>
+<li><a href="#the-hivemind-can-be-used-to-integrate-ovos-with-any-platform">the hivemind can be used to integrate OVOS with any platform</a></li>
+</ul>
+<hr />
+<h4 id="the-hivemind-is-a-ovos-add-on">the hivemind is a OVOS add-on</h4>
+<p>Since the hivemind is focused on OVOS, let's start there</p>
+<ul>
+<li>step 1: install <a href="https://github.com/OpenVoiceOS/ovos-core">ovos-core</a> / own a <a href="https://www.kickstarter.com/projects/aiforeveryone/mycroft-mark-ii-the-open-voice-assistant">mycroft device</a> / install a <a href="https://github.com/ChanceNCounter/awesome-mycroft-community#distributions-images-projects-shipping-mycroft">project shipping mycroft</a></li>
+<li>step 2: run <a href="https://github.com/JarbasHiveMind/HiveMind-core/blob/dev/examples/mycroft_master.py">hivemind-core</a> in that device</li>
+<li>step 3: :tada:</li>
+</ul>
+<p>This is the gist of it, you have a voice assistant and it can do things! It has a brain of sorts</p>
+<p>I will refer to this as the <em>OVOS node</em> in the other examples</p>
+<p>Ok, we installed it but still don't know anything about the hivemind, what does it do?</p>
+<hr />
+<h4 id="the-hivemind-connects-devices">the hivemind connects devices</h4>
+<p>If you are like me and live in the terminal, wouldn't it be nice to just ask a quick question?</p>
+<ul>
+<li>step 1: install the <a href="https://github.com/OpenJarbas/HiveMind-cli">cli terminal</a> and <a href="https://github.com/JarbasHiveMind/HiveMind-core/blob/dev/examples/add_keys.py">register it</a> (<strong>see below</strong>) in the OVOS node</li>
+<li>step 2: if auto discovery is enabled in the OVOS node it will auto connect, alternatively you can specify an ip address directly</li>
+<li>step 3 :tada:</li>
+</ul>
+<p>isnt this the same thing as the mycroft debug cli but with extra work? </p>
+<p>No! the terminal is running in your laptop and OVOS is in a different room of the house</p>
+<hr />
+<h4 id="the-hivemind-decentralizes-ovos-core">the hivemind decentralizes ovos-core</h4>
+<p>With the hive mind we can create all kinds of thin clients that don't actually run OVOS</p>
+<ul>
+<li>step 1: install the <a href="https://github.com/JarbasHiveMind/HiveMind-voice-sat">voice satellite</a> or the <a href="https://github.com/JarbasHiveMind/HiveMind-PTT">push to talk node</a>, eg, in a <a href="https://github.com/JarbasHiveMind/HiveMind-PTT/blob/respeaker2mic/respeaker.mp4">raspberry pi 0</a><ul>
+<li>NOTE: PTT is in the process of being merged into the voice satellite</li>
+</ul>
+</li>
+<li>step 2: if auto discovery is enabled in the OVOS node it will auto connect, alternatively you can specify an ip address directly</li>
+<li>step 3 :tada:</li>
+</ul>
+<p>Now you can access the <em>OVOS node</em> anywhere in your house, get a microphone in each room!</p>
+<hr />
+<h4 id="the-hivemind-encrypts-the-messagebus">the hivemind encrypts the messagebus</h4>
+<p>I have seen many people host OVOS in the cloud, but the messagebus in unencrypted and doesn't even <a href="https://github.com/MycroftAI/mycroft-core/pull/1148">support ssl</a>, a common solution is to setup nginx and/or <a href="https://github.com/OpenVoiceOS/ovos-docker">smartgic docker image</a></p>
+<p>hivemind supports ssl connections, and will even auto generate self signed certificates, however self signed certificates are <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">unsafe</a></p>
+<p>managing ssl certificates at home can get messy really fast, as part of the <a href="https://jarbashivemind.github.io/HiveMind-community-docs/pairing/">registration process</a> the hivemind will AES encrypt every payload. This makes ssl essentially optional</p>
+<ul>
+<li>step 1: install the <a href="https://github.com/JarbasHiveMind/HiveMind-webchat">local webchat</a></li>
+<li>step 2: open <code>http://{ip_address}:9090</code> in your browser</li>
+<li>step 3: :tada:</li>
+</ul>
+<p>NOTE: currently device <code>password</code> is assumed to be pre shared out of band to ensure a human in the loop</p>
+<hr />
+<h4 id="the-hivemind-authenticates-the-messagebus">the hivemind authenticates the messagebus</h4>
+<p>the message bus is <a href="https://github.com/Nhoya/MycroftAI-RCE">a privacy nightmare and should be closed from the outside world</a>, anyone can connect to it and capture every single thing going on in "OVOS's nervous system" or inject new commands</p>
+<ul>
+<li>step 1: install <a href="https://github.com/OpenVoiceOS/ovos_utils">ovos_utils</a> on your <em>OVOS node</em> (or get it's ip address)</li>
+<li>step 2: run the <a href="https://github.com/OpenVoiceOS/ovos_utils/blob/dev/examples/count_utterances.py">ovos_utils metrics</a> example with that ip address</li>
+<li>step 3: :question: (spyware)</li>
+</ul>
+<p>By default the hivemind requires authentication, think of this like the token you would be given for any http api, unregistered clients can not connect to the hivemind</p>
+<p>This is why hivemind has a <a href="https://jarbashivemind.github.io/HiveMind-community-docs/pairing/">registration process</a></p>
+<hr />
+<h4 id="the-hivemind-safely-exposes-ovos-to-the-web">the hivemind safely exposes OVOS to the web</h4>
+<p>since there is a local chat node, can we get OVOS on a server and expose it to the public?</p>
+<p>Yes! There is a catalan voice assistant built on top the hivemind, you can <a href="https://ona.assistent.cat/">test it</a> and check <a href="https://github.com/assistent-cat/ona">github</a></p>
+<ul>
+<li>step 1: install the <a href="https://github.com/JarbasHiveMind/HiveMind-flask-template">flask chatroom template</a></li>
+<li>step 2: navigate to <code>http://{ip_address}:8081</code></li>
+<li>step 3 :tada:</li>
+</ul>
+<hr />
+<h4 id="the-hivemind-isolates-the-messagebus">the hivemind isolates the messagebus</h4>
+<p>I don't care about hackers and privacy, its all in my super safe network, Why not connect to the messagebus directly like the <a href="https://github.com/MycroftAI/Mycroft-Android">android passthrough app</a> does? is the hivemind still needed?</p>
+<ul>
+<li>step 1: install the <a href="https://github.com/MycroftAI/Mycroft-Android">android app</a></li>
+<li>step 2: get the ip address of your <em>OVOS node</em> and set the url as <code>ws://{ip_address}:8181</code></li>
+<li>step 3: :x: (disable the firewall in OVOS device)</li>
+<li>step 4: :question: </li>
+</ul>
+<p>When you use the android app you will notice that you get the answers from any question asked in the actual OVOS device in your phone, and that your device speaks everything you ask from the phone out loud.</p>
+<p>this is solved by including proper metadata in the bus message.context, you can read more about how ovos-core routes messages internally in <a href="https://github.com/JarbasHiveMind/HiveMind-core/wiki/(ovos-core)-message-routing">the wiki</a>. each connected client only receives what it should, not everything</p>
+<hr />
+<h4 id="the-hivemind-is-a-protocol-that-transparently-integrates-with-ovos">the hivemind is a protocol that transparently integrates with OVOS</h4>
+<p>can we connect the android app using hivemind?</p>
+<ul>
+<li>step 1: install the <a href="https://github.com/MycroftAI/Mycroft-Android">android app</a></li>
+<li>step 2: get the ip address of your <em>OVOS node</em> and set the url as <code>wss://{ip_address}:5678?authorization={encoded}</code><ul>
+<li>TODO this <a href="">url</a> will generate the encoded url for you</li>
+<li>decoding <a href="https://github.com/JarbasHiveMind/HiveMind-core/blob/dev/jarbas_hive_mind/nodes/master.py#L40">#</a> encoding <a href="https://github.com/JarbasHiveMind/hivemind_websocket_client/blob/master/hivemind_bus_client/client.py#L102">#</a> encoding javascript <a href="https://github.com/JarbasHiveMind/HiveMind-js/blob/master/static/js/hivemind.js#L92">#</a></li>
+<li>TODO need a flag in hivemind-core to support this (assume all messages are payloads of <a href="https://github.com/JarbasHiveMind/HiveMind-core/wiki/Messages#OVOS-messages">type "bus"</a>) per client (?)</li>
+</ul>
+</li>
+<li>step 3 :x: <strong>NOT YET</strong>!</li>
+</ul>
+<p>Does this mean we can turn any OVOS thingy in a hivemind node? we are getting there...</p>
+<ul>
+<li>isolation</li>
+<li>authentication</li>
+<li>NO ENCRYPTION  :x:</li>
+</ul>
+<hr />
+<h4 id="the-hivemind-can-be-used-to-integrate-ovos-with-any-platform">the hivemind can be used to integrate OVOS with any platform</h4>
+<p>How many times have you wanted to integrate OVOS with a chat platform? maybe just for a quick demo?</p>
+<ul>
+<li>step 1: install the <a href="https://github.com/JarbasHiveMind/HiveMind-HackChatBridge">hackchat bridge</a></li>
+<li>step 2: go the newly created channel and invite anyone to check it out</li>
+<li>step 3 :tada: <strong>shared OVOS with friends</strong></li>
+</ul>
+<p>What about something more useful?</p>
+<ul>
+<li>step 1: install the <a href="https://github.com/JarbasHiveMind/HiveMind_mattermost_bridge">mattermost bridge</a></li>
+<li>step 2: create skills and tell your coworkers how to use them in their workflow</li>
+<li>step 3 :tada: <strong>OVOS is a productivity tool</strong></li>
+</ul>
+<p>Even if not interested in exposing it to the public there are some private and secure ways to interact with your <em>OVOS node</em></p>
+<ul>
+<li>step 1: install the <a href="https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge">deltachat bridge</a></li>
+<li>step 2: install <a href="https://delta.chat/en">ðeltachat</a> in your phone</li>
+<li>step 3 :tada: <strong>control OVOS from your phone</strong></li>
+</ul>
+<p>How can you use the hivemind to integrate with an existing service, maybe it's for costumer support on some platform</p>
+<ul>
+<li>step 1: install the <a href="https://github.com/JarbasHiveMind/HiveMind-twitch-bridge">twitch bridge</a> </li>
+<li>step 2: create skills to provide support to your users<ul>
+<li>TIP: add a greeting and help command</li>
+</ul>
+</li>
+<li>step 3 :tada: <strong>OVOS is a chatbot</strong></li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../05_presence/" class="btn btn-neutral float-left" title="Auto Discovery"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../08_persona/" class="btn btn-neutral float-right" title="OVOS Persona">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../05_presence/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../08_persona/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

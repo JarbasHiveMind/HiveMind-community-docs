@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/12_hive/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Hive Messages - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Hive Messages";
+        var mkdocs_page_input_path = "12_hive.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/12_hive/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_create/">Create a Hive</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Minds</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_ovos/">OpenVoiceOS</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">OVOS Persona</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../14_localhive/">LocalHive</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Terminals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Bridges</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Hive Messages</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#payload-messages">Payload Messages</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#bus">Bus</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#shared-bus">Shared Bus</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#transport-messages">Transport Messages</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#broadcast">Broadcast</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#escalate">Escalate</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#propagate">Propagate</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Developers</li>
+      <li class="breadcrumb-item active">Hive Messages</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="message-types">Message types</h1>
+<p>The HiveMind can be seen as a global OpenVoiceOS bus shared across devices, but not everyone gets every message!</p>
+<p>Messages consist of 2 parts, a <code>message_type</code> and a <code>payload</code>.</p>
+<p>The <code>message_type</code> defines how the message is routed. Each node may ignore specific <code>message_type</code>s (either globally or per client) depending on its configuration.</p>
+<p>The payload can be another <code>HiveMessage</code>, a OpenVoiceOS <code>Message</code>, or even binary, depending on the <code>message_type</code>.</p>
+<ul>
+<li><a href="#message-types">Message types</a></li>
+<li><a href="#payload-messages">Payload Messages</a><ul>
+<li><a href="#bus">Bus</a></li>
+<li><a href="#shared-bus">Shared Bus</a></li>
+</ul>
+</li>
+<li><a href="#transport-messages">Transport Messages</a><ul>
+<li><a href="#broadcast">Broadcast</a></li>
+<li><a href="#escalate">Escalate</a></li>
+<li><a href="#propagate">Propagate</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="payload-messages">Payload Messages</h2>
+<p>the payload of these messages is a OVOS <code>Message</code> object</p>
+<h4 id="bus">Bus</h4>
+<p><code>BUS</code> is single hop and flows from <code>slave -&gt; master</code> and <code>master -&gt; slave</code></p>
+<p>when master receives a <code>BUS</code> message, it will check it's global <code>whitelist/blacklist</code> and slave permissions, if the slave is authorized to inject that message in the <code>ovos-core</code> messagebus then it will be injected. Any messages from master's <code>ovos-core</code> that are a direct response to the injected message will be forwarded back to the slave</p>
+<p>Permissions can be defined as a combination of <code>msg_type</code>, <code>intent_type</code>, <code>skill_id</code>, <code>accessKey</code> and <code>ip_address</code> rules</p>
+<p>you can find the dedicated page on how these messages are handled by OVOS <a href="../13_mycroft/">here</a></p>
+<p>Valid payloads for OVOS can be found <a href="https://github.com/OpenVoiceOS/message_spec">here</a></p>
+<p><img alt="" src="https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/bus.gif" /></p>
+<p>The most common example will be injecting a user utterance and receiving the responses, here is the output from <code>master -&gt; slave</code> to the injected utterance "tell me a joke"</p>
+<pre><code>{'msg_type': 'bus', 'payload': {'type': 'skill.converse.request', 'data': {'skill_id': 'mycroft-joke.mycroftai', 'utterances': ['tell me a joke'], 'lang': 'en-us'}, 'context': {'source': 'HiveMind', 'destination': 'tcp4:127.0.0.1:52772', 'platform': 'HiveMessageBusClientV0.0.1', 'peer': 'tcp4:127.0.0.1:52772', 'client_name': 'HiveMindV0.7'}}, 'route': [], 'node': None, 'source_peer': 'tcp4:0.0.0.0:5678'}
+{'msg_type': 'bus', 'payload': {'type': 'mycroft-joke.mycroftai:JokingIntent', 'data': {'intent_type': 'mycroft-joke.mycroftai:JokingIntent', 'mycroft_joke_mycroftaiJoke': 'joke', 'target': None, 'confidence': 0.3333333333333333, '__tags__': [{'match': 'joke', 'key': 'joke', 'start_token': 3, 'entities': [{'key': 'joke', 'match': 'joke', 'data': [['joke', 'mycroft_joke_mycroftaiJoke']], 'confidence': 1.0}], 'end_token': 3, 'from_context': False}], 'utterance': 'tell me a joke'}, 'context': {'source': 'HiveMind', 'destination': 'tcp4:127.0.0.1:52772', 'platform': 'HiveMessageBusClientV0.0.1', 'peer': 'tcp4:127.0.0.1:52772', 'client_name': 'HiveMindV0.7'}}, 'route': [], 'node': None, 'source_peer': 'tcp4:0.0.0.0:5678'}
+{'msg_type': 'bus', 'payload': {'type': 'mycroft.skill.handler.start', 'data': {'name': 'JokingSkill.handle_general_joke'}, 'context': {'source': 'HiveMind', 'destination': 'tcp4:127.0.0.1:52772', 'platform': 'HiveMessageBusClientV0.0.1', 'peer': 'tcp4:127.0.0.1:52772', 'client_name': 'HiveMindV0.7'}}, 'route': [], 'node': None, 'source_peer': 'tcp4:0.0.0.0:5678'}
+{'msg_type': 'bus', 'payload': {'type': 'speak', 'data': {'utterance': &quot;When Chuck Norris breaks the build, you can't fix it, because there is not a single line of code left.&quot;, 'expect_response': False, 'meta': {'skill': 'JokingSkill'}}, 'context': {'source': 'HiveMind', 'destination': 'tcp4:127.0.0.1:52772', 'platform': 'HiveMessageBusClientV0.0.1', 'peer': 'tcp4:127.0.0.1:52772', 'client_name': 'HiveMindV0.7'}}, 'route': [], 'node': None, 'source_peer': 'tcp4:0.0.0.0:5678'}
+{'msg_type': 'bus', 'payload': {'type': 'mycroft.skill.handler.complete', 'data': {'name': 'JokingSkill.handle_general_joke'}, 'context': {'source': 'HiveMind', 'destination': 'tcp4:127.0.0.1:52772', 'platform': 'HiveMessageBusClientV0.0.1', 'peer': 'tcp4:127.0.0.1:52772', 'client_name': 'HiveMindV0.7'}}, 'route': [], 'node': None, 'source_peer': 'tcp4:0.0.0.0:5678'}
+</code></pre>
+<h4 id="shared-bus">Shared Bus</h4>
+<p><code>SHARED_BUS</code> is single hop and flows from <code>slave -&gt; master</code></p>
+<p>the master passively monitors everything going on the slave <code>ovos-core</code> instance's <code>messagebus</code></p>
+<p><code>SHARED_BUS</code> needs to be explicitly enabled in the slave device configuration, by default the <code>ovos-core</code> bus is not shared</p>
+<p>in the case of terminals, messages of the type <code>BUS</code> are injected in their master, these will also be forwarded as <code>SHARED_BUS</code> to the next master</p>
+<p><img alt="" src="https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/shared_bus.gif" /></p>
+<h2 id="transport-messages">Transport Messages</h2>
+<p>the payload of these messages is another <code>HiveMessage</code> object</p>
+<h4 id="broadcast">Broadcast</h4>
+<p><code>BROADCAST</code> is multi-hop and flows from <code>master -&gt; slave</code></p>
+<p>Send message to all of the recipient's slaves ("send the message down")</p>
+<p><img alt="" src="https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/broadcast.gif" /></p>
+<h4 id="escalate">Escalate</h4>
+<p><code>ESCALATE</code> is multi-hop and flows from <code>slave -&gt; master</code></p>
+<p>Send message up the authority chain, never to a slave ("send the message up")</p>
+<p><img alt="" src="https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/escalate.gif" /></p>
+<h4 id="propagate">Propagate</h4>
+<p><code>PROPAGATE</code> is multi-hop and flows both from <code>master -&gt; slave</code> and <code>slave -&gt; master</code></p>
+<p>Send message to all your direct connections ("send the message everywhere")</p>
+<p><img alt="" src="https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/propagate.gif" /></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../11_devs/" class="btn btn-neutral float-left" title="Libraries"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../13_mycroft/" class="btn btn-neutral float-right" title="OVOS Messages">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../11_devs/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../13_mycroft/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
