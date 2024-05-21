@@ -49,12 +49,16 @@ Options:
 
 The `SHARED_BUS` message is designed for single-hop communication, exclusively flowing **from slave to master**. In this scenario, the master passively monitors the ovos-core message bus on the slave device. It is important to note that the `SHARED_BUS` functionality needs to be explicitly enabled in the slave device configuration, as the default behavior does not involve sharing the ovos-core bus. In the case of terminals, messages of type `BUS` are injected into their respective masters and are simultaneously forwarded as `SHARED_BUS` messages to the subsequent masters in the hierarchy.
 
+> NOTE: this is usually done by [HiveMind Skill](https://github.com/JarbasHiveMind/ovos-skill-fallback-hivemind) if enabled in settings
+
 ![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/shared_bus.gif)
 
 
 ## Transport Messages
 
 Transport messages contain another `HiveMessage` object as their payload.
+
+> NOTE: these message types only matter for [Nested Hives](https://jarbashivemind.github.io/HiveMind-community-docs/15_nested/)
 
 ### Broadcast Message
 
