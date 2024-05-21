@@ -18,21 +18,6 @@ Once you have at least 1 Mind in your hive you can start connecting things to it
 
 `hivemind-core` provides a command line interface to manage client permissions
 
-```bash
-$ hivemind-core --help
-Usage: hivemind-core [OPTIONS] COMMAND [ARGS]...
-
-Options:
-  --help  Show this message and exit.
-
-Commands:
-  add-client     add credentials for a client
-  allow-msg      allow message types sent from a client
-  delete-client  remove credentials for a client
-  list-clients   list clients and credentials
-  listen         start listening for HiveMind connections
-```
-
 ```shell
 $ hivemind-core add-client --help
 Usage: hivemind-core add-client [OPTIONS] [NAME] [ACCESS_KEY] [PASSWORD]
