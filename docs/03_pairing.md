@@ -63,7 +63,7 @@ Options:
   --help  Show this message and exit.
 ```
 
-## Command Line
+## Command Line Pairing
 
 You need to register the satellite devices in the HiveMind **server** as discussed above
 
@@ -108,7 +108,7 @@ $ hivemind-client test-identity
 
 If the identity test passed, then your satellite is paired with the Hive!
 
-## HiveMind GGWave
+## Audio Pairing via GGWave
 
 Data over sound for HiveMind
 
@@ -137,7 +137,6 @@ workflow:
 - satellite devices get the ack then connect to received host
 
 ![img_9.png](img_9.png)
-
 
 - manually exchanged string [via browser](https://jarbashivemind.github.io/hivemind-ggwave/)
   
