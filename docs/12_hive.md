@@ -45,6 +45,22 @@ The most common example will be injecting a user utterance and receiving the res
 {'msg_type': 'bus', 'payload': {'type': 'mycroft.skill.handler.complete', 'data': {'name': 'JokingSkill.handle_general_joke'}, 'context': {'source': 'HiveMind', 'destination': 'tcp4:127.0.0.1:52772', 'platform': 'HiveMessageBusClientV0.0.1', 'peer': 'tcp4:127.0.0.1:52772', 'client_name': 'HiveMindV0.7'}}, 'route': [], 'node': None, 'source_peer': 'tcp4:0.0.0.0:5678'}
 ```
 
+##### Secret Bus Messages
+
+bus messages may also be encrypted with a node [public_key](https://jarbashivemind.github.io/HiveMind-community-docs/03_pairing/#the-identity-file), this is usually done in `ESCALATE` or `PROPAGATE` payloads. It ensures intermediate nodes are unable to read the message contents
+
+A encrypted BUS message is a regular bus message, but has the type `"hive.identity_encrypted"` and data `{"ciphertext": "XXXXXXX"}`
+
+Where `"ciphertext"` can only be decoded by the target Node, not by any intermediary
+
+When a message needs to be sent securely, it is encrypted using the recipient node's public PGP key. This ensures that only the intended recipient, who possesses the corresponding private PGP key, can decrypt the message.
+
+After encryption, the message is signed with the sender's private PGP key. This provides authentication and integrity, ensuring that the message has not been tampered with and confirming the sender's identity.
+
+Upon receiving an encrypted message, the recipient node attempts to decrypt it using its private PGP key. If successful, the message payload is then processed and emitted internally.
+
+the target node public key needs to be known beforehand if you want to send secret messages
+
 #### Shared Bus
 
 `SHARED_BUS` is single hop and flows from `slave -> master`
