@@ -68,9 +68,9 @@ A Mind may decide to broadcast a message at any time
 
 ![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/broadcast.gif)
 
-A broadcast message may also contain a `"target_side_id"`
+A broadcast message may also contain a `"target_site_id"`
 
-When a slave receives a broadcast message it will check if it's own `"side_id"` matches the `"target_side_id"`, and if it does, the BUS message is injected into the slave internal bus
+When a slave receives a broadcast message it will check if it's own `"site_id"` matches the `"target_site_id"`, and if it does, the BUS message is injected into the slave internal bus
 
 This allows for example a Mind to make all the satellites in `site_id: "kitchen"` speak a message out loud
 
