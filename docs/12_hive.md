@@ -53,6 +53,8 @@ A encrypted BUS message is a regular bus message, but has the type `"hive.identi
 
 Where `"ciphertext"` can only be decoded by the target Node, not by any intermediary
 
+> Intermediate nodes do not know **the contents** of the message, nor **who the recipient is**
+
 When a message needs to be sent securely, it is encrypted using the recipient node's public PGP key. This ensures that only the intended recipient, who possesses the corresponding private PGP key, can decrypt the message.
 
 After encryption, the message is signed with the sender's private PGP key. This provides authentication and integrity, ensuring that the message has not been tampered with and confirming the sender's identity.
@@ -60,6 +62,7 @@ After encryption, the message is signed with the sender's private PGP key. This 
 Upon receiving an encrypted message, the recipient node attempts to decrypt it using its private PGP key. If successful, the message payload is then processed and emitted internally.
 
 the target node public key needs to be known beforehand if you want to send secret messages
+
 
 #### Shared Bus
 
