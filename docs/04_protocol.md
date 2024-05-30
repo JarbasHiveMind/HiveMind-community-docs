@@ -64,9 +64,15 @@ Transport messages contain another `HiveMessage` object as their payload.
 
 The `BROADCAST` message plays a crucial role in multi-hop communication, flowing **from a master to its associated slaves**. It serves as a means to disseminate a message to all slaves connected to a particular master, effectively "sending the message down" the authority chain. Through the use of broadcast messages, information or commands can be efficiently transmitted throughout the hive, facilitating widespread collaboration.
 
+A Mind may decide to broadcast a message at any time
+
 ![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/broadcast.gif)
 
-A Mind may decide to broadcast a message at any time
+A broadcast message may also contain a `"target_side_id"`
+
+When a slave receives a broadcast message it will check if it's own `"side_id"` matches the `"target_side_id"`, and if it does, the BUS message is injected into the slave internal bus
+
+This allows for example a Mind to make all the satellites in `site_id: "kitchen"` speak a message out loud
 
 ### Escalate Message
 

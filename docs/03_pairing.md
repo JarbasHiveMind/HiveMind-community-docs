@@ -84,3 +84,47 @@ workflow:
 - with a [talking button](https://github.com/ggerganov/ggwave/discussions/27)
 
 <video src="https://user-images.githubusercontent.com/1991296/166411509-5e1b9bcb-3655-40b1-9dc3-9bec72889dcf.mp4" width="320"></video>
+
+
+## The Identity File
+
+The identity file is a crucial component in the HiveMind ecosystem, as it stores the necessary credentials and settings for a node (device) to connect and communicate within the HiveMind network. This file ensures that the node can authenticate and maintain secure connections with other nodes.
+
+While connection parameters can be set at launch time, this file provides a way to reuse them across the whole OS
+
+### Contents of the identity file
+
+The identity file, typically located at `~/.config/hivemind/_identity.json`, contains the following information:
+
+| Field           | Description                                                                                  |
+|-----------------|----------------------------------------------------------------------------------------------|
+| `name`          | A human-readable label for the node, which is not guaranteed to be unique.                   |
+| `password`      | The password used to generate a session AES key for secure communication within the HiveMind network. |
+| `access_key`    | A unique access key assigned to the node for identification and authentication.              |
+| `site_id`       | An identifier for the physical location or context in which the node is operating.           |
+| `default_port`  | The default port number used to connect to the HiveMind core.                                |
+| `default_master`| The default host (address) of the HiveMind core that the node connects to.                   |
+| `public_key`    | The ASCII-encoded public PGP key used for authenticating the node within the HiveMind network.|
+| `secret_key`    | The path to the private PGP key file, which uniquely identifies the node and proves its identity. |
+
+By maintaining these details in the identity file, nodes can securely and efficiently participate in the HiveMind network, facilitating a seamless and secure distributed communication environment.
+
+If a node needs to securely communicate or authenticate another (that isn't the master) it can do so via the public key
+
+#### Public Key
+
+The Public Key in the identity file is part of a PGP key pair used to uniquely identify the node. This key serves several purposes:
+
+1. **Unique Node Identification:** The PGP key uniquely identifies this node within the HiveMind network, ensuring that each node can be distinctly recognized.
+   
+2. **Inter-Node Authentication:** Nodes can use the PGP key to authenticate each other, providing a layer of security that ensures only authorized nodes can communicate within the network.
+
+3. **Network Independence:** The PGP key allows nodes to identify each other regardless of the specific HiveMind core (mind) they are connected to. This means that even if nodes switch Minds, they can still recognize and authenticate each other using their PGP keys.
+
+#### Private Key
+
+The Private Key is the only way for a node to read a message encrypted with it's corresponding public key. This file must be kept safe and private at all times!
+
+By default, the private key is stored in `~/.config/hivemind/HiveMindComs.asc`
+
+If you believe your private key has been compromised, or simply want to change keys you can use the `hivemind-client reset-pgp` command
