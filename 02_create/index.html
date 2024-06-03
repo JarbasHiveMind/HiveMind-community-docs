@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/02_create/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Create a Hive - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Create a Hive";
+        var mkdocs_page_input_path = "02_create.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/02_create/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../01_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Create a Hive</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#minds">Minds</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#managing-clients">Managing Clients</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#terminals-satellites">Terminals / Satellites</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#bridges">Bridges</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Minds</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_ovos/">OpenVoiceOS</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">OVOS Persona</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../14_localhive/">LocalHive</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Terminals</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Bridges</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_hive/">Hive Messages</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">About</li>
+      <li class="breadcrumb-item active">Create a Hive</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="creating-a-hive">Creating a Hive</h1>
+<h2 id="minds">Minds</h2>
+<p>When creating a Hive the first step is to add a Mind to it, this is "the brain" of the hive and is expected to handle natural language queries</p>
+<ul>
+<li><a href="https://github.com/JarbasHiveMind/HiveMind-core/">hivemind-core</a> -&gt; connects to an existing ovos-core setup</li>
+<li><a href="https://github.com/JarbasHiveMind/hivemind-persona">hivemind-persona</a> -&gt; launch a OVOS persona behind a hivemind server, this can for example be ChatGPT</li>
+<li><a href="https://github.com/JarbasHiveMind/MultiMind">MultiMind</a> -&gt; launch a dedicated ovos-core per access key</li>
+<li><a href="https://github.com/JarbasHiveMind/LocalHive">LocalHive</a> -&gt; a mind that loads OVOS skills fully isolated, usable on localhost only</li>
+<li><a href="https://github.com/JarbasHiveMind/Fakecroft-DDG">DuckDuckGo</a> -&gt; proof of concept of how to turn anything into a Mind</li>
+</ul>
+<p>Once you have at least 1 Mind in your hive you can start connecting things to it!</p>
+<p><img alt="imagem" src="https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/fb241c4d-ca84-4b47-b917-b398b16f93bd" /></p>
+<h3 id="managing-clients">Managing Clients</h3>
+<p><code>hivemind-core</code> provides a command line interface to manage client permissions</p>
+<pre><code class="language-shell">$ hivemind-core add-client --help
+Usage: hivemind-core add-client [OPTIONS] [NAME] [ACCESS_KEY] [PASSWORD]
+                                [CRYPTO_KEY]
+
+  add credentials for a client
+
+Options:
+  --help  Show this message and exit.
+</code></pre>
+<pre><code class="language-shell">$ hivemind-core delete-client --help
+Usage: hivemind-core delete-client [OPTIONS] NODE_ID
+
+  remove credentials for a client
+
+Options:
+  --help  Show this message and exit.
+</code></pre>
+<pre><code class="language-shell">$ hivemind-core list-clients --help
+Usage: hivemind-core list-clients [OPTIONS]
+
+  list clients and credentials
+
+Options:
+  --help  Show this message and exit.
+
+</code></pre>
+<pre><code class="language-shell">$ hivemind-core allow-msg --help
+Usage: hivemind-core allow-msg [OPTIONS] MSG_TYPE [NODE_ID]
+
+  allow message types sent from a client
+
+Options:
+  --help  Show this message and exit.
+</code></pre>
+<h2 id="terminals-satellites">Terminals / Satellites</h2>
+<p>A terminal is something that allows you to interact with your hive, it connects to a Mind setup in the previous step</p>
+<ul>
+<li><a href="https://github.com/OpenJarbas/HiveMind-voice-sat">Voice Satellite</a> - processes audio on satellite and sends natural language queries to a mind</li>
+<li><a href="https://github.com/OpenJarbas/HiveMind-webchat">Webchat</a> -&gt; webchat to connect from browser directly to a mind</li>
+<li><a href="https://github.com/JarbasHiveMind/HiveMind-flask-template">Flask Chatroom</a> - reference implementation for a web application that connects to a mind backend side</li>
+<li><a href="https://github.com/OpenJarbas/HiveMind-cli">Remote Cli</a> - a command line application to chat with a Mind</li>
+</ul>
+<p>See the <a href="https://jarbashivemind.github.io/HiveMind-community-docs/03_pairing/">pairing</a> documentation for further details</p>
+<h2 id="bridges">Bridges</h2>
+<p>A bridge connects some existing service to a Mind, it is like a terminal but depends on some intermediate service</p>
+<ul>
+<li><a href="https://github.com/JarbasHiveMind/HiveMind-matrix-bridge">Matrix Bridge</a></li>
+<li><a href="https://github.com/OpenJarbas/HiveMind_mattermost_bridge">Mattermost Bridge</a></li>
+<li><a href="https://github.com/OpenJarbas/HiveMind-HackChatBridge">HackChat Bridge</a></li>
+<li><a href="https://github.com/OpenJarbas/HiveMind-twitch-bridge">Twitch Bridge</a></li>
+<li><a href="https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge">DeltaChat Bridge</a></li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../01_terminology/" class="btn btn-neutral float-left" title="Terminology"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../15_nested/" class="btn btn-neutral float-right" title="Nested Hives">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../01_terminology/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../15_nested/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
