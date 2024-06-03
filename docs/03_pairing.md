@@ -109,7 +109,9 @@ The identity file, typically located at `~/.config/hivemind/_identity.json`, con
 
 By maintaining these details in the identity file, nodes can securely and efficiently participate in the HiveMind network, facilitating a seamless and secure distributed communication environment.
 
-If a node needs to securely communicate or authenticate another (that isn't the master) it can do so via the public key
+If a node needs to securely communicate or authenticate another (that isn't the master) it can do so via the public key. See the section for [intercom messages](https://jarbashivemind.github.io/HiveMind-community-docs/12_hive/#intercom) for more details
+
+Groups of devices can also be targeted via their `site_id`, for example, we can [propagate](https://jarbashivemind.github.io/HiveMind-community-docs/04_protocol/#propagate-message) a speak message to announce dinner is ready or [broadcast](https://jarbashivemind.github.io/HiveMind-community-docs/04_protocol/#broadcast-message) a bus message to order all devices in a certain area equipped with a camera to take a picture. 
 
 #### Public Key
 

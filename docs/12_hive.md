@@ -11,6 +11,7 @@ The payload can be another `HiveMessage`, a OpenVoiceOS `Message`, or even binar
 - [Message types](#message-types)
   * [Payload Messages](#payload-messages)
       - [Bus](#bus)
+      - [Intercom](#intercom)
       - [Shared Bus](#shared-bus)
   * [Transport Messages](#transport-messages)
       - [Broadcast](#broadcast)
@@ -45,13 +46,15 @@ The most common example will be injecting a user utterance and receiving the res
 {'msg_type': 'bus', 'payload': {'type': 'mycroft.skill.handler.complete', 'data': {'name': 'JokingSkill.handle_general_joke'}, 'context': {'source': 'HiveMind', 'destination': 'tcp4:127.0.0.1:52772', 'platform': 'HiveMessageBusClientV0.0.1', 'peer': 'tcp4:127.0.0.1:52772', 'client_name': 'HiveMindV0.7'}}, 'route': [], 'node': None, 'source_peer': 'tcp4:0.0.0.0:5678'}
 ```
 
-##### Secret Bus Messages
+#### Intercom
 
-bus messages may also be encrypted with a node [public_key](https://jarbashivemind.github.io/HiveMind-community-docs/03_pairing/#the-identity-file), this is usually done in `ESCALATE` or `PROPAGATE` payloads. It ensures intermediate nodes are unable to read the message contents
+messages may also be encrypted with a node [public_key](https://jarbashivemind.github.io/HiveMind-community-docs/03_pairing/#the-identity-file), this ensures intermediate nodes are unable to read the message contents
 
-A encrypted BUS message is a regular bus message, but has the type `"hive.identity_encrypted"` and data `{"ciphertext": "XXXXXXX"}`
+A encrypted message is a regular hive message, but has the type `"INTERCOM"` and payload `{"ciphertext": "XXXXXXX"}`
 
 Where `"ciphertext"` can only be decoded by the target Node, not by any intermediary
+
+these messages are usually the payload of transport messages such as `ESCALATE` or `PROPAGATE` payloads. 
 
 > Intermediate nodes do not know **the contents** of the message, nor **who the recipient is**
 
@@ -62,7 +65,6 @@ After encryption, the message is signed with the sender's private PGP key. This 
 Upon receiving an encrypted message, the recipient node attempts to decrypt it using its private PGP key. If successful, the message payload is then processed and emitted internally.
 
 the target node public key needs to be known beforehand if you want to send secret messages
-
 
 #### Shared Bus
 
