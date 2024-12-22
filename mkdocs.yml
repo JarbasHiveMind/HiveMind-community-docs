@@ -4,8 +4,7 @@ nav:
     - Home: index.md
     - About:
       - Quick start: 01_quickstart.md
-      - Terminology: 01_terminology.md
-      - Create a Hive: 02_create.md
+      - Terminology: 02_terminology.md
       - Auto Discovery: 05_presence.md
       - Nested Hives: 15_nested.md
     - Nodes:

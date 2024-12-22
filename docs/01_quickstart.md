@@ -2,6 +2,8 @@
 
 This guide will help you get started quickly with the HiveMind platform, allowing you to extend your OpenVoiceOS (OVOS) ecosystem across multiple devices, even with low-resource hardware. HiveMind lets you connect lightweight devices as satellites to a central OVOS hub, offering centralized control and fine-grained permissions.
 
+![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/fb241c4d-ca84-4b47-b917-b398b16f93bd)
+
 ## 🚀 Installation
 
 To begin using HiveMind Core, you need to install the `hivemind-core` package in your OVOS device. This can be done via pip:
