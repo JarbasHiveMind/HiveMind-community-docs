@@ -220,7 +220,7 @@ A **unversioned** binarized message
 1 | 0 | XXXXX | X | XXXXXXXX | <metadata> | <payload>
 ```
 
-A binary message
+A binary payload message
 ```
 1 | 1 | XXXXXXXX | XXXXX | X | XXXXXXXX | <metadata> | XXXX | <payload>
 ```
