@@ -3,7 +3,7 @@
 
 Hivemind leverages [ovos-plugin-manager](), bringing compatibility with hundreds of plugins.
 
-> 💡 **Tip**: OVOS plugins can be used both on *client* and *server* side
+> 💡 OVOS plugins can be used both on *client* and *server* side
 
 | Plugin Type         | Description                                             | Documentation                                                                                   |
 |---------------------|---------------------------------------------------------|-------------------------------------------------------------------------------------------------|
