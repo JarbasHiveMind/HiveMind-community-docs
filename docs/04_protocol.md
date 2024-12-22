@@ -60,7 +60,7 @@ See [hivemind-persona](https://github.com/JarbasHiveMind/hivemind-persona) for a
     - Authorized messages are injected into the master's OVOS-core bus.
     - Direct responses from the master's OVOS-core are forwarded back to the originating slave.
 
-> 💡 Valid payloads for OVOS can be found [here](https://github.com/OpenVoiceOS/message_spec)
+**Command Line**:
 
 ```bash
 $ hivemind-client send-mycroft --help
@@ -80,12 +80,12 @@ Options:
   --help           Show this message and exit.
 ```
 
+> 💡 Valid payloads for OVOS can be found [here](https://github.com/OpenVoiceOS/message_spec)
+
 **Visualization**:
 
 ![BUS Message Flow](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/bus.gif)
 
-**Use Case**: Terminal applications (e.g., voice-sat) inject natural language queries. Other integrations (e.g., Home
-Assistant) may inject specific messages based on their configuration.
 
 ### SHARED_BUS Message
 
@@ -152,16 +152,11 @@ for [Nested Hives](https://jarbashivemind.github.io/HiveMind-community-docs/15_n
 - **Behavior**:
     - Elevates messages up the authority chain for higher-level processing.
 
-
-**Example**: Escalate a OVOS message:
-
-```bash
-$ hivemind-client escalate --msg "intent_failure" --payload "{}"
-```
-
 **Visualization**:
 
 ![Escalate Message Flow](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/escalate.gif)
+
+**Command Line**:
 
 ```bash
 $ hivemind-client escalate --help
@@ -191,6 +186,8 @@ Options:
 **Visualization**:
 
 ![Propagate Message Flow](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/propagate.gif)
+
+**Command Line**:
 
 ```bash
 $ hivemind-client propagate --help
