@@ -42,7 +42,9 @@ The server will now listen for incoming satellite connections.
 ## 🔑 Permissions
 
 HiveMind Core uses a flexible permissions system, where each client's permissions are customizable. By default:
+ 
 - Only essential bus messages are allowed.
+
 - Skills and intents are accessible but can be blacklisted or restricted.
 
 You can manage permissions for clients by using commands like `allow-msg`, `blacklist-msg`, `allow-skill`, and `blacklist-skill`.
@@ -57,16 +59,21 @@ You can manage permissions for clients by using commands like `allow-msg`, `blac
 Here are the basic commands for managing clients and their permissions:
 
 - **Add a new client**:  
-    ```bash
-    hivemind-core add-client --name "satellite_1" --access-key "mykey123" --password "mypass"
-    ```
+
+```bash
+hivemind-core add-client --name "satellite_1" --access-key "mykey123" --password "mypass"
+```
+
 - **List all registered clients**:  
-    ```bash
-    hivemind-core list-clients
-    ```
+
+```bash
+hivemind-core list-clients
+```
+
 - **Start listening for client connections**:  
-    ```bash
-    hivemind-core listen --port 5678
-    ```
+
+```bash
+hivemind-core listen --port 5678
+```
 
 For detailed help on each command, use `--help` (e.g., `hivemind-core add-client --help`).
