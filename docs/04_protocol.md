@@ -10,13 +10,13 @@ The protocol is categorized into two main roles: **Listener Protocol** and **Cli
 
 ### Listener Protocol
 
-- **Accepts**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`
-- **Emits**: `BUS`, `PROPAGATE`, `BROADCAST`
+- **Accepts**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`, `INTERCOM`
+- **Emits**: `BUS`, `PROPAGATE`, `BROADCAST`, `INTERCOM`
 
 ### Client Protocol
 
-- **Accepts**: `BUS`, `PROPAGATE`, `BROADCAST`
-- **Emits**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`
+- **Accepts**: `BUS`, `PROPAGATE`, `BROADCAST`, `INTERCOM`
+- **Emits**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`, `INTERCOM`
 
 ---
 
@@ -31,6 +31,8 @@ See [hivemind-persona](https://github.com/JarbasHiveMind/hivemind-persona) for a
 > ⚠️ All HiveMind servers are expected to handle natural language queries. At a minimum,
 > the `recognizer_loop:utterance` OVOS message must be supported.
 
+> 💡 Use the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) package to send a bus message from the command line
+
 ### BUS Message
 
 - **Purpose**: Single-hop communication between slaves and masters.
@@ -39,7 +41,7 @@ See [hivemind-persona](https://github.com/JarbasHiveMind/hivemind-persona) for a
     - Authorized messages are injected into the master's OVOS-core bus.
     - Direct responses from the master's OVOS-core are forwarded back to the originating slave.
 
-> 💡 Use the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) package to send a bus message from the command line
+> 💡 Valid payloads for OVOS can be found [here](https://github.com/OpenVoiceOS/message_spec)
 
 ```bash
 $ hivemind-client send-mycroft --help
@@ -58,6 +60,7 @@ Options:
   --payload TEXT   ovos message.data json
   --help           Show this message and exit.
 ```
+
 
 #### Permissions
 
@@ -97,6 +100,29 @@ Assistant) may inject specific messages based on their configuration.
 **Visualization**:
 
 ![Shared Bus Message Flow](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/shared_bus.gif)
+
+---
+
+
+### INTERCOM Message
+
+messages may also be encrypted with a node [public_key](https://jarbashivemind.github.io/HiveMind-community-docs/03_pairing/#the-identity-file), this ensures intermediate nodes are unable to read the message contents
+
+A encrypted message is a regular hive message, but has the type `"INTERCOM"` and payload `{"ciphertext": "XXXXXXX"}`
+
+Where `"ciphertext"` can only be decoded by the target Node, not by any intermediary
+
+these messages are usually the payload of transport messages such as `ESCALATE` or `PROPAGATE` payloads. 
+
+> Intermediate nodes do not know **the contents** of the message, nor **who the recipient is**
+
+When a message needs to be sent securely, it is encrypted using the recipient node's public PGP key. This ensures that only the intended recipient, who possesses the corresponding private PGP key, can decrypt the message.
+
+After encryption, the message is signed with the sender's private PGP key. This provides authentication and integrity, ensuring that the message has not been tampered with and confirming the sender's identity.
+
+Upon receiving an encrypted message, the recipient node attempts to decrypt it using its private PGP key. If successful, the message payload is then processed and emitted internally.
+
+the target node public key needs to be known beforehand if you want to send secret messages
 
 ---
 
