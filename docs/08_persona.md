@@ -2,14 +2,18 @@
 
 this is a hivemind Master node, but it is running [ovos-persona](https://github.com/OpenVoiceOS/ovos-persona) instead of connecting to ovos-core
 
-you can use this to expose chatbots and LLMs via hivemind, all clients should be compatible (eg, voice-sat)
+you can use this to expose chatbots and LLMs via hivemind, satellites made for `hivemind-core` should be compatible
+
+> ⚠️ Satellites made specifically for `hivemind-listener` (Sound server) will not work with `hivemind-persona`!
 
 ![img_13.png](img_13.png)
 
+
 ## Install
 
-Install from [Github](https://github.com/JarbasHiveMind/hivemind-persona)
-
+```bash
+pip install hivemind-persona
+```
 
 ## ChatGPT
 
