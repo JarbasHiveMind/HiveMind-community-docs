@@ -21,7 +21,7 @@
 - **Secure Plugin Access**:  
   Running **TTS/STT via HiveMind Listener** requires an access key, offering fine-grained **access control** compared to non-authenticated server plugins.
 
-#### 🚀 Getting Started with HiveMind Listener
+#### Usage
 
 1. **Install HiveMind Listener**:
 
