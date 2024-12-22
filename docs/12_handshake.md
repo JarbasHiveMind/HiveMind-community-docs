@@ -10,11 +10,11 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
 
 ## Handshake Types
 
-1. **Password-Based Handshake**:
+**Password-Based Handshake**:
    - Utilizes a shared password for authentication.
    - Requires both client and server to know the password beforehand.
 
-2. **Public Key Handshake**:
+**Public Key Handshake**:
    - Based on public/private key pairs.
    - The server provides a public key to the client, and the client verifies the server's authenticity.
    - Supports implicit trust for first-time connections (when no public key is available).
@@ -25,13 +25,13 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
 
 ## Workflow: Server Perspective
 
-1. **HELLO Message**:
+**HELLO Message**:
    - The server sends a `HELLO` message to the client containing:
      - Public key (`pubkey`) for key-based handshake.
      - Node ID (`node_id`) for identification.
      - Optional `session_id` for session-based communication.
 
-2. **HANDSHAKE Request**:
+**HANDSHAKE Request**:
    - The server initiates the handshake by sending a `HANDSHAKE` message:
      - Specifies whether to use password-based or public-key-based authentication.
      - Includes optional fields like:
@@ -39,21 +39,21 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
        - `binarize`: Flag for binary protocol support.
        - `password`: Indicator for password-based handshake.
 
-3. **Validate Client's Response**:
+**Validate Client's Response**:
    - If the client provides an envelope:
      - Validate the client's response using the shared password or public key.
      - Update the cryptographic key for secure communication.
-   - If the `crypto_key` flag is set, use the pre-shared cryptographic key directly, skipping the handshake step.
+   - If the `crypto_key` flag is set or the client doesnt answer the handshake, use the pre-shared cryptographic key directly, skipping the handshake step.
 
 ---
 
 ## Workflow: Client Perspective
 
-1. **Receive HELLO Message**:
+**Receive HELLO Message**:
    - Extract the server's public key and node ID from the `HELLO` message.
    - Store the session ID if provided.
 
-2. **Start Handshake**:
+**Start Handshake**:
    - Determine the handshake type based on the server's `HANDSHAKE` request:
      - Password-based handshake:
        - Generate an envelope using the shared password.
@@ -61,7 +61,7 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
        - Verify the server's public key (if available).
        - Generate and send an envelope for authentication.
 
-3. **Handle Validation**:
+**Handle Validation**:
    - If the server sends an envelope for validation:
      - Verify the server's authenticity using the shared password or public key.
      - Update the cryptographic key for secure communication.
