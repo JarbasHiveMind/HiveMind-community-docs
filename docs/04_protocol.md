@@ -18,6 +18,25 @@ The protocol is categorized into two main roles: **Listener Protocol** and **Cli
 - **Accepts**: `BUS`, `PROPAGATE`, `BROADCAST`, `INTERCOM`
 - **Emits**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`, `INTERCOM`
 
+
+### Permissions
+
+Permissions are based on a combination of:
+
+- Access key
+- Allowed Message types
+- Blacklisted Intent types
+- Blacklisted Skill IDs
+
+> 💡 Use the [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core) package to authorize message types or blacklist intents/skills.
+
+**Example**: Allow the "speak" message type:
+
+```bash
+$ hivemind-core allow-msg "speak"
+```
+
+
 ---
 
 ## Payload Messages
@@ -59,25 +78,6 @@ Options:
   --msg TEXT       ovos message type to inject
   --payload TEXT   ovos message.data json
   --help           Show this message and exit.
-```
-
-
-#### Permissions
-
-Permissions can be based on:
-
-- Message type
-- Intent type
-- Skill ID
-- Access key
-- IP address rules
-
-> 💡 Use the [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core) package to authorize message types or blacklist intents/skills.
-
-**Example**: Allow the "speak" message type:
-
-```bash
-$ hivemind-core allow-msg "speak"
 ```
 
 **Visualization**:
