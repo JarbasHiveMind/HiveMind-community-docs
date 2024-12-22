@@ -4,7 +4,7 @@ Hivemind-core is the reference integrations with OpenVoiceOS
 
 ![img_11.png](img_11.png)
 
-> 💡 If you are not running on a home server you only need `hivemind-core`, `ovos-core` and `ovos-messagebus`
+> 💡 If you are running on a home server you only need `hivemind-core`, `ovos-core` and `ovos-messagebus`
 
 
 ## Install
