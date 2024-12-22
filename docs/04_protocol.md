@@ -223,6 +223,3 @@ Options:
 
 > ⚠️ Protocol v0 is **deprecated**! However some clients (e.g., HiveMind-Js) may not yet support Protocol Version 1.
 
----
-
-🚧 TODO - explain Binary serialization 🚧

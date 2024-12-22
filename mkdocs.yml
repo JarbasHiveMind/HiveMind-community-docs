@@ -21,7 +21,8 @@ nav:
       - DeltaChat: 10_deltachat.md
       - Home Assistant: 07_homeassistant.md
     - Protocol:
-      - Protocol: 04_protocol.md
+      - Transport: 04_protocol.md
+      - Binarization: 18_binarization.md
       - OVOS Messages: 13_mycroft.md
     - Security:
       - Database: 17_database.md
