@@ -68,21 +68,21 @@ To ensure byte alignment, padding bits (`0`) are inserted as needed. The total l
 1. **Start Marker**: Add a single bit set to `1` to signify the start of the message.
 
 2. **Header Fields**:
-   - Add a 1-bit flag to indicate whether the protocol version is included.
-   - If the version is included, append the 8-bit protocol version number.
-   - Add a 5-bit message type field.
-   - Add a 1-bit flag to indicate compression status.
-   - Add an 8-bit metadata length field.
+      - Add a 1-bit flag to indicate whether the protocol version is included.
+      - If the version is included, append the 8-bit protocol version number.
+      - Add a 5-bit message type field.
+      - Add a 1-bit flag to indicate compression status.
+      - Add an 8-bit metadata length field.
    
 3. **Metadata**:
-   - Serialize metadata as a JSON object (if any).
-   - Compress the metadata if compression is enabled.
-   - Append the serialized metadata.
+     - Serialize metadata as a JSON object (if any).
+     - Compress the metadata if compression is enabled.
+     - Append the serialized metadata.
    
 4. **Payload**:
-   - Serialize the payload according to the message type.
-   - Compress the payload if compression is enabled.
-   - Append the serialized payload.
+     - Serialize the payload according to the message type.
+     - Compress the payload if compression is enabled.
+     - Append the serialized payload.
    
 5. **Padding**: Add `0` bits as needed to ensure the total length is a multiple of 8 bits.
 
@@ -91,21 +91,22 @@ To ensure byte alignment, padding bits (`0`) are inserted as needed. The total l
 1. **Alignment**: Read bits until encountering the start marker (`1`).
 
 2. **Header Fields**:
-   - Read the `Versioned Flag` and determine if the protocol version is specified.
-   - If specified, read the 8-bit protocol version number.
-   - Read the 5-bit message type field.
-   - Read the `Compressed Flag`.
-   - Read the 8-bit metadata length field.
+
+     - Read the `Versioned Flag` and determine if the protocol version is specified.
+     - If specified, read the 8-bit protocol version number.
+     - Read the 5-bit message type field.
+     - Read the `Compressed Flag`.
+     - Read the 8-bit metadata length field.
    
 3. **Metadata**:
-   - Read the specified number of bytes for metadata.
-   - Decompress if the `Compressed Flag` is set.
-   - Deserialize the metadata.
+     - Read the specified number of bytes for metadata.
+     - Decompress if the `Compressed Flag` is set.
+     - Deserialize the metadata.
    
 4. **Payload**:
-   - Read the remaining bits as the payload.
-   - Decompress if the `Compressed Flag` is set.
-   - Deserialize the payload based on the message type.
+     - Read the remaining bits as the payload.
+     - Decompress if the `Compressed Flag` is set.
+     - Deserialize the payload based on the message type.
 
 ## Binary Payloads
 
