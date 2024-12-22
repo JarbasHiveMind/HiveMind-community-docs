@@ -1,5 +1,7 @@
 # HomeAssistant Integration
 
+> ⚠️ **UNMAINTAINED**: currently not functional
+
 ![img_20.png](img_20.png)
 
 **This component will set up the following actions.**

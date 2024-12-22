@@ -1,5 +1,7 @@
 # LocalHive
 
+> ⚠️ **Proof of Concept**: not actively maintained
+
 ![img_10.png](img_10.png)
 
 The LocalHive is a hardened OpenVoiceOS skills service, the messagebus is replaced with a hivemind connection

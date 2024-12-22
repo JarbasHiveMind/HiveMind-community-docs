@@ -5,24 +5,26 @@ nav:
     - About:
       - Terminology: 01_terminology.md
       - Create a Hive: 02_create.md
-      - Nested Hives: 15_nested.md
       - Pairing: 03_pairing.md
-      - Protocol: 04_protocol.md
       - Auto Discovery: 05_presence.md
-    - Minds:
+      - Nested Hives: 15_nested.md
+    - Nodes:
       - OpenVoiceOS: 06_ovos.md
       - OVOS Persona: 08_persona.md
-      - LocalHive: 14_localhive.md
-    - Terminals:
       - Voice Satellite: 07_voicesat.md
-      - Home Assistant: 07_homeassistant.md
-    - Bridges:
+      - LocalHive: 14_localhive.md
+    - Integrations:
       - Matrix: 09_matrix.md
       - DeltaChat: 10_deltachat.md
+      - Home Assistant: 07_homeassistant.md
+    - Protocol:
+      - Protocol: 04_protocol.md
+      - OVOS Messages: 13_mycroft.md
+    - Security:
+      - Permissions: 16_permissions.md
+      - Handshake: 12_handshake.md
     - Developers:
       - Libraries: 11_devs.md
-      - Hive Messages: 12_hive.md
-      - OVOS Messages: 13_mycroft.md
     - ChatGPT was here:
       - ELI5: gpt_eli5.md
 

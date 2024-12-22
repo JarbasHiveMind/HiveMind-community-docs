@@ -39,7 +39,7 @@ See [hivemind-persona](https://github.com/JarbasHiveMind/hivemind-persona) for a
     - Authorized messages are injected into the master's OVOS-core bus.
     - Direct responses from the master's OVOS-core are forwarded back to the originating slave.
 
-> 💡 **Tip**: Use the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) package to send a bus message from the command line
+> 💡 Use the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) package to send a bus message from the command line
 
 ```bash
 $ hivemind-client send-mycroft --help
@@ -69,7 +69,7 @@ Permissions can be based on:
 - Access key
 - IP address rules
 
-> 💡 **Tip**: Use the [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core) package to authorize message types or blacklist intents/skills.
+> 💡 Use the [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core) package to authorize message types or blacklist intents/skills.
 
 **Example**: Allow the "speak" message type:
 
@@ -92,7 +92,7 @@ Assistant) may inject specific messages based on their configuration.
     - Requires explicit configuration on the slave device.
     - Similar to `BUS`, but for observation, not processing.
 
-> 💡 **Tip**: This feature is typically enabled through the [HiveMind Skill](https://github.com/JarbasHiveMind/ovos-skill-fallback-hivemind).
+> 💡 This feature is typically enabled through the [HiveMind Skill](https://github.com/JarbasHiveMind/ovos-skill-fallback-hivemind).
 
 **Visualization**:
 
@@ -114,7 +114,7 @@ for [Nested Hives](https://jarbashivemind.github.io/HiveMind-community-docs/15_n
 
 **Example**: A master can make all slaves in `site_id: "kitchen"` speak a specific message.
 
-> 💡 **Tip**: `BROADCAST` messages are typically sent by skills running in a hivemind server
+> 💡 `BROADCAST` messages are typically sent by skills running in a hivemind server
 
 **Visualization**:
 
@@ -186,7 +186,7 @@ Options:
 
 ---
 
-## Protocol Versions
+## Protocol Features
 
 
 | Feature              | Protocol v0 | Protocol v1 |
@@ -200,3 +200,4 @@ Options:
 
 > ⚠️ Protocol v0 is **deprecated**! However some clients (e.g., HiveMind-Js) may not yet support Protocol Version 1.
 
+TODO - explain each of the features above in a subsection below
