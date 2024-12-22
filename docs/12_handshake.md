@@ -32,7 +32,7 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
 
 ## Workflow: Server Perspective
 
-1. **HELLO Message**:
+**HELLO Message**:
 
    - The server sends a `HELLO` message to the client containing:
    
@@ -42,7 +42,7 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
      
      - Optional `session_id` for session-based communication.
 
-2. **HANDSHAKE Request**:
+**HANDSHAKE Request**:
 
    - The server initiates the handshake by sending a `HANDSHAKE` message:
    
@@ -56,7 +56,7 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
        
        - `password`: Indicator for password-based handshake.
 
-3. **Validate Client's Response**:
+**Validate Client's Response**:
 
    - If the client provides an envelope:
    
@@ -70,13 +70,13 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
 
 ## Workflow: Client Perspective
 
-1. **Receive HELLO Message**:
+**Receive HELLO Message**:
 
    - Extract the server's public key and node ID from the `HELLO` message.
 
    - Store the session ID if provided.
 
-2. **Start Handshake**:
+**Start Handshake**:
 
    - Determine the handshake type based on the server's `HANDSHAKE` request:
    
@@ -90,7 +90,7 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
        
        - Generate and send an envelope for authentication.
 
-3. **Handle Validation**:
+**Handle Validation**:
 
    - If the server sends an envelope for validation:
    
@@ -154,29 +154,29 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
 
 ### Server
 
-1. **Start Handshake**:
+**Start Handshake**:
 
   - Ensure the client is authorized to join the HiveMind network.
   
-2. **Broadcast Key**:
+**Broadcast Key**:
 
   - Send the server's public key for public-key-based handshakes.
   
-3. **Verify Envelope**:
+**Verify Envelope**:
 
   - Authenticate the client using the received envelope and establish the shared cryptographic key.
 
 ### Client
 
-1. **Generate Envelope**:
+**Generate Envelope**:
 
   - Create an envelope for authentication based on the handshake type.
 
-2. **Verify Server**:
+**Verify Server**:
 
   - Use the public key to verify the server's authenticity.
 
-3. **Update Session**:
+**Update Session**:
 
   - Store the server-provided session ID and synchronize it with local sessions.
 
