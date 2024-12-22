@@ -4,9 +4,9 @@ The OpenVoiceOS messagebus is considered an internal and private websocket for [
 
 A mind will inject its own context about the originating clients,  only responses to the client message will be forwarded, this provides client isolation. 
 
-A mind will filter incoming and outgoing messages per client, the permissions model of the hivemind is extensive (or will be, it's WIP!) eg, it might refuse utterances based on the intent, ovos-core will never even see them
+A mind will filter incoming and outgoing messages per client, the permissions model of the hivemind is extensive e.g. it might refuse utterances based on the intent
 
-This info applies to ovos-core, Hivemind depends on this functionality but it is not part of the hivemind itself. HiveMind responsibility is only to deliver the BUS messages
+This info applies to `ovos-core`, Hivemind depends on this functionality but it is not part of the hivemind itself. HiveMind responsibility is only to deliver the BUS messages
 
 From the POV of the Hivemind you can [replace ovos-core with anything](https://github.com/JarbasHiveMind/Fakecroft-DDG) as long as you respect the mechanisms below
 
@@ -87,4 +87,4 @@ If a skill emits it's own bus messages it needs to keep `message.context` around
 
 - skills sending their own messages might not keep message.context or wrongly `.reply` to it 
 
-- in the context of the Hivemind skills might not be [Session](https://github.com/OpenVoiceOS/ovos-bus-client/blob/dev/ovos_bus_client/session.py) aware and keep a shared state between clients, eg. a client may enable [parrot mode](https://github.com/JarbasSkills/skill-parrot) for everyone 
+- in the context of the Hivemind skills might not be [Session](https://github.com/OpenVoiceOS/ovos-bus-client/blob/dev/ovos_bus_client/session.py) aware and keep a shared state between clients, eg. a client may enable a voice game for everyone 
