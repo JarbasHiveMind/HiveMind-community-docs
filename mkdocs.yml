@@ -11,7 +11,8 @@ nav:
       - OpenVoiceOS: 06_ovos.md
       - OVOS Persona: 08_persona.md
       - Voice Satellite: 07_voicesat.md
-      - LocalHive: 14_localhive.md
+      - Voice Relay: 07_voice_relay.md
+      - Mic Satellite: 07_micsat.md
     - Integrations:
       - Matrix: 09_matrix.md
       - DeltaChat: 10_deltachat.md
