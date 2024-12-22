@@ -7,9 +7,12 @@ nav:
       - Terminology: 02_terminology.md
       - Auto Discovery: 05_presence.md
       - Nested Hives: 15_nested.md
-    - Nodes:
-      - OpenVoiceOS: 06_ovos.md
-      - OVOS Persona: 08_persona.md
+      - Plugins: 04_plugins.md
+    - Servers:
+      - Skills Server: 06_skills_server.md
+      - Sound Server: 06_sound_server.md
+      - Persona Server: 08_persona.md
+    - Satellites:
       - Voice Satellite: 07_voicesat.md
       - Voice Relay: 07_voice_relay.md
       - Mic Satellite: 07_micsat.md

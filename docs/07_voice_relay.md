@@ -12,7 +12,7 @@ A lightweight version of [voice-satellite](https://github.com/JarbasHiveMind/Hiv
 
 The regular voice satellite is built on top of [ovos-dinkum-listener](https://github.com/OpenVoiceOS/ovos-dinkum-listener) and is full featured supporting all plugins
 
-This repo is built on top of [ovos-simple-listener](https://github.com/TigreGotico/ovos-simple-listener), while it needs less resources it is also **missing** some features
+The voice relay is built on top of [ovos-simple-listener](https://github.com/TigreGotico/ovos-simple-listener), while it needs less resources it is also **missing** some features
 
 - STT plugin
 - TTS plugin
@@ -64,6 +64,4 @@ Supported plugin types:
 | G2P | grapheme-to-phoneme (G2P), used to simulate mouth movements  | No | [G2P](https://openvoiceos.github.io/ovos-technical-manual/g2p_plugins) |
 | Media Playback Plugins | Enables media playback (e.g., "play Metallica") | No | [Media Playback Plugins](https://openvoiceos.github.io/ovos-technical-manual/media_plugins/) |
 | OCP Plugins | Provides playback support for URLs (e.g., YouTube) | No | [OCP Plugins](https://openvoiceos.github.io/ovos-technical-manual/ocp_plugins/) |
-| Dialog Transformers | Processes text before text-to-speech (TTS) | No | [Dialog Transformers](https://openvoiceos.github.io/ovos-technical-manual/transformer_plugins/) |
-| TTS Transformers | Processes audio after text-to-speech (TTS) | No | [TTS Transformers](https://openvoiceos.github.io/ovos-technical-manual/transformer_plugins/) |
 | PHAL | Provides platform-specific support (e.g., Mark 1) | No | [PHAL](https://openvoiceos.github.io/ovos-technical-manual/PHAL/) |
