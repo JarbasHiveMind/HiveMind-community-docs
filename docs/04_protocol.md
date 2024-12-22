@@ -1,30 +1,45 @@
 # Protocol
 
-The ability to exchange information and commands seamlessly is made possible through the Hivemind Protocol.
+The HiveMind Protocol enables seamless exchange of information and commands within a distributed network. It defines
+message types and their handling methods, serving as a *transport* protocol. While the protocol primarily operates with
+OpenVoiceOS (OVOS) messages, it is versatile enough to support other payloads.
 
-Now, let's explore the different message types introduced by the Hivemind Protocol.
+The protocol is categorized into two main roles: **Listener Protocol** and **Client Protocol**.
+
+## Roles and Message Types
+
+### Listener Protocol
+
+- **Accepts**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`
+- **Emits**: `BUS`, `PROPAGATE`, `BROADCAST`
+
+### Client Protocol
+
+- **Accepts**: `BUS`, `PROPAGATE`, `BROADCAST`
+- **Emits**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`
+
+---
 
 ## Payload Messages
 
-Payload messages contain a OpenVoiceOS `Message` object, serving as a container for information or commands.
+Payload messages encapsulate OpenVoiceOS `Message` objects, acting as carriers for information or commands. These are
+the "cargo" the HiveMind Protocol transports across the network.
 
-### Bus Message
+Integrations with external AI backends require middleware to process OVOS messages.
+See [hivemind-persona](https://github.com/JarbasHiveMind/hivemind-persona) for an example implementation.
 
-The `BUS` message facilitates single-hop communication, flowing **between slaves and masters**. When a master receives a `BUS` message, it examines its global whitelist/blacklist and slave permissions. If the slave is authorized to inject the message into the ovos-core message bus, the message is injected accordingly. Subsequently, any direct responses from the master's ovos-core, triggered by the injected message, are forwarded back to the originating slave. The permissions can be defined based on criteria such as message type, intent type, skill ID, access key, and IP address rules.
+> ⚠️ All HiveMind servers are expected to handle natural language queries. At a minimum,
+> the `recognizer_loop:utterance` OVOS message must be supported.
 
-![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/bus.gif)
+### BUS Message
 
-Terminal applications such as the voice-sat usually inject natural language queries from users, others applications such as the Home Assistant integration may inject other messages if authorized to do so
+- **Purpose**: Single-hop communication between slaves and masters.
+- **Behavior**:
+    - A master receiving a `BUS` message checks global whitelists/blacklists and slave permissions.
+    - Authorized messages are injected into the master's OVOS-core bus.
+    - Direct responses from the master's OVOS-core are forwarded back to the originating slave.
 
-you can authorize message_types via the [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core/) package
-
-Reference BUS payloads for OVOS can be found [here](https://github.com/OpenVoiceOS/message_spec)
-
-```bash
-$hivemind-core allow-msg "speak"
-```
-
-the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) package provides an utility to connect to a Mind and send a bus message
+> 💡 **Tip**: Use the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) package to send a bus message from the command line
 
 ```bash
 $ hivemind-client send-mycroft --help
@@ -42,45 +57,85 @@ Options:
   --msg TEXT       ovos message type to inject
   --payload TEXT   ovos message.data json
   --help           Show this message and exit.
-
 ```
 
-### Shared Bus Message
+#### Permissions
 
-The `SHARED_BUS` message is designed for single-hop communication, exclusively flowing **from slave to master**. In this scenario, the master passively monitors the ovos-core message bus on the slave device. It is important to note that the `SHARED_BUS` functionality needs to be explicitly enabled in the slave device configuration, as the default behavior does not involve sharing the ovos-core bus. In the case of terminals, messages of type `BUS` are injected into their respective masters and are simultaneously forwarded as `SHARED_BUS` messages to the subsequent masters in the hierarchy.
+Permissions can be based on:
 
-> NOTE: this is usually done by [HiveMind Skill](https://github.com/JarbasHiveMind/ovos-skill-fallback-hivemind) if enabled in settings
+- Message type
+- Intent type
+- Skill ID
+- Access key
+- IP address rules
 
-![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/shared_bus.gif)
+> 💡 **Tip**: Use the [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core) package to authorize message types or blacklist intents/skills.
 
+**Example**: Allow the "speak" message type:
+
+```bash
+$ hivemind-core allow-msg "speak"
+```
+
+**Visualization**:
+
+![BUS Message Flow](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/bus.gif)
+
+**Use Case**: Terminal applications (e.g., voice-sat) inject natural language queries. Other integrations (e.g., Home
+Assistant) may inject specific messages based on their configuration.
+
+### SHARED_BUS Message
+
+- **Purpose**: Passive monitoring of a slave device's OVOS-core bus.
+- **Direction**: Slave → Master.
+- **Behavior**:
+    - Requires explicit configuration on the slave device.
+    - Similar to `BUS`, but for observation, not processing.
+
+> 💡 **Tip**: This feature is typically enabled through the [HiveMind Skill](https://github.com/JarbasHiveMind/ovos-skill-fallback-hivemind).
+
+**Visualization**:
+
+![Shared Bus Message Flow](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/shared_bus.gif)
+
+---
 
 ## Transport Messages
 
-Transport messages contain another `HiveMessage` object as their payload.
+Transport messages encapsulate another `HiveMessage` object as their payload. These types are particularly relevant
+for [Nested Hives](https://jarbashivemind.github.io/HiveMind-community-docs/15_nested/).
 
-> NOTE: these message types only matter for [Nested Hives](https://jarbashivemind.github.io/HiveMind-community-docs/15_nested/)
+### BROADCAST Message
 
-### Broadcast Message
+- **Purpose**: Multi-hop communication from master → slaves.
+- **Behavior**:
+    - Disseminates messages to all connected slaves.
+    - Supports `target_site_id` for directing messages to specific nodes.
 
-The `BROADCAST` message plays a crucial role in multi-hop communication, flowing **from a master to its associated slaves**. It serves as a means to disseminate a message to all slaves connected to a particular master, effectively "sending the message down" the authority chain. Through the use of broadcast messages, information or commands can be efficiently transmitted throughout the hive, facilitating widespread collaboration.
+**Example**: A master can make all slaves in `site_id: "kitchen"` speak a specific message.
 
-A Mind may decide to broadcast a message at any time
+> 💡 **Tip**: `BROADCAST` messages are typically sent by skills running in a hivemind server
 
-![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/broadcast.gif)
+**Visualization**:
 
-A broadcast message may also contain a `"target_site_id"`
+![Broadcast Message Flow](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/broadcast.gif)
 
-When a slave receives a broadcast message it will check if it's own `"site_id"` matches the `"target_site_id"`, and if it does, the BUS message is injected into the slave internal bus
+### ESCALATE Message
 
-This allows for example a Mind to make all the satellites in `site_id: "kitchen"` speak a message out loud
+- **Purpose**: Multi-hop communication from slave → master.
+- **Behavior**:
+    - Elevates messages up the authority chain for higher-level processing.
 
-### Escalate Message
 
-The `ESCALATE` message is an essential multi-hop message that travels **from a slave to its master**. It enables the slave to send a message up the authority chain, ensuring that the message reaches higher-level minds within the hierarchy. By employing escalate messages, valuable information or commands can be elevated, allowing for higher-level decision-making within the hive.
+**Example**: Escalate a OVOS message:
 
-![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/escalate.gif)
+```bash
+$ hivemind-client escalate --msg "intent_failure" --payload "{}"
+```
 
-the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) package provides an utility to connect to a Mind and escalate a message
+**Visualization**:
+
+![Escalate Message Flow](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/escalate.gif)
 
 ```bash
 $ hivemind-client escalate --help
@@ -101,13 +156,15 @@ Options:
 
 ```
 
-### Propagate Message
+### PROPAGATE Message
 
-The `PROPAGATE` message is a versatile multi-hop message that flows **both from a master to its slaves and vice versa**. This message type enables a master to send a message to all its direct connections, ensuring that the message reaches every relevant node within the hive. Propagate messages are instrumental in disseminating critical information or commands throughout the network, enabling comprehensive collaboration and coordination.
+- **Purpose**: Multi-hop communication in both directions (master ↔ slaves).
+- **Behavior**:
+    - Ensures the message is delivered to all relevant nodes.
 
-![](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/propagate.gif)
+**Visualization**:
 
-the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) package provides an utility to connect to a Mind and propagate a message
+![Propagate Message Flow](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/propagate.gif)
 
 ```bash
 $ hivemind-client propagate --help
@@ -125,20 +182,21 @@ Options:
   --msg TEXT       ovos message type to inject
   --payload TEXT   ovos message.data json
   --help           Show this message and exit.
-
 ```
 
+---
 
 ## Protocol Versions
 
-| Protocol Version     | 0   | 1   |
-|----------------------|-----|-----|
-| json serialization   | yes | yes |
-| binary serialization | no  | yes |
-| pre-shared AES key   | yes | yes |
-| password handshake   | no  | yes |
-| PGP handshake        | no  | yes |
-| zlib compression     | no  | yes |
 
+| Feature              | Protocol v0 | Protocol v1 |
+|----------------------|-------------|-------------|
+| JSON serialization   | ✅           | ✅           |
+| Binary serialization | ❌           | ✅           |
+| Pre-shared AES key   | ✅           | ✅           |
+| Password handshake   | ❌           | ✅           |
+| PGP handshake        | ❌           | ✅           |
+| Zlib compression     | ❌           | ✅           |
 
-some clients such as HiveMind-Js do not yet support protocol V1
+> ⚠️ Protocol v0 is **deprecated**! However some clients (e.g., HiveMind-Js) may not yet support Protocol Version 1.
+
