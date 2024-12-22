@@ -3,9 +3,9 @@ site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
 nav:
     - Home: index.md
     - About:
+      - Quick start: 01_quickstart.md
       - Terminology: 01_terminology.md
       - Create a Hive: 02_create.md
-      - Pairing: 03_pairing.md
       - Auto Discovery: 05_presence.md
       - Nested Hives: 15_nested.md
     - Nodes:
@@ -21,6 +21,7 @@ nav:
       - Protocol: 04_protocol.md
       - OVOS Messages: 13_mycroft.md
     - Security:
+      - Pairing: 03_pairing.md
       - Permissions: 16_permissions.md
       - Handshake: 12_handshake.md
     - Developers:
