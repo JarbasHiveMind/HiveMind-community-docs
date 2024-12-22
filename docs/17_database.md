@@ -8,6 +8,8 @@
 | **SQLite**         | Lightweight relational DB for single instances | `~/.local/share/hivemind-core/clients.db`   | Configurable via `--db-name` and `--db-folder`     |
 | **Redis**          | Distributed, high-performance environments     | `localhost:6379`                            | Configurable via `--redis-host` and `--redis-port` |
 
+> ⚠️ ensure you use the same database parameters when launching `hivemind-core` and registering clients!
+
 **How to Choose?**
 
 - For **scalability** or multi-instance setups, use Redis.
