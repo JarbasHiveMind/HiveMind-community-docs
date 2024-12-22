@@ -114,7 +114,7 @@ Where `"ciphertext"` can only be decoded by the target Node, not by any intermed
 
 these messages are usually the payload of transport messages such as `ESCALATE` or `PROPAGATE` payloads. 
 
-> Intermediate nodes do not know **the contents** of the message, nor **who the recipient is**
+> 💡 Intermediate nodes do not know **the contents** of the message, nor **who the recipient is**
 
 When a message needs to be sent securely, it is encrypted using the recipient node's public PGP key. This ensures that only the intended recipient, who possesses the corresponding private PGP key, can decrypt the message.
 
