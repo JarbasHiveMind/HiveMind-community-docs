@@ -9,7 +9,9 @@ The HiveMind Binarization Protocol is designed to efficiently serialize and dese
 The protocol uses an integer version number to indicate supported features and ensure compatibility between clients and servers. The current protocol version is `1`. Any change in functionality or structure requires incrementing the version number.
 
 Version-specific functionality:
+
 - **Version 0**: Original protocol design. No binarization, no handshake, only pre-shared `crypto_key` supported
+
 - **Version 1**: Introduces support for handshakes and binary payloads.
 
 ## Core Concepts
@@ -53,7 +55,9 @@ Metadata is optional and encodes key-value pairs or other information. If presen
 
 ### Payload
 The payload represents the core message data. Its format depends on the message type:
+
 - **For standard messages**: Encoded as a UTF-8 JSON string.
+
 - **For binary messages**: Encoded as raw bytes with an additional 4-bit unsigned integer indicating the binary payload type.
 
 ### Padding
@@ -62,35 +66,42 @@ To ensure byte alignment, padding bits (`0`) are inserted as needed. The total l
 ## Encoding Process
 
 1. **Start Marker**: Add a single bit set to `1` to signify the start of the message.
+
 2. **Header Fields**:
    - Add a 1-bit flag to indicate whether the protocol version is included.
    - If the version is included, append the 8-bit protocol version number.
    - Add a 5-bit message type field.
    - Add a 1-bit flag to indicate compression status.
    - Add an 8-bit metadata length field.
+   
 3. **Metadata**:
    - Serialize metadata as a JSON object (if any).
    - Compress the metadata if compression is enabled.
    - Append the serialized metadata.
+   
 4. **Payload**:
    - Serialize the payload according to the message type.
    - Compress the payload if compression is enabled.
    - Append the serialized payload.
+   
 5. **Padding**: Add `0` bits as needed to ensure the total length is a multiple of 8 bits.
 
 ## Decoding Process
 
 1. **Alignment**: Read bits until encountering the start marker (`1`).
+
 2. **Header Fields**:
    - Read the `Versioned Flag` and determine if the protocol version is specified.
    - If specified, read the 8-bit protocol version number.
    - Read the 5-bit message type field.
    - Read the `Compressed Flag`.
    - Read the 8-bit metadata length field.
+   
 3. **Metadata**:
    - Read the specified number of bytes for metadata.
    - Decompress if the `Compressed Flag` is set.
    - Deserialize the metadata.
+   
 4. **Payload**:
    - Read the remaining bits as the payload.
    - Decompress if the `Compressed Flag` is set.
@@ -115,35 +126,94 @@ The binary payload type is indicated in the header as a **4 bit unsigned integer
 
 > 💡 this how how the microphone satellite streams audio to `hivemind-listener`
 
-## Example: Serialized Message
+## Examples
+
+### Serialized Message
 
 For a simple message with:
+
 - Protocol version: 1
+
 - Message type: `BUS`
+
 - No compression
-- Metadata: `{"context":"example"}`
-- Payload: `{"utterance":"Hello"}`
+
+- Metadata: `{}`
+
+- Payload: `{"type": "speak", "data":{"utterance": "Hello"}}`
 
 The binary representation might look like this (in bit groups):
 ```
-1 | 1 | 00000001 | 00001 | 0 | 00001100 | <metadata> | <payload>
+1 | 1 | 00000001 | 00001 | 0 | 00000000 | <metadata> | <payload>
 ```
 Where:
+
 - `1` (Start Marker)
+
 - `1` (Versioned Flag)
+
 - `00000001` (Protocol Version)
+
 - `00001` (Message Type: `BUS`)
+
 - `0` (Compressed Flag)
-- `00001100` (Metadata Length: 12 bytes)
+
+- `00000000` (Metadata Length: 0 bytes)
+
 - `<metadata>`: Serialized metadata bytes.
+
 - `<payload>`: Serialized payload bytes.
 
+
+### Binary data
+
+For a binary payload with:
+
+- Protocol version: 1
+
+- Message type: `BINARY`
+
+- No compression
+
+- Metadata: `{}`
+
+- Binary Payload
+
+The binary representation might look like this (in bit groups):
+```
+1 | 1 | 00000001 | 00001 | 0 | 00000000 | <metadata> | 0001 | <binary_payload>
+```
+Where:
+
+- `1` (Start Marker)
+
+- `1` (Versioned Flag)
+
+- `00000001` (Protocol Version)
+
+- `01100` (Message Type: `BINARY`)
+
+- `0` (Compressed Flag)
+
+- `00000000` (Metadata Length: 0 bytes)
+
+- `<metadata>`: Serialized metadata bytes.
+
+- `0001` (Binary Type: Raw audio)
+
+- `<payload>`: audio bytes.
+
+
 ## Compression Metrics
+
 Compression significantly reduces payload size for larger messages but is not always efficient for small messages. Benchmarks indicate a reduction of up to **50%** for text-heavy payloads, while small payloads may see negligible benefits.
 
 ## Implementation Notes
+
 - Bit-level operations are critical for compact encoding. Ensure precision when handling individual bits.
+
 - Maintain strict alignment rules to avoid deserialization errors.
+
 - Use a modular design to allow future extensions while retaining compatibility.
 
 
