@@ -49,9 +49,11 @@ If the identity test passed, then your satellite is paired with the Hive!
 
 ## Audio Pairing via GGWave
 
+> 🚧 This feature is a proof-of-concept / work-in-progress
+
 Data over sound for HiveMind
 
-hivemind-core and hivemind-voice-sat have hivemind-ggwave support
+`hivemind-core` and `hivemind-voice-sat` have `hivemind-ggwave` support
 
 pre-requisites:
 
