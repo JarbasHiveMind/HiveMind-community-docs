@@ -2,10 +2,11 @@
 
 `hivemind-listener` extends `hivemind-core` and integrates with [ovos-simple-listener](https://github.com/TigreGotico/ovos-simple-listener), enabling audio-based communication with advanced features for **secure, distributed voice assistant functionality**.
 
-> 💡 If you are not running a full OVOS install but instead a home server this is the best option
+> 💡 If you are running a home server this is the best option, you only need to install `hivemind-listener`, `ovos-core` and `ovos-messagebus`.
 
+> ⚠️ If running on a device that is also a full OVOS assistant by itself you should use `hivemind-core` instead
 
-#### 🌟 Key Features of HiveMind Listener
+#### Key Features of HiveMind Listener
 
 - **Audio Stream Handling**:  
   Accepts encrypted binary audio streams, performing **WakeWord detection**, **Voice Activity Detection (VAD)**, **Speech-to-Text (STT)**, and **Text-to-Speech (TTS)** directly on the `hivemind-listener` instance.  
