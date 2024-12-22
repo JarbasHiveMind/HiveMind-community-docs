@@ -14,8 +14,6 @@ Version-specific functionality:
 
 - **Version 1**: Introduces support for handshakes and binary payloads.
 
-## Core Concepts
-
 ### Message Types
 Messages in the HiveMind protocol are categorized into various types, each serving a specific role. These types are encoded as 5-bit unsigned integers, enabling up to 32 distinct types. Examples include:
 
@@ -204,6 +202,28 @@ Where:
 
 - `<payload>`: audio bytes.
 
+
+### More examples
+
+```
+<uint:1=start_marker> | <uint:1=versioned_bit> | <uint:8=protocol_version> | <uint:5=msg_type> | <uint:1=compression_bit> | <uint:8=metadata_len> | <metadata> | <payload>
+```
+
+A binarized message
+
+```
+1 | 1 | XXXXXXXX | XXXXX | X | XXXXXXXX | <metadata> | <payload>
+```
+
+A **unversioned** binarized message
+```
+1 | 0 | XXXXX | X | XXXXXXXX | <metadata> | <payload>
+```
+
+A binary message
+```
+1 | 1 | XXXXXXXX | XXXXX | X | XXXXXXXX | <metadata> | XXXX | <payload>
+```
 
 ## Compression Metrics
 
