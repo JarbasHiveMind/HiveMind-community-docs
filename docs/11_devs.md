@@ -8,3 +8,4 @@ If you are implementing a client from scratch, these libraries might be of inter
 
 - [HiveMind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) (python)
 - [HiveMindJs](https://github.com/JarbasHiveMind/HiveMind-js) (javascript)
+- [ovos-solver-hivemind-plugin](https://github.com/JarbasHiveMind/ovos-solver-hivemind-plugin) python client to chat with hivemind
