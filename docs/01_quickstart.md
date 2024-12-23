@@ -16,18 +16,21 @@ pip install hivemind-core
 
 Once the server is running, you'll need to add client credentials for each satellite device you want to connect.
 
-1. Run the following command to add a satellite device:
-    ```bash
-    hivemind-core add-client
-    ```
-    The output will show you important details like:
-    - Node ID
-    - Friendly Name
-    - Access Key
-    - Password
-    - Encryption Key (deprecated, only used for legacy clients)
+Run the following command to add a satellite device:
 
-2. Provide these credentials on the client devices to enable the connection.
+```bash
+hivemind-core add-client
+```
+   
+The output wi*ll show you important details like:
+
+- Node ID
+- Friendly Name
+- Access Key
+- Password
+- Encryption Key (deprecated, only used for legacy clients)
+
+Provide these credentials on the client devices to enable the connection.
 
 ## 🖥️ Running the HiveMind Server
 
