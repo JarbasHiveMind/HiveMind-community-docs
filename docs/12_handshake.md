@@ -28,6 +28,9 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
 
    - Encrypts the symmetric session key to allow further communication using the shared key.
 
+
+![HANDSHAKE.png](HANDSHAKE.png)
+
 ---
 
 ## Workflow: Server Perspective
