@@ -1,8 +1,8 @@
 # Binarization Protocol
 
-The HiveMind Binarization Protocol is designed to efficiently serialize and deserialize structured messages into compact binary formats for network transmission. This document provides a high-level description of the protocol, including its structure, encoding rules, and the rationale behind key design decisions. The binary format is protocol-versioned to support backward compatibility and future extensions.
+> ⚠️ **EXPERIMENTAL**: subject to change without warning
 
-> 💡 the binarization scheme allows the hivemind protocol to be implemented by just flashing a light
+The HiveMind Binarization Protocol is designed to efficiently serialize and deserialize structured messages into compact binary formats for network transmission. This document provides a high-level description of the protocol, including its structure, encoding rules, and the rationale behind key design decisions. The binary format is protocol-versioned to support backward compatibility and future extensions.
 
 ## Protocol Versions
 
@@ -209,21 +209,28 @@ Where:
 <uint:1=start_marker> | <uint:1=versioned_bit> | <uint:8=protocol_version> | <uint:5=msg_type> | <uint:1=compression_bit> | <uint:8=metadata_len> | <metadata> | <payload>
 ```
 
-A binarized message
+A binarized **uncompressed** message
 
 ```
-1 | 1 | XXXXXXXX | XXXXX | X | XXXXXXXX | <metadata> | <payload>
+1 | 1 | XXXXXXXX | XXXXX | 0 | XXXXXXXX | <metadata> | <payload>
 ```
 
-A **unversioned** binarized message
+A **unversioned** and **compressed** binarized message
 ```
-1 | 0 | XXXXX | X | XXXXXXXX | <metadata> | <payload>
+1 | 0 | XXXXX | 1 | XXXXXXXX | <metadata> | <payload>
 ```
 
-A binary payload message
+A binary **uncompressed** payload message
 ```
-1 | 1 | XXXXXXXX | XXXXX | X | XXXXXXXX | <metadata> | XXXX | <payload>
+1 | 1 | XXXXXXXX | 01100 | 0 | XXXXXXXX | <metadata> | XXXX | <payload>
 ```
+
+A **unversioned** and **compressed** binary payload message
+```
+1 | 0 | 01100 | 1 | XXXXXXXX | <metadata> | XXXX | <payload>
+```
+
+> 💡 the binarization scheme allows the hivemind protocol to be implemented by just flashing a light
 
 ## Compression Metrics
 
