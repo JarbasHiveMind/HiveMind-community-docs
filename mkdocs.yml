@@ -28,6 +28,7 @@ nav:
       - Database: 17_database.md
       - Pairing: 03_pairing.md
       - Permissions: 16_permissions.md
+      - Encryption: 19_crypto.md
       - Handshake: 12_handshake.md
     - Developers:
       - Libraries: 11_devs.md
