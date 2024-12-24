@@ -235,13 +235,3 @@ A **unversioned** and **compressed** binary payload message
 ## Compression Metrics
 
 Compression significantly reduces payload size for larger messages but is not always efficient for small messages. Benchmarks indicate a reduction of up to **50%** for text-heavy payloads, while small payloads may see negligible benefits.
-
-## Implementation Notes
-
-- Bit-level operations are critical for compact encoding. Ensure precision when handling individual bits.
-
-- Maintain strict alignment rules to avoid deserialization errors.
-
-- Use a modular design to allow future extensions while retaining compatibility.
-
-
