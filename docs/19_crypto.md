@@ -58,9 +58,9 @@ The `nonce` and `tag` are included in the message unencrypted, while the `cipher
 
 To securely encrypt and decrypt messages, HiveMind uses a shared secret key. This key is never transmitted directly but is derived independently by each device using the following steps:
 
-
 ![HANDSHAKE.png](HANDSHAKE_V1.png)
 
+> 💡 Protocol V0 starts directly with the pre-shared key, Protocol V1 still supports this usage by simply ignoring the handshake initated by the server
 
 ### 1. **Handshake and Identity Verification**
    - Each device generates a **hash-based subkey (HSUB)** using:
