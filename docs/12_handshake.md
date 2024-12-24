@@ -16,7 +16,7 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
 
    - Requires both client and server to know the password beforehand.
 
-**Public Key Handshake**:
+**PGP (Public Key) Handshake**:
 
    - Based on public/private key pairs.
 
@@ -29,43 +29,43 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
    - Encrypts the symmetric session key to allow further communication using the shared key.
 
 
+> ⚠️ PGP Handshake is a work in progress! 🚧
+
 ---
 
 ## Workflow: Server Perspective
 
-**HELLO Message**:
+**HELLO Message** (sent to client):
 
-   - The server sends a `HELLO` message to the client containing:
-   
-     - Public key (`pubkey`) for key-based handshake.
+   - On connection established the server sends a `HELLO` message to the client containing:
+       - `pubkey`: Public key for key-based handshake. 
+       - `node_id`: friendly identifier of the server
+       - `session_id`: (optional) assigned session_id for the client, in case it doesn't report it's own
      
-     - Node ID (`node_id`) for identification.
-     
-     - Optional `session_id` for session-based communication.
-
-**HANDSHAKE Request**:
+**HANDSHAKE Request** (sent to client):
 
    - The server initiates the handshake by sending a `HANDSHAKE` message:
-   
-     - Specifies whether to use password-based or public-key-based authentication.
-     
-     - Includes optional fields like:
-     
-       - `crypto_key`: A flag indicating whether a pre-shared cryptographic key is available for use in the handshake (but not the key itself).
-       
-       - `binarize`: Flag for binary protocol support.
-       
-       - `password`: Indicator for password-based handshake.
+       - `handshake`: A flag indicating whether the connection will be dropped if client doesn't finalize handshake
+       - `binarize`: A flag indicating whether the server supports the binarization protocol.
+       - `preshared_key`: A flag indicating whether a pre-shared key is available.
+       - `password`: A flag indicating whether password-based handshake is available.
+       - `crypto_required`: A flag indicating whether unencrypted messages will be dropped
+       - `min_protocol_version`: the lowest hivemind protocol version the server allows
+       - `max_protocol_version`: the highest hivemind protocol version the server allows
 
-**Validate Client's Response**:
+**HANDSHAKE Response** (received from client):
 
-   - If the client provides an envelope:
-   
-     - Validate the client's response using the shared password or public key.
-     
-     - Update the cryptographic key for secure communication.
-     
-   - If the `crypto_key` flag is set or the client doesnt answer the handshake, use the pre-shared cryptographic key directly, skipping the handshake step.
+   - If the client doesnt answer the handshake, use the pre-shared cryptographic key directly, skipping the handshake step.
+   - If the client answers the handshake by sending back another `HANDSHAKE` message:
+       - `session`: the client Session data (may overwrite `session_id` from `HELLO` message)
+       - `site_id`: the client site_id
+       - `binarize`: A flag indicating whether the client supports the binarization protocol.
+       - `envelope`: the handshake envelope to be validated by the server
+   - Validate the client's `envelope` using the shared password
+       - Update the cryptographic key for secure communication.
+       - Update the client session data and site_id
+       - Send back another `HANDSHAKE` message with server `envelope` to be validated by the client
+
 
 ---
 
@@ -73,113 +73,24 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
 
 **Receive HELLO Message**:
 
-   - Extract the server's public key and node ID from the `HELLO` message.
+   - Extract the server's public key and node ID from the `HELLO` message:
+       - `pubkey`: the server public PGP key
+       - `node_id`: friendly identifier of the server
+       - `session_id`: (optional) the server assigned session_id
 
-   - Store the session ID if provided.
+**Receive HANDSHAKE Request**:
 
-**Start Handshake**:
+   - Proceed with **Password-based handshake**  by sending back another `HANDSHAKE` message:
+       - `session`: the client Session data
+       - `site_id`: the client site_id
+       - `binarize`: A flag indicating whether the client supports the binarization protocol.
+       - `envelope`: the handshake envelope to be validated by the server
 
-   - Determine the handshake type based on the server's `HANDSHAKE` request:
-   
-     - Password-based handshake:
-     
-       - Generate an envelope using the shared password.
-       
-     - Public-key-based handshake:
-     
-       - Verify the server's public key (if available).
-       
-       - Generate and send an envelope for authentication.
+**Complete HANDSHAKE**:
 
-**Handle Validation**:
-
-   - If the server sends an envelope for validation:
-   
-     - Verify the server's authenticity using the shared password or public key.
-     
-     - Update the cryptographic key for secure communication.
-
----
-
-## Handshake Message Structure
-
-### HELLO Message
-
-- **From Server**:
-
-```json
-{
-"type": "HELLO",
-"payload": {
-  "pubkey": "<server_public_key>",
-  "node_id": "<server_node_id>",
-  "session_id": "<session_id (optional)>"
-}
-}
-```
-
-### HANDSHAKE Message
-
-- **From Server**:
-
-```json
-{
-"type": "HANDSHAKE",
-"payload": {
-  "password": "<bool>",
-  "crypto_key": "<bool (flag indicating availability of pre-shared key)>",
-  "binarize": "<bool>",
-  "envelope": "<handshake_envelope (if client has started)>"
-}
-}
-```
-
-- **From Client**:
-
-```json
-{
-"type": "HANDSHAKE",
-"payload": {
-  "pubkey": "<client_public_key (if using pubkey)>",
-  "envelope": "<handshake_envelope>",
-  "binarize": "<bool>",
-  "session": "<session_data>",
-  "site_id": "<client_site_id>"
-}
-}
-```
-
----
-
-## Key Functions and Responsibilities
-
-### Server
-
-**Start Handshake**:
-
-  - Ensure the client is authorized to join the HiveMind network.
-  
-**Broadcast Key**:
-
-  - Send the server's public key for public-key-based handshakes.
-  
-**Verify Envelope**:
-
-  - Authenticate the client using the received envelope and establish the shared cryptographic key.
-
-### Client
-
-**Generate Envelope**:
-
-  - Create an envelope for authentication based on the handshake type.
-
-**Verify Server**:
-
-  - Use the public key to verify the server's authenticity.
-
-**Update Session**:
-
-  - Store the server-provided session ID and synchronize it with local sessions.
+   - Received final`HANDSHAKE` message with server `envelope`
+       - Verify the server's authenticity using the shared password.
+       - Update the cryptographic key for secure communication.
 
 ---
 
@@ -189,7 +100,7 @@ Upon successful handshake:
 
 1. A shared cryptographic key is established between the server and the client.
 
-2. All further communication between the server and client is encrypted using this symmetric key (e.g., AES-256).
+2. All further communication between the server and client is encrypted using this symmetric key (AES-256).
 
 3. The session ID ensures continuity and identification in multi-session environments.
 
@@ -206,20 +117,6 @@ This guarantees that all data exchanged between the server and the client is pro
 **Handshake Failures**:
 
   - Authentication failures result in handshake termination and rejection of the connection.
-
----
-
-## Example Scenarios
-
-### First-Time Connection (Implicit Trust)
-1. Server sends `HELLO` with its public key.
-2. Client trusts the server and starts the handshake.
-3. A shared cryptographic key is established for encrypted communication.
-
-### Reconnection with Password
-1. Server requests a password-based handshake.
-2. Client generates an envelope using the shared password.
-3. Server validates the envelope and establishes a secure session.
 
 ---
 
