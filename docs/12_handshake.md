@@ -22,11 +22,11 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
 
    - The server provides a public key to the client, and the client verifies the server's authenticity.
 
-   - Supports implicit trust for first-time connections (when no public key is available).
+   - Supports implicit trust for first-time connections (when no previous public key is available).
 
-   - Uses asymmetric encryption (RSA, for example) to ensure that communication is secure and cannot be intercepted or modified.
+   - Uses asymmetric encryption to ensure that communication is secure and cannot be intercepted or modified.
 
-   - Encrypts the symmetric session key to allow further communication using the shared key.
+   - The symmetric session key (AES) for further communication is transmitted encrypted with PGP public keys.
 
 
 > ⚠️ PGP Handshake is a work in progress! 🚧
