@@ -98,9 +98,3 @@ Once the secret key is derived, it is used to encrypt and decrypt all messages e
 2. **Decryption**:
    - The receiving device extracts the `ciphertext`, `nonce`, and `tag` from the message.
    - Using the same secret key, it decrypts the `ciphertext` and verifies the message integrity using the `tag`.
-
-
-
----
-
-HiveMind's encryption process provides a secure foundation for communication, protecting sensitive data against unauthorized access and tampering. Let us know if you'd like to explore specific implementation details or examples!
