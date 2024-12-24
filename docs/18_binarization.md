@@ -230,7 +230,7 @@ A **unversioned** and **compressed** binary payload message
 1 | 0 | 01100 | 1 | XXXXXXXX | <metadata> | XXXX | <payload>
 ```
 
-> 💡 the binarization scheme allows the hivemind protocol to be implemented by just flashing a light
+> 💡 the binarization scheme allows the protocol to be implemented by just flashing a light
 
 ## Compression Metrics
 
