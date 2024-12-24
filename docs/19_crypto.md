@@ -92,9 +92,9 @@ This approach ensures that both devices independently derive the same encryption
 Once the secret key is derived, it is used to encrypt and decrypt all messages exchanged between devices. The process is as follows:
 
 1. **Encryption**:
-        - The sending device uses the secret key to encrypt the plaintext message using AES-GCM.
-        - The resulting ciphertext, along with the `nonce` and `tag`, is packaged into a message and sent over the network.
+    - The sending device uses the secret key to encrypt the plaintext message using AES-GCM.
+    - The resulting ciphertext, along with the `nonce` and `tag`, is packaged into a message and sent over the network.
 
 2. **Decryption**:
-        - The receiving device extracts the `ciphertext`, `nonce`, and `tag` from the message.
-        - Using the same secret key, it decrypts the `ciphertext` and verifies the message integrity using the `tag`.
+    - The receiving device extracts the `ciphertext`, `nonce`, and `tag` from the message.
+    - Using the same secret key, it decrypts the `ciphertext` and verifies the message integrity using the `tag`.
