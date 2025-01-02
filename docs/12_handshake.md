@@ -57,7 +57,7 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
     - **`max_protocol_version`**: The maximum supported HiveMind protocol version.  
 - **Security**: This message is **NOT ENCRYPTED** 🔓.  
 
-#### **HANDSHAKE Response**  ⬅️ ✉️  `HANDSHAKE`
+#### **Initiate Key Exchange**  ⬅️ ✉️  `HANDSHAKE`
 
 - **Trigger**: Client initiated handshake in response to previously sent connection parameters.  
 - **Content**:
