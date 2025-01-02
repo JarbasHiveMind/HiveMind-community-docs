@@ -16,7 +16,7 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
 
    - Requires both client and server to know the password beforehand.
 
-**PGP (Public Key) Handshake**:
+**RSA (Public Key) Handshake**:
 
    - Based on public/private key pairs.
 
@@ -26,71 +26,119 @@ For detailed code and various usage examples, you can refer to the [Poorman Hand
 
    - Uses asymmetric encryption to ensure that communication is secure and cannot be intercepted or modified.
 
-   - The symmetric session key (AES) for further communication is transmitted encrypted with PGP public keys.
+   - The symmetric session key (AES) for further communication is transmitted encrypted with RSA public keys.
 
 
-> ⚠️ PGP Handshake is a work in progress! 🚧
+> ⚠️ RSA Handshake is a work in progress! 🚧
 
 ---
 
 ## Workflow: Server Perspective
 
-**HELLO Message** (sent to client):
+#### **Send Server Info** `HELLO` ✉️ ➡️  
 
-   - On connection established the server sends a `HELLO` message to the client containing:
-       - `pubkey`: Public key for key-based handshake. 
-       - `node_id`: friendly identifier of the server
-       - `session_id`: (optional) assigned session_id for the client, in case it doesn't report it's own
-     
-**HANDSHAKE Request** (sent to client):
+- **Trigger**: Sent immediately upon connection establishment.  
+- **Content**:
+      - **`pubkey`**: Public key for key-based handshake and `INTERCOM` messages.  
+      - **`node_id`**: A user-friendly identifier for the server.  
+- **Security**: This message is **NOT ENCRYPTED** 🔓.  
 
-   - The server initiates the handshake by sending a `HANDSHAKE` message:
-       - `handshake`: A flag indicating whether the connection will be dropped if client doesn't finalize handshake
-       - `binarize`: A flag indicating whether the server supports the binarization protocol.
-       - `preshared_key`: A flag indicating whether a pre-shared key is available.
-       - `password`: A flag indicating whether password-based handshake is available.
-       - `crypto_required`: A flag indicating whether unencrypted messages will be dropped
-       - `min_protocol_version`: the lowest hivemind protocol version the server allows
-       - `max_protocol_version`: the highest hivemind protocol version the server allows
 
-**HANDSHAKE Response** (received from client):
+#### **Establish connection parameters** `HANDSHAKE`✉️ ➡️  
 
-   - If the client doesnt answer the handshake, use the pre-shared cryptographic key directly, skipping the handshake step.
-   - If the client answers the handshake by sending back another `HANDSHAKE` message:
-       - `session`: the client Session data (may overwrite `session_id` from `HELLO` message)
-       - `site_id`: the client site_id
-       - `binarize`: A flag indicating whether the client supports the binarization protocol.
-       - `envelope`: the handshake envelope to be validated by the server
-   - Validate the client's `envelope` using the shared password
-       - Update the cryptographic key for secure communication.
-       - Update the client session data and site_id
-       - Send back another `HANDSHAKE` message with server `envelope` to be validated by the client
+- **Trigger**: Initiates the handshake process immediately after `HELLO` message.  
+- **Content**:
+    - **`handshake`**: Indicates if the connection will be dropped if the client does not finalize the handshake.  
+    - **`binarize`**: Specifies if the server supports the binarization protocol.  
+    - **`preshared_key`**: Indicates the availability of a pre-shared key.  
+    - **`password`**: Indicates the availability of password-based handshake.  
+    - **`crypto_required`**: Specifies if unencrypted messages will be dropped.  
+    - **`min_protocol_version`**: The minimum supported HiveMind protocol version.  
+    - **`max_protocol_version`**: The maximum supported HiveMind protocol version.  
+- **Security**: This message is **NOT ENCRYPTED** 🔓.  
 
+#### **HANDSHAKE Response**  ⬅️ ✉️  `HANDSHAKE`
+
+- **Trigger**: Client initiated handshake in response to previously sent connection parameters.  
+- **Content**:
+     - **`binarize`**: Specifies if the client supports the binarization protocol.  
+     - **`envelope`**: The handshake envelope to be validated by the server.  
+- **Behavior**:  
+     - If the client does not respond, the server will skip the handshake step and use the pre-shared cryptographic key directly.  
+     - Validate the client's `envelope` using the pre-shared password.  
+- **Security**: This message is **NOT ENCRYPTED** 🔓.  
+
+#### **Complete Key Exchange** `HANDSHAKE` ✉️ ➡️  
+
+- **Trigger**: Validated client's `envelope` and updated the cryptographic key for secure communication.
+- **Content**:
+     - **`envelope`**: The handshake envelope to be validated by the client.  
+- **Security**: This message is **NOT ENCRYPTED** 🔓.  
+
+
+#### **Receive Client Info** ⬅️ ✉️ `HELLO`
+
+- **Trigger**: Sent after the handshake is complete and encryption is established.  
+- **Content**:
+    - **`session`**: The client session data.  
+    - **`site_id`**: The client site identifier.  
+    - **`pubkey`**: Public key for `INTERCOM` messages.  
+- **Security**: This message is **ENCRYPTED** 🔐.  
 
 ---
 
 ## Workflow: Client Perspective
 
-**Receive HELLO Message**:
+#### **Receive Server Info** ⬅️ ✉️  `HELLO`
 
-   - Extract the server's public key and node ID from the `HELLO` message:
-       - `pubkey`: the server public PGP key
-       - `node_id`: friendly identifier of the server
-       - `session_id`: (optional) the server assigned session_id
+- **Trigger**: Received upon connection establishment.  
+- **Content**:
+     - **`pubkey`**: The server's public RSA key.  
+    - **`node_id`**: A user-friendly identifier for the server.  
+- **Security**: This message is **NOT ENCRYPTED** 🔓.  
 
-**Receive HANDSHAKE Request**:
 
-   - Proceed with **Password-based handshake**  by sending back another `HANDSHAKE` message:
-       - `session`: the client Session data
-       - `site_id`: the client site_id
-       - `binarize`: A flag indicating whether the client supports the binarization protocol.
-       - `envelope`: the handshake envelope to be validated by the server
+#### **Establish connection parameters** ⬅️ ✉️  `HANDSHAKE`
 
-**Complete HANDSHAKE**:
+- **Trigger**: Received immediately after `HELLO` message.  
+- **Content**:
+     - **`handshake`**: Indicates if the connection will be dropped if the client does not finalize the handshake.  
+    - **`binarize`**: Specifies if the server supports the binarization protocol.  
+    - **`preshared_key`**: Indicates the availability of a pre-shared key.  
+    - **`password`**: Indicates the availability of password-based handshake.  
+    - **`crypto_required`**: Specifies if unencrypted messages will be dropped.  
+    - **`min_protocol_version`**: The minimum supported HiveMind protocol version.  
+    - **`max_protocol_version`**: The maximum supported HiveMind protocol version.  
+- **Security**: This message is **NOT ENCRYPTED** 🔓.  
 
-   - Received final`HANDSHAKE` message with server `envelope`
-       - Verify the server's authenticity using the shared password.
-       - Update the cryptographic key for secure communication.
+
+#### **Initiate Key Exchange** `HANDSHAKE` ✉️ ➡️  
+
+- **Trigger**: Respond to the server's handshake request.  
+- **Content**:
+     - **`binarize`**: Specifies if the client supports the binarization protocol.  
+    - **`envelope`**: The handshake envelope to be validated by the server.  
+- **Security**: This message is **NOT ENCRYPTED** 🔓.  
+
+#### **Complete Key Exchange** ⬅️ ✉️  `HANDSHAKE`
+
+- **Trigger**: On reception of the server's final `HANDSHAKE` message.  
+- **Content**:
+    - **`envelope`**: The handshake envelope to be validated by the client.  
+- **Behavior**:
+    - Verify the server's authenticity using the shared password.  
+    - Update the cryptographic key for secure communication.  
+- **Security**: This message is **NOT ENCRYPTED** 🔓.  
+
+
+#### **Send Session Data** `HELLO` ✉️ ➡️  
+
+- **Trigger**: Send session data after encryption is established.  
+- **Content**:
+     - **`session`**: The client session data.  
+    - **`site_id`**: The client site identifier.  
+    - **`pubkey`**: Public key for `INTERCOM` messages.  
+- **Security**: This message is **ENCRYPTED** 🔐.  
 
 ---
 
@@ -114,9 +162,15 @@ This guarantees that all data exchanged between the server and the client is pro
 
   - Messages not adhering to the protocol are logged, and the connection may be terminated.
 
-**Handshake Failures**:
+**Authentication Failures**:
 
   - Authentication failures result in handshake termination and rejection of the connection.
+
+**Skipping Handshake**:
+
+  - Handshake can be skipped if a secret key has been previously exchanged out of band
+
+![img_21.png](img_21.png)
 
 ---
 
