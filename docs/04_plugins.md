@@ -1,100 +1,114 @@
+# HiveMind Plugin Manager
 
-## OVOS Plugins Compatibility
+The **HiveMind Plugin Manager (HPM)** is a system for discovering, managing, and loading plugins within the HiveMind ecosystem. It supports various plugin types, including databases, network protocols, agent protocols, and binary data handlers. HPM allows for dynamic integration of these plugins to enhance the functionality of HiveMind agents, offering a flexible and extensible architecture.
 
-Hivemind leverages [ovos-plugin-manager](), bringing compatibility with hundreds of plugins.
+## Features
 
-> 💡 OVOS plugins can be used both on *client* and *server* side
+- **Plugin Discovery**: Easily find and load plugins of different types, including:
+  - **Database Plugins**: Supports various database types such as JSON, SQLite, and Redis.
+  - **Agent Protocol Plugins**: Integrates agent protocols like OVOS and Persona, enabling seamless communication between HiveMind agents.
+  - **Network Protocol Plugins**: Enables network protocols such as WebSockets for distributed communication.
+  - **Binary Data Handler Plugins**: Handle binary data communication, like audio data over HiveMind.
 
-| Plugin Type         | Description                                             | Documentation                                                                                   |
-|---------------------|---------------------------------------------------------|-------------------------------------------------------------------------------------------------|
-| Microphone          | Captures voice input                                    | [Microphone Documentation](https://openvoiceos.github.io/ovos-technical-manual/mic_plugins/)    |
-| VAD                 | Voice Activity Detection                                | [VAD Documentation](https://openvoiceos.github.io/ovos-technical-manual/vad_plugins/)           |
-| WakeWord            | Detects wake words for interaction                      | [WakeWord Documentation](https://openvoiceos.github.io/ovos-technical-manual/ww_plugins/)       |
-| STT                 | Speech-to-text (STT)                                    | [STT Documentation](https://openvoiceos.github.io/ovos-technical-manual/stt_plugins/)           |
-| TTS                 | Text-to-speech (TTS)                                    | [TTS Documentation](https://openvoiceos.github.io/ovos-technical-manual/tts_plugins)            |
-| G2P                 | Grapheme-to-phoneme (G2P), used to simulate mouth movements | [G2P Documentation](https://openvoiceos.github.io/ovos-technical-manual/g2p_plugins)           |
-| Media Playback      | Enables media playback (e.g., "play Metallica")         | [Media Playback Documentation](https://openvoiceos.github.io/ovos-technical-manual/media_plugins/) |
-| OCP Plugins         | Provides playback support for URLs (e.g., YouTube)      | [OCP Plugins Documentation](https://openvoiceos.github.io/ovos-technical-manual/ocp_plugins/)   |
-| Audio Transformers  | Processes audio before speech-to-text (STT)             | [Audio Transformers Documentation](https://openvoiceos.github.io/ovos-technical-manual/transformer_plugins/) |
-| Dialog Transformers | Processes text before text-to-speech (TTS)              | [Dialog Transformers Documentation](https://openvoiceos.github.io/ovos-technical-manual/transformer_plugins/) |
-| TTS Transformers    | Processes audio after text-to-speech (TTS)              | [TTS Transformers Documentation](https://openvoiceos.github.io/ovos-technical-manual/transformer_plugins/) |
-| PHAL                | Provides platform-specific support (e.g., Mark 1)       | [PHAL Documentation](https://openvoiceos.github.io/ovos-technical-manual/PHAL/)                |
+- **Plugin Loading**: Dynamically load specific plugins by name, type, or from available entry points.
 
-### Client side plugins
-
-The tables below illustrates how plugins from the OVOS ecosystem relate to the various satellites and where they should
-be installed and configured
-
-**Audio input**:
-
-| Supported Plugins                 | **Microphone**   | **VAD**          | **Wake Word**      | **STT**          |
-|-----------------------------------|------------------|------------------|--------------------|------------------|
-| **HiveMind Voice Satellite**      | ✔️<br>(Required) | ✔️<br>(Required) | ✔️<br>(Required *) | ✔️<br>(Required) | 
-| **HiveMind Voice Relay**          | ✔️<br>(Required) | ✔️<br>(Required) | ✔️<br>(Required)   | 📡<br>(Remote)   | 
-| **HiveMind Microphone Satellite** | ✔️<br>(Required) | ✔️<br>(Required) | 📡<br>(Remote)     | 📡<br>(Remote)   | 
-
-* can be skipped
-  with [continuous listening mode](https://openvoiceos.github.io/ovos-technical-manual/speech_service/#modes-of-operation)
-
-**Audio output**:
-
-| Supported Plugins                 | **TTS**          | **Media Playback** | **OCP extractors** | 
-|-----------------------------------|------------------|--------------------|--------------------| 
-| **HiveMind Voice Satellite**      | ✔️<br>(Required) | ✔️<br>(Optional)   | ✔️<br>(Optional)   |  
-| **HiveMind Voice Relay**          | 📡<br>(Remote)   | ✔️<br>(Optional)   | ✔️<br>(Optional)   | 
-| **HiveMind Microphone Satellite** | 📡<br>(Remote)   | ✔️<br>(Optional)   | ✔️<br>(Optional)   |  
-
-**Transformers**:
-
-| Supported Plugins                 | **Audio**          | **Utterance**      | **Metadata**       | **Dialog**         | **TTS**            |
-|-----------------------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
-| **HiveMind Voice Satellite**      | ✔️<br>(Optional)   | ✔️<br>(Optional)   | ✔️<br>(Optional)   | ✔️<br>(Optional)   | ✔️<br>(Optional)   |
-| **HiveMind Voice Relay**          | ❌<br>(Unsupported) | 🚧<br>(TODO)       | 🚧<br>(TODO)       | 🚧<br>(TODO)       | ❌<br>(Unsupported) |
-| **HiveMind Microphone Satellite** | ❌<br>(Unsupported) | ❌<br>(Unsupported) | ❌<br>(Unsupported) | ❌<br>(Unsupported) | ❌<br>(Unsupported) |
-
-**Other**:
-
-| Supported Plugins                 | **G2P**<br>(mouth movements) | **PHAL**         |
-|-----------------------------------|------------------------------|------------------|
-| **HiveMind Voice Satellite**      | ✔️<br>(Optional)             | ✔️<br>(Optional) |
-| **HiveMind Voice Relay**          | ❌<br>(Unsupported)           | ✔️<br>(Optional) |
-| **HiveMind Microphone Satellite** | ❌<br>(Unsupported)           | ✔️<br>(Optional) |
+- **Factories for Plugin Instantiation**: Factories for creating instances of each plugin type (database, agent protocol, network protocol, binary protocol) based on user configurations.
 
 
-### Server side plugins
+## Plugin Types
 
-The tables below illustrates how plugins from the OVOS ecosystem relate to the various server setups and where they should
-be installed and configured
+![hpm.png](hpm.png)
 
-**Audio input**:
+### 1. **Database Plugins**
 
-| Supported Plugins           | **Microphone**     | **VAD**            | **Wake Word**      | **STT**            |
-|-----------------------------|--------------------|--------------------|--------------------|--------------------|
-| **Hivemind Skills Server**  | ❌<br>(Unsupported) | ❌<br>(Unsupported) | ❌<br>(Unsupported) | ❌<br>(Unsupported) | 
-| **Hivemind Sound Server**   | ✔️<br>(Required)   | ✔️<br>(Required)   | ✔️<br>(Required)   | ✔️<br>(Required)   | 
-| **Hivemind Persona Server** | ❌<br>(Unsupported) | ❌<br>(Unsupported) | ❌<br>(Unsupported) | ❌<br>(Unsupported) | 
+Supports multiple database systems, such as:
 
-**Audio output**:
+- **JSON Database**: Stores data in a JSON format.
+- **SQLite Database**: Uses SQLite for local database storage.
+- **Redis Database**: Uses Redis for distributed caching and storage.
 
-| Supported Plugins           | **TTS**            | **Media Playback** | **OCP extractors** | 
-|-----------------------------|--------------------|--------------------|--------------------| 
-| **Hivemind Skills Server**  | ❌<br>(Unsupported) | ❌<br>(Unsupported) | ✔️<br>(Optional)   |  
-| **Hivemind Sound Server**   | ✔️<br>(Required)   | ❌<br>(Unsupported) | ✔️<br>(Optional)   | 
-| **Hivemind Persona Server** | ❌<br>(Unsupported) | ❌<br>(Unsupported) | ❌<br>(Unsupported) |  
+### 2. **Agent Protocol Plugins**
 
-**Transformers**:
+Supports communication protocols for agents, such as:
 
-| Supported Plugins           | **Audio**          | **Utterance**      | **Metadata**       | **Dialog**         | **TTS**            |
-|-----------------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
-| **Hivemind Skills Server**  | ❌<br>(Unsupported) | ❌<br>(Unsupported) | ❌<br>(Unsupported) | ❌<br>(Unsupported) | ❌<br>(Unsupported) |
-| **Hivemind Sound Server**   | 🚧<br>(TODO)       | ✔️<br>(Optional)   | ✔️<br>(Optional)   | ✔️<br>(Optional)   | 🚧<br>(TODO)       |
-| **Hivemind Persona Server** | ❌<br>(Unsupported) | 🚧<br>(TODO)       | ❌<br>(Unsupported) | 🚧<br>(TODO)       | ❌<br>(Unsupported) |
+- **OVOS Protocol**: For interaction with OVOS-based agents.
+- **Persona Protocol**: For interaction with the Persona framework.
 
-**Other**:
+### 3. **Network Protocol Plugins**
 
-| Supported Plugins           | **G2P**<br>(mouth movements) | **PHAL**           |
-|-----------------------------|------------------------------|--------------------|
-| **Hivemind Skills Server**  | ❌<br>(Unsupported)           | ❌<br>(Unsupported) |
-| **Hivemind Sound Server**   | ❌<br>(Unsupported)           | ❌<br>(Unsupported) |
-| **Hivemind Persona Server** | ❌<br>(Unsupported)           | ❌<br>(Unsupported) |
+Enables network communication protocols, such as:
 
+- **WebSocket Protocol**: For real-time, bidirectional communication over WebSockets.
+
+### 4. **Binary Data Handler Protocol Plugins**
+
+Handles communication of binary data types, like audio, using specialized protocols.
+
+
+## Installation
+
+`hivemind-plugin-manager` is a dependency of `hivemind-core`, you typically do not need to install it
+
+```bash
+pip install hivemind-plugin-manager
+```
+
+## Developers
+
+The following example demonstrates how to discover and load plugins, along with creating instances using the provided factories.
+
+### Discovering Plugins
+
+Use the `find_plugins` function to discover all available plugins for a specific type:
+
+```python
+from hivemind_plugin_manager import find_plugins, HiveMindPluginTypes
+
+# Find all database plugins
+database_plugins = find_plugins(HiveMindPluginTypes.DATABASE)
+print(database_plugins)
+
+# Find all agent protocol plugins
+agent_protocol_plugins = find_plugins(HiveMindPluginTypes.AGENT_PROTOCOL)
+print(agent_protocol_plugins)
+```
+
+### Creating Plugin Instances
+
+Each plugin type has a corresponding factory class that allows for creating plugin instances with the required configuration.
+
+#### Database Plugin Factory
+
+```python
+from hivemind_plugin_manager import DatabaseFactory
+
+# Create an instance of a database plugin
+db_instance = DatabaseFactory.create("hivemind-redis-db-plugin", password="Password1!", host="192.168.1.11", port=6789)
+```
+
+#### Agent Protocol Factory
+
+```python
+from hivemind_plugin_manager import AgentProtocolFactory
+
+# Create an agent protocol instance
+agent_protocol_instance = AgentProtocolFactory.create("hivemind-ovos-agent-plugin")
+```
+
+#### Network Protocol Factory
+
+```python
+from hivemind_plugin_manager import NetworkProtocolFactory
+
+# Create a network protocol instance
+network_protocol_instance = NetworkProtocolFactory.create("hivemind-websocket-plugin")
+```
+
+#### Binary Data Handler Protocol Factory
+
+```python
+from hivemind_plugin_manager import BinaryDataHandlerProtocolFactory
+
+# Create a binary data handler protocol instance
+binary_data_handler_instance = BinaryDataHandlerProtocolFactory.create("hivemind-audio-binary-protocol-plugin")
+```
