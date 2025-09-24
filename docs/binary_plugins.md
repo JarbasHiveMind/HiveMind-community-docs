@@ -19,6 +19,8 @@ Unlike agent plugins, which process BUS messages, binary plugins work directly w
 
 ## Current Implementation
 
+The reference plugin is the [hivemind-audio-binary-protocol](https://github.com/JarbasHiveMind/hivemind-audio-binary-protocol), built on top of OpenVoiceOS plugins
+
 Right now, the binary plugin system is focused on **STT and TTS**, but the design allows for more use cases in the future.
 
 * The first binary plugin implementation loads existing **OpenVoiceOS TTS and STT plugins**.

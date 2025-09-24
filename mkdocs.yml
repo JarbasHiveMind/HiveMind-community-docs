@@ -7,6 +7,7 @@ nav:
       - Terminology: 02_terminology.md
       - Nested Hives: 15_nested.md
       - Plugins: 04_plugins.md
+      - Configuration: config.md
     - Plugins:
       - Agents: agents.md
       - Network: network_plugins.md
