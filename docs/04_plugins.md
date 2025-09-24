@@ -45,7 +45,12 @@ Enables network communication protocols, such as:
 Handles communication of binary data types, like audio, using specialized protocols.
 
 
-## Installation
+## Developers
+
+The following example demonstrates how to discover and load plugins, along with creating instances using the provided factories.
+
+
+### Installation
 
 `hivemind-plugin-manager` is a dependency of `hivemind-core`, you typically do not need to install it
 
@@ -53,9 +58,6 @@ Handles communication of binary data types, like audio, using specialized protoc
 pip install hivemind-plugin-manager
 ```
 
-## Developers
-
-The following example demonstrates how to discover and load plugins, along with creating instances using the provided factories.
 
 ### Discovering Plugins
 

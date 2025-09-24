@@ -116,7 +116,7 @@ The client connecting to HiveMind must have **admin privileges** and permission 
 - `ovos.common_play.repeat.one`
 
 #### Audio Service
-*(only if enabled manually — for systems without the OCP Audio Plugin)*
+*(only if enabled manually, for systems without the OCP Audio Plugin)*
 
 - `mycroft.audio.service.play`
 - `mycroft.audio.service.resume`

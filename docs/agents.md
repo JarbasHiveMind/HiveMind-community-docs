@@ -1,6 +1,6 @@
 # Agent Plugins for HiveMind
 
-HiveMind is **just a transport protocol** — it moves **BUS messages** between devices and services.
+HiveMind is **just a transport protocol**, it moves **BUS messages** between devices and services.
 On its own, HiveMind doesn’t decide what those messages *mean* or what to *do* with them.
 
 That responsibility is delegated to **Agent Plugins**.
@@ -67,5 +67,5 @@ Learn more about [OVOS personas](https://openvoiceos.github.io/ovos-technical-ma
   * Want a network-controlled speaker? Use the Media Player Agent.
 
 * They illustrate the design philosophy:
-  **HiveMind doesn’t care what your node *is* — only that it can communicate.**
+  **HiveMind doesn’t care what your node *is*, only that it can communicate.**
 

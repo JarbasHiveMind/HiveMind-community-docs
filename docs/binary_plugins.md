@@ -4,7 +4,7 @@ While **Agent Plugins** handle text-based messages, HiveMind also supports **Bin
 
 These plugins make it possible to provide **secure services** like **Speech-to-Text (STT)** and **Text-to-Speech (TTS)** across HiveMind without exposing them directly.
 
-Importantly, **transport always happens securely over HiveMind** — binary data uses the same encrypted HiveMind transport as all other messages.
+Importantly, **transport always happens securely over HiveMind**, binary data uses the same encrypted HiveMind transport as all other messages.
 
 ---
 
