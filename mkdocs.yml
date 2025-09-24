@@ -5,18 +5,19 @@ nav:
     - About:
       - Quick start: 01_quickstart.md
       - Terminology: 02_terminology.md
-      - Auto Discovery: 05_presence.md
       - Nested Hives: 15_nested.md
       - Plugins: 04_plugins.md
-    - Servers:
-      - Skills Server: 06_skills_server.md
-      - Sound Server: 06_sound_server.md
-      - Persona Server: 08_persona.md
+    - Plugins:
+      - Agents: agents.md
+      - Network: network_plugins.md
+      - Binary payloads: binary_plugins.md
     - Satellites:
+      - Overview: satellites.md
       - Voice Satellite: 07_voicesat.md
       - Voice Relay: 07_voice_relay.md
       - Mic Satellite: 07_micsat.md
     - Integrations:
+      - OpenVoiceOS Pipeline: 09_matrix.md
       - Matrix: 09_matrix.md
       - DeltaChat: 10_deltachat.md
       - Home Assistant: 07_homeassistant.md

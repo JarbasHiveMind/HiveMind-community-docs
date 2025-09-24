@@ -1,24 +1,30 @@
-# HiveMind Voice Satellite
+# HiveMind Voice Satellite (voice-sat)
 
-OpenVoiceOS Satellite, connect to HiveMind
+The **Voice Satellite** runs a full OpenVoiceOS audio stack **locally on the device**. All microphone, VAD, wake-word, STT, and TTS processing happens on the satellite. Only **text messages** are sent to HiveMind core, no audio is streamed.
 
-Built on top of [ovos-dinkum-listener](https://github.com/OpenVoiceOS/ovos-dinkum-listener), [ovos-audio](https://openvoiceos.github.io/ovos-technical-manual/audio_service/) and [PHAL](https://openvoiceos.github.io/ovos-technical-manual/PHAL/)
+> ⚠️ **No binary plugin is required** on the HiveMind core server. This makes voice-sat fully compatible with a standard HiveMind core setup.
 
-![img_19.png](img_19.png)
+Built on top of [ovos-dinkum-listener](https://github.com/OpenVoiceOS/ovos-dinkum-listener), [ovos-audio](https://openvoiceos.github.io/ovos-technical-manual/audio_service/), and [PHAL](https://openvoiceos.github.io/ovos-technical-manual/PHAL/).
+
+![img\_19.png](img_19.png)
+
+---
 
 ## Install
 
-Install dependencies (if needed)
+Install dependencies (if needed):
 
 ```bash
 sudo apt-get install -y libpulse-dev libasound2-dev
 ```
 
-Install with pip
+Install via pip:
 
 ```bash
-$ pip install HiveMind-voice-sat
+pip install HiveMind-voice-sat
 ```
+
+---
 
 ## Usage
 
@@ -28,37 +34,43 @@ Usage: hivemind-voice-sat [OPTIONS]
   connect to HiveMind
 
 Options:
-  --host TEXT      hivemind host
+  --host TEXT      HiveMind host
   --key TEXT       Access Key
   --password TEXT  Password for key derivation
   --port INTEGER   HiveMind port number
-  --selfsigned     accept self signed certificates
+  --selfsigned     Accept self signed certificates
   --help           Show this message and exit.
-
 ```
 
+---
 
 ## Configuration
 
-Voice satellite is built on top of [ovos-listener](https://openvoiceos.github.io/ovos-technical-manual/speech_service/) and [ovos-audio](https://openvoiceos.github.io/ovos-technical-manual/audio_service/), it uses the same OpenVoiceOS configuration `~/.config/mycroft/mycroft.conf`
+The Voice Satellite uses the **standard OpenVoiceOS configuration** at:
 
-Supported plugins:
+```
+~/.config/mycroft/mycroft.conf
+```
 
-| Plugin Type | Description | Required | Link |
-|-------------|-------------|----------|------|
-| Microphone | Captures voice input | Yes | [Microphone](https://openvoiceos.github.io/ovos-technical-manual/mic_plugins/) |
-| VAD | Voice Activity Detection | Yes | [VAD](https://openvoiceos.github.io/ovos-technical-manual/vad_plugins/) |
-| WakeWord | Detects wake words for interaction | Yes* | [WakeWord](https://openvoiceos.github.io/ovos-technical-manual/ww_plugins/) |
-| STT | speech-to-text (STT)| Yes | [STT](https://openvoiceos.github.io/ovos-technical-manual/stt_plugins/) |
-| TTS | text-to-speech (TTS) | Yes | [TTS](https://openvoiceos.github.io/ovos-technical-manual/tts_plugins) |
-| G2P | grapheme-to-phoneme (G2P), used to simulate mouth movements  | No | [G2P](https://openvoiceos.github.io/ovos-technical-manual/g2p_plugins) |
-| Media Playback Plugins | Enables media playback (e.g., "play Metallica") | No | [Media Playback Plugins](https://openvoiceos.github.io/ovos-technical-manual/media_plugins/) |
-| OCP Plugins | Provides playback support for URLs (e.g., YouTube) | No | [OCP Plugins](https://openvoiceos.github.io/ovos-technical-manual/ocp_plugins/) |
-| Audio Transformers | Processes audio before speech-to-text (STT) | No | [Audio Transformers](https://openvoiceos.github.io/ovos-technical-manual/transformer_plugins/) |
-| Dialog Transformers | Processes text before text-to-speech (TTS) | No | [Dialog Transformers](https://openvoiceos.github.io/ovos-technical-manual/transformer_plugins/) |
-| TTS Transformers | Processes audio after text-to-speech (TTS) | No | [TTS Transformers](https://openvoiceos.github.io/ovos-technical-manual/transformer_plugins/) |
-| PHAL | Provides platform-specific support (e.g., Mark 1) | No | [PHAL](https://openvoiceos.github.io/ovos-technical-manual/PHAL/) |
+All plugin settings (microphone, VAD, wake word, STT, TTS, G2P, media playback, transformers, PHAL, etc.) are managed through this configuration.
 
-* can be skipped with [continuous listening mode](https://openvoiceos.github.io/ovos-technical-manual/speech_service/#modes-of-operation)
+See the [OpenVoiceOS documentation](https://openvoiceos.github.io/ovos-technical-manual/) for detailed plugin setup.
 
-You can optimize your voice satellite for a variety of platforms by selecting different plugin combinations
+---
+
+## Key Features
+
+* ✅ Fully local audio handling: microphone, VAD, wake word, STT, TTS
+* 🔒 Only text is sent over HiveMind
+* 📦 Compatible with all OVOS plugins (media, transformers, PHAL, etc.)
+* ⚡ Low latency and offline-capable
+* 🔗 No HiveMind binary plugin required
+
+---
+
+## Notes
+
+* Wake word detection can be skipped if using [continuous listening mode](https://openvoiceos.github.io/ovos-technical-manual/speech_service/#modes-of-operation).
+* Ideal for devices where privacy, offline operation, and low latency are important.
+* All HiveMind communication is secure and encrypted.
+
