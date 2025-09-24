@@ -11,7 +11,7 @@ It defines **protocols, plugins, and security options** for the HiveMind node.
 
 ---
 
-## Default Configuration
+## Example Configuration
 
 The configuration includes agent, network, database, and binary protocol settings:
 
