@@ -46,9 +46,7 @@ Learn more about [OVOS personas](https://openvoiceos.github.io/ovos-technical-ma
 * Special-case agent focused on **media playback control**.
 * Does **not** handle natural language queries.
 * Instead, it reacts to OVOS bus messages related to media (play, pause, stop, next, etc.).
-* Exposes HiveMind devices as **media players** to frameworks such as:
-  * [Home Assistant](https://www.home-assistant.io/)
-  * [Music Assistant](https://music-assistant.io/)
+* Exposes HiveMind devices as **media players** to frameworks such as [Home Assistant](https://www.home-assistant.io/)
 * Implemented as an agent plugin for technical consistency, but demonstrates HiveMind’s flexibility: not all agents need to be conversational.
 
 ---
