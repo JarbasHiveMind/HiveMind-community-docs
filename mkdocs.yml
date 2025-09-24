@@ -17,7 +17,7 @@ nav:
       - Voice Relay: 07_voice_relay.md
       - Mic Satellite: 07_micsat.md
     - Integrations:
-      - OpenVoiceOS Pipeline: 09_matrix.md
+      - OpenVoiceOS Pipeline: pipeline.md
       - Matrix: 09_matrix.md
       - DeltaChat: 10_deltachat.md
       - Home Assistant: 07_homeassistant.md
