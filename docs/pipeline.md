@@ -99,18 +99,13 @@ hivemind-client test-identity
 
 When running in **slave mode**, the device can passively monitor HiveMind and **emit serialized HiveMessages** via the regular OVOS bus.
 
-* **From slave → master:**
+* **From slave → master:** (might be rejected by `hivemind-core`)
 
-```json
-"msg_type": "bus", "payload": message.serialize()
-```
+emit `"hive.send.upstream"` with message.data, `{"msg_type": "bus", "payload": message.serialize()}`
 
 * **From master → slave:**
 
-```json
-"msg_type": "bus", "payload": message.serialize()
-```
+emit `"hive.send.downstream"` with message.data, `{"msg_type": "bus", "payload": message.serialize()}`
 
-This feature enables **nested hives**, where a device can act as both **master** (running `hivemind-core`) and **slave** (running this plugin).
 
-> See the [HiveMind protocol documentation](https://jarbashivemind.github.io/HiveMind-community-docs/04_protocol) for valid message payloads and more details.
+> 💡 this is what enables [nested hives](https://jarbashivemind.github.io/HiveMind-community-docs/15_nested/), OpenVoiceOS can be both a **master** (by running `hivemind-core`) and a **slave** (by running this plugin)

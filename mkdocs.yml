@@ -10,8 +10,8 @@ nav:
       - Configuration: config.md
     - Plugins:
       - Agents: agents.md
+      - Binary: binary_plugins.md
       - Network: network_plugins.md
-      - Binary payloads: binary_plugins.md
       - Database: db_plugins.md
     - Satellites:
       - Overview: satellites.md
