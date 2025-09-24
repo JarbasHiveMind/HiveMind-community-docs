@@ -11,6 +11,7 @@ nav:
       - Agents: agents.md
       - Network: network_plugins.md
       - Binary payloads: binary_plugins.md
+      - Database: db_plugins.md
     - Satellites:
       - Overview: satellites.md
       - Voice Satellite: 07_voicesat.md
