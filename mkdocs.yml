@@ -36,3 +36,6 @@ nav:
       - ELI5: gpt_eli5.md
 
 theme: readthedocs
+
+extra_javascript:
+  - javascripts/analytics.js
