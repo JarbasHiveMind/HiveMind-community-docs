@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/04_plugins/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Plugins - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Plugins";
+        var mkdocs_page_input_path = "04_plugins.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/04_plugins/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Plugins</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#features">Features</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#plugin-types">Plugin Types</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-database-plugins">1. Database Plugins</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-agent-protocol-plugins">2. Agent Protocol Plugins</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-network-protocol-plugins">3. Network Protocol Plugins</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-binary-data-handler-protocol-plugins">4. Binary Data Handler Protocol Plugins</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#developers">Developers</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#discovering-plugins">Discovering Plugins</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#creating-plugin-instances">Creating Plugin Instances</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#database-plugin-factory">Database Plugin Factory</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#agent-protocol-factory">Agent Protocol Factory</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#network-protocol-factory">Network Protocol Factory</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#binary-data-handler-protocol-factory">Binary Data Handler Protocol Factory</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">About</li>
+      <li class="breadcrumb-item active">Plugins</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="hivemind-plugin-manager">HiveMind Plugin Manager</h1>
+<p>The <strong>HiveMind Plugin Manager (HPM)</strong> is a system for discovering, managing, and loading plugins within the HiveMind ecosystem. It supports various plugin types, including databases, network protocols, agent protocols, and binary data handlers. HPM allows for dynamic integration of these plugins to enhance the functionality of HiveMind agents, offering a flexible and extensible architecture.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li><strong>Plugin Discovery</strong>: Easily find and load plugins of different types, including:</li>
+<li><strong>Database Plugins</strong>: Supports various database types such as JSON, SQLite, and Redis.</li>
+<li><strong>Agent Protocol Plugins</strong>: Integrates agent protocols like OVOS and Persona, enabling seamless communication between HiveMind agents.</li>
+<li><strong>Network Protocol Plugins</strong>: Enables network protocols such as WebSockets for distributed communication.</li>
+<li>
+<p><strong>Binary Data Handler Plugins</strong>: Handle binary data communication, like audio data over HiveMind.</p>
+</li>
+<li>
+<p><strong>Plugin Loading</strong>: Dynamically load specific plugins by name, type, or from available entry points.</p>
+</li>
+<li>
+<p><strong>Factories for Plugin Instantiation</strong>: Factories for creating instances of each plugin type (database, agent protocol, network protocol, binary protocol) based on user configurations.</p>
+</li>
+</ul>
+<h2 id="plugin-types">Plugin Types</h2>
+<p><img alt="hpm.png" src="../hpm.png" /></p>
+<h3 id="1-database-plugins">1. <strong>Database Plugins</strong></h3>
+<p>Supports multiple database systems, such as:</p>
+<ul>
+<li><strong>JSON Database</strong>: Stores data in a JSON format.</li>
+<li><strong>SQLite Database</strong>: Uses SQLite for local database storage.</li>
+<li><strong>Redis Database</strong>: Uses Redis for distributed caching and storage.</li>
+</ul>
+<h3 id="2-agent-protocol-plugins">2. <strong>Agent Protocol Plugins</strong></h3>
+<p>Supports communication protocols for agents, such as:</p>
+<ul>
+<li><strong>OVOS Protocol</strong>: For interaction with OVOS-based agents.</li>
+<li><strong>Persona Protocol</strong>: For interaction with the Persona framework.</li>
+</ul>
+<h3 id="3-network-protocol-plugins">3. <strong>Network Protocol Plugins</strong></h3>
+<p>Enables network communication protocols, such as:</p>
+<ul>
+<li><strong>WebSocket Protocol</strong>: For real-time, bidirectional communication over WebSockets.</li>
+</ul>
+<h3 id="4-binary-data-handler-protocol-plugins">4. <strong>Binary Data Handler Protocol Plugins</strong></h3>
+<p>Handles communication of binary data types, like audio, using specialized protocols.</p>
+<h2 id="installation">Installation</h2>
+<p><code>hivemind-plugin-manager</code> is a dependency of <code>hivemind-core</code>, you typically do not need to install it</p>
+<pre><code class="language-bash">pip install hivemind-plugin-manager
+</code></pre>
+<h2 id="developers">Developers</h2>
+<p>The following example demonstrates how to discover and load plugins, along with creating instances using the provided factories.</p>
+<h3 id="discovering-plugins">Discovering Plugins</h3>
+<p>Use the <code>find_plugins</code> function to discover all available plugins for a specific type:</p>
+<pre><code class="language-python">from hivemind_plugin_manager import find_plugins, HiveMindPluginTypes
+
+# Find all database plugins
+database_plugins = find_plugins(HiveMindPluginTypes.DATABASE)
+print(database_plugins)
+
+# Find all agent protocol plugins
+agent_protocol_plugins = find_plugins(HiveMindPluginTypes.AGENT_PROTOCOL)
+print(agent_protocol_plugins)
+</code></pre>
+<h3 id="creating-plugin-instances">Creating Plugin Instances</h3>
+<p>Each plugin type has a corresponding factory class that allows for creating plugin instances with the required configuration.</p>
+<h4 id="database-plugin-factory">Database Plugin Factory</h4>
+<pre><code class="language-python">from hivemind_plugin_manager import DatabaseFactory
+
+# Create an instance of a database plugin
+db_instance = DatabaseFactory.create(&quot;hivemind-redis-db-plugin&quot;, password=&quot;Password1!&quot;, host=&quot;192.168.1.11&quot;, port=6789)
+</code></pre>
+<h4 id="agent-protocol-factory">Agent Protocol Factory</h4>
+<pre><code class="language-python">from hivemind_plugin_manager import AgentProtocolFactory
+
+# Create an agent protocol instance
+agent_protocol_instance = AgentProtocolFactory.create(&quot;hivemind-ovos-agent-plugin&quot;)
+</code></pre>
+<h4 id="network-protocol-factory">Network Protocol Factory</h4>
+<pre><code class="language-python">from hivemind_plugin_manager import NetworkProtocolFactory
+
+# Create a network protocol instance
+network_protocol_instance = NetworkProtocolFactory.create(&quot;hivemind-websocket-plugin&quot;)
+</code></pre>
+<h4 id="binary-data-handler-protocol-factory">Binary Data Handler Protocol Factory</h4>
+<pre><code class="language-python">from hivemind_plugin_manager import BinaryDataHandlerProtocolFactory
+
+# Create a binary data handler protocol instance
+binary_data_handler_instance = BinaryDataHandlerProtocolFactory.create(&quot;hivemind-audio-binary-protocol-plugin&quot;)
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../15_nested/" class="btn btn-neutral float-left" title="Nested Hives"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../06_skills_server/" class="btn btn-neutral float-right" title="Skills Server">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../15_nested/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../06_skills_server/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

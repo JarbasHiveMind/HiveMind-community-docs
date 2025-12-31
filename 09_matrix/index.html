@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/09_matrix/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Matrix - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Matrix";
+        var mkdocs_page_input_path = "09_matrix.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/09_matrix/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Matrix</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#install">Install</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Integrations</li>
+      <li class="breadcrumb-item active">Matrix</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="hivemind-matrix-bridge">HiveMind - Matrix bridge</h1>
+<p>What is it?</p>
+<p><a href="https://matrix.org/">Matrix</a> is a chat protocol, it works a little like email, but instantaneous and secure:</p>
+<ul>
+<li>
+<p>You need to register an account at a provider</p>
+</li>
+<li>
+<p>Whatever your provider is, you can talk to people using other providers</p>
+</li>
+<li>
+<p>In the same way you can use Outlook or Thunderbird with the same email account, you can use different Matrix apps for the same Matrix account.</p>
+</li>
+</ul>
+<p><img alt="img_16.png" src="../img_16.png" /></p>
+<h2 id="install">Install</h2>
+<p>Install from <a href="https://github.com/JarbasHiveMind/HiveMind-matrix-bridge">Github</a></p>
+<h2 id="usage">Usage</h2>
+<p><img alt="imagem" src="https://github.com/JarbasHiveMind/HiveMind-matrix-bridge/assets/33701864/f70c7889-43eb-41b1-b295-d4d5040ab610" /></p>
+<pre><code>Usage: HiveMind-matrix run [OPTIONS]
+
+  connect a matrix chatroom to hivemind
+
+Options:
+  --botname TEXT      thehivebot
+  --matrixtoken TEXT  syt_dGhl.....
+  --matrixhost TEXT   https://matrix.org
+  --room TEXT         #hivemind-bots:matrix.org
+  --key TEXT          HiveMind access key (default read from identity file)
+  --password TEXT     HiveMind password (default read from identity file)
+  --host TEXT         HiveMind host (default read from identity file)
+  --port INTEGER      HiveMind port number (default: 5678)
+  --help              Show this message and exit.
+
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../07_micsat/" class="btn btn-neutral float-left" title="Mic Satellite"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../10_deltachat/" class="btn btn-neutral float-right" title="DeltaChat">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../07_micsat/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../10_deltachat/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

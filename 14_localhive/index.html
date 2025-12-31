@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/14_localhive/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>LocalHive - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "LocalHive";
+        var mkdocs_page_input_path = "14_localhive.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/14_localhive/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">LocalHive</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="localhive">LocalHive</h1>
+<blockquote>
+<p>⚠️ <strong>Proof of Concept</strong>: not actively maintained</p>
+</blockquote>
+<p><img alt="img_10.png" src="../img_10.png" /></p>
+<p>The LocalHive is a hardened OpenVoiceOS skills service, the messagebus is replaced with a hivemind connection</p>
+<p>*Coming Soon - <a href="https://github.com/JarbasHiveMind/LocalHive">Github</a></p>
+<p><em>"security as a requirement, not a feature"</em></p>
+<ul>
+<li>the LocalHive is HTTP only</li>
+<li>the LocalHive uses no crypto</li>
+<li>the LocalHive does not require accessKey, instead it only accepts connections coming from 0.0.0.0</li>
+<li>the LocalHive rejects all connections not coming from 0.0.0.0</li>
+<li>the LocalHive runs in port 6989</li>
+<li>skills can not listen to each other's traffic</li>
+<li>skills can only inject whitelisted messages to LocalHive (by default intents + converse + speak)</li>
+<li>by default skills only register and trigger intents, nothing else</li>
+<li>each skill can run in it's own .venv with it's own requirements</li>
+<li>TODO - skills should be able to request to listen for specific messages, cross skill communication is currently impossible</li>
+</ul>
+<h2 id="permissions">Permissions</h2>
+<p>skills need to be explicitly authorizes to send each message_type</p>
+<pre><code class="language-python">UTTERANCES = [&quot;recognizer_loop:utterance&quot;]
+INTENTS = [
+    &quot;mycroft.skill.handler.start&quot;,
+    &quot;mycroft.skill.handler.complete&quot;,
+    &quot;intent.service.intent.get&quot;,
+    &quot;intent.service.skills.get&quot;,
+    &quot;intent.service.active_skills.get&quot;,
+    &quot;intent.service.adapt.get&quot;,
+    &quot;intent.service.padatious.get&quot;,
+    &quot;intent.service.adapt.manifest.get&quot;,
+    &quot;intent.service.padatious.manifest.get&quot;,
+    &quot;intent.service.adapt.vocab.manifest.get&quot;,
+    &quot;intent.service.padatious.entities.manifest.get&quot;,
+    &quot;register_vocab&quot;,
+    &quot;register_intent&quot;,
+    &quot;detach_intent&quot;,
+    &quot;detach_skill&quot;,
+    &quot;add_context&quot;,
+    &quot;remove_context&quot;,
+    &quot;clear_context&quot;,
+    'padatious:register_intent',
+    'padatious:register_entity',
+    &quot;mycroft.skill.set_cross_context&quot;,
+    &quot;mycroft.skill.remove_cross_context&quot;
+]
+CONVERSE = [
+    &quot;skill.converse.response&quot;,
+    &quot;skill.converse.pong&quot;,
+    &quot;active_skill_request&quot;,
+    &quot;intent.service.skills.activated&quot;,
+    &quot;intent.service.skills.deactivated&quot;,
+]
+SPEAK = [&quot;speak&quot;]
+STOP = [&quot;mycroft.stop&quot;]
+
+DEFAULT = INTENTS + \
+          CONVERSE + \
+          SPEAK + \
+          [&quot;mycroft.skills.loaded&quot;]
+</code></pre>
+<h3 id="per-skill-permissions">Per Skill Permissions</h3>
+<p>you can allow new messages per skill_id by editing the json file at <code>~/.config/LocalHive/skill_permissions.json</code></p>
+<pre><code>{
+    &quot;ovos-stop.openvoiceos&quot;: [&quot;mycroft.stop&quot;]
+}
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>At this point of development you need to create python scripts to directly interface with the existing code</p>
+<h3 id="running-localhive">Running LocalHive</h3>
+<pre><code class="language-python">from local_hive.service import LocalHiveService
+from ovos_utils import wait_for_exit_signal
+
+if __name__ == &quot;__main__&quot;:
+    localmind = LocalHiveService()
+    localmind.start()
+    wait_for_exit_signal()
+
+</code></pre>
+<h3 id="connecting-a-skill">Connecting a skill</h3>
+<pre><code class="language-python">from local_hive.loader import HiveMindExternalSkillWrapper
+from ovos_utils import wait_for_exit_signal
+from os.path import join, dirname
+
+path = join(dirname(__file__), &quot;test_skills&quot;, &quot;mycroft-joke.mycroftai&quot;)
+
+skill = HiveMindExternalSkillWrapper(path)
+
+wait_for_exit_signal()
+
+&quot;&quot;&quot;
+2021-05-14 03:23:50.059 | INFO     | 44310 | HiveMind-websocket-client | Connected
+2021-05-14 03:23:50.111 | INFO     | 44310 | mycroft.skills.settings:get_local_settings:83 | /home/user/.config/mycroft/skills/mycroft-joke.mycroftai/settings.json
+&quot;&quot;&quot;
+</code></pre>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

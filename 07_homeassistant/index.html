@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/07_homeassistant/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Home Assistant - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Home Assistant";
+        var mkdocs_page_input_path = "07_homeassistant.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/07_homeassistant/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Home Assistant</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#related-projects">Related Projects:</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#manual-installation">Manual Installation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#home-assistant-setup">Home Assistant Setup</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#music-assistant">Music Assistant</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#permissions-required">Permissions Required</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#ovos-core">ovos-core</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ovos-dinkum-listener">ovos-dinkum-listener</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ovos-gui">ovos-gui</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ovos-audio">ovos-audio</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#ocp-openvoiceos-common-play">OCP (OpenVoiceOS Common Play)</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#audio-service">Audio Service</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#phal">PHAL</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#ovos-phal-plugin-alsa">ovos-phal-plugin-alsa</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#ovos-phal-plugin-system">ovos-phal-plugin-system</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#ovos-phal-plugin-camera">ovos-phal-plugin-camera</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Integrations</li>
+      <li class="breadcrumb-item active">Home Assistant</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="hivemind-integration-for-home-assistant">HiveMind Integration for Home Assistant</h1>
+<p>This is a <strong>manual install</strong> Home Assistant integration for connecting to an OpenVoiceOS instance via HiveMind</p>
+<p>It allows Home Assistant to directly control and interact with a HiveMind device at a system level, not just sending voice commands, but also manipulating services like audio playback, volume, and system power.</p>
+<hr />
+<h2 id="related-projects">Related Projects:</h2>
+<ul>
+<li><a href="https://github.com/JarbasHiveMind/hivemind-homeassistant">hivemind-homeassistant</a> (this integration) allows HiveMind to show up as a device in Home Assistant</li>
+<li><a href="https://github.com/HiveMindInsiders/hivemind-player-protocol">hivemind-player-protocol</a> turn any device into a standalone HiveMind OCP player</li>
+<li><a href="https://github.com/HiveMindInsiders/ovos-skill-music-assistant">ovos-skill-music-assistant</a> allows OVOS to search media in MA sources</li>
+<li><a href="https://github.com/HiveMindInsiders/ovos-media-plugin-mass">ovos-media-plugin-mass</a> allows OVOS to control MA players</li>
+</ul>
+<hr />
+<h2 id="manual-installation">Manual Installation</h2>
+<ol>
+<li>Copy the <code>hivemind</code> folder into your Home Assistant <code>custom_components</code> directory:</li>
+</ol>
+<pre><code class="language-bash">mkdir -p /config/custom_components
+cp -r custom_components/hivemind /config/custom_components/
+</code></pre>
+<ol>
+<li>
+<p>Restart Home Assistant.</p>
+</li>
+<li>
+<p>Add the HiveMind integration via the Home Assistant UI:<br />
+<strong>Settings → Devices &amp; Services → Add Integration → HiveMind</strong></p>
+</li>
+</ol>
+<hr />
+<h2 id="home-assistant-setup">Home Assistant Setup</h2>
+<p><img alt="setup" src="https://github.com/user-attachments/assets/5b34c714-3faa-4c8b-8c84-e438c20085fb" /></p>
+<p>Once a HiveMind device is added to HomeAssistant you will have several entities available</p>
+<p><img alt="image" src="https://github.com/user-attachments/assets/f4a56e28-96e1-470e-99cc-0f9e8707b37f" /></p>
+<p>controls</p>
+<p><img alt="image" src="https://github.com/user-attachments/assets/d76cd0a6-7dc1-4af8-93d3-73668e11a405" /></p>
+<p>media player</p>
+<p><img alt="image" src="https://github.com/user-attachments/assets/9bb3bdba-bce0-47f5-b837-6f934eff67ef" /></p>
+<p>notify</p>
+<p><img alt="image" src="https://github.com/user-attachments/assets/57a797f7-06a6-4d12-9eb0-a3496fe32748" /></p>
+<p>status sensors</p>
+<p><img alt="image" src="https://github.com/user-attachments/assets/5f98232b-1243-445f-98ed-bb03e23a50b5" /></p>
+<h2 id="music-assistant">Music Assistant</h2>
+<p><img alt="image" src="https://github.com/user-attachments/assets/1b0adcb0-bb92-4125-82ee-36367ce2bf60" /></p>
+<hr />
+<h2 id="permissions-required">Permissions Required</h2>
+<p>Since this integration does <strong>more than just voice queries</strong>, it requires <strong>low-level permissions</strong> to inject and control bus messages directly.  </p>
+<p>The client connecting to HiveMind must have <strong>admin privileges</strong> and permission to access the following message types:</p>
+<h3 id="ovos-core">ovos-core</h3>
+<ul>
+<li><code>mycroft.stop</code></li>
+<li><code>mycroft.skills.is_alive</code></li>
+<li><code>mycroft.skills.is_ready</code></li>
+</ul>
+<h3 id="ovos-dinkum-listener">ovos-dinkum-listener</h3>
+<ul>
+<li><code>mycroft.voice.is_alive</code></li>
+<li><code>mycroft.voice.is_ready</code></li>
+<li><code>mycroft.mic.listen</code></li>
+<li><code>mycroft.mic.mute</code></li>
+<li><code>mycroft.mic.unmute</code></li>
+<li><code>mycroft.mic.get_status</code></li>
+<li><code>recognizer_loop:sleep</code></li>
+<li><code>recognizer_loop:wake_up</code></li>
+<li><code>recognizer_loop:state.get</code></li>
+<li><code>recognizer_loop:state.set</code></li>
+</ul>
+<h3 id="ovos-gui">ovos-gui</h3>
+<ul>
+<li><code>mycroft.gui_service.is_alive</code></li>
+<li><code>mycroft.gui_service.is_ready</code></li>
+</ul>
+<h3 id="ovos-audio">ovos-audio</h3>
+<ul>
+<li><code>speak</code></li>
+<li><code>mycroft.audio.is_alive</code></li>
+<li><code>mycroft.audio.is_ready</code></li>
+<li><code>mycroft.audio.speak.status</code></li>
+</ul>
+<h4 id="ocp-openvoiceos-common-play">OCP (OpenVoiceOS Common Play)</h4>
+<ul>
+<li><code>ovos.common_play.player.status</code></li>
+<li><code>ovos.common_play.track_info</code></li>
+<li><code>ovos.common_play.get_track_length</code></li>
+<li><code>ovos.common_play.get_track_position</code></li>
+<li><code>ovos.common_play.playlist.queue</code></li>
+<li><code>ovos.common_play.resume</code></li>
+<li><code>ovos.common_play.pause</code></li>
+<li><code>ovos.common_play.stop</code></li>
+<li><code>ovos.common_play.previous</code></li>
+<li><code>ovos.common_play.next</code></li>
+<li><code>ovos.common_play.set_track_position</code></li>
+<li><code>ovos.common_play.playlist.clear</code></li>
+<li><code>ovos.common_play.shuffle.set</code></li>
+<li><code>ovos.common_play.shuffle.unset</code></li>
+<li><code>ovos.common_play.repeat.set</code></li>
+<li><code>ovos.common_play.repeat.unset</code></li>
+<li><code>ovos.common_play.repeat.one</code></li>
+</ul>
+<h4 id="audio-service">Audio Service</h4>
+<p><em>(only if enabled manually — for systems without the OCP Audio Plugin)</em></p>
+<ul>
+<li><code>mycroft.audio.service.play</code></li>
+<li><code>mycroft.audio.service.resume</code></li>
+<li><code>mycroft.audio.service.pause</code></li>
+<li><code>mycroft.audio.service.stop</code></li>
+<li><code>mycroft.audio.service.prev</code></li>
+<li><code>mycroft.audio.service.next</code></li>
+<li><code>mycroft.audio.service.set_track_position</code></li>
+</ul>
+<h3 id="phal">PHAL</h3>
+<ul>
+<li><code>mycroft.phal.is_alive</code></li>
+<li><code>mycroft.phal.is_ready</code></li>
+</ul>
+<h4 id="ovos-phal-plugin-alsa">ovos-phal-plugin-alsa</h4>
+<ul>
+<li><code>mycroft.volume.get</code></li>
+<li><code>mycroft.volume.increase</code></li>
+<li><code>mycroft.volume.decrease</code></li>
+<li><code>mycroft.volume.mute</code></li>
+<li><code>mycroft.volume.unmute</code></li>
+</ul>
+<h4 id="ovos-phal-plugin-system">ovos-phal-plugin-system</h4>
+<ul>
+<li><code>system.reboot</code></li>
+<li><code>system.shutdown</code></li>
+<li><code>system.mycroft.service.restart</code></li>
+<li><code>system.ssh.status</code></li>
+</ul>
+<h4 id="ovos-phal-plugin-camera">ovos-phal-plugin-camera</h4>
+<p>(<em>work in progress</em>)</p>
+<ul>
+<li><code>ovos.phal.camera.ping</code></li>
+<li><code>ovos.phal.camera.get</code></li>
+<li><code>ovos.phal.camera.open</code></li>
+<li><code>ovos.phal.camera.close</code></li>
+</ul>
+<hr />
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../10_deltachat/" class="btn btn-neutral float-left" title="DeltaChat"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../04_protocol/" class="btn btn-neutral float-right" title="Transport">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../10_deltachat/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../04_protocol/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

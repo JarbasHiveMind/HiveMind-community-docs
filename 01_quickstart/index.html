@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/01_quickstart/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Quick start - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Quick start";
+        var mkdocs_page_input_path = "01_quickstart.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/01_quickstart/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Quick start</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#installation">🚀 Installation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#adding-a-satellite-device">🛰️ Adding a Satellite Device</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#running-the-hivemind-server">🖥️ Running the HiveMind Server</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#permissions">🔑 Permissions</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#example-use-cases">Example Use Cases:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hivemind-core-commands-overview">HiveMind Core Commands Overview</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">About</li>
+      <li class="breadcrumb-item active">Quick start</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="quick-start-guide">Quick Start Guide</h1>
+<p>This guide will help you get started quickly with the HiveMind platform, allowing you to extend your OpenVoiceOS (OVOS) ecosystem across multiple devices, even with low-resource hardware. HiveMind lets you connect lightweight devices as satellites to a central OVOS hub, offering centralized control and fine-grained permissions.</p>
+<p><img alt="imagem" src="https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/fb241c4d-ca84-4b47-b917-b398b16f93bd" /></p>
+<h2 id="installation">🚀 Installation</h2>
+<p>To begin using HiveMind Core, you need to install the <code>hivemind-core</code> package in your OVOS device. This can be done via pip:</p>
+<pre><code class="language-bash">pip install hivemind-core
+</code></pre>
+<h2 id="adding-a-satellite-device">🛰️ Adding a Satellite Device</h2>
+<p>Once the server is running, you'll need to add client credentials for each satellite device you want to connect.</p>
+<p>Run the following command to add a satellite device:</p>
+<pre><code class="language-bash">hivemind-core add-client
+</code></pre>
+<p>The output wi*ll show you important details like:</p>
+<ul>
+<li>Node ID</li>
+<li>Friendly Name</li>
+<li>Access Key</li>
+<li>Password</li>
+<li>Encryption Key (deprecated, only used for legacy clients)</li>
+</ul>
+<p>Provide these credentials on the client devices to enable the connection.</p>
+<h2 id="running-the-hivemind-server">🖥️ Running the HiveMind Server</h2>
+<p>Start the HiveMind server to accept client connections on a specified port:</p>
+<pre><code class="language-bash">hivemind-core listen --port 5678
+</code></pre>
+<p>The server will now listen for incoming satellite connections.</p>
+<blockquote>
+<p>💡 <code>hivemind-core</code> needs to be running in the same device as OVOS</p>
+</blockquote>
+<h2 id="permissions">🔑 Permissions</h2>
+<p>HiveMind Core uses a flexible permissions system, where each client's permissions are customizable. By default:</p>
+<ul>
+<li>
+<p>Only essential bus messages are allowed.</p>
+</li>
+<li>
+<p>Skills and intents are accessible but can be blacklisted or restricted.</p>
+</li>
+</ul>
+<p>You can manage permissions for clients by using commands like <code>allow-msg</code>, <code>blacklist-msg</code>, <code>allow-skill</code>, and <code>blacklist-skill</code>.</p>
+<h3 id="example-use-cases">Example Use Cases:</h3>
+<ul>
+<li><strong>Basic AI Integration</strong>: Enable a simple client to send natural language instructions.</li>
+<li><strong>Custom Permissions</strong>: Restrict an IoT device to only communicate with specific message types, such as <code>temperature.set</code>.</li>
+</ul>
+<h2 id="hivemind-core-commands-overview">HiveMind Core Commands Overview</h2>
+<p>Here are the basic commands for managing clients and their permissions:</p>
+<ul>
+<li><strong>Add a new client</strong>:  </li>
+</ul>
+<pre><code class="language-bash">hivemind-core add-client --name &quot;satellite_1&quot; --access-key &quot;mykey123&quot; --password &quot;mypass&quot;
+</code></pre>
+<ul>
+<li><strong>List all registered clients</strong>:  </li>
+</ul>
+<pre><code class="language-bash">hivemind-core list-clients
+</code></pre>
+<ul>
+<li><strong>Start listening for client connections</strong>:  </li>
+</ul>
+<pre><code class="language-bash">hivemind-core listen --port 5678
+</code></pre>
+<p>For detailed help on each command, use <code>--help</code> (e.g., <code>hivemind-core add-client --help</code>).</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../02_terminology/" class="btn btn-neutral float-right" title="Terminology">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../02_terminology/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

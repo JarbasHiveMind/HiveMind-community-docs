@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/19_crypto/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Encryption - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Encryption";
+        var mkdocs_page_input_path = "19_crypto.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/19_crypto/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Encryption</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#terminology">Terminology</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#encryption-in-transit">Encryption in Transit</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#key-generation-and-exchange">Key Generation and Exchange</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-handshake-and-identity-verification">1. Handshake and Identity Verification</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-deriving-a-common-salt">2. Deriving a Common Salt</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-key-derivation">3. Key Derivation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#secure-message-exchange">Secure Message Exchange</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Security</li>
+      <li class="breadcrumb-item active">Encryption</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="encryption">Encryption</h1>
+<p>HiveMind ensures secure communication between devices by using modern cryptographic techniques. This page provides an overview of how messages are encrypted in transit, the structure of encrypted messages, and the process of encryption key generation.</p>
+<ul>
+<li><strong>End-to-End Encryption</strong>: Messages are encrypted on the sender's device and decrypted only on the receiver's device, ensuring complete confidentiality.</li>
+<li><strong>Mutual Authentication</strong>: The identity verification step ensures that both devices share the same credentials and trust each other.</li>
+<li><strong>Resistance to Replay Attacks</strong>: The use of unique IVs for each message prevents attackers from reusing captured messages.</li>
+<li><strong>Strong Key Derivation</strong>: By leveraging PBKDF2 and a shared salt, HiveMind protects against brute-force and dictionary attacks.</li>
+</ul>
+<hr />
+<h2 id="terminology">Terminology</h2>
+<p>Before diving into the details, here are key terms used in this documentation:</p>
+<ul>
+<li><strong>Plaintext</strong>: Unencrypted data, the original readable content before encryption.</li>
+<li><strong>Ciphertext</strong>: Encrypted data, unreadable without the decryption key.</li>
+<li><strong><a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a></strong>: Advanced Encryption Standard, a symmetric encryption algorithm.</li>
+<li><strong><a href="https://en.wikipedia.org/wiki/Galois/Counter_Mode">GCM</a></strong>: Galois/Counter Mode, a mode of operation for AES that provides both encryption and message authentication.</li>
+<li><strong><a href="https://en.wikipedia.org/wiki/Initialization_vector">IV</a></strong>: Initialization vector (sometimes called <code>nonce</code>), a unique value used to initialize encryption and ensure message uniqueness.</li>
+<li><strong><a href="https://en.wikipedia.org/wiki/Message_authentication_code">MAC</a></strong>: Message Authentication Code (sometimes called <code>tag</code> or Integrity Check Value (<code>ICV</code>)), used to verify the authenticity and integrity of a message.</li>
+<li><strong><a href="https://en.wikipedia.org/wiki/Salt_(cryptography)">Salt</a></strong>: A random value used during key derivation to ensure unique and secure key generation, even with repeated passwords.</li>
+<li><strong><a href="https://en.wikipedia.org/wiki/SHA-2">SHA-2</a></strong>: A family of cryptographic hash functions, used for generating hash values (e.g., SHA-256 is used in HiveMind).</li>
+<li><strong><a href="https://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a></strong>: Password-Based Key Derivation Function 2, a cryptographic function that strengthens passwords by applying hashing multiple times to derive secure keys.</li>
+</ul>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>HiveMind uses <strong>AES-GCM (Advanced Encryption Standard in Galois/Counter Mode)</strong> for authenticated encryption of messages in transit. This method provides both <strong>confidentiality</strong> (protecting the message content) and <strong>integrity</strong> (ensuring that messages have not been tampered with during transmission).</p>
+<p>To securely exchange messages, HiveMind leverages a <strong>key derivation and exchange mechanism</strong> that avoids directly sharing sensitive credentials, ensuring secure key generation and agreement between devices.</p>
+<hr />
+<h2 id="encryption-in-transit">Encryption in Transit</h2>
+<p>When two devices communicate over HiveMind, all messages are encrypted before being transmitted over the network. This prevents eavesdropping and ensures that any intercepted messages are unreadable without the appropriate key.</p>
+<p>Each encrypted message contains the following components:</p>
+<pre><code class="language-json">{
+  &quot;ciphertext&quot;: &quot;&lt;encrypted_message&gt;&quot;,
+  &quot;tag&quot;: &quot;&lt;authentication_tag&gt;&quot;,
+  &quot;nonce&quot;: &quot;&lt;initialization_vector&gt;&quot;
+}
+</code></pre>
+<ul>
+<li><strong>Ciphertext</strong>: The encrypted form of the original plaintext message.</li>
+<li><strong>Tag</strong>: A message authentication code (MAC) that ensures the integrity and authenticity of the message.</li>
+<li><strong>Nonce (IV)</strong>: A unique initialization vector used for encryption. It ensures that each message is encrypted uniquely, even if the same key and plaintext are reused.</li>
+</ul>
+<p>The <code>nonce</code> and <code>tag</code> are included in the message unencrypted, while the <code>ciphertext</code> remains confidential. This allows the receiving device to verify and decrypt the message.</p>
+<hr />
+<h2 id="key-generation-and-exchange">Key Generation and Exchange</h2>
+<p>To securely encrypt and decrypt messages, HiveMind uses a shared secret key. This key is never transmitted directly but is derived independently by each device using the following steps:</p>
+<p><img alt="HANDSHAKE.png" src="../HANDSHAKE_V1.png" /></p>
+<blockquote>
+<p>💡 Protocol V0 starts directly with the pre-shared key, Protocol V1 still supports this usage by simply ignoring the handshake initated by the server</p>
+</blockquote>
+<h3 id="1-handshake-and-identity-verification">1. <strong>Handshake and Identity Verification</strong></h3>
+<ul>
+<li>Each device generates a <strong>hash-based subkey (HSUB)</strong> using:<ul>
+<li>A randomly generated <strong>initialization vector (IV)</strong>.</li>
+<li>The user's <strong>password</strong> (or pre-shared secret).</li>
+<li>A cryptographic hash function, such as <code>SHA-256</code>.</li>
+</ul>
+</li>
+<li>Devices exchange their <code>HSUB</code> and <code>IV</code> values over the network.</li>
+<li>Upon receiving the other's <code>HSUB</code>, each device regenerates it locally using the received <code>IV</code> and its own password. If the computed and received <code>HSUB</code> match, the devices verify each other's identity.</li>
+</ul>
+<h3 id="2-deriving-a-common-salt">2. <strong>Deriving a Common Salt</strong></h3>
+<ul>
+<li>A shared salt is generated by XORing the <code>IV</code> values exchanged during the handshake:</li>
+</ul>
+<pre><code class="language-text">Salt = IV_A ⊕ IV_B
+</code></pre>
+<ul>
+<li>This salt ensures that each session has a unique basis for key derivation.</li>
+</ul>
+<h3 id="3-key-derivation">3. <strong>Key Derivation</strong></h3>
+<ul>
+<li>Both devices derive a <strong>common secret key</strong> using the following inputs:<ul>
+<li>The <strong>salt</strong> from the previous step.</li>
+<li>The user's <strong>password</strong>.</li>
+</ul>
+</li>
+<li>The key derivation process uses <strong>PBKDF2</strong> (Password-Based Key Derivation Function 2) with <code>HMAC-SHA256</code> to produce a cryptographically strong key.</li>
+</ul>
+<p>This approach ensures that both devices independently derive the same encryption key without directly transmitting it over the network.</p>
+<hr />
+<h2 id="secure-message-exchange">Secure Message Exchange</h2>
+<p>Once the secret key is derived, it is used to encrypt and decrypt all messages exchanged between devices. The process is as follows:</p>
+<ol>
+<li>
+<p><strong>Encryption</strong>:</p>
+<ul>
+<li>The sending device uses the secret key to encrypt the plaintext message using AES-GCM.</li>
+<li>The resulting ciphertext, along with the <code>nonce</code> and <code>tag</code>, is packaged into a message and sent over the network.</li>
+</ul>
+</li>
+<li>
+<p><strong>Decryption</strong>:</p>
+<ul>
+<li>The receiving device extracts the <code>ciphertext</code>, <code>nonce</code>, and <code>tag</code> from the message.</li>
+<li>Using the same secret key, it decrypts the <code>ciphertext</code> and verifies the message integrity using the <code>tag</code>.</li>
+</ul>
+</li>
+</ol>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../12_handshake/" class="btn btn-neutral float-left" title="Handshake"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../11_devs/" class="btn btn-neutral float-right" title="Libraries">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../12_handshake/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../11_devs/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

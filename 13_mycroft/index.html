@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/13_mycroft/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>OVOS Messages - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "OVOS Messages";
+        var mkdocs_page_input_path = "13_mycroft.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/13_mycroft/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">OVOS Messages</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#message">Message</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#targeting-theory">Targeting Theory</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sources">Sources</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#destinations">Destinations</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#ovos-core">OVOS-Core</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#skills">Skills</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Protocol</li>
+      <li class="breadcrumb-item active">OVOS Messages</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="openvoiceos-messages">OpenVoiceOS Messages</h1>
+<p>The OpenVoiceOS messagebus is considered an internal and private websocket for <a href="https://github.com/JarbasHiveMind/HiveMind-core/wiki/Terminology">minds</a>, clients do not connect directly to it.</p>
+<p>A mind will inject its own context about the originating clients,  only responses to the client message will be forwarded, this provides client isolation. </p>
+<p>A mind will filter incoming and outgoing messages per client, the permissions model of the hivemind is extensive e.g. it might refuse utterances based on the intent</p>
+<p>This info applies to <code>ovos-core</code>, Hivemind depends on this functionality but it is not part of the hivemind itself. HiveMind responsibility is only to deliver the BUS messages</p>
+<p>From the POV of the Hivemind you can <a href="https://github.com/JarbasHiveMind/Fakecroft-DDG">replace ovos-core with anything</a> as long as you respect the mechanisms below</p>
+<ul>
+<li><a href="#message">Message</a></li>
+<li><a href="#targeting-theory">Targeting Theory</a></li>
+<li><a href="#sources">Sources</a></li>
+<li><a href="#destinations">Destinations</a></li>
+<li><a href="#skills">Skills</a></li>
+</ul>
+<h2 id="message">Message</h2>
+<p>A OpenVoiceOS message consists of a json payload, it contains a <code>type</code> , some <code>data</code> and a <code>context</code>.</p>
+<p>The <code>context</code> is considered to be metadata and might be changed at any time in transit, the <code>context</code> can contain anything depending on where the message came from, and often is completely empty. </p>
+<p>You can think of the message <code>context</code> as a sort of session data for a individual interaction, in general messages down the chain keep the <code>context</code> from the original message, most listeners (eg, skills) will only care about <code>type</code> and <code>data</code>. </p>
+<h2 id="targeting-theory">Targeting Theory</h2>
+<p>ovos-core uses the message <code>context</code> to add metadata about the messages themselves, where do they come from and what are they intended for.</p>
+<p>the <code>Message</code> object provides the following methods:</p>
+<ul>
+<li><code>message.forward</code> method, keeps previous context.<ul>
+<li>message continues going to same <code>destination</code></li>
+</ul>
+</li>
+<li><code>message.reply</code> method swaps <code>"source"</code> with <code>"destination"</code><ul>
+<li>message goes back to <code>source</code></li>
+</ul>
+</li>
+</ul>
+<p>The context <code>destination</code> parameter in the original message can be set to a list with any number of intended targets:</p>
+<pre><code class="language-python">bus.emit(Message('recognizer_loop:utterance', data, 
+                 context={'destination': ['audio', 'kde'],
+                          'source': &quot;remote_service&quot;))
+</code></pre>
+<h2 id="sources">Sources</h2>
+<p>ovos-core injects the context when it emits an utterance, this can be either typed or spoken via OVOS STT service</p>
+<p>STT will identify itself as <code>audio</code></p>
+<p>mycroft.conf defines a list of <code>"native_sources"</code>, by default only <code>audio</code> is a native source</p>
+<h2 id="destinations">Destinations</h2>
+<p>Output capable services are ovos-audio (TTS, music...)</p>
+<p>TTS checks the message context if it's the intended target for the message and will only speak in the following conditions:</p>
+<ul>
+<li>
+<p>Explicitly targeted i.e. the <code>destination</code> is native_source (default: <code>"audio")</code></p>
+</li>
+<li>
+<p><code>destination</code> is set to <code>None</code></p>
+</li>
+<li>
+<p><code>destination</code> is missing completely</p>
+</li>
+</ul>
+<p>The idea is that for example when the android app is used to access OpenVoiceOS the device at home shouldn't start to speak.</p>
+<p>TTS will be executed when a native_source (eg, <code>audio</code>) is the <code>destination</code></p>
+<p>A missing <code>destination</code> or if the <code>destination</code> is set to <code>None</code> is interpreted as a multicast and should trigger all output capable processes (be it the ovos-audio process, a web-interface, the KDE plasmoid or maybe the android app)</p>
+<h2 id="ovos-core">OVOS-Core</h2>
+<p>ovos-core is responsible for managing the routing context, skills do not usually need to worry about any of this</p>
+<ul>
+<li>
+<p>intent service will <code>.reply</code> to the original utterance message</p>
+</li>
+<li>
+<p>all skill/intent service messages are <code>.forward</code> (from previous intent service <code>.reply</code>)</p>
+</li>
+</ul>
+<h3 id="skills">Skills</h3>
+<p>OpenVoiceOS skills can do anything, if you are developing/installing a mission critical skill carefully evaluate what it does and evaluate if it is hivemind friendly</p>
+<p>If a skill emits it's own bus messages it needs to keep <code>message.context</code> around</p>
+<p><strong>Common issues</strong>:</p>
+<ul>
+<li>
+<p>skills sending their own messages might not keep message.context or wrongly <code>.reply</code> to it </p>
+</li>
+<li>
+<p>in the context of the Hivemind skills might not be <a href="https://github.com/OpenVoiceOS/ovos-bus-client/blob/dev/ovos_bus_client/session.py">Session</a> aware and keep a shared state between clients, eg. a client may enable a voice game for everyone </p>
+</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../18_binarization/" class="btn btn-neutral float-left" title="Binarization"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../17_database/" class="btn btn-neutral float-right" title="Database">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../18_binarization/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../17_database/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/12_handshake/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Handshake - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Handshake";
+        var mkdocs_page_input_path = "12_handshake.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/12_handshake/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Handshake</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#handshake-types">Handshake Types</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#workflow-server-perspective">Workflow: Server Perspective</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#send-server-info-hello">Send Server Info HELLO ✉️ ➡️</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#establish-connection-parameters-handshake">Establish connection parameters HANDSHAKE✉️ ➡️</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#initiate-key-exchange-handshake">Initiate Key Exchange ⬅️ ✉️ HANDSHAKE</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#complete-key-exchange-handshake">Complete Key Exchange HANDSHAKE ✉️ ➡️</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#receive-client-info-hello">Receive Client Info ⬅️ ✉️ HELLO</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#workflow-client-perspective">Workflow: Client Perspective</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#receive-server-info-hello">Receive Server Info ⬅️ ✉️ HELLO</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#establish-connection-parameters-handshake_1">Establish connection parameters ⬅️ ✉️ HANDSHAKE</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#initiate-key-exchange-handshake_1">Initiate Key Exchange HANDSHAKE ✉️ ➡️</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#complete-key-exchange-handshake_1">Complete Key Exchange ⬅️ ✉️ HANDSHAKE</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#send-session-data-hello">Send Session Data HELLO ✉️ ➡️</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#secure-communication-after-handshake">Secure Communication After Handshake</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#error-handling">Error Handling</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Security</li>
+      <li class="breadcrumb-item active">Handshake</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="handshake-protocol">Handshake Protocol</h1>
+<p>This document provides an overview of the handshake protocol used in the HiveMind system, detailing how handshakes are initiated and processed from both the client (slave) and server (master) perspectives.</p>
+<p>The handshake process establishes a secure connection between a HiveMind master and its slaves. It ensures authentication, optionally using passwords or public/private key pairs, and sets up cryptographic keys for secure communication.</p>
+<p>For detailed code and various usage examples, you can refer to the <a href="https://github.com/JarbasHiveMind/poorman_handshake">Poorman Handshake GitHub Repository</a>.</p>
+<hr />
+<h2 id="handshake-types">Handshake Types</h2>
+<p><strong>Password-Based Handshake</strong>:</p>
+<ul>
+<li>
+<p>Utilizes a shared password for authentication.</p>
+</li>
+<li>
+<p>Requires both client and server to know the password beforehand.</p>
+</li>
+</ul>
+<p><strong>RSA (Public Key) Handshake</strong>:</p>
+<ul>
+<li>
+<p>Based on public/private key pairs.</p>
+</li>
+<li>
+<p>The server provides a public key to the client, and the client verifies the server's authenticity.</p>
+</li>
+<li>
+<p>Supports implicit trust for first-time connections (when no previous public key is available).</p>
+</li>
+<li>
+<p>Uses asymmetric encryption to ensure that communication is secure and cannot be intercepted or modified.</p>
+</li>
+<li>
+<p>The symmetric session key (AES) for further communication is transmitted encrypted with RSA public keys.</p>
+</li>
+</ul>
+<blockquote>
+<p>⚠️ RSA Handshake is a work in progress! 🚧</p>
+</blockquote>
+<hr />
+<h2 id="workflow-server-perspective">Workflow: Server Perspective</h2>
+<h4 id="send-server-info-hello"><strong>Send Server Info</strong> <code>HELLO</code> ✉️ ➡️</h4>
+<ul>
+<li><strong>Trigger</strong>: Sent immediately upon connection establishment.  </li>
+<li><strong>Content</strong>:<ul>
+<li><strong><code>pubkey</code></strong>: Public key for key-based handshake and <code>INTERCOM</code> messages.  </li>
+<li><strong><code>node_id</code></strong>: A user-friendly identifier for the server.  </li>
+</ul>
+</li>
+<li><strong>Security</strong>: This message is <strong>NOT ENCRYPTED</strong> 🔓.  </li>
+</ul>
+<h4 id="establish-connection-parameters-handshake"><strong>Establish connection parameters</strong> <code>HANDSHAKE</code>✉️ ➡️</h4>
+<ul>
+<li><strong>Trigger</strong>: Initiates the handshake process immediately after <code>HELLO</code> message.  </li>
+<li><strong>Content</strong>:<ul>
+<li><strong><code>handshake</code></strong>: Indicates if the connection will be dropped if the client does not finalize the handshake.  </li>
+<li><strong><code>binarize</code></strong>: Specifies if the server supports the binarization protocol.  </li>
+<li><strong><code>preshared_key</code></strong>: Indicates the availability of a pre-shared key.  </li>
+<li><strong><code>password</code></strong>: Indicates the availability of password-based handshake.  </li>
+<li><strong><code>crypto_required</code></strong>: Specifies if unencrypted messages will be dropped.  </li>
+<li><strong><code>min_protocol_version</code></strong>: The minimum supported HiveMind protocol version.  </li>
+<li><strong><code>max_protocol_version</code></strong>: The maximum supported HiveMind protocol version.  </li>
+</ul>
+</li>
+<li><strong>Security</strong>: This message is <strong>NOT ENCRYPTED</strong> 🔓.  </li>
+</ul>
+<h4 id="initiate-key-exchange-handshake"><strong>Initiate Key Exchange</strong>  ⬅️ ✉️  <code>HANDSHAKE</code></h4>
+<ul>
+<li><strong>Trigger</strong>: Client initiated handshake in response to previously sent connection parameters.  </li>
+<li><strong>Content</strong>:<ul>
+<li><strong><code>binarize</code></strong>: Specifies if the client supports the binarization protocol.  </li>
+<li><strong><code>envelope</code></strong>: The handshake envelope to be validated by the server.  </li>
+</ul>
+</li>
+<li><strong>Behavior</strong>:  <ul>
+<li>If the client does not respond, the server will skip the handshake step and use the pre-shared cryptographic key directly.  </li>
+<li>Validate the client's <code>envelope</code> using the pre-shared password.  </li>
+</ul>
+</li>
+<li><strong>Security</strong>: This message is <strong>NOT ENCRYPTED</strong> 🔓.  </li>
+</ul>
+<h4 id="complete-key-exchange-handshake"><strong>Complete Key Exchange</strong> <code>HANDSHAKE</code> ✉️ ➡️</h4>
+<ul>
+<li><strong>Trigger</strong>: Validated client's <code>envelope</code> and updated the cryptographic key for secure communication.</li>
+<li><strong>Content</strong>:<ul>
+<li><strong><code>envelope</code></strong>: The handshake envelope to be validated by the client.  </li>
+</ul>
+</li>
+<li><strong>Security</strong>: This message is <strong>NOT ENCRYPTED</strong> 🔓.  </li>
+</ul>
+<h4 id="receive-client-info-hello"><strong>Receive Client Info</strong> ⬅️ ✉️ <code>HELLO</code></h4>
+<ul>
+<li><strong>Trigger</strong>: Sent after the handshake is complete and encryption is established.  </li>
+<li><strong>Content</strong>:<ul>
+<li><strong><code>session</code></strong>: The client session data.  </li>
+<li><strong><code>site_id</code></strong>: The client site identifier.  </li>
+<li><strong><code>pubkey</code></strong>: Public key for <code>INTERCOM</code> messages.  </li>
+</ul>
+</li>
+<li><strong>Security</strong>: This message is <strong>ENCRYPTED</strong> 🔐.  </li>
+</ul>
+<hr />
+<h2 id="workflow-client-perspective">Workflow: Client Perspective</h2>
+<h4 id="receive-server-info-hello"><strong>Receive Server Info</strong> ⬅️ ✉️  <code>HELLO</code></h4>
+<ul>
+<li><strong>Trigger</strong>: Received upon connection establishment.  </li>
+<li><strong>Content</strong>:<ul>
+<li><strong><code>pubkey</code></strong>: The server's public RSA key.  </li>
+<li><strong><code>node_id</code></strong>: A user-friendly identifier for the server.  </li>
+</ul>
+</li>
+<li><strong>Security</strong>: This message is <strong>NOT ENCRYPTED</strong> 🔓.  </li>
+</ul>
+<h4 id="establish-connection-parameters-handshake_1"><strong>Establish connection parameters</strong> ⬅️ ✉️  <code>HANDSHAKE</code></h4>
+<ul>
+<li><strong>Trigger</strong>: Received immediately after <code>HELLO</code> message.  </li>
+<li><strong>Content</strong>:<ul>
+<li><strong><code>handshake</code></strong>: Indicates if the connection will be dropped if the client does not finalize the handshake.  </li>
+<li><strong><code>binarize</code></strong>: Specifies if the server supports the binarization protocol.  </li>
+<li><strong><code>preshared_key</code></strong>: Indicates the availability of a pre-shared key.  </li>
+<li><strong><code>password</code></strong>: Indicates the availability of password-based handshake.  </li>
+<li><strong><code>crypto_required</code></strong>: Specifies if unencrypted messages will be dropped.  </li>
+<li><strong><code>min_protocol_version</code></strong>: The minimum supported HiveMind protocol version.  </li>
+<li><strong><code>max_protocol_version</code></strong>: The maximum supported HiveMind protocol version.  </li>
+</ul>
+</li>
+<li><strong>Security</strong>: This message is <strong>NOT ENCRYPTED</strong> 🔓.  </li>
+</ul>
+<h4 id="initiate-key-exchange-handshake_1"><strong>Initiate Key Exchange</strong> <code>HANDSHAKE</code> ✉️ ➡️</h4>
+<ul>
+<li><strong>Trigger</strong>: Respond to the server's handshake request.  </li>
+<li><strong>Content</strong>:<ul>
+<li><strong><code>binarize</code></strong>: Specifies if the client supports the binarization protocol.  </li>
+<li><strong><code>envelope</code></strong>: The handshake envelope to be validated by the server.  </li>
+</ul>
+</li>
+<li><strong>Security</strong>: This message is <strong>NOT ENCRYPTED</strong> 🔓.  </li>
+</ul>
+<h4 id="complete-key-exchange-handshake_1"><strong>Complete Key Exchange</strong> ⬅️ ✉️  <code>HANDSHAKE</code></h4>
+<ul>
+<li><strong>Trigger</strong>: On reception of the server's final <code>HANDSHAKE</code> message.  </li>
+<li><strong>Content</strong>:<ul>
+<li><strong><code>envelope</code></strong>: The handshake envelope to be validated by the client.  </li>
+</ul>
+</li>
+<li><strong>Behavior</strong>:<ul>
+<li>Verify the server's authenticity using the shared password.  </li>
+<li>Update the cryptographic key for secure communication.  </li>
+</ul>
+</li>
+<li><strong>Security</strong>: This message is <strong>NOT ENCRYPTED</strong> 🔓.  </li>
+</ul>
+<h4 id="send-session-data-hello"><strong>Send Session Data</strong> <code>HELLO</code> ✉️ ➡️</h4>
+<ul>
+<li><strong>Trigger</strong>: Send session data after encryption is established.  </li>
+<li><strong>Content</strong>:<ul>
+<li><strong><code>session</code></strong>: The client session data.  </li>
+<li><strong><code>site_id</code></strong>: The client site identifier.  </li>
+<li><strong><code>pubkey</code></strong>: Public key for <code>INTERCOM</code> messages.  </li>
+</ul>
+</li>
+<li><strong>Security</strong>: This message is <strong>ENCRYPTED</strong> 🔐.  </li>
+</ul>
+<hr />
+<h2 id="secure-communication-after-handshake">Secure Communication After Handshake</h2>
+<p>Upon successful handshake:</p>
+<ol>
+<li>
+<p>A shared cryptographic key is established between the server and the client.</p>
+</li>
+<li>
+<p>All further communication between the server and client is encrypted using this symmetric key (AES-256).</p>
+</li>
+<li>
+<p>The session ID ensures continuity and identification in multi-session environments.</p>
+</li>
+</ol>
+<p>This guarantees that all data exchanged between the server and the client is protected, even if intercepted by a third party.</p>
+<hr />
+<h2 id="error-handling">Error Handling</h2>
+<p><strong>Illegal Messages</strong>:</p>
+<ul>
+<li>Messages not adhering to the protocol are logged, and the connection may be terminated.</li>
+</ul>
+<p><strong>Authentication Failures</strong>:</p>
+<ul>
+<li>Authentication failures result in handshake termination and rejection of the connection.</li>
+</ul>
+<p><strong>Skipping Handshake</strong>:</p>
+<ul>
+<li>Handshake can be skipped if a secret key has been previously exchanged out of band</li>
+</ul>
+<p><img alt="img_21.png" src="../img_21.png" /></p>
+<hr />
+<p>For detailed code and various usage examples, please refer to the <a href="https://github.com/JarbasHiveMind/poorman_handshake">Poorman Handshake GitHub Repository</a>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../16_permissions/" class="btn btn-neutral float-left" title="Permissions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../19_crypto/" class="btn btn-neutral float-right" title="Encryption">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../16_permissions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../19_crypto/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/17_database/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Database - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Database";
+        var mkdocs_page_input_path = "17_database.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/17_database/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Database</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#security-considerations">Security Considerations</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-json-file-based-storage">1. JSON (File-Based Storage)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-sqlite-lightweight-relational-database">2. SQLite (Lightweight Relational Database)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-redis-distributed-high-performance">3. Redis (Distributed High-Performance)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#general-database-security-tips">General Database Security Tips:</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Security</li>
+      <li class="breadcrumb-item active">Database</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="database-backends">Database Backends</h1>
+<p><code>hivemind-core</code> supports multiple database backends to store client credentials and settings. Each has its own use case:</p>
+<table>
+<thead>
+<tr>
+<th>Backend</th>
+<th>Use Case</th>
+<th>Default Location</th>
+<th>Command Line options</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>JSON</strong> (default)</td>
+<td>Simple, file-based setup for local use</td>
+<td><code>~/.local/share/hivemind-core/clients.json</code></td>
+<td>Configurable via <code>--db-name</code> and <code>--db-folder</code></td>
+</tr>
+<tr>
+<td><strong>SQLite</strong></td>
+<td>Lightweight relational DB for single instances</td>
+<td><code>~/.local/share/hivemind-core/clients.db</code></td>
+<td>Configurable via <code>--db-name</code> and <code>--db-folder</code></td>
+</tr>
+<tr>
+<td><strong>Redis</strong></td>
+<td>Distributed, high-performance environments</td>
+<td><code>localhost:6379</code></td>
+<td>Configurable via <code>--redis-host</code> and <code>--redis-port</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ ensure you use the same database parameters when launching <code>hivemind-core</code> and registering clients!</p>
+</blockquote>
+<p><strong>How to Choose?</strong></p>
+<ul>
+<li>For <strong>scalability</strong> or multi-instance setups, use Redis.</li>
+<li>For <strong>simplicity</strong> or single-device environments, use SQLite.</li>
+<li>For <strong>development</strong> or to be able to edit the database by hand, use JSON.</li>
+</ul>
+<h2 id="security-considerations">Security Considerations</h2>
+<p>When using any of these backends, it’s important to implement security practices to safeguard sensitive data. Below are some considerations:</p>
+<h4 id="1-json-file-based-storage">1. <strong>JSON (File-Based Storage)</strong></h4>
+<ul>
+<li><strong>Security Risks</strong>: As JSON files are stored locally, they can be accessed directly by anyone with access to the file system. Without encryption, the data is vulnerable to unauthorized access.</li>
+<li><strong>Best Practices</strong>:<ul>
+<li><strong>File Permissions</strong>: Set restrictive permissions on the <code>.json</code> file to limit access to the user running <code>hivemind-core</code>.</li>
+<li><strong>Backups</strong>: Regularly back up this file to ensure recovery in case of data loss or corruption, while also securing backups with encryption.</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-sqlite-lightweight-relational-database">2. <strong>SQLite (Lightweight Relational Database)</strong></h4>
+<ul>
+<li><strong>Security Risks</strong>: SQLite databases are stored in a file, making them susceptible to unauthorized access if file permissions are not properly configured.</li>
+<li><strong>Best Practices</strong>:</li>
+<li><strong>File Permissions</strong>: Ensure the SQLite file is owned by a specific user or group, with read and write access limited to only the user running <code>hivemind-core</code>.<ul>
+<li><strong>Database Backups</strong>: Always back up SQLite files securely and store backups in encrypted form.</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-redis-distributed-high-performance">3. <strong>Redis (Distributed High-Performance)</strong></h4>
+<ul>
+<li><strong>Security Risks</strong>: Redis is commonly used in distributed setups, which can introduce risks if the Redis server is exposed to the internet or local networks without proper security measures.</li>
+<li><strong>Best Practices</strong>:</li>
+<li><strong>Authentication</strong>: Always configure <strong>Redis authentication</strong> by setting a strong password using the <code>requirepass</code> directive in the Redis configuration file.<ul>
+<li><strong>Encryption</strong>: Use <strong>TLS/SSL</strong> encryption (<code>--ssl</code> flag) for data in transit. This ensures that data is encrypted between clients and Redis servers.</li>
+<li><strong>Access Control</strong>: Limit access to Redis to trusted clients and IP addresses by configuring the <code>bind</code> and <code>protected-mode</code> settings in the Redis configuration file.</li>
+<li><strong>Firewall</strong>: Use a firewall to restrict access to Redis from unauthorized networks, ensuring that only trusted systems can communicate with the Redis server.</li>
+<li><strong>Backups</strong>: Redis does not encrypt its persistent storage by default, so ensure that backup files (RDB/AOF) are stored securely and encrypted if necessary.</li>
+</ul>
+</li>
+</ul>
+<h4 id="general-database-security-tips">General Database Security Tips:</h4>
+<ul>
+<li><strong>Sensitive Data Storage</strong>: Ensure that sensitive data, such as database backups, is stored securely (using encryption)</li>
+<li><strong>Regular Audits</strong>: Periodically audit your database access logs and configurations to ensure no unauthorized access has occurred.</li>
+<li><strong>Monitoring</strong>: Implement monitoring on your database systems to detect any unusual access patterns or unauthorized attempts to connect.</li>
+</ul>
+<p>By following these best practices, you can ensure that your <code>hivemind-core</code> installation is secure and that client credentials and settings remain protected.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../13_mycroft/" class="btn btn-neutral float-left" title="OVOS Messages"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../03_pairing/" class="btn btn-neutral float-right" title="Pairing">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../13_mycroft/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../03_pairing/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

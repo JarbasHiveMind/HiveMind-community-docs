@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/04_protocol/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Transport - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Transport";
+        var mkdocs_page_input_path = "04_protocol.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/04_protocol/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Transport</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#roles-and-message-types">Roles and Message Types</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#listener-protocol">Listener Protocol</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#client-protocol">Client Protocol</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#permissions">Permissions</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#payload-messages">Payload Messages</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#bus-message">BUS Message</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#shared_bus-message">SHARED_BUS Message</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#intercom-message">INTERCOM Message</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#transport-messages">Transport Messages</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#broadcast-message">BROADCAST Message</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#escalate-message">ESCALATE Message</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#propagate-message">PROPAGATE Message</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#protocol-features">Protocol Features</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Protocol</li>
+      <li class="breadcrumb-item active">Transport</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="protocol">Protocol</h1>
+<p>The HiveMind Protocol enables seamless exchange of information and commands within a distributed network. It defines
+message types and their handling methods, serving as a <em>transport</em> protocol. While the protocol primarily operates with
+OpenVoiceOS (OVOS) messages, it is versatile enough to support other payloads.</p>
+<p>The protocol is categorized into two main roles: <strong>Listener Protocol</strong> and <strong>Client Protocol</strong>.</p>
+<h2 id="roles-and-message-types">Roles and Message Types</h2>
+<h3 id="listener-protocol">Listener Protocol</h3>
+<ul>
+<li><strong>Accepts</strong>: <code>BUS</code>, <code>SHARED_BUS</code>, <code>PROPAGATE</code>, <code>ESCALATE</code>, <code>INTERCOM</code></li>
+<li><strong>Emits</strong>: <code>BUS</code>, <code>PROPAGATE</code>, <code>BROADCAST</code>, <code>INTERCOM</code></li>
+</ul>
+<h3 id="client-protocol">Client Protocol</h3>
+<ul>
+<li><strong>Accepts</strong>: <code>BUS</code>, <code>PROPAGATE</code>, <code>BROADCAST</code>, <code>INTERCOM</code></li>
+<li><strong>Emits</strong>: <code>BUS</code>, <code>SHARED_BUS</code>, <code>PROPAGATE</code>, <code>ESCALATE</code>, <code>INTERCOM</code></li>
+</ul>
+<h3 id="permissions">Permissions</h3>
+<p>Permissions are based on a combination of:</p>
+<ul>
+<li>Access key</li>
+<li>Allowed Message types</li>
+<li>Blacklisted Intent types</li>
+<li>Blacklisted Skill IDs</li>
+</ul>
+<blockquote>
+<p>💡 Use the <a href="https://github.com/JarbasHiveMind/HiveMind-core">hivemind-core</a> package to authorize message types or blacklist intents/skills.</p>
+</blockquote>
+<p><strong>Example</strong>: Allow the "speak" message type:</p>
+<pre><code class="language-bash">$ hivemind-core allow-msg &quot;speak&quot;
+</code></pre>
+<hr />
+<h2 id="payload-messages">Payload Messages</h2>
+<p>Payload messages encapsulate OpenVoiceOS <code>Message</code> objects, acting as carriers for information or commands. These are
+the "cargo" the HiveMind Protocol transports across the network.</p>
+<p>Integrations with external AI backends require middleware to process OVOS messages.
+See <a href="https://github.com/JarbasHiveMind/hivemind-persona">hivemind-persona</a> for an example implementation.</p>
+<blockquote>
+<p>⚠️ All HiveMind servers are expected to handle natural language queries. At a minimum,
+the <code>recognizer_loop:utterance</code> OVOS message must be supported.</p>
+<p>💡 Use the <a href="https://github.com/JarbasHiveMind/hivemind_websocket_client">hivemind-websocket-client</a> package to send a bus message from the command line</p>
+</blockquote>
+<h3 id="bus-message">BUS Message</h3>
+<ul>
+<li><strong>Purpose</strong>: Single-hop communication between slaves and masters.</li>
+<li><strong>Behavior</strong>:<ul>
+<li>A master receiving a <code>BUS</code> message checks global whitelists/blacklists and slave permissions.</li>
+<li>Authorized messages are injected into the master's OVOS-core bus.</li>
+<li>Direct responses from the master's OVOS-core are forwarded back to the originating slave.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Command Line</strong>:</p>
+<pre><code class="language-bash">$ hivemind-client send-mycroft --help
+Usage: hivemind-client send-mycroft [OPTIONS]
+
+  send a single mycroft message
+
+Options:
+  --key TEXT       HiveMind access key (default read from identity file)
+  --password TEXT  HiveMind password (default read from identity file)
+  --host TEXT      HiveMind host (default read from identity file)
+  --port INTEGER   HiveMind port number (default: 5678)
+  --siteid TEXT    location identifier for message.context  (default read from
+                   identity file)
+  --msg TEXT       ovos message type to inject
+  --payload TEXT   ovos message.data json
+  --help           Show this message and exit.
+</code></pre>
+<blockquote>
+<p>💡 Valid payloads for OVOS can be found <a href="https://github.com/OpenVoiceOS/message_spec">here</a></p>
+</blockquote>
+<p><strong>Visualization</strong>:</p>
+<p><img alt="BUS Message Flow" src="https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/bus.gif" /></p>
+<h3 id="shared_bus-message">SHARED_BUS Message</h3>
+<ul>
+<li><strong>Purpose</strong>: Passive monitoring of a slave device's OVOS-core bus.</li>
+<li><strong>Direction</strong>: Slave → Master.</li>
+<li><strong>Behavior</strong>:<ul>
+<li>Requires explicit configuration on the slave device.</li>
+<li>Similar to <code>BUS</code>, but for observation, not processing.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>💡 This feature is typically enabled through the <a href="https://github.com/JarbasHiveMind/ovos-skill-fallback-hivemind">HiveMind Skill</a>.</p>
+</blockquote>
+<p><strong>Visualization</strong>:</p>
+<p><img alt="Shared Bus Message Flow" src="https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/shared_bus.gif" /></p>
+<hr />
+<h3 id="intercom-message">INTERCOM Message</h3>
+<p>messages may also be encrypted with a node <a href="https://jarbashivemind.github.io/HiveMind-community-docs/03_pairing/#the-identity-file">public_key</a>, this ensures intermediate nodes are unable to read the message contents</p>
+<p>A encrypted message is a regular hive message, but has the type <code>"INTERCOM"</code> and payload <code>{"ciphertext": "XXXXXXX"}</code></p>
+<p>Where <code>"ciphertext"</code> can only be decoded by the target Node, not by any intermediary</p>
+<p>these messages are usually the payload of transport messages such as <code>ESCALATE</code> or <code>PROPAGATE</code> payloads. </p>
+<blockquote>
+<p>💡 Intermediate nodes do not know <strong>the contents</strong> of the message, nor <strong>who the recipient is</strong></p>
+</blockquote>
+<p>When a message needs to be sent securely, it is encrypted using the recipient node's public PGP key. This ensures that only the intended recipient, who possesses the corresponding private PGP key, can decrypt the message.</p>
+<p>After encryption, the message is signed with the sender's private PGP key. This provides authentication and integrity, ensuring that the message has not been tampered with and confirming the sender's identity.</p>
+<p>Upon receiving an encrypted message, the recipient node attempts to decrypt it using its private PGP key. If successful, the message payload is then processed and emitted internally.</p>
+<p>the target node public key needs to be known beforehand if you want to send secret messages</p>
+<hr />
+<h2 id="transport-messages">Transport Messages</h2>
+<p>Transport messages encapsulate another <code>HiveMessage</code> object as their payload. These types are particularly relevant
+for <a href="https://jarbashivemind.github.io/HiveMind-community-docs/15_nested/">Nested Hives</a>.</p>
+<h3 id="broadcast-message">BROADCAST Message</h3>
+<ul>
+<li><strong>Purpose</strong>: Multi-hop communication from master → slaves.</li>
+<li><strong>Behavior</strong>:<ul>
+<li>Disseminates messages to all connected slaves.</li>
+<li>Supports <code>target_site_id</code> for directing messages to specific nodes.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Example</strong>: A master can make all slaves in <code>site_id: "kitchen"</code> speak a specific message.</p>
+<blockquote>
+<p>💡 <code>BROADCAST</code> messages are typically sent by skills running in a hivemind server</p>
+</blockquote>
+<p><strong>Visualization</strong>:</p>
+<p><img alt="Broadcast Message Flow" src="https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/broadcast.gif" /></p>
+<h3 id="escalate-message">ESCALATE Message</h3>
+<ul>
+<li><strong>Purpose</strong>: Multi-hop communication from slave → master.</li>
+<li><strong>Behavior</strong>:<ul>
+<li>Elevates messages up the authority chain for higher-level processing.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Visualization</strong>:</p>
+<p><img alt="Escalate Message Flow" src="https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/escalate.gif" /></p>
+<p><strong>Command Line</strong>:</p>
+<pre><code class="language-bash">$ hivemind-client escalate --help
+Usage: hivemind-client escalate [OPTIONS]
+
+  escalate a single mycroft message
+
+Options:
+  --key TEXT       HiveMind access key (default read from identity file)
+  --password TEXT  HiveMind password (default read from identity file)
+  --host TEXT      HiveMind host (default read from identity file)
+  --port INTEGER   HiveMind port number (default: 5678)
+  --siteid TEXT    location identifier for message.context  (default read from
+                   identity file)
+  --msg TEXT       ovos message type to inject
+  --payload TEXT   ovos message.data json
+  --help           Show this message and exit.
+
+</code></pre>
+<h3 id="propagate-message">PROPAGATE Message</h3>
+<ul>
+<li><strong>Purpose</strong>: Multi-hop communication in both directions (master ↔ slaves).</li>
+<li><strong>Behavior</strong>:<ul>
+<li>Ensures the message is delivered to all relevant nodes.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Visualization</strong>:</p>
+<p><img alt="Propagate Message Flow" src="https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/propagate.gif" /></p>
+<p><strong>Command Line</strong>:</p>
+<pre><code class="language-bash">$ hivemind-client propagate --help
+Usage: hivemind-client propagate [OPTIONS]
+
+  propagate a single mycroft message
+
+Options:
+  --key TEXT       HiveMind access key (default read from identity file)
+  --password TEXT  HiveMind password (default read from identity file)
+  --host TEXT      HiveMind host (default read from identity file)
+  --port INTEGER   HiveMind port number (default: 5678)
+  --siteid TEXT    location identifier for message.context  (default read from
+                   identity file)
+  --msg TEXT       ovos message type to inject
+  --payload TEXT   ovos message.data json
+  --help           Show this message and exit.
+</code></pre>
+<hr />
+<h2 id="protocol-features">Protocol Features</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Protocol v0</th>
+<th>Protocol v1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JSON serialization</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Binary serialization</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Pre-shared AES key</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Password handshake</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>PGP handshake</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Zlib compression</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ Protocol v0 is <strong>deprecated</strong>! However some clients (e.g., HiveMind-Js) may not yet support Protocol Version 1.</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../07_homeassistant/" class="btn btn-neutral float-left" title="Home Assistant"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../18_binarization/" class="btn btn-neutral float-right" title="Binarization">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../07_homeassistant/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../18_binarization/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

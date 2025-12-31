@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/15_nested/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Nested Hives - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Nested Hives";
+        var mkdocs_page_input_path = "15_nested.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/15_nested/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Nested Hives</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">About</li>
+      <li class="breadcrumb-item active">Nested Hives</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h3 id="nested-hives">Nested Hives</h3>
+<p>Now that you have a basic hive setup, you can add more Minds to it and connect them to each other.</p>
+<p>To better understand how minds can interact with each read <a href="../04_protocol/">the protocol</a></p>
+<h2 id="nested-hiveminds-in-action">Nested Hiveminds in Action</h2>
+<p>To illustrate the power of nested Hiveminds, let's consider a scenario where two housemates, let's call them Mom and Dad, each have their own AI assistant running on OpenVoiceOS, named John and Jane, respectively.</p>
+<p><img alt="imagem" src="https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/486d97a1-484c-42e0-a556-193cf70fe6c6" /></p>
+<p>While sharing a house and most of their IoT devices, Mom and Dad want to ensure that their AI assistants can control the smart home individually without interfering with each other's commands. To achieve this, they create a Hive for their house, naming it George, with at least one instance of OpenVoiceOS acting as the brain.</p>
+<p>Mom and Dad then connect their AI assistants, John and Jane, as clients to the George Hive. This setup allows John and Jane to communicate with George individually but not directly with each other. Instead, their messages pass through George, which acts as an intermediary, ensuring proper communication flow. John is connected to Dad's phone and calendar, it knows Dad's favorite songs. This ensures George is not bothered with personal data, and that Dad has a personalized experience. The same holds true for Jane and Mom, Alarms and Music Playlists don't get mixed together</p>
+<p><img alt="imagem" src="https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/1da8c4f5-243b-4b58-9465-e59612d5d74e" /></p>
+<p>It is important to note that as soon as a Hive is decoupled, such as when  Mom and Dad split their Hives, they become their own independent Masters again. </p>
+<p>Now, when Dad instructs his AI assistant to adjust the lights, the message goes through George. Similarly, when Mom asks her AI assistant to set the temperature, the command is routed through George. George becomes the central point of control for the shared devices, enabling independent control for John and Jane.</p>
+<p><img alt="imagem" src="https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/e0634651-ab97-475a-bf7e-5cef68235c40" /></p>
+<p>Moreover, if guests visit their house, Mom and Dad can grant them access to George directly, for example by using the voice satellites around the house, or they can create a guest Hive under George temporarily. </p>
+<p>This flexibility allows for easy integration and disconnection of Hives as required.</p>
+<p><img alt="imagem" src="https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/4b3e04ed-cc06-4405-a7e8-4e8b22dfb0cf" /></p>
+<p>Nested Hiveminds offer a dynamic and adaptable environment for managing AI systems and devices. </p>
+<p>This hierarchical organization, with clusters nested within a Master Hive, provides a scalable and efficient framework</p>
+<h2 id="permissions">Permissions</h2>
+<p>Let's further explore the practical applications of nested Hiveminds by introducing another scenario. Imagine that Mom and Dad have a guest staying with them, and this guest, Bob, also has his own AI assistant. To provide Bob with access to the shared smart home functionalities, they allow Bob's AI assistant to connect to the George Hive as a client.</p>
+<p>However, Mom and Dad want to ensure that Bob's AI assistant has limited permissions within their ecosystem. They configure hivemind-core, acting as a firewall, to restrict Bob's assistant from placing orders or accessing sensitive information from Mom and Dad. This fine-grained control ensures that the guest AI operates within defined boundaries, maintaining privacy and security for all parties involved.</p>
+<p><img alt="imagem" src="https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/ae8530d6-a465-4ae6-b556-b3f50562d810" /></p>
+<p>Furthermore, consider a scenario where Mom and Dad have children. They can create a separate nested assistant for their kids, granting them access to specific functionalities suitable for their age and requirements. This nested assistant for the kids would have limited permissions and tailored interactions, providing a safe and engaging AI experience while keeping their privacy intact.</p>
+<p><img alt="imagem" src="https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/217b4185-7e1b-46f0-af83-b3c097ff2b5f" /></p>
+<p>Nested Hiveminds offer a versatile framework for managing multiple AI assistants and customizing their capabilities based on individual needs and preferences. </p>
+<p>By configuring access permissions and setting up appropriate firewalls, users can create an ecosystem that ensures privacy, security, and personalized experiences for each participant.</p>
+<p><img alt="img_15.png" src="../img_15.png" /></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../05_presence/" class="btn btn-neutral float-left" title="Auto Discovery"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../04_plugins/" class="btn btn-neutral float-right" title="Plugins">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../05_presence/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../04_plugins/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

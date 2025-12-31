@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/06_sound_server/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Sound Server - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Sound Server";
+        var mkdocs_page_input_path = "06_sound_server.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/06_sound_server/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Sound Server</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#key-features-of-hivemind-listener">Key Features of HiveMind Listener</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-use-cases">Example Use Cases</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Servers</li>
+      <li class="breadcrumb-item active">Sound Server</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="hivemind-sound-server">HiveMind Sound Server</h1>
+<p><code>hivemind-listener</code> extends <code>hivemind-core</code> and integrates with <a href="https://github.com/TigreGotico/ovos-simple-listener">ovos-simple-listener</a>, enabling audio-based communication with advanced features for <strong>secure, distributed voice assistant functionality</strong>.</p>
+<blockquote>
+<p>💡 If you are running a home server this is the best option, you only need to install <code>hivemind-listener</code>, <code>ovos-core</code> and <code>ovos-messagebus</code>.</p>
+<p>⚠️ If running on a device that is also a full OVOS assistant by itself you should use <code>hivemind-core</code> instead</p>
+</blockquote>
+<h4 id="key-features-of-hivemind-listener">Key Features of HiveMind Listener</h4>
+<ul>
+<li>
+<p><strong>Audio Stream Handling</strong>:<br />
+  Accepts encrypted binary audio streams, performing <strong>WakeWord detection</strong>, <strong>Voice Activity Detection (VAD)</strong>, <strong>Speech-to-Text (STT)</strong>, and <strong>Text-to-Speech (TTS)</strong> directly on the <code>hivemind-listener</code> instance.<br />
+<em>(Lightweight clients like <a href="https://github.com/JarbasHiveMind/hivemind-mic-satellite">hivemind-mic-satellite</a> only run a microphone and VAD plugin.)</em></p>
+</li>
+<li>
+<p><strong>STT Service</strong>:<br />
+  Provides <strong>STT</strong> via the <a href="https://github.com/JarbasHiveMind/hivemind-websocket-client">hivemind-websocket-client</a>, accepting Base64-encoded audio inputs.</p>
+</li>
+<li>
+<p><strong>TTS Service</strong>:<br />
+  Provides <strong>TTS</strong> via the <a href="https://github.com/JarbasHiveMind/hivemind-websocket-client">hivemind-websocket-client</a>, returning Base64-encoded audio outputs.</p>
+</li>
+<li>
+<p><strong>Secure Plugin Access</strong>:<br />
+  Running <strong>TTS/STT via HiveMind Listener</strong> requires an access key, offering fine-grained <strong>access control</strong> compared to non-authenticated server plugins.</p>
+</li>
+</ul>
+<h4 id="usage">Usage</h4>
+<ol>
+<li><strong>Install HiveMind Listener</strong>:</li>
+</ol>
+<pre><code class="language-bash">pip install hivemind-listener
+</code></pre>
+<ol>
+<li><strong>Start the HiveMind Listener</strong>:</li>
+</ol>
+<pre><code class="language-bash">$ hivemind-listener --help
+Usage: hivemind-listener [OPTIONS]
+
+  Run the HiveMind Listener with configurable plugins.
+
+  If a plugin is not specified, the defaults from mycroft.conf will be used.
+  mycroft.conf will be loaded as usual for plugin settings.
+
+Options:
+  --wakeword TEXT                 Specify the wake word for the listener.
+                                  Default is 'hey_mycroft'.
+  --stt-plugin TEXT               Specify the STT plugin to use.
+  --tts-plugin TEXT               Specify the TTS plugin to use.
+  --vad-plugin TEXT               Specify the VAD plugin to use.
+  --dialog-transformers TEXT      dialog transformer plugins to load.
+                                  Installed plugins: None
+  --utterance-transformers TEXT   utterance transformer plugins to load. 
+                                  Installed plugins: ['ovos-utterance-plugin-cancel']
+  --metadata-transformers TEXT    metadata transformer plugins to
+                                  load. Installed plugins: None
+  --ovos_bus_address TEXT         Open Voice OS bus address
+  --ovos_bus_port INTEGER         Open Voice OS bus port number
+  --host TEXT                     HiveMind host
+  --port INTEGER                  HiveMind port number
+  --ssl BOOLEAN                   use wss://
+  --cert_dir TEXT                 HiveMind SSL certificate directory
+  --cert_name TEXT                HiveMind SSL certificate file name
+  --db-backend [redis|json|sqlite]
+                                  Select the database backend to use. Options:
+                                  redis, sqlite, json.
+  --db-name TEXT                  [json/sqlite] The name for the database
+                                  file. ~/.cache/hivemind-core/{name}
+  --db-folder TEXT                [json/sqlite] The subfolder where database
+                                  files are stored. ~/.cache/{db_folder}}
+  --redis-host TEXT               [redis] Host for Redis. Default is
+                                  localhost.
+  --redis-port INTEGER            [redis] Port for Redis. Default is 6379.
+  --redis-password TEXT           [redis] Password for Redis. Default None
+  --help                          Show this message and exit.
+</code></pre>
+<p>This command will run the HiveMind Listener, with configurable plugins for wakeword detection, STT, TTS, and VAD, as well as access control via SSL.</p>
+<hr />
+<h4 id="example-use-cases">Example Use Cases</h4>
+<ol>
+<li>
+<p><strong>Microphone Satellite</strong>:<br />
+   Use <a href="https://github.com/JarbasHiveMind/hivemind-mic-satellite">hivemind-mic-satellite</a> to stream raw audio to the <code>hivemind-listener</code>. Microphones handle audio capture and VAD, while the Listener manages WakeWord, STT, and TTS processing.</p>
+</li>
+<li>
+<p><strong>Authenticated STT/TTS Services</strong>:<br />
+   Connect clients securely using access keys for transcribing or synthesizing audio via the HiveMind Listener, ensuring robust access control.</p>
+</li>
+</ol>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../06_skills_server/" class="btn btn-neutral float-left" title="Skills Server"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../08_persona/" class="btn btn-neutral float-right" title="Persona Server">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../06_skills_server/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../08_persona/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

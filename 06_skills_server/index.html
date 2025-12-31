@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/06_skills_server/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Skills Server - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Skills Server";
+        var mkdocs_page_input_path = "06_skills_server.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/06_skills_server/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Skills Server</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#install">Install</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#why-hivemind">Why HiveMind?</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#key-features-setup">Key Features &amp; Setup</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Servers</li>
+      <li class="breadcrumb-item active">Skills Server</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="openvoiceos-skills-server">OpenVoiceOS Skills Server</h1>
+<p>Hivemind-core is the reference integrations with OpenVoiceOS</p>
+<p><img alt="img_11.png" src="../img_11.png" /></p>
+<blockquote>
+<p>💡 For a minimal install you only need <code>hivemind-core</code>, <code>ovos-core</code> and <code>ovos-messagebus</code></p>
+</blockquote>
+<h2 id="install">Install</h2>
+<pre><code class="language-bash">pip install hivemind-core
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>Everything is done via the <code>hivemind-core</code> command, see <a href="../03_pairing/">pairing</a> for more info</p>
+<pre><code class="language-shell">$ hivemind-core --help
+Usage: hivemind-core [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  add-client     add credentials for a client
+  allow-msg      allow message types sent from a client
+  delete-client  remove credentials for a client
+  list-clients   list clients and credentials
+  listen         start listening for HiveMind connections
+</code></pre>
+<pre><code class="language-shell">$ hivemind-core listen --help
+Usage: hivemind-core listen [OPTIONS]
+
+  start listening for HiveMind connections
+
+Options:
+  --host TEXT       HiveMind host
+  --port INTEGER    HiveMind port number
+  --ssl BOOLEAN     use wss://
+  --cert_dir TEXT   HiveMind SSL certificate directory
+  --cert_name TEXT  HiveMind SSL certificate file name
+  --db-backend [redis|json|sqlite]
+                                  Select the database backend to use. Options:
+                                  redis, sqlite, json.
+  --db-name TEXT                  [json/sqlite] The name for the database
+                                  file. ~/.cache/hivemind-core/{name}
+  --db-folder TEXT                [json/sqlite] The subfolder where database
+                                  files are stored. ~/.cache/{db_folder}}
+  --redis-host TEXT               [redis] Host for Redis. Default is
+                                  localhost.
+  --redis-port INTEGER            [redis] Port for Redis. Default is 6379.
+  --redis-password TEXT           [redis] Password for Redis. Default None
+  --help            Show this message and exit.
+</code></pre>
+<hr />
+<h3 id="why-hivemind">Why HiveMind?</h3>
+<p>HiveMind offers a decentralized solution for OVOS, with features such as secure communication, device integration, and protocol transparency. Here's what it brings to the table:</p>
+<ul>
+<li>
+<p><strong>HiveMind as an OVOS Add-on</strong><br />
+  Start with OVOS by installing <a href="https://github.com/OpenVoiceOS/ovos-core">ovos-core</a>, or use a <a href="https://www.kickstarter.com/projects/aiforeveryone/mycroft-mark-ii-the-open-voice-assistant">Mycroft device</a>. Then, run <code>hivemind-core</code> to enable HiveMind functionality. This transforms your OVOS node into a connected system with the "brain" of HiveMind.</p>
+</li>
+<li>
+<p><strong>Decentralizing OVOS-Core</strong><br />
+  With HiveMind, thin clients like the <a href="https://github.com/JarbasHiveMind/HiveMind-voice-sat">voice satellite</a> can connect without running full OVOS software. This allows for multiple access points (e.g., microphones across your home) while keeping the core in a central location.</p>
+</li>
+<li>
+<p><strong>Encrypted Communication</strong><br />
+  HiveMind supports SSL-encrypted communication, eliminating the need for manual certificate management. It auto-generates self-signed certificates for secure, encrypted connections between devices.</p>
+</li>
+<li>
+<p><strong>MessageBus Authentication &amp; Security</strong><br />
+  HiveMind enforces authentication for the message bus, ensuring only authorized clients can connect. This enhances privacy and prevents unauthorized access, unlike traditional setups where the message bus is open.</p>
+</li>
+<li>
+<p><strong>Exposing OVOS to the Web Safely</strong><br />
+  HiveMind can expose your OVOS instance securely over the web. By using the <a href="https://github.com/JarbasHiveMind/HiveMind-flask-template">Flask chatroom template</a>, you can interact with OVOS remotely while maintaining privacy and security.</p>
+</li>
+<li>
+<p><strong>Protocol for Integration</strong><br />
+  HiveMind allows integration with external platforms like Android, Mattermost, or Twitch. Whether you want to turn OVOS into a chatbot or integrate it with other services, HiveMind provides the protocol for seamless interaction.</p>
+</li>
+</ul>
+<hr />
+<h3 id="key-features-setup">Key Features &amp; Setup</h3>
+<ul>
+<li><strong>HiveMind in Action:</strong></li>
+<li><strong>Devices Connecting:</strong> Install the HiveMind CLI and register with your OVOS node to connect devices across your network.</li>
+<li><strong>Decentralization:</strong> Use lightweight devices like Raspberry Pi with HiveMind to extend OVOS functionality across rooms.</li>
+<li><strong>Encryption &amp; Authentication:</strong> Safely transmit data over SSL, with built-in encryption and message authentication.</li>
+<li><strong>Web Exposure:</strong> Use HiveMind’s secure web interface to interact with OVOS remotely.</li>
+<li><strong>Chat Integrations:</strong> Install bridges like the <a href="https://github.com/JarbasHiveMind/HiveMind-HackChatBridge">HackChat</a> or <a href="https://github.com/JarbasHiveMind/HiveMind_mattermost_bridge">Mattermost</a> bridges to bring OVOS to chat platforms.</li>
+</ul>
+<p>By leveraging HiveMind's features, you can transform OVOS into a flexible, decentralized, and secure platform, capable of handling a wide variety of use cases and integrations.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../04_plugins/" class="btn btn-neutral float-left" title="Plugins"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../06_sound_server/" class="btn btn-neutral float-right" title="Sound Server">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../04_plugins/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../06_sound_server/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

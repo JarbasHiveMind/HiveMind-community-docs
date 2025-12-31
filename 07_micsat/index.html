@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/07_micsat/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Mic Satellite - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Mic Satellite";
+        var mkdocs_page_input_path = "07_micsat.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/07_micsat/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto Discovery</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugins</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Servers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Mic Satellite</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#server-requirements">Server requirements</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#install">Install</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">OVOS Messages</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Satellites</li>
+      <li class="breadcrumb-item active">Mic Satellite</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="hivemind-microphone-satellite">HiveMind Microphone Satellite</h1>
+<p>OpenVoiceOS Microphone Satellite, connect to <a href="https://github.com/JarbasHiveMind/HiveMind-listener">HiveMind Listener</a></p>
+<p>A super lightweight version of <a href="https://github.com/JarbasHiveMind/HiveMind-voice-sat">voice-satellite</a>, only Microphone and VAD plugins runs on the mic-satellite, voice activity is streamed to <code>hivemind-listener</code> and all the processing happens there</p>
+<h2 id="server-requirements">Server requirements</h2>
+<blockquote>
+<p>⚠️ <code>hivemind-listener</code> is required server side, the default <code>hivemind-core</code> does not provide STT and TTS capabilities.</p>
+</blockquote>
+<h2 id="install">Install</h2>
+<p>Install with pip</p>
+<pre><code class="language-bash">$ pip install hivemind-mic-satellite
+</code></pre>
+<h2 id="configuration">Configuration</h2>
+<p>Voice relay is built on top of <a href="https://github.com/OpenVoiceOS/ovos-plugin-manager">ovos-plugin-manager</a>, it uses the same OpenVoiceOS configuration <code>~/.config/mycroft/mycroft.conf</code></p>
+<p>Supported plugins:</p>
+<table>
+<thead>
+<tr>
+<th>Plugin Type</th>
+<th>Description</th>
+<th>Required</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microphone</td>
+<td>Captures voice input</td>
+<td>Yes</td>
+<td><a href="https://openvoiceos.github.io/ovos-technical-manual/mic_plugins/">Microphone</a></td>
+</tr>
+<tr>
+<td>VAD</td>
+<td>Voice Activity Detection</td>
+<td>Yes</td>
+<td><a href="https://openvoiceos.github.io/ovos-technical-manual/vad_plugins/">VAD</a></td>
+</tr>
+<tr>
+<td>PHAL</td>
+<td>Platform/Hardware Abstraction Layer</td>
+<td>No</td>
+<td><a href="https://openvoiceos.github.io/ovos-technical-manual/PHAL/">PHAL</a></td>
+</tr>
+<tr>
+<td>G2P</td>
+<td>Generate visemes (mouth movements), eg. for Mk1</td>
+<td>No</td>
+<td><a href="https://openvoiceos.github.io/ovos-technical-manual/g2p_plugins/">G2P</a></td>
+</tr>
+<tr>
+<td>Media Playback Plugins</td>
+<td>Enables media playback (e.g., "play Metallica")</td>
+<td>No</td>
+<td><a href="https://openvoiceos.github.io/ovos-technical-manual/media_plugins/">Media Playback Plugins</a></td>
+</tr>
+<tr>
+<td>OCP Plugins</td>
+<td>Provides playback support for URLs (e.g., YouTube)</td>
+<td>No</td>
+<td><a href="https://openvoiceos.github.io/ovos-technical-manual/ocp_plugins/">OCP Plugins</a></td>
+</tr>
+</tbody>
+</table>
+<p>The regular voice satellite is built on top of <a href="https://github.com/OpenVoiceOS/ovos-dinkum-listener">ovos-dinkum-listener</a> and is full featured supporting all plugins</p>
+<p>This repo needs less resources but it is also <strong>missing</strong> some features</p>
+<ul>
+<li>STT plugin (runs on server)</li>
+<li>TTS plugin (runs on server)</li>
+<li>WakeWord plugin (runs on server)</li>
+<li>Continuous Listening</li>
+<li>Hybrid Listening</li>
+<li>Recording Mode</li>
+<li>Sleep Mode</li>
+<li>Multiple WakeWords</li>
+<li>Audio Transformers plugins</li>
+<li>Dialog Transformers plugins  (TODO - support in the future)</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../07_voice_relay/" class="btn btn-neutral float-left" title="Voice Relay"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../09_matrix/" class="btn btn-neutral float-right" title="Matrix">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../07_voice_relay/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../09_matrix/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/analytics.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
