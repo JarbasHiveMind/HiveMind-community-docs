@@ -18,6 +18,29 @@ The protocol is categorized into two main roles: **Listener Protocol** and **Cli
 - **Accepts**: `BUS`, `PROPAGATE`, `BROADCAST`, `INTERCOM`
 - **Emits**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`, `INTERCOM`
 
+## Message Types Reference
+
+Each `HiveMessage` carries a `msg_type` from the `HiveMessageType` enum (defined in `hivemind_bus_client.message.HiveMessageType`) that dictates how the hub routes and processes the message.
+
+| Type | Purpose | Direction | Transport |
+|---|---|---|---|
+| **`BUS`** | Standard message for the AI | Bidirectional | Injected to OVOS bus |
+| **`SHARED_BUS`** | Passive monitoring of a slave's local bus | Slave → Master | Observed, not processed |
+| **`ESCALATE`** | Request from satellite to master for help | Uplink | Hop-limited escalation |
+| **`BROADCAST`** | Admin command to all satellites (master only) | Master → All | Flooding |
+| **`PROPAGATE`** | Bidirectional flood to all peers | Bidirectional | Full mesh propagation |
+| **`INTERCOM`** | End-to-end encrypted peer-to-peer | Point-to-point | Encrypted tunnel |
+| **`PING`** | Network discovery probe; always inside PROPAGATE | Bidirectional | Topology mapping |
+| **`PONG`** | Discovery reply with hive path metadata | Uplink | Route information |
+| **`HELLO`** | Node announcement at connection time | Downlink | Session sync |
+| **`HANDSHAKE`** | Cryptographic key exchange | Bidirectional | Encrypted handshake |
+| **`THIRDPRTY`** | User-defined payload type | Application-dependent | Relayed opaquely |
+| **`BIN`** | Raw binary data (audio, file transfers) | Bidirectional | Binary encoding |
+
+**Key notes:**
+- **PING/PONG**: Always wrapped inside a PROPAGATE message; never sent bare. Used for topology discovery via `HiveMapper` in `hivemind_core.hive_map`.
+- **HELLO/HANDSHAKE**: Automatically managed by `HiveMessageBusClient` during connection setup (via `poorman_handshake.PasswordHandShake`).
+- **Context metadata**: All messages carry a `context` dict with routing keys (`peer`, `source`, `destination`, `session`, etc.) — see [Session Management & Context Keys](#session-management--context-keys) below.
 
 ### Permissions
 
@@ -206,6 +229,62 @@ Options:
   --payload TEXT   ovos message.data json
   --help           Show this message and exit.
 ```
+
+---
+
+## Session Management & Context Keys
+
+HiveMind uses OVOS `Message.context` keys to manage routing, session state, and permissions. When a satellite sends an utterance, the hub injects routing metadata before passing it to OVOS, then uses that same metadata to route the response back.
+
+### Context Keys — Full Reference
+
+| Key | Set by | Source | Value | Role |
+|-----|--------|--------|-------|------|
+| `context["peer"]` | `handle_inject_agent_msg` | `hivemind_core/protocol.py:949` | Satellite peer ID (e.g. `"HiveMindV0.0@127.0.0.1:8222/0"`) | Identifies which satellite sent this message; used in test assertions |
+| `context["source"]` (inbound) | `handle_inject_agent_msg` | `protocol.py:949` | Same as `peer` | OVOS origin identifier; becomes `destination` after `Message.reply()` swap |
+| `context["destination"]` (inbound) | `handle_inject_agent_msg` | `protocol.py:942-945` | `"skills"` (default) or `["audio"]` | Prevents message being treated as broadcast; routes responses back to originator |
+| `context["session"]` | `_update_blacklist` | `protocol.py:903` | Full serialized `Session` dict | Per-satellite session state; includes `session_id`, `blacklisted_skills`, `blacklisted_intents` |
+| `context["session"]["session_id"]` | `Session.__init__` | `ovos-bus-client/session.py:311` | UUID or explicit string (e.g., `"test-session"`) | Stable identifier persisting across utterances; enables conversational state |
+| `context["session"]["blacklisted_skills"]` | `_update_blacklist` | `protocol.py:918` | List of skill IDs | ACL enforcement: `IntentService` skips these skills |
+| `context["session"]["blacklisted_intents"]` | `_update_blacklist` | `protocol.py:921` | List of intent names | ACL enforcement: `IntentService` skips these intents |
+| `context["destination"]` (outbound) | `Message.reply()` swap | `ovos-bus-client/message.py:195-198` | Peer ID (swapped from `source`) | What `HiveMindListenerProtocol.handle_internal_mycroft()` reads to route response back |
+| `context["source"]` (outbound) | `handle_internal_mycroft` | `protocol.py:123` | `"hive"` | Marks message as coming from HiveMind hub |
+
+### Session ID Lifecycle
+
+`session_id` is the stable identifier that lets OVOS maintain conversational state (active skill, intent history, etc.) across multiple utterances from the same satellite.
+
+1. **Created on satellite** — Explicit ID or auto-generated UUID:
+   ```python
+   sess = Session("test-session")  # or Session() for UUID
+   message = Message(
+       "recognizer_loop:utterance",
+       {"utterances": ["hello"]},
+       {"session": sess.serialize(), "source": "sat", "destination": "master"}
+   )
+   ```
+
+2. **Extracted at hub** (`protocol.py:903`) — `_update_blacklist()` replaces `context["session"]` with the hub's per-connection session tracking (`client.sess`), ensuring DB-enforced blacklists are always applied while honouring the satellite's `session_id`.
+
+3. **Read by OVOS IntentService** — `_validate_session()` deserializes the session from the message and maintains conversational state across skill invocations.
+
+4. **Updated after skill match** — `IntentService` updates `context["session"]` with new `active_skills` and returns it in all replies.
+
+5. **Returned to satellite** — All replies (`speak`, `mycroft.skill.handler.complete`, etc.) carry the updated `context["session"]`, allowing satellites to inspect `msg.context["session"]["active_skills"]` to see the current state.
+
+### Message Reply Routing (The Core Mechanism)
+
+Reverse routing relies on the `Message.reply()` method from `ovos-bus-client` (message.py:195-198), which swaps `source` ↔ `destination` in the context. When HiveMind injects an utterance it sets:
+```python
+context["source"] = client.peer          # e.g. "HiveMindV0.0@127.0.0.1:8222/0"
+context["destination"] = "skills"        # default, or [peer] if already set
+```
+
+After `Message.reply()` is called by OVOS:
+- `destination` becomes the peer ID (the originating satellite)
+- `source` becomes `"skills"`
+
+Every subsequent skill message (`speak`, `intent.handled`, etc.) is also a `.reply()`, so the destination keeps pointing at the originator. `HiveMindListenerProtocol.handle_internal_mycroft()` reads `context["destination"]` and routes the message to the correct peer connection.
 
 ---
 
