@@ -29,7 +29,8 @@ nav:
       - Docker Deployment: docker.md
       - Network Discovery: 20_network_discovery.md
     - Protocol:
-      - Transport: 04_protocol.md
+      - WebSocket Transport: 04_protocol.md
+      - HTTP Transport: http_protocol.md
       - Binarization: 18_binarization.md
       - OVOS Messages: 13_mycroft.md
     - Security:

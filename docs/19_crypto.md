@@ -98,3 +98,50 @@ Once the secret key is derived, it is used to encrypt and decrypt all messages e
 2. **Decryption**:
     - The receiving device extracts the `ciphertext`, `nonce`, and `tag` from the message.
     - Using the same secret key, it decrypts the `ciphertext` and verifies the message integrity using the `tag`.
+
+---
+
+## Security Best Practices
+
+**Source**: `poorman_handshake/docs/security_best_practices.md`
+
+### Password Security
+
+1. **High Entropy**: Use passwords with at least 12 characters, mixing uppercase, lowercase, numbers, and symbols.
+2. **Never Hardcode**: Inject passwords via environment variables or secure credential stores at runtime.
+3. **Rotation Policy**: While session keys are short-lived (renegotiated per connection), periodically rotate pre-shared passwords in long-running deployments.
+
+### Key Management
+
+1. **Session Key Lifetime**: Session keys are intentionally short-lived; they are regenerated on every connection via the handshake. This limits exposure if a key is compromised.
+2. **In-Memory Only**: Derived session keys are kept in memory only; they are never persisted to disk.
+3. **IV Uniqueness**: AES-GCM requires a unique, 12-byte IV for every message. HiveMind generates these automatically; do not reuse IVs.
+
+### Network Security
+
+1. **Enable SSL/TLS**: Always run HiveMind with SSL enabled (`ssl: true` in `server.json`) to add transport-layer encryption beyond application-layer AES-GCM.
+2. **Firewall Isolation**: Restrict HiveMind ports (5678 for WebSocket, 5679 for HTTP) to trusted networks and devices.
+3. **Monitor Handshake Failures**: Log failed handshakes and authentication errors; repeated failures may indicate intrusion attempts.
+
+### Deployment Checklist
+
+- [ ] Strong, randomly generated pre-shared password (12+ chars, mixed case/symbols)
+- [ ] Password stored in environment variables, not in config files
+- [ ] SSL/TLS enabled on the hub
+- [ ] HiveMind ports (5678, 5679) firewalled to trusted subnets
+- [ ] Handshake failure logs monitored for attacks
+- [ ] PBKDF2 iteration count verified (100,000 by default in `poorman_handshake`)
+
+### Limitations & Threat Model
+
+HiveMind's password-based handshake is designed for **trusted local networks** (e.g., home networks, office VPNs). It provides:
+- ✅ Confidentiality (AES-256-GCM)
+- ✅ Integrity (GCM authentication)
+- ✅ Mutual authentication (PBKDF2-based handshake)
+- ⚠️ Limited protection against brute-force on weak passwords
+- ⚠️ No protection against network-level adversaries if SSL is not enabled
+
+For Internet-facing deployments, use:
+- SSL/TLS with valid certificates (Let's Encrypt, etc.)
+- PGP-based asymmetric handshakes (experimental feature)
+- Additional firewall/VPN isolation

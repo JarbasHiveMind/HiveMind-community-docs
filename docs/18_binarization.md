@@ -235,3 +235,100 @@ A **unversioned** and **compressed** binary payload message
 ## Compression Metrics
 
 Compression significantly reduces payload size for larger messages but is not always efficient for small messages. Benchmarks indicate a reduction of up to **50%** for text-heavy payloads, while small payloads may see negligible benefits.
+
+---
+
+## Audio Streaming & Satellites
+
+The `BIN` message type with audio payload types enables real-time audio streaming between satellites and the hub.
+
+**Source**: `hivemind-audio-binary-protocol` package
+
+### Audio Payload Types
+
+| Type | Constant | Purpose | Direction |
+|------|----------|---------|-----------|
+| **1** | `RAW_AUDIO` | Continuous microphone stream for VAD/STT | Satellite → Hub |
+| **4** | `STT_AUDIO_TRANSCRIBE` | Full audio sentence for STT with transcript return | Satellite → Hub |
+| **5** | `STT_AUDIO_HANDLE` | Full audio sentence for STT and immediate intent handling | Satellite → Hub |
+| **6** | `TTS_AUDIO` | Synthesized speech to be played back | Hub → Satellite |
+
+### Satellite Integration Modes
+
+#### Mic Satellite (`hivemind-mic-satellite`)
+
+Minimal processing on the satellite; all intelligence on the hub.
+
+- **On Satellite**: Runs microphone loop + simple VAD. Streams all detected speech as `RAW_AUDIO` (`BIN` payload type 1).
+- **On Hub**: Receives audio via `AudioBinaryProtocol.handle_microphone_input()`. Creates `SimpleListener` that performs WakeWord detection, STT, and TTS generation.
+- **Use Case**: Ultra-lightweight devices; WiFi-connected microphones.
+
+#### Voice Relay (`HiveMind-voice-relay`)
+
+Balanced local/remote processing.
+
+- **On Satellite**: Runs local WakeWord detection. Only streams audio *after* wake word is triggered.
+- **On Hub**: Handles STT and intent processing via `recognizer_loop:b64_audio` (Base64-encoded) or raw `BIN` messages.
+- **Use Case**: Devices with enough CPU for WakeWord engine (Raspberry Pi, etc.).
+
+### Configuration
+
+Audio binary protocol is enabled via `server.json` in the hub:
+
+```json
+{
+  "network_protocols": {
+    "audio_binary_protocol": {
+      "enabled": true,
+      "vad_engine": "silero",
+      "wakeword_plugin": "precise",
+      "stt_plugin": "deepgram",
+      "tts_plugin": "google"
+    }
+  }
+}
+```
+
+### STT/TTS API
+
+**Source**: `hivemind-audio-binary-protocol/docs/stt_tts_api.md`
+
+When audio arrives at the hub:
+1. **VAD filtering** removes silence using the configured VAD engine
+2. **STT processing** transcribes complete audio chunks
+3. **Intent handling** routes transcribed text to skills
+4. **TTS generation** synthesizes spoken responses
+
+Satellites receive TTS audio as `BIN` payload type 6 (`TTS_AUDIO`) and play it back immediately.
+
+### Example: Streaming Microphone Audio
+
+```python
+import pyaudio
+from hivemind_bus_client.message import HiveMessage, HiveMessageType
+
+CHUNK = 2048
+FORMAT = pyaudio.paFloat32
+CHANNELS = 1
+RATE = 16000
+
+p = pyaudio.PyAudio()
+stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE,
+                input=True, frames_per_buffer=CHUNK)
+
+client = HiveMessageBusClient()
+client.connect()
+
+try:
+    while True:
+        data = stream.read(CHUNK)
+        # Stream as RAW_AUDIO (binary payload type 1)
+        msg = HiveMessage(HiveMessageType.BIN, data,
+                         context={"binary_type": 1})  # RAW_AUDIO
+        client.emit(msg)
+finally:
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+    client.close()
+```

@@ -174,4 +174,62 @@ This guarantees that all data exchanged between the server and the client is pro
 
 ---
 
+## Algorithm Details: Password-Based Handshake
+
+The password-based handshake (the most common mode) uses **PBKDF2** for key derivation.
+
+**Source**: `poorman_handshake` package
+
+### Key Derivation Function (PBKDF2)
+
+PBKDF2 (Password-Based Key Derivation Function 2) transforms a password and unique salt into a 256-bit symmetric key:
+
+- **Iterations**: 100,000 (configurable in `poorman_handshake.symmetric.pbkdf2.PBKDF2HandShake`)
+- **Hash Algorithm**: SHA-256
+- **Salt Generation**: A new, random salt is generated for every handshake in `generate_handshake()`, ensuring different sessions using the same password have different session keys
+- **Output**: 256-bit symmetric key for AES-256-GCM
+
+### Session Key Usage
+
+Once derived via `PasswordHandShake.secret` property, the session key is used for AES-256-GCM encryption:
+
+- **Confidentiality**: Standard AES-256 encryption
+- **Integrity**: GCM (Galois/Counter Mode) provides message authentication codes (MAC)
+- **Initialization Vector (IV)**: A unique, 12-byte IV for every encrypted message
+
+### Password Strength
+
+Security is directly proportional to password entropy:
+
+- **Minimum**: 12+ characters with mixed case, numbers, symbols
+- **Recommended**: Use a passphrase or generated cryptographically random string
+- **Never**: Hardcode passwords; use environment variables or secure credential stores
+- **Rotation**: Session keys are inherently short-lived — a new key is negotiated on every reconnection
+
+---
+
+## Security Best Practices
+
+**Source**: `poorman_handshake/docs/security_best_practices.md`
+
+### For Password-Based Connections
+
+1. **Strong passwords**: Use high-entropy pre-shared passwords; leverage environment variable injection in deployment.
+2. **Salt uniqueness**: PBKDF2 generates a new salt for each handshake, preventing rainbow table attacks.
+3. **Session key lifetime**: Keys live only for the duration of a connection; reconnection forces key renegotiation.
+
+### For PGP (Asymmetric) Connections
+
+1. **Private key protection**: Always protect your PGP private key with a strong passphrase.
+2. **Key verification**: Manually verify public keys through a trusted channel to prevent MITM attacks.
+3. **Key rotation**: Periodically rotate long-lived keys.
+
+### Network Best Practices
+
+1. **TLS/SSL**: Run HiveMind with SSL enabled (`ssl: true` in `server.json`) to add an additional transport layer.
+2. **Firewall isolation**: Restrict HiveMind ports to trusted networks.
+3. **Monitoring**: Log and monitor failed handshakes for intrusion attempts.
+
+---
+
 For detailed code and various usage examples, please refer to the [Poorman Handshake GitHub Repository](https://github.com/JarbasHiveMind/poorman_handshake).
