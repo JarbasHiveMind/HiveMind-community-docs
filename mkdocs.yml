@@ -19,6 +19,7 @@ nav:
       - Voice Satellite: 07_voicesat.md
       - Voice Relay: 07_voice_relay.md
       - Mic Satellite: 07_micsat.md
+      - WebSpeech Browser: webspeech.md
     - Integrations:
       - Web Chatroom: chatroom.md
       - Matrix: 09_matrix.md
