@@ -1,14 +1,31 @@
-# HiveMind Community Documentation
 
-Welcome to the HiveMind Community Docs!
+# HiveMind
 
-![](https://github.com/JarbasHiveMind/HiveMind-assets/raw/master/logo/hivemind-512.png)
+![HiveMind Logo](https://github.com/JarbasHiveMind/HiveMind-assets/raw/master/logo/hivemind-512.png)
 
-HiveMind is a community-developed superset or extension of [OpenVoiceOS](https://openvoiceos.github.io/community-docs) the open-source voice operating system.
+HiveMind is an open-source protocol and platform that connects satellite devices to a central AI hub — either an [OpenVoiceOS](https://openvoiceos.github.io/community-docs) skills server or a standalone LLM/persona server.
 
-With HiveMind, you can extend one (or more, but usually just one!) instance of OpenVoiceOS to as many devices as you want, including devices that can't ordinarily run OpenVoiceOS!
+- **One hub, many satellites** — run OVOS, an LLM, or a chatbot on your hub machine. Every other device connects as a satellite over the network.
+- **Secure by default** — all traffic is AES-256-GCM encrypted with per-client authentication and fine-grained permissions.
+- **Flexible** — voice satellites, microphone-only devices, LLM chatbots, Home Assistant, Matrix rooms, and custom clients all speak the same protocol.
 
-HiveMind's developers have successfully connected to OpenVoiceOS from a PinePhone, a 2009 MacBook, and a Raspberry Pi 0, among other devices. 
-OpenVoiceOS itself usually runs on our desktop computers or our home servers, but you can use any Mycroft-branded device, or [OpenVoiceOS](https://github.com/OpenVoiceOS/), as your central unit.
+---
 
-Join [Hivemind Matrix chat](https://matrix.to/#/#jarbashivemind:matrix.org) for general news, support and chit chat
+## Where to start
+
+| I want to… | Go to |
+|---|---|
+| Understand the core concepts | [What is HiveMind](about.md) |
+| Set up a hub and connect a first satellite | [Quick Start](01_quickstart.md) |
+| Pick the right satellite for my device | [Choosing a Satellite](satellite_comparison.md) |
+| Run HiveMind with Docker | [Docker Deployment](docker.md) |
+| Connect a chatbot or LLM | [Persona Server](08_persona.md) |
+| Integrate with Home Assistant | [Home Assistant](07_homeassistant.md) |
+| Build a client application | [Client Libraries](11_devs.md) |
+
+---
+
+## Community
+
+- [Matrix chat](https://matrix.to/#/#jarbashivemind:matrix.org) — news, support, and general discussion
+- [GitHub](https://github.com/JarbasHiveMind) — source code and issues

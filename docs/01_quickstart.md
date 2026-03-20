@@ -1,84 +1,158 @@
 # Quick Start Guide
 
-This guide will help you get started quickly with the HiveMind platform, allowing you to extend your OpenVoiceOS (OVOS) ecosystem across multiple devices, even with low-resource hardware. HiveMind lets you connect lightweight devices as satellites to a central OVOS hub, offering centralized control and fine-grained permissions.
+This guide takes you from zero to a working hub with one connected satellite.
 
-![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/fb241c4d-ca84-4b47-b917-b398b16f93bd)
+> **Hub Requirements**: Choose one:
+> - **OVOS Hub**: OVOS must already be running (`ovos-core` and `ovos-messagebus`). See the [OVOS documentation](https://openvoiceos.github.io/community-docs) for setup.
+> - **Persona Hub**: Use `hivemind-persona` for LLM/chatbot mode without OVOS. See [Persona Server](08_persona.md) for setup.
 
-## 🚀 Installation
+---
 
-To begin using HiveMind Core, you need to install the `hivemind-core` package in your OVOS device. This can be done via pip:
+## Step 1 — Install HiveMind Core on the hub
+
+On the hub machine:
 
 ```bash
 pip install hivemind-core
 ```
 
-## 🛰️ Adding a Satellite Device
+> **Note**: Use your preferred package installer (`pip`, `uv pip`, etc.).
 
-Once the server is running, you'll need to add client credentials for each satellite device you want to connect.
-
-Run the following command to add a satellite device:
-
-```bash
-hivemind-core add-client
-```
-   
-The output wi*ll show you important details like:
-
-- Node ID
-- Friendly Name
-- Access Key
-- Password
-- Encryption Key (deprecated, only used for legacy clients)
-
-Provide these credentials on the client devices to enable the connection.
-
-## 🖥️ Running the HiveMind Server
-
-Start the HiveMind server to accept client connections on a specified port:
+## Step 2 — Start the HiveMind server
 
 ```bash
 hivemind-core listen --port 5678
 ```
 
-The server will now listen for incoming satellite connections.
-
-> 💡 `hivemind-core` needs to be running in the same device as OVOS
-
-## 🔑 Permissions
-
-HiveMind Core uses a flexible permissions system, where each client's permissions are customizable. By default:
- 
-- Only essential bus messages are allowed.
-
-- Skills and intents are accessible but can be blacklisted or restricted.
-
-You can manage permissions for clients by using commands like `allow-msg`, `blacklist-msg`, `allow-skill`, and `blacklist-skill`.
-
-### Example Use Cases:
-
-- **Basic AI Integration**: Enable a simple client to send natural language instructions.
-- **Custom Permissions**: Restrict an IoT device to only communicate with specific message types, such as `temperature.set`.
-
-## HiveMind Core Commands Overview
-
-Here are the basic commands for managing clients and their permissions:
-
-- **Add a new client**:  
+The server now accepts satellite connections on port 5678.
 
 ```bash
-hivemind-core add-client --name "satellite_1" --access-key "mykey123" --password "mypass"
+# Full options
+hivemind-core listen --help
+
+Options:
+  --host TEXT        HiveMind host
+  --port INTEGER     HiveMind port number (default: 5678)
+  --ssl BOOLEAN      Use wss:// instead of ws://
+  --cert_dir TEXT    SSL certificate directory
+  --cert_name TEXT   SSL certificate file name
+  --db-backend [redis|json|sqlite]
+                     Database backend (default: json)
+  --db-name TEXT     [json/sqlite] Database file name
+  --db-folder TEXT   [json/sqlite] Database folder
+  --redis-host TEXT  [redis] Redis host (default: localhost)
+  --redis-port INT   [redis] Redis port (default: 6379)
+  --redis-password TEXT  [redis] Redis password
 ```
 
-- **List all registered clients**:  
+> See [Database Backends](17_database.md) for guidance on choosing `json`, `sqlite`, or `redis`.
+
+## Step 3 — Add credentials for a satellite
+
+On the hub, register the satellite device:
 
 ```bash
+hivemind-core add-client --name "my-satellite"
+```
+
+The output shows the credentials the satellite will need:
+
+```
+Credentials added to database!
+
+Node ID: 2
+Friendly Name: my-satellite
+Access Key: 5a9e580a2773a262cbb23fe9759881ff
+Password: 9b247ca66c7cd2b6388ad49ca504279d
+Encryption Key: 4185240103de0770
+WARNING: Encryption Key is deprecated, only use if your client does not support password
+```
+
+Keep the **Access Key** and **Password** — you need them on the satellite.
+
+> **Tip**: use `hivemind-core add-client --help` to set a custom access key and password instead of generated ones.
+
+## Step 4 — Install and configure the satellite
+
+On the satellite device, choose and install a satellite package. For a full-featured voice satellite:
+
+```bash
+sudo apt-get install -y libpulse-dev libasound2-dev
+pip install HiveMind-voice-sat  # or: uv pip install HiveMind-voice-sat
+```
+
+> Not sure which satellite to use? See [Choosing a Satellite](satellite_comparison.md).
+
+Set the identity file on the satellite with the credentials from Step 3:
+
+```bash
+hivemind-client set-identity \
+  --key 5a9e580a2773a262cbb23fe9759881ff \
+  --password 9b247ca66c7cd2b6388ad49ca504279d \
+  --host 192.168.1.10 \
+  --port 5678 \
+  --siteid living-room
+```
+
+This writes `~/.config/hivemind/_identity.json`.
+
+## Step 5 — Test the connection
+
+```bash
+hivemind-client test-identity
+```
+
+Expected output:
+
+```
+== Identity successfully connected to HiveMind!
+```
+
+## Step 6 — Start the satellite
+
+```bash
+hivemind-voice-sat
+```
+
+The satellite reads credentials from the identity file automatically. You can also pass them on the command line:
+
+```bash
+hivemind-voice-sat --host 192.168.1.10 --key <key> --password <pass>
+```
+
+---
+
+## Managing clients
+
+```bash
+# List all registered clients
 hivemind-core list-clients
+
+# Remove a client
+hivemind-core delete-client --node-id 2
+
+# Allow a specific OVOS message type for a client
+hivemind-core allow-msg "speak" --node-id 2
 ```
 
-- **Start listening for client connections**:  
+See [Permissions](16_permissions.md) for the full permission management reference.
+
+---
+
+## Permissions overview
+
+By default each new client has access to basic message types only. You can expand or restrict permissions per client:
+
+- Only essential bus messages are allowed by default
+- Skills and intents are accessible but individual ones can be blacklisted
+- Message types, skills, and intents can each be allowed or denied independently
 
 ```bash
-hivemind-core listen --port 5678
+# Allow a message type
+hivemind-core allow-msg "mycroft.volume.set" --node-id 2
+
+# Blacklist a skill
+hivemind-core blacklist-skill "skill-homeassistant.openvoiceos" --node-id 2
 ```
 
-For detailed help on each command, use `--help` (e.g., `hivemind-core add-client --help`).
+See [Permissions](16_permissions.md) for the complete CLI reference.

@@ -44,4 +44,4 @@ This repo needs less resources but it is also **missing** some features
 - Sleep Mode
 - Multiple WakeWords
 - Audio Transformers plugins
-- Dialog Transformers plugins  (TODO - support in the future)
+- Dialog Transformers plugins
