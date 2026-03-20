@@ -3,9 +3,12 @@ site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
 nav:
     - Home: index.md
     - About:
+      - What is HiveMind: about.md
       - Quick start: 01_quickstart.md
       - Terminology: 02_terminology.md
+      - Choosing a Satellite: satellite_comparison.md
       - Auto Discovery: 05_presence.md
+      - Local Hives: 14_localhive.md
       - Nested Hives: 15_nested.md
       - Plugins: 04_plugins.md
     - Servers:
@@ -17,9 +20,14 @@ nav:
       - Voice Relay: 07_voice_relay.md
       - Mic Satellite: 07_micsat.md
     - Integrations:
+      - Web Chatroom: chatroom.md
       - Matrix: 09_matrix.md
       - DeltaChat: 10_deltachat.md
+      - Media Player: media_player.md
       - Home Assistant: 07_homeassistant.md
+    - Administration:
+      - Docker Deployment: docker.md
+      - Network Discovery: 20_network_discovery.md
     - Protocol:
       - Transport: 04_protocol.md
       - Binarization: 18_binarization.md
@@ -32,8 +40,7 @@ nav:
       - Encryption: 19_crypto.md
     - Developers:
       - Libraries: 11_devs.md
-    - ChatGPT was here:
-      - ELI5: gpt_eli5.md
+      - OVOS Integration: ovos_integration.md
 
 theme: readthedocs
 
