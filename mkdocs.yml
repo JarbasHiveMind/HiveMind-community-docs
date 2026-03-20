@@ -24,6 +24,8 @@ nav:
       - Web Chatroom: chatroom.md
       - Matrix: 09_matrix.md
       - DeltaChat: 10_deltachat.md
+      - Mattermost: mattermost.md
+      - Twitch: twitch.md
       - Media Player: media_player.md
       - Home Assistant: 07_homeassistant.md
     - Administration:
