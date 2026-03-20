@@ -56,11 +56,17 @@ A: Yes. HiveMind uses:
 
 **Q: Can I use HiveMind over the internet?**
 
-A: Yes, but with caveats:
-- Enable SSL/TLS on the hub (`ssl: true` in `server.json`)
-- Use a strong password (12+ chars, mixed case/symbols)
-- Consider a VPN or firewall to restrict access
-- See [Security Best Practices](/HiveMind-community-docs/docs/19_crypto.md#security-best-practices)
+A: Yes, but best practices differ by deployment:
+
+**Local Network**: Use native SSL with self-signed certs + strong password
+
+**Internet-Facing**: Use a reverse proxy (nginx proxy manager, Caddy, Traefik):
+- Proxy handles valid TLS certificates (Let's Encrypt)
+- HiveMind stays on private/internal port
+- Proxy provides rate limiting, load balancing, WAF
+- Strong password + firewall still required (defense in depth)
+
+See [Security Best Practices](/HiveMind-community-docs/docs/19_crypto.md#network-security)
 
 **Q: What's the difference between the WebSocket and HTTP transports?**
 

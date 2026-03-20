@@ -119,18 +119,35 @@ Once the secret key is derived, it is used to encrypt and decrypt all messages e
 
 ### Network Security
 
-1. **Enable SSL/TLS**: Always run HiveMind with SSL enabled (`ssl: true` in `server.json`) to add transport-layer encryption beyond application-layer AES-GCM.
-2. **Firewall Isolation**: Restrict HiveMind ports (5678 for WebSocket, 5679 for HTTP) to trusted networks and devices.
+1. **TLS Configuration**:
+   - **Local Networks** (home, office): Native SSL with self-signed certificates (`ssl: true` in `server.json`) is sufficient for development/private use
+   - **Internet-Facing** (public endpoints): Use a reverse proxy (nginx proxy manager, Caddy, Traefik, etc.) with valid certificates (Let's Encrypt)
+     - Proxy setup decouples HiveMind from certificate management
+     - Enables automatic certificate renewal
+     - Supports load balancing, rate limiting, and WAF rules
+     - Example: nginx proxy manager routes traffic to HiveMind on internal port, exposes HTTPS publicly
+
+2. **Firewall Isolation**: Restrict HiveMind ports (5678 for WebSocket, 5679 for HTTP) to trusted networks and devices (or run behind proxy only).
+
 3. **Monitor Handshake Failures**: Log failed handshakes and authentication errors; repeated failures may indicate intrusion attempts.
 
 ### Deployment Checklist
 
+**Local/Private Networks:**
 - [ ] Strong, randomly generated pre-shared password (12+ chars, mixed case/symbols)
 - [ ] Password stored in environment variables, not in config files
-- [ ] SSL/TLS enabled on the hub
-- [ ] HiveMind ports (5678, 5679) firewalled to trusted subnets
+- [ ] Native SSL enabled on the hub (self-signed certs acceptable)
+- [ ] HiveMind ports (5678, 5679) firewalled to trusted subnets only
 - [ ] Handshake failure logs monitored for attacks
 - [ ] PBKDF2 iteration count verified (100,000 by default in `poorman_handshake`)
+
+**Internet-Facing:**
+- [ ] Reverse proxy (nginx proxy manager, Caddy, Traefik) deployed
+- [ ] Valid TLS certificates configured (Let's Encrypt recommended)
+- [ ] Automatic certificate renewal enabled
+- [ ] HiveMind ports NOT exposed to public internet (behind proxy only)
+- [ ] Strong password + firewall restrictions still required (defense in depth)
+- [ ] Rate limiting and WAF rules configured on proxy
 
 ### Limitations & Threat Model
 
@@ -142,6 +159,10 @@ HiveMind's password-based handshake is designed for **trusted local networks** (
 - ⚠️ No protection against network-level adversaries if SSL is not enabled
 
 For Internet-facing deployments, use:
-- SSL/TLS with valid certificates (Let's Encrypt, etc.)
-- PGP-based asymmetric handshakes (experimental feature)
-- Additional firewall/VPN isolation
+- **Reverse Proxy** (nginx proxy manager, Caddy, Traefik) with valid Let's Encrypt certificates
+  - Keep HiveMind on private/internal port; expose only via proxy
+  - Automatic certificate renewal and management
+  - Rate limiting, WAF, and load balancing
+- Strong password + firewall restrictions (defense in depth)
+- PGP-based asymmetric handshakes (experimental feature) for additional authentication
+- Consider VPN overlay for satellite connections if endpoints are untrusted
