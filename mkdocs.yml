@@ -45,6 +45,7 @@ nav:
     - Developers:
       - Libraries: 11_devs.md
       - OVOS Integration: ovos_integration.md
+      - Testing Guide: testing.md
 
 theme: readthedocs
 
