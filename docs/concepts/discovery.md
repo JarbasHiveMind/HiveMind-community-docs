@@ -1,14 +1,18 @@
 # Auto Discovery
 
-[HiveMind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) enables automatic discovery of HiveMind nodes on the local network without manual address configuration.
+[HiveMind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) enables automatic discovery of HiveMind nodes on the local network without manual address configuration. It is an optional extra package — `hivemind-core` runs without it.
 
 ## Discovery transports
 
-**HiveBeacon (default)**: Zero-dependency UDP broadcast. The hub announces itself and satellites scan for announcements. No external dependencies.
+**HiveBeacon (default)**: Zero-dependency UDP broadcast. The hub announces itself and satellites scan for announcements. No external dependencies. Enabled by default when `hivemind-presence` is running.
 
 **mDNS / Zeroconf (optional)**: Standard multicast DNS discovery. Requires `zeroconf` to be installed. Useful in environments where UDP broadcast is filtered by switches.
 
 **UPnP**: Not supported.
+
+## Integration with hivemind-core
+
+When `hivemind-presence` is installed, start the announcer alongside the hub. The `hivemind-presence announce` command is independent of `hivemind-core listen` — run them together, or configure `hivemind-presence` as a separate service on the same machine. No changes to `~/.config/hivemind-core/server.json` are required.
 
 ## Running the hub announcer
 

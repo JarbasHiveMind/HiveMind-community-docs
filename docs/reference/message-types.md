@@ -13,6 +13,8 @@ All message types are defined in `HiveMessageType` in `hivemind_bus_client.messa
 | `ESCALATE` | Transport | Satellite → Hub (up) | Multi-hop upward routing |
 | `BROADCAST` | Transport | Hub → All (down) | Multi-hop downward routing |
 | `PROPAGATE` | Transport | Bidirectional | All-directions flood |
+| `QUERY` | Transport | Bidirectional | Routed request with a single expected response |
+| `CASCADE` | Transport | Bidirectional | Scatter/gather — all nodes may respond |
 | `INTERCOM` | Transport | Point-to-point | End-to-end encrypted tunnel |
 | `PING` | Discovery | Bidirectional (via PROPAGATE) | Topology probe |
 | `PONG` | Discovery | Satellite → Hub | Topology probe reply |
@@ -76,6 +78,37 @@ Wraps another `HiveMessage` and floods it in all directions.
 
 - **Payload**: a nested `HiveMessage`
 - **Use**: mesh-wide announcements, topology discovery (PING is always wrapped in PROPAGATE)
+
+## QUERY
+
+A routed request that expects exactly one response, correlated by a `query_id`. Like `ESCALATE`, but the response travels back to the originator.
+
+- **Payload**: a nested `HiveMessage` (typically wrapping a `BUS` message)
+- **Permission**: the sending client must have `can_escalate = True`
+- **Hub behaviour (request)**: the hub attempts to answer from its local agent (within a timeout). If the local agent answers, a QUERY response is sent back immediately. If not, the request is forwarded upstream via `query_to_master`. At the top-level master with no upstream, a `hive.query.timeout` error response is returned.
+- **Hub behaviour (response)**: messages with `metadata["is_response"] = True` are routed downstream toward the originator identified by `metadata["originator_peer"]`.
+- **Response metadata fields**:
+
+| Field | Description |
+|---|---|
+| `query_id` | UUID correlating request and response |
+| `originator_peer` | Peer ID of the node that issued the original request |
+| `responder_peer` | Peer ID of the node that answered |
+| `is_response` | `true` — distinguishes response from request |
+
+The response payload wraps an inner `BUS` HiveMessage; the inner BUS message carries the OVOS agent's reply.
+
+## CASCADE
+
+A scatter/gather request: like `PROPAGATE`, but every reachable node may answer. Responses are collected and a **select callback** disambiguates to pick the best answer.
+
+- **Payload**: a nested `HiveMessage` (wrapping a `BUS` message)
+- **Permission**: the sending client must have `can_propagate = True`
+- **Hub behaviour (request)**: the hub tries its local agent, then forwards the CASCADE to all other connected peers and upstream. Every node that can answer sends a response.
+- **Hub behaviour (response)**: response messages (`is_response = True`) are routed back toward the originator. At the originator's hub, a `cascade_select_callback` (if configured) collects all responses and picks a winner. Without a select callback, each response is forwarded individually.
+- **Client behaviour**: `CascadeAggregator` on the client side buffers responses for a `cascade_timeout` window (default 5 s). Once the timer expires — or the expected number of responses has arrived — the `cascade_select_callback` picks the best response and delivers it.
+- **Trust**: unlike QUERY responses (which come from a known upstream node), CASCADE responses can originate from any node in the hive. The select callback is responsible for choosing among potentially untrusted responses.
+- **Response metadata fields**: same as QUERY (`query_id`, `originator_peer`, `responder_peer`, `is_response`).
 
 ## INTERCOM
 
