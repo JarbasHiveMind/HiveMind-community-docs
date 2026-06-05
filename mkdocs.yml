@@ -21,16 +21,13 @@ nav:
       - Mic Satellite: 07_micsat.md
       - WebSpeech Browser: webspeech.md
     - Integrations:
-      - Web Chatroom: chatroom.md
       - Matrix: 09_matrix.md
       - DeltaChat: 10_deltachat.md
       - Mattermost: mattermost.md
       - Twitch: twitch.md
-      - Media Player: media_player.md
       - Home Assistant: 07_homeassistant.md
     - Administration:
       - Docker Deployment: docker.md
-      - Network Discovery: 20_network_discovery.md
     - Protocol:
       - WebSocket Transport: 04_protocol.md
       - HTTP Transport: http_protocol.md
@@ -44,7 +41,6 @@ nav:
       - Encryption: 19_crypto.md
     - Developers:
       - Libraries: 11_devs.md
-      - OVOS Integration: ovos_integration.md
       - Testing Guide: testing.md
 
 theme: readthedocs
