@@ -1,7 +1,6 @@
 # Auto Discovery
 
-[Hivemind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) is an utility to enable auto discovery of
-HiveMind nodes in your network
+[HiveMind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) enables automatic discovery of HiveMind nodes in your local network using zero-dependency UDP broadcast (HiveBeacon), mDNS (Zeroconf), or manual address entry.
 
 ## Command line usage
 
@@ -17,7 +16,7 @@ Commands:
   scan      scan for hivemind nodes in the local network
 ```
 
-Announce your HiveMind node in your lan via UpnP and Zeroconf
+Announce your HiveMind node in your local network via HiveBeacon (UDP broadcast) and optionally mDNS:
 
 ```
 $ hivemind-presence announce --help
@@ -29,13 +28,13 @@ Options:
   --port INTEGER       HiveMind port number (default: 5678)
   --name TEXT          friendly device name (default: HiveMind-Node)
   --service-type TEXT  HiveMind service type (default: HiveMind-websocket)
-  --zeroconf BOOLEAN   advertise via zeroconf (default: True)
-  --upnp BOOLEAN       advertise via UPNP (default: False)
+  --beacon BOOLEAN     advertise via UDP broadcast (default: True)
+  --zeroconf BOOLEAN   advertise via mDNS/Zeroconf (default: False)
   --help               Show this message and exit.
 
 ```
 
-Scan for HiveMind nodes in your lan via UpnP and Zeroconf
+Scan for HiveMind nodes in your local network via HiveBeacon (UDP broadcast) and optionally mDNS:
 
 ```
 $ hivemind-presence scan --help
@@ -44,8 +43,8 @@ Usage: hivemind-presence scan [OPTIONS]
   scan for hivemind nodes in the local network
 
 Options:
-  --zeroconf BOOLEAN   scan via zeroconf (default: True)
-  --upnp BOOLEAN       scan via UPNP (default: False)
+  --beacon BOOLEAN     scan via UDP broadcast (default: True)
+  --zeroconf BOOLEAN   scan via mDNS/Zeroconf (default: False)
   --service-type TEXT  HiveMind service type (default: HiveMind-websocket)
   --help               Show this message and exit.
 ```

@@ -4,17 +4,18 @@
 
 | Backend            | Use Case                                       | Default Location                            | Command Line options                               |
 |--------------------|------------------------------------------------|---------------------------------------------|----------------------------------------------------|
-| **JSON** (default) | Simple, file-based setup for local use         | `~/.local/share/hivemind-core/clients.json` | Configurable via `--db-name` and `--db-folder`     |
-| **SQLite**         | Lightweight relational DB for single instances | `~/.local/share/hivemind-core/clients.db`   | Configurable via `--db-name` and `--db-folder`     |
+| **SQLite**         | Lightweight relational DB (default for new installs) | `~/.local/share/hivemind-core/clients.db`   | Configurable via `--db-name` and `--db-folder`     |
+| **JSON**           | Simple, file-based setup (kept for existing installs) | `~/.local/share/hivemind-core/clients.json` | Configurable via `--db-name` and `--db-folder`     |
 | **Redis**          | Distributed, high-performance environments     | `localhost:6379`                            | Configurable via `--redis-host` and `--redis-port` |
 
-> ⚠️ ensure you use the same database parameters when launching `hivemind-core` and registering clients!
+> **Note**: ensure you use the same database parameters when launching `hivemind-core` and registering clients!
 
 **How to Choose?**
 
+- For **new installations**, use SQLite (the default).
+- For **existing installs** using JSON, migration is automatic on first run.
 - For **scalability** or multi-instance setups, use Redis.
-- For **simplicity** or single-device environments, use SQLite.
-- For **development** or to be able to edit the database by hand, use JSON.
+- For **development** or manual database editing, use JSON.
 
 ## Security Considerations
 

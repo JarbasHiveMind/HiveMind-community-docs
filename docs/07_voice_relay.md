@@ -1,14 +1,14 @@
 # HiveMind Voice Relay
 
-OpenVoiceOS Relay, connect to [HiveMind](https://github.com/JarbasHiveMind/HiveMind-listener)
+OpenVoiceOS Voice Relay for offloading speech processing to a central hub.
 
-A lightweight version of [voice-satellite](https://github.com/JarbasHiveMind/HiveMind-voice-sat), but STT and TTS are sent to HiveMind instead of handled on device
+A lightweight version of [HiveMind-voice-sat](https://github.com/JarbasHiveMind/HiveMind-voice-sat). WakeWord and VAD run locally; STT and TTS are delegated to the hub.
 
 ## Server requirements
 
-> ⚠️ `hivemind-listener` is required server side, the default `hivemind-core` does not provide STT and TTS capabilities.
-
-> Alternatively run `hivemind-core` together with `ovos-audio` and `ovos-dinkum-listener`
+The hub must provide STT and TTS capabilities. You can either:
+- Run `hivemind-core` with the `hivemind-audio-binary-protocol` binary plugin (recommended)
+- Run `hivemind-core` with OVOS and `ovos-audio` + `ovos-dinkum-listener` for full voice processing
 
 The regular voice satellite is built on top of [ovos-dinkum-listener](https://github.com/OpenVoiceOS/ovos-dinkum-listener) and is full featured supporting all plugins
 

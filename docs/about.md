@@ -29,7 +29,7 @@ Satellites can be anything that speaks the HiveMind protocol: dedicated voice ha
 | Hub type | Package | Use case |
 |---|---|---|
 | OVOS skills server | `hivemind-core` | Full OVOS with installed skills |
-| Sound server (listener) | `hivemind-listener` | Offloads STT/TTS/WakeWord from satellites |
+| OVOS audio hub | `hivemind-core` + `hivemind-audio-binary-protocol` | Offloads STT/TTS/WakeWord via binary plugin on `hivemind-core` |
 | Persona server | `hivemind-persona` | LLMs and chatbots via `ovos-persona` |
 
 ## What connects to the hub

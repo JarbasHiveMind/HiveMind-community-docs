@@ -37,7 +37,7 @@ Options:
   --cert_dir TEXT    SSL certificate directory
   --cert_name TEXT   SSL certificate file name
   --db-backend [redis|json|sqlite]
-                     Database backend (default: json)
+                     Database backend (default: sqlite)
   --db-name TEXT     [json/sqlite] Database file name
   --db-folder TEXT   [json/sqlite] Database folder
   --redis-host TEXT  [redis] Redis host (default: localhost)
@@ -45,7 +45,7 @@ Options:
   --redis-password TEXT  [redis] Redis password
 ```
 
-> See [Database Backends](17_database.md) for guidance on choosing `json`, `sqlite`, or `redis`.
+> See [Database Backends](17_database.md) for guidance on choosing `sqlite`, `json`, or `redis`.
 
 ## Step 3 — Add credentials for a satellite
 

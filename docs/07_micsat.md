@@ -1,12 +1,14 @@
 # HiveMind Microphone Satellite
 
-OpenVoiceOS Microphone Satellite, connect to [HiveMind Listener](https://github.com/JarbasHiveMind/HiveMind-listener)
+OpenVoiceOS Microphone Satellite for offloading audio processing to a central hub.
 
-A super lightweight version of [voice-satellite](https://github.com/JarbasHiveMind/HiveMind-voice-sat), only Microphone and VAD plugins runs on the mic-satellite, voice activity is streamed to `hivemind-listener` and all the processing happens there
+A super lightweight version of [HiveMind-voice-sat](https://github.com/JarbasHiveMind/HiveMind-voice-sat), only Microphone and VAD plugins run on the mic-satellite. Voice activity is streamed to the hub and all speech processing (STT/TTS/wakeword) happens on the server.
 
 ## Server requirements
 
-> ⚠️ `hivemind-listener` is required server side, the default `hivemind-core` does not provide STT and TTS capabilities.
+> **Note**: The hub must provide STT and TTS capabilities. You can either:
+> - Run `hivemind-core` with the `hivemind-audio-binary-protocol` binary plugin (recommended)
+> - Run `hivemind-core` with OVOS and `ovos-audio` + `ovos-dinkum-listener` for full voice processing
 
 ## Install
 

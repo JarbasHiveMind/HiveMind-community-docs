@@ -6,14 +6,14 @@ In the ever-expanding landscape of AI and interconnected systems, the HiveMind f
 
 HiveMind Bridges serve as connectors between external platforms and the HiveMind network.
 These bridges act as terminals, enabling communication with the HiveMind infrastructure.
-With the support of various protocols such as Matrix, [Mattermost Bridge](https://github.com/OpenJarbas/HiveMind_mattermost_bridge), [HackChat Bridge](https://github.com/OpenJarbas/HiveMind-HackChatBridge), [DeltaChat Bridge](https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge), email, and more, HiveMind Bridges extend the reach of AI assistants and allow them to interact with users through familiar channels.
+With the support of various protocols such as Matrix, [Mattermost Bridge](https://github.com/JarbasHiveMind/HiveMind-mattermost-bridge), [DeltaChat Bridge](https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge), email, and more, HiveMind Bridges extend the reach of AI assistants and allow them to interact with users through familiar channels.
 
 Each bridge behaves like a secure intermediary, ensuring the safety and privacy of communications.
 They maintain their own session and permissions, allowing them to answer specific users or adhere to custom rules defined within the bridge. This flexibility makes it possible to integrate AI assistants seamlessly into existing communication platforms, expanding their capabilities and enhancing user interactions.
 
 ## HiveMind Web Chat Interface: Unleashing AI Potential
 
-The [HiveMind Webchat](https://github.com/OpenJarbas/HiveMind-webchat) Interface, powered by [HiveMindJs](https://github.com/JarbasHiveMind/HiveMind-js) provides a user-friendly and versatile solution for connecting to the HiveMind network.
+The [HiveMind Web Chat Interface](https://github.com/JarbasHiveMind/HiveMind-webchat), powered by [HiveMindJs](https://github.com/JarbasHiveMind/HiveMind-js), provides a user-friendly and versatile solution for connecting to the HiveMind network.
 This JavaScript library enables direct communication with the HiveMind infrastructure when access keys are available in the browser environment.
 For instance, a login page with HiveMind access keys can leverage HiveMindJS to establish a secure connection, granting users access to AI functionalities seamlessly.
 
