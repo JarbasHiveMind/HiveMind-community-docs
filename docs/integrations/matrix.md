@@ -1,0 +1,56 @@
+# Matrix Bridge
+
+[HiveMind-matrix-bridge](https://github.com/JarbasHiveMind/HiveMind-matrix-bridge) connects a [Matrix](https://matrix.org/) chat room to a HiveMind hub. Messages posted in the room are forwarded to the hub as utterances; responses come back as messages in the room.
+
+Matrix is a federated, end-to-end-encrypted chat protocol. You register a bot account at any Matrix provider and the bridge logs in as that bot.
+
+## Install
+
+```bash
+pip install HiveMind-matrix-bridge
+```
+
+## Usage
+
+```
+Usage: HiveMind-matrix run [OPTIONS]
+
+  Connect a Matrix chatroom to HiveMind
+
+Options:
+  --botname TEXT      Bot username (default: thehivebot)
+  --matrixtoken TEXT  Matrix access token
+  --matrixhost TEXT   Matrix homeserver URL (default: https://matrix.org)
+  --room TEXT         Matrix room ID (e.g. #hivemind-bots:matrix.org)
+  --key TEXT          HiveMind access key (default: read from identity file)
+  --password TEXT     HiveMind password (default: read from identity file)
+  --host TEXT         HiveMind host (default: read from identity file)
+  --port INTEGER      HiveMind port number (default: 5678)
+```
+
+Example:
+
+```bash
+HiveMind-matrix run \
+  --botname thehivebot \
+  --matrixtoken syt_dGhl..... \
+  --matrixhost https://matrix.org \
+  --room "#hivemind-bots:matrix.org" \
+  --host 192.168.1.10 \
+  --key <key> \
+  --password <password>
+```
+
+## How it works
+
+The bridge runs as a HiveMind client. Each Matrix message from a room member is wrapped in a `recognizer_loop:utterance` OVOS message and sent to the hub via `BUS`. The hub processes the utterance and returns a `speak` response; the bridge posts the spoken text back to the Matrix room.
+
+## Permissions required
+
+The bridge client needs at minimum:
+
+```bash
+hivemind-core allow-msg "speak" --node-id <id>
+```
+
+Add further permissions if your use case requires access to specific skills or message types.

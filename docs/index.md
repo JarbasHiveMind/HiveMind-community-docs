@@ -3,11 +3,22 @@
 
 ![HiveMind Logo](https://github.com/JarbasHiveMind/HiveMind-assets/raw/master/logo/hivemind-512.png)
 
-HiveMind is an open-source protocol and platform that connects satellite devices to a central AI hub — either an [OpenVoiceOS](https://openvoiceos.github.io/community-docs) skills server or a standalone LLM/persona server.
+HiveMind is an open-source protocol and platform that connects lightweight **satellite** devices to a central AI **hub** over the network. Satellites range from text-only CLI clients to full voice-capable devices. The hub can be an [OpenVoiceOS](https://openvoiceos.github.io/community-docs) skills server or a standalone LLM/persona server.
 
-- **One hub, many satellites** — run OVOS, an LLM, or a chatbot on your hub machine. Every other device connects as a satellite over the network.
-- **Secure by default** — all traffic is AES-256-GCM encrypted with per-client authentication and fine-grained permissions.
-- **Flexible** — voice satellites, microphone-only devices, LLM chatbots, Home Assistant, Matrix rooms, and custom clients all speak the same protocol.
+```
+[Voice Satellite] ──┐
+[Mic Satellite]  ───┤──→ [HiveMind Hub] ──→ skills / LLM / intents
+[CLI Client]     ───┤
+[Browser Tab]    ───┘
+```
+
+**Key properties:**
+
+- **Transport-agnostic** — protocol plugins handle WebSocket, HTTP, MQTT, and more; swap without changing clients
+- **Payload-agnostic** — OVOS messages by default; agent protocol plugins support other backends
+- **Encrypted by default** — AES-256-GCM with per-client access keys and PBKDF2 password handshake
+- **Fine-grained ACL** — per-client allowlists for message types, skills, and intents; fail-closed
+- **Mesh-capable** — hubs connect to other hubs; ESCALATE goes up the chain, BROADCAST goes down
 
 ---
 
@@ -15,13 +26,14 @@ HiveMind is an open-source protocol and platform that connects satellite devices
 
 | I want to… | Go to |
 |---|---|
-| Understand the core concepts | [What is HiveMind](about.md) |
-| Set up a hub and connect a first satellite | [Quick Start](01_quickstart.md) |
-| Pick the right satellite for my device | [Choosing a Satellite](satellite_comparison.md) |
-| Run HiveMind with Docker | [Docker Deployment](docker.md) |
-| Connect a chatbot or LLM | [Persona Server](08_persona.md) |
-| Integrate with Home Assistant | [Home Assistant](07_homeassistant.md) |
-| Build a client application | [Client Libraries](11_devs.md) |
+| Understand what HiveMind is | [About](about.md) |
+| Set up a hub and connect my first satellite | [Quick Start](quickstart.md) |
+| Pick the right satellite for my hardware | [Choosing a Satellite](satellites/index.md) |
+| Run HiveMind in Docker | [Docker Deployment](server/docker.md) |
+| Connect a chatbot or LLM | [Persona Hub](server/persona-hub.md) |
+| Integrate with Home Assistant | [Home Assistant](integrations/home-assistant.md) |
+| Build a client application | [Developer Guide](developers/client-library.md) |
+| Read the protocol specification | [Protocol Reference](developers/protocol-spec.md) |
 
 ---
 
@@ -29,3 +41,4 @@ HiveMind is an open-source protocol and platform that connects satellite devices
 
 - [Matrix chat](https://matrix.to/#/#jarbashivemind:matrix.org) — news, support, and general discussion
 - [GitHub](https://github.com/JarbasHiveMind) — source code and issues
+- [YouTube channel](https://www.youtube.com/channel/UCYoV5kxp2zrH6pnoqVZpKSA/) — video guides and demos

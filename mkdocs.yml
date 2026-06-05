@@ -1,47 +1,48 @@
-site_name: Documentation
+site_name: HiveMind Documentation
 site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
 nav:
-    - Home: index.md
-    - About:
-      - What is HiveMind: about.md
-      - Quick start: 01_quickstart.md
-      - Terminology: 02_terminology.md
-      - Choosing a Satellite: satellite_comparison.md
-      - Auto Discovery: 05_presence.md
-      - Local Hives: 14_localhive.md
-      - Nested Hives: 15_nested.md
-      - Plugins: 04_plugins.md
-    - Servers:
-      - Skills Server: 06_skills_server.md
-      - Sound Server: 06_sound_server.md
-      - Persona Server: 08_persona.md
-    - Satellites:
-      - Voice Satellite: 07_voicesat.md
-      - Voice Relay: 07_voice_relay.md
-      - Mic Satellite: 07_micsat.md
-      - WebSpeech Browser: webspeech.md
-    - Integrations:
-      - Matrix: 09_matrix.md
-      - DeltaChat: 10_deltachat.md
-      - Mattermost: mattermost.md
-      - Twitch: twitch.md
-      - Home Assistant: 07_homeassistant.md
-    - Administration:
-      - Docker Deployment: docker.md
-    - Protocol:
-      - WebSocket Transport: 04_protocol.md
-      - HTTP Transport: http_protocol.md
-      - Binarization: 18_binarization.md
-      - OVOS Messages: 13_mycroft.md
-    - Security:
-      - Database: 17_database.md
-      - Pairing: 03_pairing.md
-      - Permissions: 16_permissions.md
-      - Handshake: 12_handshake.md
-      - Encryption: 19_crypto.md
-    - Developers:
-      - Libraries: 11_devs.md
-      - Testing Guide: testing.md
+  - Home: index.md
+  - About: about.md
+  - Quick Start: quickstart.md
+
+  - Core Concepts:
+    - Mesh & Hub Topology: concepts/mesh.md
+    - Protocol & Message Types: concepts/protocol.md
+    - Security & Permissions: concepts/security.md
+    - Database Backends: concepts/databases.md
+    - Auto Discovery: concepts/discovery.md
+    - Plugin Architecture: concepts/plugins.md
+
+  - Satellites:
+    - Choosing a Satellite: satellites/index.md
+    - HiveMind CLI: satellites/cli.md
+    - Mic Satellite: satellites/mic-satellite.md
+    - Voice Relay: satellites/voice-relay.md
+    - Voice Satellite: satellites/voice-sat.md
+    - WebSpeech Browser: satellites/webspeech.md
+
+  - Hub & Server:
+    - OVOS Skills Hub: server/ovos-hub.md
+    - Persona Hub (LLM): server/persona-hub.md
+    - Audio Binary Protocol: server/audio-binary-protocol.md
+    - Docker Deployment: server/docker.md
+
+  - Integrations:
+    - Home Assistant: integrations/home-assistant.md
+    - Matrix: integrations/matrix.md
+    - DeltaChat: integrations/deltachat.md
+    - Mattermost: integrations/mattermost.md
+    - Twitch: integrations/twitch.md
+
+  - Developer Guide:
+    - Client Library: developers/client-library.md
+    - Protocol Specification: developers/protocol-spec.md
+    - Testing: developers/testing.md
+
+  - Reference:
+    - CLI Commands: reference/cli.md
+    - Message Types: reference/message-types.md
+    - Configuration: reference/config.md
 
 theme: readthedocs
 
