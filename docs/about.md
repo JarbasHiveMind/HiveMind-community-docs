@@ -19,7 +19,7 @@ HiveMind separates AI workload from edge devices. Satellites (microphones, voice
 |---|---|---|
 | OVOS skills server | `hivemind-core` | OpenVoiceOS (full skill ecosystem) |
 | Audio hub | `hivemind-core` + `hivemind-audio-binary-protocol` | OVOS + server-side STT/TTS/wakeword |
-| Persona server | `hivemind-persona` | LLMs and chatbots via `ovos-persona` |
+| Persona server | `hivemind-core` + `hivemind-persona-agent-plugin` | LLMs and chatbots via `ovos-persona` |
 
 ## Satellite types
 

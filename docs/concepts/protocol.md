@@ -1,6 +1,6 @@
 # Protocol
 
-HiveMind defines a message protocol that runs over pluggable transports. Every message on the wire is a `HiveMessage` — a JSON envelope (or binary-encoded equivalent in protocol v1) carrying a `msg_type` and a payload.
+HiveMind defines a message protocol that runs over pluggable transports. Every message on the wire is a `HiveMessage` — a JSON envelope (or binary-encoded equivalent in protocol v2) carrying a `msg_type` and a payload.
 
 ## HiveMessage types
 
@@ -30,7 +30,7 @@ These wrap another `HiveMessage` as their payload and control how it is routed t
 | **`CASCADE`** | Scatter/gather — every node may answer; originator picks best | Bidirectional |
 | **`INTERCOM`** | End-to-end encrypted point-to-point tunnel | Between any two nodes |
 | **`PING`** | Topology probe — always wrapped inside PROPAGATE | Bidirectional (via PROPAGATE) |
-| **`PONG`** | Topology reply — carries hive path metadata | Satellite → Hub |
+| **`RENDEZVOUS`** | Reserved for rendezvous-nodes | Bidirectional |
 
 ### Connection management messages
 
@@ -38,8 +38,8 @@ These are handled automatically by `HiveMessageBusClient` and `hivemind-core`. Y
 
 | Type | Purpose |
 |---|---|
-| **`HELLO`** | Node announcement on connection (carries node ID and public key) |
-| **`HANDSHAKE`** | Cryptographic key exchange (carries PBKDF2 envelope) |
+| **`HELLO`** | Node announcement on connection (carries node ID and RSA public key) |
+| **`HANDSHAKE`** | Cryptographic key exchange (password mode → PBKDF2 envelope, or RSA mode → RSA-wrapped secret) |
 
 ## Roles
 
@@ -70,7 +70,7 @@ The `Message.reply()` mechanism (from `ovos-bus-client`) swaps `source` ↔ `des
 
 ## INTERCOM — end-to-end encrypted peer-to-peer
 
-`INTERCOM` messages are encrypted with the **recipient node's PGP public key**. Intermediate nodes — including the hub — cannot read the payload. Only the target node, which holds the corresponding private key, can decrypt it. After decryption, the node verifies the sender's signature using the sender's public key (stored in the trust store).
+`INTERCOM` messages are sealed in a **hybrid envelope**: a random AES-256-GCM session key is wrapped with the **recipient node's RSA public key** (PKCS#1 OAEP) and the payload is encrypted with AES-256-GCM. The envelope carries base64 fields `encrypted_key`, `ciphertext`, `tag`, `nonce`, and `signature`. Intermediate nodes — including the hub — cannot read the payload. Only the target node, which holds the corresponding RSA private key, can unwrap the session key and decrypt it. After decryption, the node verifies the sender's RSA signature (PSS over SHA-256) using the sender's public key (stored in the trust store).
 
 `INTERCOM` is usually the payload of a transport message (`ESCALATE` or `PROPAGATE`) so it reaches its destination through the mesh. Intermediate nodes forward it without being able to read it.
 
@@ -117,7 +117,7 @@ Unlike QUERY (where responses come from a known upstream chain), CASCADE respons
 
 ## PING and topology mapping
 
-`PING` is always wrapped inside a `PROPAGATE` — it floods to all reachable nodes. Each node that receives it replies with a `PONG` that includes the path it travelled (a list of `{source, targets}` hops). `HiveMapper` in `hivemind_core.hive_map` collects PONGs to build a topology map of the live hive.
+`PING` is always wrapped inside a `PROPAGATE` — it floods to all reachable nodes. There is no separate reply message type: each node that receives a `PING` re-emits *its own* `PING` (carrying the same `flood_id`), flooded onward via `PROPAGATE`. Receivers deduplicate by `flood_id` so each probe is processed once. The PING payload is `{flood_id, peer, site_id, timestamp}`. `HiveMapper` in `hivemind_core.hive_map` observes these re-emitted PINGs to build a topology map of the live hive.
 
 ## Session and context keys
 
@@ -137,13 +137,12 @@ After `Message.reply()` is called by OVOS, `source` and `destination` are swappe
 
 ## Protocol versions
 
-| Feature | v0 | v1 |
-|---|:---:|:---:|
-| JSON serialization | ✅ | ✅ |
-| Binary serialization | ❌ | ✅ |
-| Pre-shared AES key | ✅ | ✅ |
-| Password handshake (PBKDF2) | ❌ | ✅ |
-| PGP key exchange | ❌ | ✅ |
-| Zlib compression | ❌ | ✅ |
+The hivemind-core `ProtocolVersion` enum bumps capabilities one step at a time:
 
-Protocol v0 uses only a pre-shared encryption key (the `Encryption Key` in `add-client` output). Protocol v1 adds the full password handshake, PGP identity, compression, and binary framing. New clients should always use v1.
+| Feature | ZERO (v0) | ONE (v1) | TWO (v2) |
+|---|:---:|:---:|:---:|
+| JSON serialization | ✅ | ✅ | ✅ |
+| Handshake (password or RSA) | ❌ | ✅ | ✅ |
+| Binary serialization | ❌ | ❌ | ✅ |
+
+Protocol v0 is JSON only, with no handshake and no binary framing — it uses only a pre-shared encryption key (the legacy, deprecated `Encryption Key` in `add-client` output). Protocol v1 adds the handshake (password/PBKDF2 or RSA), the RSA identity, and zlib compression. Protocol v2 additionally enables binary framing. (This `ProtocolVersion` enum is distinct from the binary-serialization `PROTOCOL_VERSION` constant in `serialization.py`.) New clients should use the highest version both sides support.

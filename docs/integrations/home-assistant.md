@@ -82,7 +82,28 @@ ovos.common_play.repeat.unset
 ovos.common_play.repeat.one
 ```
 
-### PHAL — volume control (ovos-phal-plugin-alsa)
+### Audio Service
+
+*(only if enabled manually — for systems without the OCP Audio Plugin)*
+
+```
+mycroft.audio.service.play
+mycroft.audio.service.resume
+mycroft.audio.service.pause
+mycroft.audio.service.stop
+mycroft.audio.service.prev
+mycroft.audio.service.next
+mycroft.audio.service.set_track_position
+```
+
+### PHAL
+
+```
+mycroft.phal.is_alive
+mycroft.phal.is_ready
+```
+
+#### ovos-phal-plugin-alsa
 
 ```
 mycroft.volume.get
@@ -92,7 +113,7 @@ mycroft.volume.mute
 mycroft.volume.unmute
 ```
 
-### PHAL — system control (ovos-phal-plugin-system)
+#### ovos-phal-plugin-system
 
 ```
 system.reboot
@@ -101,20 +122,24 @@ system.mycroft.service.restart
 system.ssh.status
 ```
 
-### PHAL — status
+#### ovos-phal-plugin-camera
+
+*(work in progress)*
 
 ```
-mycroft.phal.is_alive
-mycroft.phal.is_ready
+ovos.phal.camera.ping
+ovos.phal.camera.get
+ovos.phal.camera.open
+ovos.phal.camera.close
 ```
 
-Grant these permissions using `hivemind-core allow-msg` for the client node ID associated with this integration:
+Grant these permissions using `hivemind-core allow-msg`, passing the client node ID positionally:
 
 ```bash
-hivemind-core allow-msg "speak" --node-id <id>
-hivemind-core allow-msg "mycroft.volume.get" --node-id <id>
+hivemind-core allow-msg "speak" <id>
+hivemind-core allow-msg "mycroft.volume.get" <id>
 # ... repeat for each message type
-hivemind-core make-admin --node-id <id>
+hivemind-core make-admin <id>
 ```
 
 ## Related projects

@@ -1,6 +1,6 @@
 # Protocol Specification
 
-This page describes the wire format for HiveMind messages, including the binary framing introduced in protocol version 1.
+This page describes the wire format for HiveMind messages, including the binary framing introduced in protocol version 2.
 
 ## Message envelope
 
@@ -12,12 +12,15 @@ Every HiveMind message is a `HiveMessage` with:
 
 ## Protocol versions
 
+The hivemind-core `ProtocolVersion` enum (`ZERO`/`ONE`/`TWO`) raises capabilities one step at a time. This is distinct from the binary-serialization `PROTOCOL_VERSION` constant in `serialization.py`.
+
 | Version | Transport encoding | Key exchange | Compression |
 |---|---|---|---|
-| **v0** | JSON | Pre-shared AES key only | None |
-| **v1** | JSON or binary | PBKDF2 password handshake + PGP | Optional zlib |
+| **v0** | JSON | Pre-shared AES key only (legacy, deprecated) | None |
+| **v1** | JSON | Handshake: PBKDF2 password **or** RSA | Optional zlib |
+| **v2** | JSON or binary | Handshake: PBKDF2 password **or** RSA | Optional zlib |
 
-## Binary framing (v1)
+## Binary framing (v2)
 
 When both sides negotiate `binarize: true` in the handshake, messages are framed in a compact binary format instead of JSON.
 
@@ -36,7 +39,7 @@ When both sides negotiate `binarize: true` in the handshake, messages are framed
 | Compression flag | 1 | `1` if payload is zlib-compressed |
 | Metadata length | 8 | Length of metadata block in bytes |
 
-Followed by: metadata bytes, then payload bytes. Padding zeros are added to align to a byte boundary.
+Followed by: metadata bytes, then payload bytes. To pad to a byte boundary, zero bits are **prepended** to the left of the start marker; the decoder skips these leading zeros until it reads the first `1`. The metadata length is a `uint:8` (max 255 bytes).
 
 ### Message type encoding
 
@@ -48,12 +51,15 @@ Followed by: metadata bytes, then payload bytes. Padding zeros are added to alig
 | 3 | BROADCAST |
 | 4 | PROPAGATE |
 | 5 | ESCALATE |
-| 6 | INTERCOM |
-| 7 | PING |
-| 8 | PONG |
-| 9 | HELLO |
-| 10 | THIRDPRTY |
+| 6 | HELLO |
+| 7 | QUERY |
+| 8 | CASCADE |
+| 9 | PING |
+| 10 | RENDEZVOUS |
+| 11 | THIRDPRTY |
 | 12 | BINARY |
+
+`INTERCOM` has no dedicated binary integer slot — it defaults to `11` when encoded. The type field is a 5-bit unsigned integer.
 
 ### Binary payload type
 
@@ -95,7 +101,7 @@ For `BINARY` (`msg_type = 12`) messages, a 4-bit unsigned integer immediately af
 
 ## Compression
 
-When the compression flag is set, both the metadata and payload are compressed independently with zlib. Compression is most effective on large payloads (reduces size by up to ~50%); it adds overhead for small messages.
+When the compression flag is set, both the metadata and payload are compressed independently with zlib (each typically ~49–50% smaller). Compression is most effective on large payloads; it adds overhead for small messages.
 
 ## Session context
 

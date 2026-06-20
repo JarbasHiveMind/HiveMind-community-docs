@@ -16,53 +16,44 @@ The simplest HiveMind satellite — text only, no audio hardware required.
 ## Install
 
 ```bash
-pip install hivemind-cli
+pip install HiveMind-cli
 ```
+
+This provides the `hivemind-cli` console script — a terminal client with no
+subcommands, just flags.
 
 ## Usage
 
 Interactive mode — type utterances and see responses:
 
 ```bash
-hivemind-client --host 192.168.1.10 --key <key> --password <password>
+hivemind-cli --access-key <key> --password <password> --host wss://192.168.1.10 --port 5678
 ```
 
-Or with an identity file set via `hivemind-client set-identity`:
+The host **must** include the protocol prefix (`ws://` or `wss://`). If `--host` is
+omitted, the CLI scans the local network for a HiveMind node via UDP broadcast and
+asks before connecting.
+
+Plain output (no curses UI) for scripting or SSH sessions:
 
 ```bash
-hivemind-client
+hivemind-cli --access-key <key> --password <password> --host wss://192.168.1.10 --no-curses
 ```
 
-Send a single utterance and exit:
+## CLI flags
 
-```bash
-hivemind-client send-utterance "what time is it"
-```
+| Flag | Default | Description |
+|---|---|---|
+| `--access-key` | *(required)* | Client access key issued by `hivemind-core add-client`. |
+| `--password` | `None` | Optional client password. |
+| `--host` | *(scan)* | HiveMind host URI, including protocol: `ws://…` or `wss://…`. |
+| `--port` | `5678` | WebSocket port. |
+| `--no-curses` | off | Disable the curses UI; use plain stdout/stdin instead. |
+| `--self-signed` | off | Accept self-signed SSL certificates. |
 
-Send a raw OVOS message:
+## See also
 
-```bash
-hivemind-client send-mycroft --msg "speak" --payload '{"utterance": "hello world"}'
-```
-
-## Other CLI commands
-
-```bash
-# Escalate a message up the hive chain
-hivemind-client escalate --msg "recognizer_loop:utterance" --payload '{"utterances": ["hello"]}'
-
-# Propagate a message to all nodes
-hivemind-client propagate --msg "recognizer_loop:utterance" --payload '{"utterances": ["hello"]}'
-
-# Test connection from the stored identity file
-hivemind-client test-identity
-
-# Set the identity file
-hivemind-client set-identity \
-  --key <key> --password <password> --host <host> --port 5678 --siteid myroom
-
-# Reset PGP keys
-hivemind-client reset-pgp
-```
-
-Run `hivemind-client --help` for a full list.
+For scriptable, non-interactive use, the `hivemind-client` command from the
+[hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind-websocket-client)
+package offers subcommands such as `set-identity`, `terminal`, `send-mycroft`,
+`escalate`, `propagate`, and `ping`. That is a separate package from `HiveMind-cli`.

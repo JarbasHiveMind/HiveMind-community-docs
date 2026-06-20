@@ -1,17 +1,26 @@
 # Voice Satellite
 
-The full-stack OVOS voice satellite. Microphone, VAD, wakeword, STT, and TTS all run on this device. Only the transcribed text utterance is sent to the hub. Responses arrive as text and are spoken locally.
+The full-stack OVOS voice satellite. Microphone, VAD, and wakeword run on this device, and the STT/TTS plugins are configured here rather than on the hub. Only the transcribed text utterance is sent to the hub — never audio. Responses arrive as text and are spoken locally.
 
-**What runs locally**: Microphone + VAD + Wakeword + STT + TTS
+> **Note**: STT and TTS are chosen on the satellite, but the *shipped defaults*
+> (`ovos-stt-plugin-server` / `ovos-tts-plugin-server`) are remote HTTP services
+> pointed at `*.openvoiceos.org`. Audio stays off the hub, but with the defaults it
+> still leaves the device for transcription. For true on-device/offline operation,
+> swap in local STT/TTS plugins (see [Configuration](#configuration)).
+
+**What runs locally**: Microphone + VAD + Wakeword (+ STT + TTS if local plugins are configured)
 
 **What the hub provides**: Skills, intents, reasoning
 
 ## When to use it
 
 - Devices with sufficient CPU/GPU (laptop, desktop, Raspberry Pi 4B or better)
-- Maximum audio privacy — audio never leaves the device
+- Maximum audio privacy — **only if** you swap in local STT/TTS plugins. The shipped
+  defaults (`ovos-stt-plugin-server` / `ovos-tts-plugin-server`) send audio to a
+  remote speech server (configured against `*.openvoiceos.org`).
 - Low-latency interaction (no round-trip for audio)
-- Offline operation after initial model downloads
+- Fully offline operation after initial model downloads — again, only with local
+  STT/TTS plugins in place of the remote-server defaults
 
 ## Install
 
@@ -101,6 +110,6 @@ All plugin slots are swappable via [ovos-plugin-manager](https://github.com/Open
 
 ## How it differs from other satellites
 
-Unlike mic-satellite and voice-relay, voice-sat sends **text utterances** to the hub — no audio leaves the device. The hub only needs to run skills and return text responses. It does not need `hivemind-audio-binary-protocol`.
+Unlike mic-satellite and voice-relay, voice-sat sends **text utterances** to the hub — no audio reaches the hub. The hub only needs to run skills and return text responses. It does not need `hivemind-audio-binary-protocol`. (With the default remote STT/TTS plugins, audio is still sent to the configured speech server for transcription; use local plugins to keep all audio on-device.)
 
 You also choose your own STT and TTS plugins, independent of any hub configuration.

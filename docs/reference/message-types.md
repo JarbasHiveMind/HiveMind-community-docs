@@ -17,7 +17,7 @@ All message types are defined in `HiveMessageType` in `hivemind_bus_client.messa
 | `CASCADE` | Transport | Bidirectional | Scatter/gather — all nodes may respond |
 | `INTERCOM` | Transport | Point-to-point | End-to-end encrypted tunnel |
 | `PING` | Discovery | Bidirectional (via PROPAGATE) | Topology probe |
-| `PONG` | Discovery | Satellite → Hub | Topology probe reply |
+| `RENDEZVOUS` | Transport | Bidirectional | Reserved for rendezvous-nodes |
 | `HELLO` | Connection | Bidirectional | Node announcement on connect |
 | `HANDSHAKE` | Connection | Bidirectional | Cryptographic key exchange |
 
@@ -114,26 +114,33 @@ A scatter/gather request: like `PROPAGATE`, but every reachable node may answer.
 
 End-to-end encrypted point-to-point message.
 
-- **Payload**: `{"ciphertext": "<PGP-encrypted-data>"}` — only the target node can decrypt
-- **Signature**: sender's private PGP key signs the ciphertext
+- **Payload**: a hybrid envelope — a random AES-256-GCM session key wrapped with the target node's RSA public key (PKCS#1 OAEP), with the body encrypted under AES-256-GCM. Base64 fields: `encrypted_key`, `ciphertext`, `tag`, `nonce`, `signature`. Only the target node (holding the RSA private key) can unwrap the session key and decrypt.
+- **Signature**: sender's RSA private key signs (PSS over SHA-256)
 - **Routing**: typically wrapped in ESCALATE or PROPAGATE to reach the target
 - **Intermediate nodes**: cannot read the content or determine the recipient
 
-## PING / PONG
+## PING
 
 Topology discovery.
 
 - `PING` is always wrapped inside `PROPAGATE`
-- Every node that receives PING replies with `PONG` carrying the path it travelled
-- `HiveMapper` in `hivemind_core.hive_map` collects PONGs to build a live topology map
+- There is no `PONG` reply type. Every node that receives a `PING` re-emits its own `PING` with the same `flood_id`, flooded onward via `PROPAGATE`; receivers deduplicate by `flood_id`
+- **Payload**: `{flood_id, peer, site_id, timestamp}`
+- `HiveMapper` in `hivemind_core.hive_map` observes the re-emitted PINGs to build a live topology map
 
 ## HELLO / HANDSHAKE
 
 Connection management. Handled automatically by `HiveMessageBusClient` and `hivemind-core`.
 
-- `HELLO` announces the node (node_id, public key) — sent unencrypted
-- `HANDSHAKE` performs PBKDF2 key exchange — sent unencrypted, establishes the session key
+- `HELLO` announces the node (node_id, RSA public key in PEM) — sent unencrypted
+- `HANDSHAKE` performs the key exchange — sent unencrypted, establishes the session key. Two modes:
+  - **Password mode** (`PasswordHandShake`): the session key is derived with PBKDF2-HMAC-SHA256, 100000 iterations
+  - **RSA mode**: a random 32-byte secret is wrapped with the peer's RSA public key (no PBKDF2)
 - After the handshake, a second `HELLO` (encrypted) carries session data, site_id, and client public key
+
+## RENDEZVOUS
+
+Reserved for rendezvous-nodes. Defined in the `HiveMessageType` enum but not yet wired into general routing.
 
 ## THIRDPRTY
 

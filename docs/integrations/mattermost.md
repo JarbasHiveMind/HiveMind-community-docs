@@ -1,32 +1,55 @@
 # Mattermost Bridge
 
-[HiveMind-mattermost-bridge](https://github.com/JarbasHiveMind/HiveMind_mattermost_bridge) connects a Mattermost workspace to a HiveMind hub. Users can interact with the AI assistant through direct messages or channel mentions.
+[HiveMind-mattermost-bridge](https://github.com/JarbasHiveMind/HiveMind_mattermost_bridge) connects a Mattermost server to a HiveMind hub. Users can interact with the AI assistant through direct messages or channel mentions.
+
+!!! note "Legacy bridge"
+    This bridge is built on the deprecated `jarbas_hive_mind` stack rather than the
+    current `hivemind-bus-client`. It is unmaintained and provided as-is.
 
 ## Install
 
+There is no published package and no `setup.py`/`pyproject.toml`, so `pip install`
+is not available. Clone the repo and install the runtime dependencies:
+
 ```bash
-pip install HiveMind-mattermost-bridge
+git clone https://github.com/JarbasHiveMind/HiveMind_mattermost_bridge
+cd HiveMind_mattermost_bridge
+pip install -r requirements.txt
 ```
 
 ## Configuration
 
-Create `~/.config/hivemind-mattermost-bridge/config.json`:
+There is no config file. Configuration is done by editing the
+`connect_mattermost_to_hivemind(...)` call at the bottom of
+`mattermost_bridge/__main__.py`:
 
-```json
-{
-  "mattermost_url": "https://mattermost.example.com",
-  "bot_token": "xxxxx",
-  "bot_username": "hivemind",
-  "hivemind_host": "192.168.1.10",
-  "hivemind_port": 5678,
-  "hivemind_key": "access-key",
-  "hivemind_password": "password"
-}
+```python
+connect_mattermost_to_hivemind(
+    mail="bot@example.com",   # Mattermost login (mattermostdriver auth)
+    pswd="bot-password",      # Mattermost password
+    url="chat.example.com",   # Mattermost server host (no scheme)
+    tags=["@bot"],            # trigger tags for channel mentions
+    host="127.0.0.1",         # HiveMind hub host
+    port=5678,                # HiveMind hub port
+    key="unsafe",             # HiveMind access key
+)
 ```
 
-Set up a Mattermost outgoing webhook (System Console → Integrations → Outgoing Webhooks) pointing to `http://<bridge-server>:5000/webhook`.
+Authentication is a Mattermost user login (`mail`/`pswd` via `mattermostdriver`),
+not a bot token. The channel mention trigger is whatever is in `tags`, defaulting
+to `["@bot"]`.
+
+The bridge connects to Mattermost as an outbound websocket client
+(`mattermostdriver` `init_websocket`) — it does **not** run an HTTP server, so no
+outgoing webhook or listener port needs to be configured on the Mattermost side.
 
 ## Usage
+
+Run the bridge as a module:
+
+```bash
+python -m mattermost_bridge
+```
 
 **Direct message the bot:**
 
@@ -35,12 +58,16 @@ User: hello
 HiveMind Bot: Hello! How can I help?
 ```
 
-**Mention the bot in a channel:**
+**Mention the bot in a channel** (using a tag from `tags`):
 
 ```
-User: @hivemind what's the weather?
+User: @bot what's the weather?
 ```
+
+Both direct messages and channel mentions are handled.
 
 ## How it works
 
-Each Mattermost user maps to a unique HiveMind peer. Incoming messages become `recognizer_loop:utterance` OVOS messages sent to the hub. Responses (`speak`) are posted back to the originating conversation.
+Each Mattermost user maps to a unique HiveMind peer. Incoming direct messages and
+mentions become `recognizer_loop:utterance` OVOS messages sent to the hub.
+Responses (`speak`) are posted back to the originating conversation.

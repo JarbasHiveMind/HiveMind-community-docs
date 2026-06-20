@@ -14,10 +14,8 @@ Control how HiveMind listens for and connects to satellites.
 |---|---|---|
 | `hivemind-websocket-plugin` | WebSocket (ws:// / wss://) | 5678 |
 | `hivemind-http-plugin` | HTTP (polling) | 5679 |
-| `hivemind-mqtt-protocol` | MQTT | — |
-| `hivemind-usenet` | Usenet (NNTP) | — |
 
-Both WebSocket and HTTP plugins are enabled by default in `server.json`.
+Both WebSocket and HTTP plugins are enabled by default in `server.json`. MQTT (`hivemind-mqtt-protocol`) and Usenet/NNTP (`hivemind-usenet`) transports are planned/experimental and not confirmed published.
 
 ### Agent protocol plugins
 
@@ -26,7 +24,7 @@ Control which AI back-end handles incoming messages.
 | Plugin | Back-end |
 |---|---|
 | `hivemind-ovos-agent-plugin` | OpenVoiceOS (default) |
-| `hivemind-persona-plugin` | ovos-persona / LLM solvers |
+| `hivemind-persona-agent-plugin` | ovos-persona / LLM solvers |
 
 ### Binary data handler plugins
 
@@ -34,7 +32,7 @@ Control how binary payloads (audio, images, files) are processed on the hub.
 
 | Plugin | Function |
 |---|---|
-| `hivemind-audio-binary-protocol` | Server-side wakeword, STT, VAD, TTS for mic-satellite and voice-relay |
+| `hivemind-audio-binary-protocol-plugin` | Server-side wakeword, STT, VAD, TTS for mic-satellite and voice-relay |
 
 No binary plugin is loaded by default. Install and configure one when you need server-side audio processing.
 
@@ -46,7 +44,7 @@ Control where client credentials are stored.
 |---|---|
 | `hivemind-sqlite-db-plugin` | SQLite (default for new installs) |
 | `hivemind-json-db-plugin` | JSON file |
-| `hivemind-redis-database` | Redis |
+| `hivemind-redis-db-plugin` | Redis (from the `hivemind-redis-database` package) |
 
 ## Configuration
 
@@ -96,10 +94,9 @@ Plugins are installed as Python packages via pip:
 ```bash
 pip install hivemind-audio-binary-protocol
 pip install hivemind-redis-database
-pip install hivemind-mqtt-protocol
 ```
 
-After installation, update `server.json` to reference the new module name.
+After installation, update `server.json` to reference the new plugin (entry-point) name — note that the installed package name may differ from the plugin name used in config (e.g. the `hivemind-redis-database` package provides the `hivemind-redis-db-plugin` plugin, and `hivemind-audio-binary-protocol` provides `hivemind-audio-binary-protocol-plugin`).
 
 ## Developing plugins
 

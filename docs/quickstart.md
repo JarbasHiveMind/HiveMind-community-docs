@@ -2,7 +2,7 @@
 
 This guide takes you from zero to a working hub with one connected satellite in under ten minutes.
 
-> **Prerequisites for an OVOS hub**: `ovos-core` and `ovos-messagebus` must already be running on the hub machine. See the [OVOS documentation](https://openvoiceos.github.io/community-docs) for setup. For an LLM/chatbot hub without OVOS, use `hivemind-persona` — see [Persona Hub](server/persona-hub.md).
+> **Prerequisites for an OVOS hub**: `ovos-core` and `ovos-messagebus` must already be running on the hub machine. See the [OVOS documentation](https://openvoiceos.github.io/community-docs) for setup. For an LLM/chatbot hub without OVOS, run `hivemind-core` with `hivemind-persona-agent-plugin` — see [Persona Hub](server/persona-hub.md).
 
 ---
 
@@ -15,27 +15,10 @@ pip install hivemind-core
 ## Step 2 — Start the server
 
 ```bash
-hivemind-core listen --port 5678
+hivemind-core listen
 ```
 
-The server accepts satellite connections on port 5678. Full options:
-
-```
-Options:
-  --host TEXT                      HiveMind host (default: 0.0.0.0)
-  --port INTEGER                   HiveMind port number (default: 5678)
-  --ssl BOOLEAN                    Use wss:// instead of ws://
-  --cert_dir TEXT                  SSL certificate directory
-  --cert_name TEXT                 SSL certificate file name
-  --db-backend [redis|json|sqlite] Database backend (default: sqlite)
-  --db-name TEXT                   [json/sqlite] Database file name
-  --db-folder TEXT                 [json/sqlite] Database folder
-  --redis-host TEXT                [redis] Redis host (default: localhost)
-  --redis-port INT                 [redis] Redis port (default: 6379)
-  --redis-password TEXT            [redis] Redis password
-```
-
-Server configuration can also be written to `~/.config/hivemind-core/server.json` so you do not have to repeat flags on every launch. See [Server Configuration](reference/config.md).
+The server accepts satellite connections on port 5678 (WebSocket) and port 5679 (HTTP). `listen` takes no flags — all server settings (host, ports, SSL, database backend) are read from `~/.config/hivemind-core/server.json`. See [Server Configuration](reference/config.md), or run `hivemind-core print-config` to inspect the active configuration.
 
 ## Step 3 — Register credentials for a satellite
 
@@ -120,14 +103,14 @@ hivemind-voice-sat --host 192.168.1.10 --key <key> --password <password>
 # List all registered clients
 hivemind-core list-clients
 
-# Remove a client
-hivemind-core delete-client --node-id 2
+# Remove a client (node id is a positional argument)
+hivemind-core delete-client 2
 
 # Allow a specific OVOS message type
-hivemind-core allow-msg "speak" --node-id 2
+hivemind-core allow-msg "speak" 2
 
 # Blacklist a skill
-hivemind-core blacklist-skill "skill-homeassistant.openvoiceos" --node-id 2
+hivemind-core blacklist-skill "skill-homeassistant.openvoiceos" 2
 ```
 
 For the full CLI reference see [CLI Reference](reference/cli.md) and [Permissions](concepts/security.md#permissions).

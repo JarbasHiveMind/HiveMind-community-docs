@@ -12,26 +12,26 @@ Server → Client  HANDSHAKE    (PBKDF2 envelope — plaintext)
 Client → Server  HELLO        (session data, site_id, client public key — ENCRYPTED)
 ```
 
-The PBKDF2 handshake works as follows:
+The handshake works as follows:
 
-1. Each side generates a random IV and computes `HSUB = PBKDF2(password, IV, 100_000 iterations, SHA-256)`
+1. Each side generates a random IV and computes a salted-hash subject `HSUB = IV ‖ SHA256(IV + password)` (the IV concatenated with the hash, not a PBKDF2 value)
 2. Both sides exchange their `HSUB` and `IV`
 3. Each side verifies the other's `HSUB` by recomputing it locally
 4. A common salt is derived: `salt = IV_client XOR IV_server`
-5. The session key is derived: `key = PBKDF2(password, salt, 100_000 iterations, SHA-256)` — 256 bits
+5. The session key is derived with PBKDF2: `key = PBKDF2-HMAC-SHA256(password, salt, 100_000 iterations)` — 256 bits
 
-After the handshake all messages are encrypted with **AES-256-GCM** using the derived session key. Each message carries a unique 12-byte nonce and a GCM authentication tag.
+After the handshake all messages are encrypted with the negotiated cipher using the derived session key. Both **ChaCha20-Poly1305** and **AES-GCM** are supported (config `allowed_ciphers: ["CHACHA20-POLY1305", "AES-GCM"]`; the runtime default is AES-GCM). Each message carries a unique nonce and an authentication tag.
 
 An alternative v0 path skips the handshake and uses a pre-shared `crypto_key` directly (the legacy `Encryption Key` printed by `add-client`). This path is kept for backward compatibility only.
 
-### PGP identity (asymmetric)
+### RSA identity (asymmetric)
 
-Each node maintains a PGP key pair stored in `~/.config/hivemind/HiveMindComs.asc`. The public key is exchanged in the encrypted `HELLO` after the handshake. PGP keys are used for:
+Each node maintains an **RSA 2048-bit** key pair, PEM-encoded and stored at `~/.config/hivemind/HiveMindComs.pem`. Encryption uses PKCS#1 OAEP; signatures use PSS with SHA-256. The public key is exchanged in the encrypted `HELLO` after the handshake. The RSA keys are used for:
 
 - **INTERCOM** — encrypting point-to-point messages so intermediate nodes cannot read them
 - **Node authentication** — verifying sender identity on INTERCOM messages via signature
 
-Reset your PGP keys at any time with `hivemind-client reset-pgp`.
+Reset the RSA key at any time with `hivemind-client reset-pgp` (the command name is retained; it recreates the RSA key pair).
 
 ## Identity file
 
@@ -44,8 +44,8 @@ The identity file at `~/.config/hivemind/_identity.json` stores all credentials 
 | `default_master` | Hub host address |
 | `default_port` | Hub port (default 5678 for WebSocket) |
 | `site_id` | Physical location identifier injected into OVOS context |
-| `public_key` | PGP public key (ASCII-armored) |
-| `secret_key` | Path to PGP private key file |
+| `public_key` | RSA public key string |
+| `secret_key` | Path to the RSA private key (PEM) file |
 
 Write the identity file:
 
@@ -74,53 +74,65 @@ Admin flag (`make-admin`) does **not** bypass the `allowed_types` check. It sign
 
 ### Managing permissions via CLI
 
+The node ID is a **positional** argument (not a `--node-id` option). If omitted, the command prompts you to pick a client.
+
 ```bash
 # Allow a message type
-hivemind-core allow-msg "speak" --node-id 2
+hivemind-core allow-msg "speak" 2
 
 # Remove an allowed message type
-hivemind-core blacklist-msg "speak" --node-id 2
+hivemind-core blacklist-msg "speak" 2
 
 # Allow/deny ESCALATE from a client
-hivemind-core allow-escalate --node-id 2
-hivemind-core blacklist-escalate --node-id 2
+hivemind-core allow-escalate 2
+hivemind-core blacklist-escalate 2
 
 # Allow/deny PROPAGATE from a client
-hivemind-core allow-propagate --node-id 2
-hivemind-core blacklist-propagate --node-id 2
+hivemind-core allow-propagate 2
+hivemind-core blacklist-propagate 2
 
 # Blacklist a skill (OVOS-policy)
-hivemind-core blacklist-skill "skill-homeassistant.openvoiceos" --node-id 2
+hivemind-core blacklist-skill "skill-homeassistant.openvoiceos" 2
 
 # Un-blacklist a skill
-hivemind-core allow-skill "skill-homeassistant.openvoiceos" --node-id 2
+hivemind-core allow-skill "skill-homeassistant.openvoiceos" 2
 
 # Blacklist an intent (OVOS-policy)
-hivemind-core blacklist-intent "HomeAssistant.DeviceControllerIntent" --node-id 2
+hivemind-core blacklist-intent "HomeAssistant.DeviceControllerIntent" 2
 
 # Un-blacklist an intent
-hivemind-core allow-intent "HomeAssistant.DeviceControllerIntent" --node-id 2
+hivemind-core allow-intent "HomeAssistant.DeviceControllerIntent" 2
 
 # Grant admin flag
-hivemind-core make-admin --node-id 2
+hivemind-core make-admin 2
 
 # Revoke admin flag
-hivemind-core revoke-admin --node-id 2
+hivemind-core revoke-admin 2
 
 # Set arbitrary metadata (read by policy plugins)
-hivemind-core set-metadata --node-id 2 --key role --value guest
+hivemind-core set-metadata 2 --key role --value guest
 ```
 
 ### Per-client defaults
 
-When a new client is added via `add-client`, it starts with a minimal default set of allowed message types. You must explicitly `allow-msg` any additional message types the client needs. This deny-by-default posture ensures that compromised credentials give an attacker minimal capability.
+When a non-admin client is added via `add-client`, its `allowed_types` whitelist is **empty** — it is denied on every message until you explicitly `allow-msg` each message type it needs. (Admin clients bypass the whitelist.) This deny-all-by-default posture ensures that compromised credentials give an attacker no capability until access is granted.
 
 ## Transport security (TLS)
 
-HiveMind can use TLS for the WebSocket transport:
+HiveMind can use TLS for the WebSocket transport. `hivemind-core listen` takes no flags — TLS is configured in `~/.config/hivemind-core/server.json` under `network_protocol.hivemind-websocket-plugin`:
 
-```bash
-hivemind-core listen --ssl true --cert_dir /path/to/certs --cert_name mycert
+```json
+{
+  "network_protocol": {
+    "hivemind-websocket-plugin": {
+      "host": "0.0.0.0",
+      "port": 5678,
+      "ssl": true,
+      "cert_dir": "/path/to/certs",
+      "cert_name": "mycert"
+    }
+  }
+}
 ```
 
 **For local networks**: a self-signed certificate is sufficient. Pass `--selfsigned` on satellite commands to accept it.
@@ -148,4 +160,4 @@ hivemind-core listen --ssl true --cert_dir /path/to/certs --cert_name mycert
 
 - The password handshake provides confidentiality and mutual authentication but security is proportional to password entropy. Weak passwords are the primary attack surface.
 - Without TLS, a network observer can see the encrypted ciphertext but not its content. TLS adds defence-in-depth.
-- INTERCOM PGP authentication requires both nodes to have pre-exchanged public keys through a trusted channel.
+- INTERCOM RSA authentication requires both nodes to have pre-exchanged public keys through a trusted channel.

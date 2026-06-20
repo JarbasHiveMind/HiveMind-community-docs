@@ -22,11 +22,11 @@ Options:
   --matrixtoken TEXT  Matrix access token
   --matrixhost TEXT   Matrix homeserver URL (default: https://matrix.org)
   --room TEXT         Matrix room ID (e.g. #hivemind-bots:matrix.org)
-  --key TEXT          HiveMind access key (default: read from identity file)
-  --password TEXT     HiveMind password (default: read from identity file)
-  --host TEXT         HiveMind host (default: read from identity file)
-  --port INTEGER      HiveMind port number (default: 5678)
 ```
+
+The `run` command takes no HiveMind credential flags. HiveMind credentials are
+read from the stored node identity (set once with `hivemind-client set-identity`),
+which the bridge loads internally via `HiveMindSolver(autoconnect=True)`.
 
 Example:
 
@@ -35,10 +35,7 @@ HiveMind-matrix run \
   --botname thehivebot \
   --matrixtoken syt_dGhl..... \
   --matrixhost https://matrix.org \
-  --room "#hivemind-bots:matrix.org" \
-  --host 192.168.1.10 \
-  --key <key> \
-  --password <password>
+  --room "#hivemind-bots:matrix.org"
 ```
 
 ## How it works
@@ -50,7 +47,7 @@ The bridge runs as a HiveMind client. Each Matrix message from a room member is 
 The bridge client needs at minimum:
 
 ```bash
-hivemind-core allow-msg "speak" --node-id <id>
+hivemind-core allow-msg "speak" <id>
 ```
 
 Add further permissions if your use case requires access to specific skills or message types.

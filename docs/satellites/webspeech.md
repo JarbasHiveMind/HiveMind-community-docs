@@ -31,4 +31,4 @@ No installation required on the client side. Include the [HiveMind.js](https://g
 - Browser VAD capabilities vary by browser and platform
 - Requires JavaScript support
 - Microphone access requires user permission (browser security model)
-- No local wakeword — the browser captures continuously when active
+- No wakeword — capture is VAD-gated push-to-talk via a VAD toggle button

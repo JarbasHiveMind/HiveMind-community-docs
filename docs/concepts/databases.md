@@ -2,11 +2,11 @@
 
 `hivemind-core` stores client credentials and settings in a pluggable database backend.
 
-| Backend | Default location | Best for |
-|---|---|---|
-| **SQLite** | `~/.local/share/hivemind-core/clients.db` | New installations (default) |
-| **JSON** | `~/.local/share/hivemind-core/clients.json` | Existing installs; manual inspection |
-| **Redis** | `localhost:6379` | Distributed or multi-instance deployments |
+| Backend | Module (package) | Default location | Best for |
+|---|---|---|---|
+| **SQLite** | `hivemind-sqlite-db-plugin` (`hivemind-sqlite-database`) | XDG data dir, e.g. `~/.local/share/hivemind-core/clients.db` | New installations (default) |
+| **JSON** | `hivemind-json-db-plugin` | XDG data dir, e.g. `~/.local/share/hivemind-core/clients.json` | Existing installs; manual inspection |
+| **Redis** | `hivemind-redis-db-plugin` (`hivemind-redis-database`) | `127.0.0.1:6379` | Distributed or multi-instance deployments |
 
 ## Choosing a backend
 
@@ -18,36 +18,42 @@
 
 ## Migrating between backends
 
-```bash
-hivemind-core migrate-db --to sqlite
-```
-
-Migrate from the current backend (detected automatically) to SQLite. Replace `sqlite` with `json` or `redis` as needed.
-
-## Selecting a backend at launch
+`migrate-db` takes the full plugin module names for source and target. `--from` defaults to the JSON backend; `--to` defaults to SQLite. There is no auto-detection.
 
 ```bash
-# SQLite (default)
-hivemind-core listen --db-backend sqlite
-
-# JSON
-hivemind-core listen --db-backend json
-
-# Redis
-hivemind-core listen \
-  --db-backend redis \
-  --redis-host 192.168.1.10 \
-  --redis-port 6379 \
-  --redis-password myredispassword
+hivemind-core migrate-db \
+  --from hivemind-json-db-plugin \
+  --to hivemind-sqlite-db-plugin
 ```
 
-> Use the same `--db-backend` flags for both `listen` and `add-client` (and all other client-management commands). If they differ, the commands will look in different databases and clients will not be found.
+Records are copied with their full credentials and metadata; the source database is left untouched.
+
+## Selecting a backend
+
+Backend selection is **not** a command-line flag — `hivemind-core listen` takes no arguments. The backend is chosen in `~/.config/hivemind-core/server.json` under the `database` block:
+
+```json
+{
+  "database": {
+    "module": "hivemind-redis-db-plugin",
+    "hivemind-redis-db-plugin": {
+      "host": "127.0.0.1",
+      "port": 6379,
+      "password": null,
+      "username": null,
+      "db": 0
+    }
+  }
+}
+```
+
+Set `module` to the desired plugin (`hivemind-sqlite-db-plugin`, `hivemind-json-db-plugin`, or `hivemind-redis-db-plugin`) and provide a same-named sub-block with that backend's connection settings. The same configuration is read by `listen` and by every client-management command (`add-client`, `allow-msg`, …), so they always operate on the same database.
 
 ## Security notes
 
-**SQLite and JSON**: The database file lives on disk. Restrict file permissions to the user running `hivemind-core`. Back up and encrypt backup copies.
+**SQLite and JSON**: The database file lives on disk. Restrict file permissions to the user running `hivemind-core`. Back up and encrypt backup copies. The SQLite backend additionally supports SQLCipher AES-256 encryption at rest — set a `password` key in its config sub-block.
 
-**Redis**: Configure Redis authentication (`requirepass` in `redis.conf`). Use TLS between `hivemind-core` and Redis in untrusted network environments. Bind Redis to `127.0.0.1` or a trusted interface; do not expose it to the internet.
+**Redis**: Configure Redis authentication (`requirepass` in `redis.conf`, mirrored by the `password` key in the config sub-block). The Redis backend supports TLS to `hivemind-core`; use it in untrusted network environments. Bind Redis to `127.0.0.1` or a trusted interface; do not expose it to the internet.
 
 General:
 

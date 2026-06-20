@@ -10,6 +10,12 @@ DeltaChat is an end-to-end encrypted messenger that uses email as its transport.
 pip install HiveMind-deltachat-bridge
 ```
 
+!!! warning "Console entry point is broken upstream"
+    The packaged `hm-deltachat-bridge` console command does not work: `setup.py`
+    points it at a `deltachat_bridge` module while the package is actually named
+    `hm_deltachat_bridge`. Until this is fixed upstream, run the bridge from a
+    checkout (`python -m hm_deltachat_bridge ...`).
+
 ## Usage
 
 See the [repository documentation](https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge) for setup instructions. You will need:

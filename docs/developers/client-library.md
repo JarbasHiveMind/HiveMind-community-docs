@@ -1,18 +1,18 @@
 # Developer Guide — Client Library
 
-`hivemind-websocket-client` is the primary Python library for building HiveMind clients. It handles connection management, the PBKDF2 handshake, AES-256-GCM encryption, and serialization transparently.
+`hivemind-bus-client` (repo: `hivemind-websocket-client`) is the primary Python library for building HiveMind clients. It handles connection management, the PBKDF2 handshake, AES-256-GCM encryption, and serialization transparently.
 
 ## Install
 
 ```bash
-pip install hivemind-websocket-client
+pip install hivemind-bus-client
 ```
 
 ## Libraries
 
 | Library | Language | Notes |
 |---|---|---|
-| [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) | Python | Primary client; WebSocket + HTTP + async + MQTT |
+| [hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) | Python | Primary client; WebSocket + HTTP + async + MQTT |
 | [HiveMind-js](https://github.com/JarbasHiveMind/HiveMind-js) | JavaScript | Browser and Node.js |
 | [ovos-solver-hivemind-plugin](https://github.com/JarbasHiveMind/ovos-solver-hivemind-plugin) | Python | OVOS solver plugin — chat with a HiveMind hub |
 
@@ -86,9 +86,9 @@ while True:
             ))
     except KeyboardInterrupt:
         break
-
-client.close()
 ```
+
+The synchronous `HiveMessageBusClient` runs its WebSocket on a background thread; there is no `close()` method — interrupting the loop is enough to stop sending. (An explicit `close()` exists only on the async client in `hivemind_bus_client.async_client`.)
 
 ## Sending binary data (audio)
 
@@ -125,16 +125,29 @@ hivemind-client test-identity
 
 The identity file is at `~/.config/hivemind/_identity.json`.
 
-## Custom binary handlers
+## Receiving binary data
+
+Inbound binary payloads (TTS audio, files) are dispatched through a
+`BinaryDataCallbacks` instance. Subclass it, override the handlers you care
+about, and pass it as `bin_callbacks=` to the constructor:
 
 ```python
-from hivemind_bus_client.message import HiveMessageType
+from hivemind_bus_client.client import HiveMessageBusClient, BinaryDataCallbacks
 
-def handle_audio_bin(data: bytes, context: dict) -> None:
-    # Process raw audio bytes
-    pass
+class MyBinaryHandler(BinaryDataCallbacks):
+    def handle_receive_tts(self, bin_data: bytes,
+                           utterance: str, lang: str, file_name: str):
+        # synthesized TTS audio to play back
+        with open(file_name, "wb") as f:
+            f.write(bin_data)
 
-client.on_bin(HiveMessageType.BINARY, handle_audio_bin)
+    def handle_receive_file(self, bin_data: bytes, file_name: str):
+        # arbitrary file pushed from the hub
+        with open(file_name, "wb") as f:
+            f.write(bin_data)
+
+client = HiveMessageBusClient(bin_callbacks=MyBinaryHandler())
+client.connect()
 ```
 
 ## Serialization and encryption
@@ -146,46 +159,67 @@ client.on_bin(HiveMessageType.BINARY, handle_audio_bin)
 3. The result is encrypted with AES-256-GCM using the session key
 4. The encrypted payload is encoded (Z85 + Base91) for text transport
 
-## Decorator helper
+## Decorator helpers
+
+`hivemind_bus_client.decorators` provides decorators that register a function as
+a handler for a given message type. Each takes a `bus=` argument (the connected
+client). The OVOS-bus variant, `on_mycroft_message`, filters on the inner OVOS
+message type:
 
 ```python
-from hivemind_bus_client.decorators import with_hivemind
+from hivemind_bus_client.client import HiveMessageBusClient
+from hivemind_bus_client.decorators import on_mycroft_message
 
-@with_hivemind
-def my_service(client: HiveMessageBusClient):
-    client.emit(...)
-    # connection is cleaned up automatically when the function returns
+client = HiveMessageBusClient()
+client.connect()
+
+@on_mycroft_message(payload_type="speak", bus=client)
+def on_speak(message):
+    print(f"AI says: {message.data['utterance']}")
 ```
 
-## Topology mapping (PING/PONG)
+Other decorators target specific `HiveMessageType` envelopes:
+`on_hive_message`, `on_payload`, `on_ping`, `on_broadcast`, `on_propagate`,
+`on_escalate`, `on_handshake`, `on_hello`, `on_query`, `on_cascade`,
+`on_rendezvous`, `on_third_party`, and `on_shared_bus`.
+
+## Topology mapping (PING flood)
+
+HiveMind discovers its topology with a PING flood: each node answers a `PING` by
+re-emitting its own `PING` carrying the same `flood_id`, propagated across the
+hive. There is no separate `PONG` message type — replies are just more `PING`s.
 
 ```python
 import uuid, time
 from hivemind_bus_client.message import HiveMessage, HiveMessageType
 
-ping_id = str(uuid.uuid4())
+flood_id = str(uuid.uuid4())
 ping_inner = HiveMessage(
     HiveMessageType.PING,
     payload={
-        "ping_id": ping_id,
+        "flood_id": flood_id,
         "timestamp": time.time(),
-        "peer": client.peer,
+        "peer": f"{client.site_id}::{client.session_id}",
         "site_id": client.site_id,
     }
 )
-# PING must always be wrapped in PROPAGATE
+# PING must always be wrapped in PROPAGATE so it floods the hive
 ping_outer = HiveMessage(HiveMessageType.PROPAGATE, payload=ping_inner)
 client.emit(ping_outer)
 
-def on_pong(message):
+def on_ping_reply(message):
     payload = message.payload
-    route = message.route  # List[{source, targets}]
-    print(f"PONG from {payload['peer']} via {len(route)} hops")
+    route = message.route  # list of {source, targets} hop records
+    print(f"PING from {payload['peer']} via {len(route)} hops")
 
-client.on(HiveMessageType.PONG, on_pong)
+# Responses arrive as PING messages (re-emitted with the same flood_id)
+client.on(HiveMessageType.PING, on_ping_reply)
 ```
 
-For automated topology collection use `HiveMapper` from `hivemind_core.hive_map`.
+For automated topology collection use `HiveMapper` from
+`hivemind_bus_client.hive_map`. Call `mapper.start_ping(flood_id)`, feed each
+received inner `PING` to `mapper.on_ping(ping_msg)`, and read back the discovered
+`mapper.nodes` / `mapper.edges`.
 
 ## See also
 

@@ -2,7 +2,7 @@
 
 ## server.json
 
-`hivemind-core` reads `~/.config/hivemind-core/server.json` at startup. Command-line flags to `hivemind-core listen` override individual settings from this file.
+`hivemind-core` reads `~/.config/hivemind-core/server.json` at startup. `hivemind-core listen` takes no command-line flags; edit this file to change any setting.
 
 ### Full default configuration
 
@@ -51,7 +51,7 @@
 | `hivemind-ovos-agent-plugin.host` | `"127.0.0.1"` | OVOS messagebus host |
 | `hivemind-ovos-agent-plugin.port` | `8181` | OVOS messagebus port |
 
-Set `module` to `"hivemind-persona-plugin"` and configure accordingly for LLM/persona mode.
+Set `module` to `"hivemind-persona-agent-plugin"` and configure accordingly for LLM/persona mode.
 
 ### binary_protocol
 
@@ -69,7 +69,8 @@ Multiple network protocol plugins can be active simultaneously. Each key is the 
 |---|---|---|
 | `hivemind-websocket-plugin` | 5678 | WebSocket |
 | `hivemind-http-plugin` | 5679 | HTTP polling |
-| `hivemind-mqtt-protocol` | — | MQTT |
+
+An MQTT transport (`hivemind-mqtt-protocol`) is planned/experimental and not confirmed published.
 
 ### policy.chain
 
@@ -96,8 +97,8 @@ Per-plugin settings are nested under the plugin name key. See [Database Backends
 | `default_master` | Hub host address (ws:// or wss://) |
 | `default_port` | Hub port (default: 5678) |
 | `site_id` | Location identifier injected into OVOS context |
-| `public_key` | PGP public key (ASCII-armored) |
-| `secret_key` | Path to PGP private key file |
+| `public_key` | RSA public key string |
+| `secret_key` | Path to the RSA private key (PEM) file |
 
 ---
 

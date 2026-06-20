@@ -20,12 +20,18 @@ pip install hivemind-core
 
 ## Configuration
 
-Server configuration lives at `~/.config/hivemind-core/server.json`. You can also pass all settings as command-line flags to `hivemind-core listen`. The file takes precedence over flags for settings it defines.
+All server configuration lives at `~/.config/hivemind-core/server.json`. `hivemind-core listen` takes no command-line flags — edit the file to change any setting. Run `hivemind-core print-config` to dump the effective configuration.
 
-Default configuration:
+Default configuration (abbreviated):
 
 ```json
 {
+  "binarize": false,
+  "allowed_encodings": [
+    "JSON-B64", "JSON-URLSAFE-B64", "JSON-B91",
+    "JSON-Z85B", "JSON-Z85P", "JSON-B32", "JSON-HEX"
+  ],
+  "allowed_ciphers": ["CHACHA20-POLY1305", "AES-GCM"],
   "agent_protocol": {
     "module": "hivemind-ovos-agent-plugin",
     "hivemind-ovos-agent-plugin": {
@@ -39,11 +45,17 @@ Default configuration:
   "network_protocol": {
     "hivemind-websocket-plugin": {
       "host": "0.0.0.0",
-      "port": 5678
+      "port": 5678,
+      "ssl": false,
+      "cert_dir": "~/.local/share/hivemind",
+      "cert_name": "hivemind"
     },
     "hivemind-http-plugin": {
       "host": "0.0.0.0",
-      "port": 5679
+      "port": 5679,
+      "ssl": false,
+      "cert_dir": "~/.local/share/hivemind",
+      "cert_name": "hivemind"
     }
   },
   "policy": {
@@ -61,23 +73,19 @@ Default configuration:
 }
 ```
 
+TLS is enabled per network protocol by setting `ssl` to `true` and pointing `cert_dir`/`cert_name` at the certificate to serve.
+
 ## Starting the server
 
 ```bash
 hivemind-core listen
 ```
 
-Or with explicit flags (override `server.json`):
-
-```bash
-hivemind-core listen \
-  --host 0.0.0.0 \
-  --port 5678 \
-  --ssl false \
-  --db-backend sqlite
-```
+All behaviour comes from `server.json`; there are no flags to pass here.
 
 ## Managing clients
+
+Client commands take the node ID as a **positional** argument (omit it and the CLI prompts you to pick one from a table):
 
 ```bash
 # Add a new satellite
@@ -86,11 +94,11 @@ hivemind-core add-client --name "living-room"
 # List all registered satellites
 hivemind-core list-clients
 
-# Remove a satellite
-hivemind-core delete-client --node-id 2
+# Remove a satellite (node ID 2)
+hivemind-core delete-client 2
 
-# Rename a client
-hivemind-core rename-client "new-name" --node-id 2
+# Rename a client (new name via --name, node ID positional)
+hivemind-core rename-client --name "new-name" 2
 ```
 
 See [CLI Reference](../reference/cli.md) for all commands and [Security](../concepts/security.md#permissions) for permission management.

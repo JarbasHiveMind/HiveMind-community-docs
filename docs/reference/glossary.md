@@ -32,7 +32,7 @@ the same network.
 | Term | Definition |
 |---|---|
 | **HiveMind protocol** | The encrypted message protocol satellites and hubs speak. Transport-agnostic; WebSocket is the default. See [Protocol & Message Types](../concepts/protocol.md) and the [Protocol Specification](../developers/protocol-spec.md). |
-| **Handshake** | The connection setup that derives a shared session key (PBKDF2-SHA256) and establishes an AES-256-GCM encrypted channel, optionally backed by PGP identities. See [Security & Permissions](../concepts/security.md). |
+| **Handshake** | The connection setup that derives a shared session key (PBKDF2-HMAC-SHA256, 100 000 iterations) and establishes an encrypted channel using ChaCha20-Poly1305 or AES-GCM, backed by per-node RSA identities. See [Security & Permissions](../concepts/security.md). |
 | **BUS message** | An OVOS `messagebus` message carried over the hive, the primary payload type for utterances and responses. |
 | **Bus message types** | The transport verbs that route messages through the mesh: `ESCALATE`, `BROADCAST`, `PROPAGATE`, `QUERY`, `CASCADE`, `INTERCOM`. See [Message Types](message-types.md). |
 | **Binary protocol** | The framing used to carry raw audio (and other binary payloads) over the hive for server-side STT/TTS. See [Audio Binary Protocol](../server/audio-binary-protocol.md). |
@@ -42,5 +42,5 @@ the same network.
 
 | Term | Definition |
 |---|---|
-| **HiveBeacon** | The default LAN auto-discovery transport: a hub announces itself over UDP so satellites can find it without manual configuration. See [Auto Discovery](../concepts/discovery.md). |
+| **HiveBeacon** | A planned zero-dependency UDP-broadcast auto-discovery transport, intended to become the default once it ships. Not yet implemented — the current default LAN discovery transport is mDNS/Zeroconf (with UPnP/SSDP as an off-by-default legacy option). See [Auto Discovery](../concepts/discovery.md). |
 | **GGWave pairing** | An audio-based pairing mechanism that exchanges connection details over sound. Proof-of-concept. See [Auto Discovery](../concepts/discovery.md). |
