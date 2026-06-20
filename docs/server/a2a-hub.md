@@ -55,7 +55,7 @@ Only `agent_url` is required. The configuration keys are:
 |---------------|---------|----------------------------------------------------------|
 | `agent_url`   | —       | **Required.** Root URL of the A2A server.                |
 | `auth_header` | —       | Optional `Authorization` header value (e.g. `Bearer …`). |
-| `timeout`     | `60`    | HTTP timeout in seconds.                                 |
+| `timeout`     | `60.0`  | HTTP timeout in seconds.                                 |
 | `streaming`   | `false` | Prefer `tasks/sendSubscribe` (SSE) when `true`.          |
 
 With `streaming` left at `false` the hub submits a blocking `tasks/send` and returns the

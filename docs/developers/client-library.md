@@ -426,14 +426,20 @@ targeted at this node) are injected onto the bus. Related helpers:
 `remove_trusted_key(alias)`, `is_trusted_key(pubkey)`,
 `get_trusted_alias(pubkey)`.
 
-## Reconnection caveat
+## Reconnection
 
-**None of the clients reconnect automatically.** The sync, async, and HTTP
-clients all clear their crypto/handshake state on close and stop; there is no
-built-in retry/backoff loop. If your deployment needs resilience against dropped
-connections, build your own supervisor: detect the drop (e.g. emit failures, the
-async receive loop emitting `"close"`, or your own heartbeat) and re-run
-`connect()` on a fresh client with backoff.
+**The sync `HiveMessageBusClient` reconnects automatically; the async and HTTP
+clients do not.** On a dropped websocket the sync client's `on_error` clears its
+crypto/handshake state and then falls through to the inherited OVOS bus-client
+reconnect loop (exponential backoff capped at 60 s, reset to 5 s on each
+successful connect); it re-runs the handshake after reconnecting. You do not need
+your own supervisor for the sync client.
+
+The **async** (`AsyncHiveMessageBusClient`) and **HTTP** (`HiveMindHTTPClient`)
+clients have **no** built-in retry/backoff loop. If your deployment uses either
+and needs resilience against dropped connections, build your own supervisor:
+detect the drop (e.g. emit failures, the async receive loop emitting `"close"`,
+or your own heartbeat) and re-run `connect()` on a fresh client with backoff.
 
 ## Encodings & ciphers
 
