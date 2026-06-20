@@ -221,6 +221,251 @@ For automated topology collection use `HiveMapper` from
 received inner `PING` to `mapper.on_ping(ping_msg)`, and read back the discovered
 `mapper.nodes` / `mapper.edges`.
 
+## Request / response
+
+`HiveMessageBusClient` ships blocking helpers that emit a message and wait for a
+matching reply on the background thread. All take a `timeout` (seconds, default
+`3.0`) and return the received message or `None` on timeout.
+
+```python
+def wait_for_message(self, message_type, timeout=3.0)
+def wait_for_payload(self, payload_type,
+                     message_type=HiveMessageType.THIRDPRTY, timeout=3.0)
+def wait_for_mycroft(self, mycroft_msg_type, timeout=3.0)
+def wait_for_response(self, message, reply_type=None, timeout=3.0)
+def wait_for_payload_response(self, message, payload_type,
+                             reply_type=None, timeout=3.0)
+```
+
+- `wait_for_message` — wait for the next `HiveMessage` of a given `HiveMessageType`.
+- `wait_for_payload` — wait for a `HiveMessage` of `message_type` whose **inner**
+  payload type matches `payload_type` (defaults the envelope to `THIRDPRTY`).
+- `wait_for_mycroft` — convenience wrapper: `wait_for_payload(mycroft_msg_type,
+  message_type=HiveMessageType.BUS)`. Use it to wait for an inner OVOS message
+  type (e.g. `"speak"`).
+- `wait_for_response` — emit `message`, then wait for a reply. `reply_type`
+  defaults to `message.msg_type`. A Mycroft `Message` waits on the inner payload
+  type; a `HiveMessage` waits on the envelope type.
+- `wait_for_payload_response` — emit `message`, then wait for a reply envelope of
+  `reply_type` whose inner payload matches `payload_type`.
+
+The request/response idiom (ask once, block for the answer):
+
+```python
+from ovos_bus_client.message import Message
+from hivemind_bus_client.message import HiveMessageType
+
+reply = client.wait_for_payload_response(
+    message=Message("recognizer_loop:utterance",
+                    {"utterances": ["what time is it?"]}),
+    payload_type="speak",
+    reply_type=HiveMessageType.BUS,
+    timeout=5,
+)
+if reply is not None:
+    print(reply.payload.data["utterance"])
+```
+
+The same five helpers exist on the async client as coroutines — `await
+client.wait_for_response(...)`.
+
+## INTERCOM — end-to-end satellite-to-satellite
+
+`emit_intercom` sends a message addressed to one specific peer, encrypted so that
+relays along the path cannot read it. The recipient's RSA **public key is
+required**.
+
+```python
+def emit_intercom(self, message, pubkey):  # pubkey: str | bytes | RSA.RsaKey
+```
+
+On the WebSocket/async client the payload is hybrid-encrypted via
+`hybrid_encrypt` (encryption.py): a random AES-256 key encrypts the serialized
+message with AES-GCM, that AES key is RSA-OAEP-wrapped with `pubkey`, and the
+ciphertext is signed with this node's private key. The envelope is a dict with
+base64 fields `encrypted_key`, `ciphertext`, `tag`, `nonce`, and `signature`,
+wrapped in a `HiveMessageType.INTERCOM` message.
+
+```python
+recipient_pubkey = client.identity.trusted_keys["living-room-hub"]
+client.emit_intercom(
+    HiveMessage(HiveMessageType.BUS,
+                Message("speak", {"utterance": "psst"})),
+    pubkey=recipient_pubkey,
+)
+```
+
+For the inbound side to accept and inject an untargeted INTERCOM message, the
+sender's key must be in the receiver's `trusted_keys` (see *Identity & trusted
+keys* below); a message whose `target_public_key` matches the receiver is always
+accepted.
+
+> **HTTP wire format differs.** `HiveMindHTTPClient.emit_intercom` does **not**
+> use the hybrid envelope. It RSA-encrypts the whole serialized message with
+> `encrypt_RSA(pubkey, ...)`, signs it, and sends a payload of just
+> `{"ciphertext": ..., "signature": ...}` (both base64). Don't mix the two
+> formats across transports.
+
+## Async client
+
+`AsyncHiveMessageBusClient` (`hivemind_bus_client.async_client`) mirrors the sync
+client on `asyncio` + the `websockets` library. Install with the extra:
+
+```bash
+pip install hivemind-bus-client[async]
+```
+
+The connect lifecycle is explicit and all I/O is awaited:
+
+```python
+import asyncio
+from hivemind_bus_client.async_client import AsyncHiveMessageBusClient
+from hivemind_bus_client.message import HiveMessage, HiveMessageType
+from ovos_bus_client.message import Message
+
+async def main():
+    bus = AsyncHiveMessageBusClient(key="my-key", password="my-password",
+                                    host="192.168.1.10", port=5678)
+    await bus.connect()                 # opens WS, binds protocol, awaits handshake
+    try:
+        await bus.emit(HiveMessage(
+            HiveMessageType.BUS,
+            Message("recognizer_loop:utterance", {"utterances": ["hi"]})))
+        reply = await bus.wait_for_mycroft("speak", timeout=5)
+        if reply is not None:
+            print(reply.payload.data["utterance"])
+    finally:
+        await bus.close()               # closes WS, cancels the receive task
+
+asyncio.run(main())
+```
+
+Key coroutines: `connect(bus=None, protocol=None, site_id=None)`, `close()`,
+`emit(...)`, `emit_mycroft(...)`, `emit_intercom(...)`, and the five `wait_for_*`
+waiters. Handler registration is **synchronous** (so existing protocol handlers
+work unchanged): `on(event, func)`, `once(event, func)` (fire-once), and
+`remove(event, func)`.
+
+Use the async client when your app already runs an event loop (aiohttp/FastAPI,
+discord.py, etc.). Use the sync `HiveMessageBusClient` for scripts and
+thread-based apps — it runs its WebSocket on a background thread and needs no loop.
+
+## HTTP client specifics
+
+`HiveMindHTTPClient` (`hivemind_bus_client.http_client`) is a
+`threading.Thread`. Its `__init__` calls `self.start()`, so the polling thread
+begins as soon as you construct it — you still must call `connect()` before
+emitting (it raises `ConnectionAbortedError` otherwise).
+
+```python
+from hivemind_bus_client.http_client import HiveMindHTTPClient
+
+client = HiveMindHTTPClient(host="http://192.168.1.10", port=5679)
+client.connect()                         # POST /connect, then awaits handshake
+resp = client.emit(some_hive_message)    # returns a requests.Response
+```
+
+- `emit(message, binary_type=...)` returns the `requests.Response` from
+  `POST {base_url}/send_message` (form field `message`), not `None`.
+- The background `run()` loop polls `GET {base_url}/get_messages` and
+  `GET {base_url}/get_binary_messages` once per second and feeds each result to
+  `on_message`. There is no server push; latency is bounded by that poll interval.
+- Register handlers with `on(hive_type, func)` for envelopes and
+  `on_mycroft(ovos_type, func)` for inner OVOS messages; `remove` /
+  `remove_mycroft` unregister them.
+- `disconnect()` (POST `/disconnect`) and `shutdown()` stop the loop.
+
+## CASCADE aggregation
+
+A CASCADE query is answered by many nodes across the hive. `CascadeAggregator`
+(`hivemind_bus_client.protocol`) collects those responses over a window and picks
+one winner.
+
+```python
+class CascadeAggregator:
+    def __init__(self, timeout, select_callback, emit_callback,
+                 expected_responses=None): ...
+    def add_response(self, message): ...
+    def cancel(self): ...
+```
+
+When the **first** response arrives a `timeout`-second timer starts; subsequent
+responses are buffered. It resolves when the timer fires **or** once
+`expected_responses` responses have arrived (whichever is first), at which point
+`select_callback(List[HiveMessage]) -> Optional[HiveMessage]` chooses the winner
+and `emit_callback(HiveMessage)` delivers it. `cancel()` drops the timer and
+buffered responses without emitting.
+
+Inside `HiveMindSlaveProtocol.handle_cascade`, a node builds one per query:
+`select_callback` defaults to `random.choice` (or the protocol's
+`cascade_select_callback`), `expected_responses` defaults to the number of nodes
+known to the `HiveMapper`, and `emit_callback` injects the winner's inner BUS
+payload onto the internal bus.
+
+## Identity & trusted keys
+
+`NodeIdentity` (`hivemind_bus_client.identity`) wraps the identity file
+(`~/.config/hivemind/_identity.json` via `JsonConfigXDG`, or pass
+`identity_file=`). Beyond the connection fields (`name`, `access_key`,
+`password`, `default_master`, `default_port`, `site_id`, `public_key`,
+`private_key`):
+
+```python
+identity = NodeIdentity()
+identity.create_keys()                       # generate + store an RSA keypair
+identity.add_trusted_key("living-room-hub",  # alias -> public key
+                         peer_public_key)     # True if added, False if alias exists
+identity.save()                              # persist to the identity file
+identity.reload()                            # re-read from disk
+print(identity.trusted_keys)                 # {alias: pubkey, ...}
+```
+
+`trusted_keys` is the alias→public-key mapping used to verify peers in PROPAGATE,
+CASCADE, and INTERCOM handling — only messages from a trusted key (or explicitly
+targeted at this node) are injected onto the bus. Related helpers:
+`remove_trusted_key(alias)`, `is_trusted_key(pubkey)`,
+`get_trusted_alias(pubkey)`.
+
+## Reconnection caveat
+
+**None of the clients reconnect automatically.** The sync, async, and HTTP
+clients all clear their crypto/handshake state on close and stop; there is no
+built-in retry/backoff loop. If your deployment needs resilience against dropped
+connections, build your own supervisor: detect the drop (e.g. emit failures, the
+async receive loop emitting `"close"`, or your own heartbeat) and re-run
+`connect()` on a fresh client with backoff.
+
+## Encodings & ciphers
+
+The JSON transport encoding and the symmetric cipher are configurable. The enums
+live in `hivemind_bus_client.encryption`:
+
+`SupportedEncodings` (string values): `JSON_B91` (`"JSON-B91"`), `JSON_Z85B`
+(`"JSON-Z85B"`), `JSON_Z85P` (`"JSON-Z85P"`), `JSON_B64` (`"JSON-B64"`),
+`JSON_URLSAFE_B64` (`"JSON-URLSAFE-B64"`), `JSON_B32` (`"JSON-B32"`), `JSON_HEX`
+(`"JSON-HEX"`).
+
+`SupportedCiphers`: `AES_GCM` (`"AES-GCM"`), `CHACHA20_POLY1305`
+(`"CHACHA20-POLY1305"`).
+
+Clients default to `JSON_HEX` + `AES_GCM` (the server defaults before they became
+configurable; the actual values are negotiated during the handshake). To force
+them, set the attributes after construction:
+
+```python
+from hivemind_bus_client.encryption import SupportedEncodings, SupportedCiphers
+
+client = HiveMessageBusClient()
+client.json_encoding = SupportedEncodings.JSON_B64
+client.cipher = SupportedCiphers.CHACHA20_POLY1305
+client.connect()
+```
+
+## Next
+
+- [Protocol Specification](protocol-spec.md) — wire format, message types, routing
+- [Testing Guide](testing.md) — writing tests with the in-process harness
+
 ## See also
 
 - [Protocol Reference](protocol-spec.md) — wire format, message types, routing

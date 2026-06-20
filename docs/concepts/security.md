@@ -33,6 +33,10 @@ Each node maintains an **RSA 2048-bit** key pair, PEM-encoded and stored at `~/.
 
 Reset the RSA key at any time with `hivemind-client reset-pgp` (the command name is retained; it recreates the RSA key pair).
 
+#### Bootstrapping satellite-to-satellite trust
+
+For INTERCOM (and the signed trust checks on PROPAGATE / CASCADE), a node only accepts messages from peers whose public key it has been told to trust. That trust is configured out of band: each node maintains a `trusted_keys` mapping (alias → public-key string) in its identity file. Add a peer's key with `NodeIdentity.add_trusted_key(alias, pubkey)` (and `trusted_keys` / `remove_trusted_key` to read or revoke). After PING discovery has mapped the network, `HiveMapper.mark_trusted_nodes(trusted_keys)` flips each discovered node's `trusted` flag based on that mapping, so subsequent source-trust checks resolve quickly. Keys must be exchanged through a channel you already trust — there is no automatic key acceptance.
+
 ## Identity file
 
 The identity file at `~/.config/hivemind/_identity.json` stores all credentials a satellite needs to connect:
@@ -71,6 +75,63 @@ For every message received from a satellite, the hub runs a policy admission cha
 2. **Policy plugins** — configured policies run in order. The default policy is `OVOSAgentPolicy`, which reads `Client.metadata` to build per-client session blacklists (skills and intents).
 
 Admin flag (`make-admin`) does **not** bypass the `allowed_types` check. It signals to policy plugins that extra-privileged operations are permitted, but the hard ACL is always enforced first.
+
+### Writing a custom policy
+
+Admission control beyond the `allowed_types` ACL is an extension point. A custom policy is a plugin that subclasses `PolicyPlugin` (from `hivemind_plugin_manager.policy`) and is registered under the `hivemind.policy` entry-point group. The hub loads it into an ordered **policy chain** and calls it for every inbound message.
+
+**The contract.** Override any of three hooks:
+
+- `review(message, client)` — inspect a Mycroft `Message` before it is emitted onto the agent bus. Return a `Verdict`.
+- `review_binary(payload, client)` — same, for binary payloads (e.g. raw audio). The default allows everything, so override it only if you care about binaries.
+- `observe(message, client)` — fire-and-forget hook called *after* a message was successfully emitted. Use for counters, audit logs, telemetry. Must not raise.
+
+A `Verdict` is either an allow or a deny:
+
+- `Verdict.allow(*mutations)` — let the message proceed. Optionally carries one or more `Mutation` objects describing changes to apply before the next policy runs. (Concrete mutation types are agent-specific and ship with the agent plugin, e.g. the OVOS bridge's skill/intent blacklist mutations — they are not part of the base primitives.)
+- `Verdict.deny(code, reason="", **data)` — drop the message and short-circuit the chain. `code` is a stable machine-readable string; the `DenyCodes` enum provides the built-in codes (`POLICY_ERROR`, `POLICY_CHAIN_UNAVAILABLE`, `ACL_DISALLOWED_TYPE`, `SESSION_ID_DEFAULT_FORBIDDEN`), but custom policies may emit their own string codes.
+
+The chain is **fail-closed**: an exception raised inside `review` / `review_binary` (or a mutation's `apply`) is converted to `Verdict.deny("policy_error", ...)`. There is no operator knob to make it lenient. `Client.is_admin` is informational only — the chain runner never skips a policy based on it; a policy that wants to treat admins specially checks `client.is_admin` itself.
+
+When a policy denies a message, the originating client is notified on the bus with a `hive.policy.denied` message carrying the `denied_type`, `code`, `reason`, and `data` from the verdict.
+
+**The chain.** Operators configure the chain as an ordered list under `policy.chain` in `~/.config/hivemind-core/server.json`:
+
+```json
+{
+  "policy": {
+    "chain": [
+      {"module": "hivemind-intent-quota-policy", "config": {"limit": 100}},
+      {"module": "my-custom-policy", "config": {}, "optional": true}
+    ]
+  }
+}
+```
+
+Each entry names a `module` (the entry-point name), an optional `config` dict passed to the plugin, and an optional `optional` flag. An `optional: true` policy that raises is logged and skipped (the chain continues); a mandatory policy that raises fails the chain closed. The built-in `MessageTypeACLPolicy` (the `allowed_types` ACL) is **always force-prepended** to the chain and is mandatory — it cannot be removed, made optional, or reordered, even if you list it explicitly. If the chain fails to build at startup, the hub installs a `DenyAllPolicy` fallback that rejects everything until the config is fixed.
+
+**Minimal skeleton.** A policy plugin and its entry point:
+
+```python
+# my_policy/__init__.py
+from hivemind_plugin_manager.policy import PolicyPlugin, Verdict
+
+
+class MyPolicy(PolicyPlugin):
+    def review(self, message, client):
+        if message.msg_type == "some.forbidden.type":
+            return Verdict.deny("forbidden_type",
+                                "this type is never allowed here")
+        return Verdict.allow()
+```
+
+```toml
+# pyproject.toml
+[project.entry-points."hivemind.policy"]
+"my-custom-policy" = "my_policy:MyPolicy"
+```
+
+See [Writing Plugins — Policy plugins](../developers/writing-plugins.md#5-policy) for the full plugin-authoring walkthrough.
 
 ### Managing permissions via CLI
 
@@ -161,3 +222,7 @@ HiveMind can use TLS for the WebSocket transport. `hivemind-core listen` takes n
 - The password handshake provides confidentiality and mutual authentication but security is proportional to password entropy. Weak passwords are the primary attack surface.
 - Without TLS, a network observer can see the encrypted ciphertext but not its content. TLS adds defence-in-depth.
 - INTERCOM RSA authentication requires both nodes to have pre-exchanged public keys through a trusted channel.
+
+---
+
+**Next:** [Mesh Topology](mesh.md) for how permissions compose across nested hives, or [Writing Plugins](../developers/writing-plugins.md#5-policy) to ship a custom admission policy.

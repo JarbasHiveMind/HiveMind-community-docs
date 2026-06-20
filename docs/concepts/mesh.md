@@ -47,6 +47,8 @@ HiveMind hubs can connect to other hubs. A sub-hub acts as a client to its paren
 
 `CASCADE` floods in all directions like `PROPAGATE`, and every node that can answer sends a response back. The originator collects responses via `CascadeAggregator` and applies a select callback to pick the best answer. See [Protocol — CASCADE](protocol.md).
 
+> **Note:** `RENDEZVOUS` (rendezvous / wormhole relay) is a **reserved** message type. It is defined in the protocol but not yet wired into core — there is no routing handler for it, and it currently falls through to the unknown-message stub. Don't design around it.
+
 ## Relay nodes
 
 A **relay node** is a hub that is simultaneously connected upstream to a parent master. It serves its own downstream satellites while forwarding traffic in both directions.
@@ -91,3 +93,7 @@ Each hop enforces its own permission chain. A sub-hub can grant clients no more 
 ## Local hives (no network)
 
 A "local hive" is a hub and satellite running on the same machine. This is useful when you want separate processes communicating via the HiveMind protocol without a real network hop — for example, a skill running as a satellite that delegates some intents to another OVOS instance on the same host.
+
+---
+
+**Next:** [Protocol](protocol.md) for the message types in detail, or [Security](security.md) for how permission chains compose across hops.

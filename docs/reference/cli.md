@@ -96,6 +96,35 @@ Usage: hivemind-core blacklist-msg MSG_TYPE [NODE_ID]
 
 `MSG_TYPE` and `NODE_ID` are positional arguments; omit `NODE_ID` to pick from a prompt.
 
+### allow-escalate / blacklist-escalate
+
+```
+Usage: hivemind-core allow-escalate [NODE_ID]
+Usage: hivemind-core blacklist-escalate [NODE_ID]
+```
+
+`NODE_ID` is a positional argument; omit it to pick from a prompt. Toggles whether the client may send `ESCALATE` messages (the `can_escalate` flag).
+
+### allow-propagate / blacklist-propagate
+
+```
+Usage: hivemind-core allow-propagate [NODE_ID]
+Usage: hivemind-core blacklist-propagate [NODE_ID]
+```
+
+`NODE_ID` is a positional argument; omit it to pick from a prompt. Toggles whether the client may send `PROPAGATE` messages (the `can_propagate` flag).
+
+### rename-client
+
+```
+Usage: hivemind-core rename-client [OPTIONS] [NODE_ID]
+
+Options:
+  --name TEXT  The new friendly name for the client
+```
+
+`NODE_ID` is a positional argument; omit it to pick from a prompt. The new name is passed via `--name`.
+
 ### blacklist-skill / allow-skill
 
 ```
@@ -231,6 +260,40 @@ Options:
   --siteid TEXT    Site identifier
 ```
 
+### escalate
+
+```
+Usage: hivemind-client escalate [OPTIONS]
+
+Options:
+  --msg TEXT       OVOS message type to inject
+  --payload TEXT   OVOS message data (JSON string)
+  --key TEXT       Access key (default: from identity file)
+  --password TEXT  Password (default: from identity file)
+  --host TEXT      Hub host (default: from identity file)
+  --port INTEGER   Port (default: 5678)
+  --siteid TEXT    Site identifier (default: from identity file)
+```
+
+Wraps the OVOS message built from `--msg`/`--payload` in an `ESCALATE` envelope and emits it. Requires the client to be allowed to send `ESCALATE` (see `hivemind-core allow-escalate`).
+
+### propagate
+
+```
+Usage: hivemind-client propagate [OPTIONS]
+
+Options:
+  --msg TEXT       OVOS message type to inject
+  --payload TEXT   OVOS message data (JSON string)
+  --key TEXT       Access key (default: from identity file)
+  --password TEXT  Password (default: from identity file)
+  --host TEXT      Hub host (default: from identity file)
+  --port INTEGER   Port (default: 5678)
+  --siteid TEXT    Site identifier (default: from identity file)
+```
+
+Wraps the OVOS message built from `--msg`/`--payload` in a `PROPAGATE` envelope and emits it. Requires the client to be allowed to send `PROPAGATE` (see `hivemind-core allow-propagate`).
+
 ### ping
 
 ```
@@ -286,3 +349,7 @@ Options:
   --upnp BOOLEAN       Scan via UPnP (default: False)
   --service-type TEXT  Service type (default: HiveMind-websocket)
 ```
+
+---
+
+**Next:** [Configuration Reference](config.md) · [Plugin Architecture](../concepts/plugins.md)

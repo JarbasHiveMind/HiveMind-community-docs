@@ -24,8 +24,10 @@ nav:
   - Hub & Server:
     - OVOS Skills Hub: server/ovos-hub.md
     - Persona Hub (LLM): server/persona-hub.md
+    - A2A Hub (Agents): server/a2a-hub.md
     - Audio Binary Protocol: server/audio-binary-protocol.md
     - Docker Deployment: server/docker.md
+    - Operations: server/operations.md
 
   - Integrations:
     - Home Assistant: integrations/home-assistant.md
@@ -37,6 +39,7 @@ nav:
   - Developer Guide:
     - Client Library: developers/client-library.md
     - Protocol Specification: developers/protocol-spec.md
+    - Writing Plugins: developers/writing-plugins.md
     - Testing: developers/testing.md
 
   - Reference:

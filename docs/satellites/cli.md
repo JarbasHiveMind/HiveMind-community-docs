@@ -57,3 +57,7 @@ For scriptable, non-interactive use, the `hivemind-client` command from the
 [hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind-websocket-client)
 package offers subcommands such as `set-identity`, `terminal`, `send-mycroft`,
 `escalate`, `propagate`, and `ping`. That is a separate package from `HiveMind-cli`.
+
+## Next
+
+New to HiveMind? Start with the [Quick Start](../quickstart.md), or learn how the pieces fit in [Core Concepts](../concepts/mesh.md).

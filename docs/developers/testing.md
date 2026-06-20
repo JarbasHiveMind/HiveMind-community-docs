@@ -265,6 +265,11 @@ pytest tests/ -v --cov=mypackage --cov-report=term-missing
 pytest tests/test_routing.py -v
 ```
 
+## Next
+
+- [Client Library](client-library.md) — `HiveMessageBusClient` API
+- [Writing Plugins](writing-plugins.md) — building HiveMind plugins
+
 ## See also
 
 - [Protocol Concepts](../concepts/protocol.md) — message types and routing

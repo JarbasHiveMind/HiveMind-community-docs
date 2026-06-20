@@ -44,3 +44,24 @@ the same network.
 |---|---|
 | **HiveBeacon** | A planned zero-dependency UDP-broadcast auto-discovery transport, intended to become the default once it ships. Not yet implemented — the current default LAN discovery transport is mDNS/Zeroconf (with UPnP/SSDP as an off-by-default legacy option). See [Auto Discovery](../concepts/discovery.md). |
 | **GGWave pairing** | An audio-based pairing mechanism that exchanges connection details over sound. Proof-of-concept. See [Auto Discovery](../concepts/discovery.md). |
+
+## OVOS & voice vocabulary
+
+Terms a HiveMind user runs into that come from the OVOS voice stack a hub runs.
+
+| Term | Definition |
+|---|---|
+| **OVOS (OpenVoiceOS)** | The open-source voice assistant platform a HiveMind hub runs skills on. See [openvoiceos.org](https://openvoiceos.org). |
+| **ovos-core** | The skills/intent engine — the default HiveMind hub agent. |
+| **messagebus / ovos-messagebus** | OVOS's internal websocket event bus that skills and services communicate over locally. It is distinct from the HiveMind protocol, which is what a hub and its satellites speak; a BUS message carries an OVOS `messagebus` message across the hive. |
+| **Skill** | A plugin that handles a category of intents (weather, timers, etc.). |
+| **Intent** | The parsed meaning of an utterance, used to route it to a skill. |
+| **Utterance** | A transcribed line of user speech (or typed text). |
+| **Wakeword** | The trigger phrase (e.g. "hey mycroft") that starts listening. |
+| **VAD (Voice Activity Detection)** | Detects when speech starts and stops in the microphone stream. |
+| **STT (Speech-to-Text)** | Transcribes audio into text. |
+| **TTS (Text-to-Speech)** | Synthesizes spoken audio from text. |
+| **Solver** | An `ovos-persona` plugin that answers a query (e.g. an LLM backend); personas chain solvers together. |
+| **Persona** | An `ovos-persona` config — a named chain of solvers — that a [Persona Hub](../server/persona-hub.md) serves instead of full skills. |
+| **OCP (OVOS Common Play)** | The OVOS media/audio playback framework. |
+| **PHAL** | OVOS's Platform Hardware Abstraction Layer — plugins for volume, system control, and similar; relevant to the Home Assistant integration's permission list. |

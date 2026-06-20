@@ -32,6 +32,8 @@ See [Audio Binary Protocol](../server/audio-binary-protocol.md).
 
 ## Quickstart
 
+> **Pre-flight:** this satellite sends audio to the hub, so **the hub MUST have the [Audio Binary Protocol](../server/audio-binary-protocol.md) configured** — it provides the VAD-gated STT, TTS, and wakeword. Without it the satellite connects but its audio is silently dropped, with no error.
+
 **1. On the hub** — register a client:
 
 ```bash
@@ -100,3 +102,7 @@ Example `mycroft.conf` excerpt:
 ```
 
 Audio is sent as `BINARY` messages with payload type `RAW_AUDIO` (type 1). The hub's `AudioBinaryProtocol.handle_microphone_input()` processes the stream.
+
+## Next
+
+Set up the hub side: [Audio Binary Protocol](../server/audio-binary-protocol.md).

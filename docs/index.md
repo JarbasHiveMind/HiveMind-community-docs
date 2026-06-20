@@ -3,7 +3,9 @@
 
 ![HiveMind Logo](https://github.com/JarbasHiveMind/HiveMind-assets/raw/master/logo/hivemind-512.png)
 
-HiveMind is an open-source protocol and platform that connects lightweight **satellite** devices to a central AI **hub** over the network. Satellites range from text-only CLI clients to full voice-capable devices. The hub can be an [OpenVoiceOS](https://openvoiceos.github.io/community-docs) skills server or a standalone LLM/persona server.
+> **New to HiveMind?** Start with the [Glossary](reference/glossary.md) — it defines every term used here in one page.
+
+HiveMind is an open-source protocol and platform that connects lightweight **[satellite](reference/glossary.md#roles)** devices to a central AI **[hub](reference/glossary.md#roles)** over the network. Satellites range from text-only CLI clients to full voice-capable devices. The hub can be an [OpenVoiceOS](https://openvoiceos.github.io/community-docs) skills server or a standalone LLM/persona server.
 
 ```
 [Voice Satellite] ──┐
@@ -24,6 +26,8 @@ HiveMind is an open-source protocol and platform that connects lightweight **sat
 
 ## Where to start
 
+Most people start with the **voice satellite** (full local voice) or the **mic satellite** (cheapest hardware) — see the [decision guide](satellites/index.md).
+
 | I want to… | Go to |
 |---|---|
 | Understand what HiveMind is | [About](about.md) |
@@ -42,3 +46,7 @@ HiveMind is an open-source protocol and platform that connects lightweight **sat
 - [Matrix chat](https://matrix.to/#/#jarbashivemind:matrix.org) — news, support, and general discussion
 - [GitHub](https://github.com/JarbasHiveMind) — source code and issues
 - [YouTube channel](https://www.youtube.com/channel/UCYoV5kxp2zrH6pnoqVZpKSA/) — video guides and demos
+
+---
+
+**Next:** [Quick Start](quickstart.md) — set up a hub and connect your first satellite.

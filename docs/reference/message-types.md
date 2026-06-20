@@ -136,7 +136,13 @@ Connection management. Handled automatically by `HiveMessageBusClient` and `hive
 - `HANDSHAKE` performs the key exchange — sent unencrypted, establishes the session key. Two modes:
   - **Password mode** (`PasswordHandShake`): the session key is derived with PBKDF2-HMAC-SHA256, 100000 iterations
   - **RSA mode**: a random 32-byte secret is wrapped with the peer's RSA public key (no PBKDF2)
-- After the handshake, a second `HELLO` (encrypted) carries session data, site_id, and client public key
+- After the handshake, a second `HELLO` carries session data, site_id, and client public key
+
+> **Plaintext, even after crypto is established.** Both `HELLO` and `HANDSHAKE` always travel as plaintext JSON — including the client's *second* `HELLO`, which is sent after the session key exists but is still unencrypted. Only `BUS`/`QUERY`/other payload traffic is encrypted.
+>
+> **Request vs response disambiguation.** A `HANDSHAKE` is a *request* (capability advertisement, "please start") versus a *response* (carrying key material) **solely by the presence of the `envelope` field** — there is no type discriminator. No `envelope` ⇒ request; `envelope` present ⇒ response/material.
+>
+> For the full connection-setup sequence with exact field tables in both directions, see the [Handshake state machine](../developers/protocol-spec.md#handshake-state-machine) in the protocol spec.
 
 ## RENDEZVOUS
 

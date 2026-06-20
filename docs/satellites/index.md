@@ -4,6 +4,8 @@ HiveMind satellites form a spectrum based on **where audio processing happens**.
 
 ## Comparison
 
+**Most people start with the voice satellite** (everything runs locally, works with any hub) or the **mic satellite** (cheapest device, but the hub must do STT/TTS). Pick from the table below, or read the decision guide.
+
 | Satellite | Mic | VAD | Wakeword | STT | TTS | What crosses the wire |
 |---|:---:|:---:|:---:|:---:|:---:|---|
 | [HiveMind-cli](cli.md) | — | — | — | — | — | Text in / text out |
@@ -46,3 +48,7 @@ See [Audio Binary Protocol](../server/audio-binary-protocol.md) for hub-side set
 When a satellite uses hub-side audio processing (mic-satellite or voice-relay), the hub operator decides the STT engine, TTS engine, and voice — the satellite cannot override them. This is the "HiveMind as a service" model: speech services are authenticated and centrally governed, like any other message on the protocol.
 
 A voice-sat by contrast runs its own STT and TTS plugins and sends only the transcribed text to the hub. It has full control over its local audio stack.
+
+## Next
+
+Head to the satellite that fits your device: [HiveMind-voice-sat](voice-sat.md), [hivemind-mic-satellite](mic-satellite.md), [HiveMind-voice-relay](voice-relay.md), [HiveMind-cli](cli.md), or [WebSpeech Browser](webspeech.md).

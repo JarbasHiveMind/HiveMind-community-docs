@@ -33,6 +33,8 @@ See [Audio Binary Protocol](../server/audio-binary-protocol.md).
 
 ## Quickstart
 
+> **Pre-flight:** wakeword runs locally, but after activation this satellite sends audio to the hub, so **the hub MUST have the [Audio Binary Protocol](../server/audio-binary-protocol.md) configured** — it provides STT and TTS. Without it the satellite connects but its audio is silently dropped, with no error.
+
 **1. On the hub** — register a client:
 
 ```bash
@@ -100,3 +102,7 @@ voice-relay reads `~/.config/mycroft/mycroft.conf`.
 ```
 
 After the wakeword triggers, audio is sent as base64-encoded audio via `recognizer_loop:b64_transcribe`. TTS audio comes back via `speak:b64_audio`.
+
+## Next
+
+Set up the hub side: [Audio Binary Protocol](../server/audio-binary-protocol.md).

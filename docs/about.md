@@ -6,6 +6,8 @@ HiveMind is an open-source protocol and platform that connects lightweight **sat
 
 HiveMind separates AI workload from edge devices. Satellites (microphones, voice devices, browsers, chat clients) delegate processing to a hub, which handles reasoning, skills, and audio processing. The hub can serve many satellites simultaneously with independent sessions and permissions for each.
 
+New here? The [Glossary](reference/glossary.md) defines every term on this page.
+
 ```
 [Mic Satellite]  ──┐
 [Voice Relay]    ───┤──→ [HiveMind Hub] ──→ skills / LLM / intents
@@ -15,10 +17,12 @@ HiveMind separates AI workload from edge devices. Satellites (microphones, voice
 
 ## Hub types
 
+Pick the **[OVOS](reference/glossary.md#ovos-voice-vocabulary) skills hub** if you want skills/home-automation; pick the **[Persona](reference/glossary.md#ovos-voice-vocabulary) hub** if you just want to chat with an LLM and want the simplest setup (no OVOS required).
+
 | Hub | Package | Agent backend |
 |---|---|---|
 | OVOS skills server | `hivemind-core` | OpenVoiceOS (full skill ecosystem) |
-| Audio hub | `hivemind-core` + `hivemind-audio-binary-protocol` | OVOS + server-side STT/TTS/wakeword |
+| Audio hub | `hivemind-core` + `hivemind-audio-binary-protocol` | OVOS + server-side [STT](reference/glossary.md#ovos-voice-vocabulary)/[TTS](reference/glossary.md#ovos-voice-vocabulary)/wakeword |
 | Persona server | `hivemind-core` + `hivemind-persona-agent-plugin` | LLMs and chatbots via `ovos-persona` |
 
 ## Satellite types
@@ -28,7 +32,7 @@ Satellites form a spectrum based on where audio processing happens. At one end t
 | Satellite | Local processing | Hub requirements |
 |---|---|---|
 | **HiveMind-cli** | Text I/O only | Any hub |
-| **hivemind-mic-satellite** | Mic + VAD | Audio binary protocol for STT/TTS/wakeword |
+| **hivemind-mic-satellite** | Mic + [VAD](reference/glossary.md#ovos-voice-vocabulary) | Audio binary protocol for STT/TTS/wakeword |
 | **HiveMind-voice-relay** | Mic + VAD + Wakeword | Audio binary protocol for STT/TTS |
 | **HiveMind-voice-sat** | Mic + VAD + Wakeword + STT + TTS | Any hub (sends text utterances) |
 | **hivemind-webspeech** | Browser mic + VAD | Any hub |
@@ -60,3 +64,7 @@ See [Security](concepts/security.md) for the full model.
 - It is **not** a replacement for OVOS when running as a skills server. OVOS remains the AI back-end; HiveMind is the external-facing gateway.
 - It is **not** a cloud service. Everything runs on your own hardware.
 - It does **not** replace the OVOS messagebus for local communication. The messagebus remains internal.
+
+---
+
+**Next:** [Quick Start](quickstart.md) to set up your first hub and satellite, or [Core Concepts](concepts/protocol.md) for how the protocol works.

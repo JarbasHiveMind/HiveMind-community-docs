@@ -1,5 +1,7 @@
 # Auto Discovery
 
+> **Auto-discovery is optional.** `hivemind-core` works fine with a manually configured `--host` (or a `default_master` in the identity file) — satellites connect straight to a known address with no discovery layer. Install [HiveMind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) only if you want satellites to find the hub automatically.
+
 [HiveMind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) enables automatic discovery of HiveMind nodes on the local network without manual address configuration. It is an optional extra package — `hivemind-core` runs without it.
 
 ## Discovery transports
@@ -83,3 +85,7 @@ GGWave encodes data as audio tones, allowing a hub and satellite to exchange pai
 4. The satellite decodes the acknowledgement and connects
 
 After a successful GGWave pairing the satellite has a populated identity file and can connect as normal.
+
+---
+
+**Next:** [Security](security.md) for the handshake, credentials, and admission control, or [Mesh Topology](mesh.md) for how discovered nodes route messages.

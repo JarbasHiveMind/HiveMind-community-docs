@@ -113,3 +113,7 @@ All plugin slots are swappable via [ovos-plugin-manager](https://github.com/Open
 Unlike mic-satellite and voice-relay, voice-sat sends **text utterances** to the hub — no audio reaches the hub. The hub only needs to run skills and return text responses. It does not need `hivemind-audio-binary-protocol`. (With the default remote STT/TTS plugins, audio is still sent to the configured speech server for transcription; use local plugins to keep all audio on-device.)
 
 You also choose your own STT and TTS plugins, independent of any hub configuration.
+
+## Next
+
+Give your hub something to answer with: set up the [OVOS Skills Hub](../server/ovos-hub.md).

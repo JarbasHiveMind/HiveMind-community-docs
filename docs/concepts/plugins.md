@@ -25,6 +25,7 @@ Control which AI back-end handles incoming messages.
 |---|---|
 | `hivemind-ovos-agent-plugin` | OpenVoiceOS (default) |
 | `hivemind-persona-agent-plugin` | ovos-persona / LLM solvers |
+| `hivemind-a2a-agent-plugin` | Google A2A agents (bridges the hive to A2A) |
 
 ### Binary data handler plugins
 
@@ -122,3 +123,5 @@ db = DatabaseFactory.create("hivemind-redis-db-plugin",
 
 agent = AgentProtocolFactory.create("hivemind-ovos-agent-plugin")
 ```
+
+To author your own plugin, see [Writing Plugins](../developers/writing-plugins.md).

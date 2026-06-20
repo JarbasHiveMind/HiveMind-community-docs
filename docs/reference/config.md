@@ -8,6 +8,14 @@
 
 ```json
 {
+  "binarize": false,
+  "allowed_encodings": [
+    "JSON-B64", "JSON-URLSAFE-B64",
+    "JSON-B91",
+    "JSON-Z85B", "JSON-Z85P",
+    "JSON-B32", "JSON-HEX"
+  ],
+  "allowed_ciphers": ["CHACHA20-POLY1305", "AES-GCM"],
   "agent_protocol": {
     "module": "hivemind-ovos-agent-plugin",
     "hivemind-ovos-agent-plugin": {
@@ -21,11 +29,17 @@
   "network_protocol": {
     "hivemind-websocket-plugin": {
       "host": "0.0.0.0",
-      "port": 5678
+      "port": 5678,
+      "ssl": false,
+      "cert_dir": "~/.local/share/hivemind",
+      "cert_name": "hivemind"
     },
     "hivemind-http-plugin": {
       "host": "0.0.0.0",
-      "port": 5679
+      "port": 5679,
+      "ssl": false,
+      "cert_dir": "~/.local/share/hivemind",
+      "cert_name": "hivemind"
     }
   },
   "policy": {
@@ -42,6 +56,23 @@
   }
 }
 ```
+
+The `database` block above is selected automatically on first run: a fresh install defaults to `hivemind-sqlite-db-plugin`, while an existing JSON deployment keeps `hivemind-json-db-plugin` (see [database](#database) below). `cert_dir` defaults to `<xdg_data_home>/hivemind` (e.g. `~/.local/share/hivemind`).
+
+### binarize
+
+| Key | Default | Description |
+|---|---|---|
+| `binarize` | `false` | Enables the HiveMind binary framing protocol once it has been negotiated with the client. Defaults to `false` to stay compatible with older `hivemind-bus-client` versions that mishandle binary frames. |
+
+### allowed_encodings / allowed_ciphers
+
+| Key | Default | Description |
+|---|---|---|
+| `allowed_encodings` | the 7 values below | Permitted message encodings, ordered by preference. The first encoding both peers support is used. |
+| `allowed_ciphers` | `["CHACHA20-POLY1305", "AES-GCM"]` | Permitted symmetric ciphers for payload encryption, ordered by preference. |
+
+The supported encodings are: `JSON-B64`, `JSON-URLSAFE-B64`, `JSON-B91`, `JSON-Z85B`, `JSON-Z85P`, `JSON-B32`, `JSON-HEX`. Trim either list to restrict what the server will negotiate.
 
 ### agent_protocol
 
@@ -72,6 +103,16 @@ Multiple network protocol plugins can be active simultaneously. Each key is the 
 
 An MQTT transport (`hivemind-mqtt-protocol`) is planned/experimental and not confirmed published.
 
+Each network protocol plugin accepts the following TLS keys for serving over `wss://` / `https://`:
+
+| Key | Default | Description |
+|---|---|---|
+| `ssl` | `false` | Serve over TLS. When `true`, a certificate is loaded from `cert_dir`/`cert_name` (generated if absent). |
+| `cert_dir` | `<xdg_data_home>/hivemind` | Directory holding the TLS certificate and key. |
+| `cert_name` | `"hivemind"` | Base filename for the `.crt`/`.key` pair in `cert_dir`. |
+
+See [Security & Permissions](../concepts/security.md) for the full TLS setup.
+
 ### policy.chain
 
 List of policy plugin modules applied in order to each incoming message. The default chain contains a single entry: `hivemind-ovos-agent-policy`, which enforces per-client skill and intent blacklists from `Client.metadata`.
@@ -83,6 +124,8 @@ List of policy plugin modules applied in order to each incoming message. The def
 | `module` | `"hivemind-sqlite-db-plugin"` | Database backend plugin |
 
 Per-plugin settings are nested under the plugin name key. See [Database Backends](../concepts/databases.md).
+
+**Auto-selection:** when `server.json` does not already define a `database` block, the backend is chosen automatically on first run. If a legacy `clients.json` exists (in `<xdg_data_home>/hivemind-core/`) and no SQLite `clients.db` is present, the JSON backend (`hivemind-json-db-plugin`) is kept so an upgrade never strands an existing credential store. Otherwise SQLite (`hivemind-sqlite-db-plugin`) is the default. Move an existing JSON store to SQLite with `hivemind-core migrate-db --to sqlite`.
 
 ---
 
@@ -109,3 +152,7 @@ Per-plugin settings are nested under the plugin name key. See [Database Backends
 | HiveMind WebSocket | 5678 | WebSocket (ws:// / wss://) |
 | HiveMind HTTP | 5679 | HTTP |
 | OVOS messagebus | 8181 | WebSocket (internal) |
+
+---
+
+**Next:** [CLI Reference](cli.md) · [Security & Permissions](../concepts/security.md)
