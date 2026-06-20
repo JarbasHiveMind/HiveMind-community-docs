@@ -43,6 +43,7 @@ nav:
     - CLI Commands: reference/cli.md
     - Message Types: reference/message-types.md
     - Configuration: reference/config.md
+    - Glossary: reference/glossary.md
 
 theme: readthedocs
 
