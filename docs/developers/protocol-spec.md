@@ -318,5 +318,11 @@ The protocol runs over any transport that can carry byte streams:
 |---|---|---|
 | WebSocket | `hivemind-websocket-plugin` | 5678 |
 | HTTP (polling) | `hivemind-http-plugin` | 5679 |
-| MQTT | `hivemind-mqtt-protocol` | — |
-| Usenet (NNTP) | `hivemind-usenet` | — |
+| MQTT (broker) | `hivemind-mqtt-plugin` | 1883 |
+| Usenet wormhole | `hivemind-usenet-wormhole` | — |
+
+WebSocket/HTTP are stable defaults. MQTT (package `hivemind-mqtt-protocol`) is a
+published alpha with a complete hub listener; its satellite client is still
+planned. The Usenet wormhole (package `hivemind-usenet`) is experimental and
+unpublished — a high-latency covert/fallback control-plane, not a real-time
+transport.

@@ -10,12 +10,18 @@ HiveMind Core is assembled from four categories of plugins, managed by the **Hiv
 
 Control how HiveMind listens for and connects to satellites.
 
-| Plugin | Transport | Default port |
-|---|---|---|
-| `hivemind-websocket-plugin` | WebSocket (ws:// / wss://) | 5678 |
-| `hivemind-http-plugin` | HTTP (polling) | 5679 |
+| Plugin | Transport | Default port | Status |
+|---|---|---|---|
+| `hivemind-websocket-plugin` | WebSocket (ws:// / wss://) | 5678 | stable, default |
+| `hivemind-http-plugin` | HTTP (polling) | 5679 | stable, default |
+| `hivemind-mqtt-plugin` | MQTT (broker) | 1883 | alpha (PyPI `hivemind-mqtt-protocol`) |
+| `hivemind-usenet-wormhole` | Usenet store-and-forward | — | experimental, unpublished |
 
-Both WebSocket and HTTP plugins are enabled by default in `server.json`. MQTT (`hivemind-mqtt-protocol`) and Usenet/NNTP (`hivemind-usenet`) transports are planned/experimental and not confirmed published.
+WebSocket and HTTP are enabled by default in `server.json`. The MQTT plugin
+(package `hivemind-mqtt-protocol`) is published as an alpha and ships the hub-side
+listener; a satellite-side MQTT client is still planned. The Usenet wormhole
+(package `hivemind-usenet`) is an experimental covert/fallback transport — not a
+real-time channel, not on PyPI (it pulls git-only carrier libraries).
 
 ### Agent protocol plugins
 

@@ -101,7 +101,12 @@ Multiple network protocol plugins can be active simultaneously. Each key is the 
 | `hivemind-websocket-plugin` | 5678 | WebSocket |
 | `hivemind-http-plugin` | 5679 | HTTP polling |
 
-An MQTT transport (`hivemind-mqtt-protocol`) is planned/experimental and not confirmed published.
+An MQTT transport is available as an alpha: package `hivemind-mqtt-protocol`,
+plugin name `hivemind-mqtt-plugin`, broker port 1883 (config keys `broker_host`,
+`broker_port`, `broker_username`, `broker_password`, `tls`, `topic_prefix`, `qos`,
+`idle_timeout`). It currently provides the hub-side listener only. An experimental
+Usenet wormhole transport (`hivemind-usenet`, plugin `hivemind-usenet-wormhole`)
+also exists but is unpublished.
 
 Each network protocol plugin accepts the following TLS keys for serving over `wss://` / `https://`:
 
