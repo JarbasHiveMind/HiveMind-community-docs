@@ -59,8 +59,16 @@ hivemind-mic-sat
 Or pass credentials directly without storing them:
 
 ```bash
-hivemind-mic-sat --key <key> --password <password> --host <host> --port 5678
+hivemind-mic-sat --key <key> --password <password> --host <host> --port 5678 --siteid kitchen
 ```
+
+The full flag set is `--key --password --host --port --siteid`. Each falls back to the
+identity file written by `hivemind-client set-identity`.
+
+!!! note
+    mic-satellite has **no** `--selfsigned` flag. If your hub uses a self-signed
+    certificate, prefer a plain `ws://` LAN connection or a properly issued
+    certificate.
 
 ## Configuration
 
@@ -106,3 +114,10 @@ Audio is sent as `BINARY` messages with payload type `RAW_AUDIO` (type 1). The h
 ## Next
 
 Set up the hub side: [Audio Binary Protocol](../server/audio-binary-protocol.md).
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_mic_sat/__init__.py`](https://github.com/JarbasHiveMind/hivemind-mic-satellite/blob/HEAD/hivemind_mic_sat/__init__.py) — CLI flags (`--key --password --host --port --siteid`) and the binary `RAW_AUDIO` transport
+- [`docs/architecture.md`](https://github.com/JarbasHiveMind/hivemind-mic-satellite/blob/HEAD/docs/architecture.md) — audio flow and hub-side processing

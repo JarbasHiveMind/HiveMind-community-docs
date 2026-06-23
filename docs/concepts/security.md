@@ -1,5 +1,12 @@
 # Security
 
+In plain terms: every device that joins a hive proves it knows a shared password, and after that all traffic is scrambled so nobody on the network can read it. The hub also decides, per device, exactly which kinds of messages that device is allowed to send — and nothing is allowed until you say so.
+
+!!! tip "Three layers protect a HiveMind"
+    1. **Handshake + encryption** — a connecting device proves it knows the password and the two sides agree on a session key without ever sending it over the wire.
+    2. **Permissions** — the hub checks every message against a per-device allowlist; an unknown message type is dropped.
+    3. **Transport (TLS)** — an optional outer layer of standard WebSocket encryption for defence-in-depth.
+
 ## Handshake and encryption
 
 Every HiveMind connection begins with a handshake that establishes a shared session key without transmitting that key over the wire. The standard handshake (protocol v1) uses PBKDF2-SHA256:
@@ -20,9 +27,16 @@ The handshake works as follows:
 4. A common salt is derived: `salt = IV_client XOR IV_server`
 5. The session key is derived with PBKDF2: `key = PBKDF2-HMAC-SHA256(password, salt, 100_000 iterations)` — 256 bits
 
-After the handshake all messages are encrypted with the negotiated cipher using the derived session key. Both **ChaCha20-Poly1305** and **AES-GCM** are supported (config `allowed_ciphers: ["CHACHA20-POLY1305", "AES-GCM"]`; the runtime default is AES-GCM). Each message carries a unique nonce and an authentication tag.
+After the handshake all messages are encrypted with the negotiated cipher using the derived session key. The cipher is **negotiated, not fixed**: the client offers an ordered list of ciphers it supports, the server filters that list against its own config `allowed_ciphers` (default `["CHACHA20-POLY1305", "AES-GCM"]`, with ChaCha20-Poly1305 listed first), and the server picks the client's most-preferred surviving choice. Both **ChaCha20-Poly1305** and **AES-GCM** are supported. Each message carries a unique nonce and an authentication tag. (AES-256-GCM is only the dataclass fallback used when a side offers no cipher list at all.)
 
 An alternative v0 path skips the handshake and uses a pre-shared `crypto_key` directly (the legacy `Encryption Key` printed by `add-client`). This path is kept for backward compatibility only.
+
+??? note "Advanced: exact handshake parameters"
+    - The handshake IV is **64-bit (8 bytes)**, generated with `os.urandom` (`generate_iv`).
+    - The common salt is `salt = IV_client XOR IV_server`.
+    - The session key is `PBKDF2-HMAC-SHA256(password, salt, 100_000 iterations)`, producing a **256-bit** key.
+
+    These are defined in `poorman_handshake/symmetric/__init__.py` and `symmetric/utils.py`.
 
 ### RSA identity (asymmetric)
 
@@ -32,6 +46,11 @@ Each node maintains an **RSA 2048-bit** key pair, PEM-encoded and stored at `~/.
 - **Node authentication** — verifying sender identity on INTERCOM messages via signature
 
 Reset the RSA key at any time with `hivemind-client reset-pgp` (the command name is retained; it recreates the RSA key pair).
+
+??? note "Advanced: how INTERCOM actually encrypts arbitrary-length payloads"
+    Bare RSA-OAEP can only encrypt a few hundred bytes, so INTERCOM uses a **hybrid RSA + AES-256-GCM** scheme (`hybrid_encrypt_RSA` in `poorman_handshake/asymmetric/utils.py`): a fresh random 256-bit AES key encrypts the payload with AES-GCM, and only that 32-byte AES key is wrapped with the recipient's RSA public key (PKCS#1 OAEP). This removes the RSA size limit while keeping end-to-end confidentiality.
+
+    Separately, the **RSA handshake path** (an alternative to the password handshake) derives the session secret by XOR-ing both sides' 32-byte secrets together, so neither side alone determines the key.
 
 #### Bootstrapping satellite-to-satellite trust
 
@@ -176,7 +195,7 @@ hivemind-core set-metadata 2 --key role --value guest
 
 ### Per-client defaults
 
-When a non-admin client is added via `add-client`, its `allowed_types` whitelist is **empty** — it is denied on every message until you explicitly `allow-msg` each message type it needs. (Admin clients bypass the whitelist.) This deny-all-by-default posture ensures that compromised credentials give an attacker no capability until access is granted.
+When a client is added via `add-client`, its `allowed_types` whitelist is **empty** — it is denied on every message until you explicitly `allow-msg` each message type it needs. This applies to admin clients too: the admin flag does **not** exempt a client from the `allowed_types` ACL (see *How the policy chain works* above). This deny-all-by-default posture ensures that compromised credentials give an attacker no capability until access is granted.
 
 ## Transport security (TLS)
 
@@ -226,3 +245,12 @@ HiveMind can use TLS for the WebSocket transport. `hivemind-core listen` takes n
 ---
 
 **Next:** [Mesh Topology](mesh.md) for how permissions compose across nested hives, or [Writing Plugins](../developers/writing-plugins.md#5-policy) to ship a custom admission policy.
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_core/policy.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/policy.py) — `MessageTypeACLPolicy` and the fail-closed policy chain; admins are bound by `allowed_types`
+- [`poorman_handshake/symmetric/__init__.py`](https://github.com/JarbasHiveMind/poorman_handshake/blob/HEAD/poorman_handshake/symmetric/__init__.py) — password handshake, salt = IV XOR IV, PBKDF2-HMAC-SHA256 100k iters
+- [`poorman_handshake/asymmetric/utils.py`](https://github.com/JarbasHiveMind/poorman_handshake/blob/HEAD/poorman_handshake/asymmetric/utils.py) — hybrid RSA + AES-256-GCM INTERCOM encryption
+- [`hivemind_bus_client/identity.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/identity.py) — identity file fields and `trusted_keys`

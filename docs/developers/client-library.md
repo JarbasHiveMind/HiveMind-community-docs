@@ -1,5 +1,7 @@
 # Developer Guide — Client Library
 
+> **New here?** This page is for writing a program that talks to a HiveMind hub. If you just want to *use* a satellite, see [Choosing a Satellite](../satellites/index.md) instead — you only need this if you are building your own client in Python.
+
 `hivemind-bus-client` (repo: `hivemind-websocket-client`) is the primary Python library for building HiveMind clients. It handles connection management, the PBKDF2 handshake, AES-256-GCM encryption, and serialization transparently.
 
 ## Install
@@ -477,3 +479,11 @@ client.connect()
 - [Protocol Reference](protocol-spec.md) — wire format, message types, routing
 - [Testing Guide](testing.md) — writing tests with the in-process harness
 - [CLI Reference](../reference/cli.md) — `hivemind-client` commands
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_bus_client/client.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/client.py) — `HiveMessageBusClient`, `BinaryDataCallbacks`, the `wait_for_*` helpers, `emit_intercom`, reconnection, and the encoding/cipher attributes
+- [`hivemind_bus_client/encryption.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/encryption.py) — `hybrid_encrypt`, `SupportedEncodings`, `SupportedCiphers`
+- [`hivemind_bus_client/identity.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/identity.py) — `NodeIdentity`, `add_trusted_key`, `trusted_keys`

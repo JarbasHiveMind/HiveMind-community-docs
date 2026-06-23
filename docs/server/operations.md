@@ -164,3 +164,10 @@ practical rather than built-in:
 - [Database Backends](../concepts/databases.md) — single-node vs shared (Redis) state.
 - [Security](../concepts/security.md) — certificates, keys, and permissions.
 - [Discovery](../concepts/discovery.md) — presence announce/scan for health and reach.
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_core/protocol.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/protocol.py) — the `hive.client.connect` / `disconnect` / `connection.error` events and the invalid-key vs protocol-version rejection paths
+- [`hivemind_core/config.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/config.py) — the `server.json` schema, per-protocol TLS keys, and the database block

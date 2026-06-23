@@ -1,6 +1,8 @@
 # Plugin Architecture
 
-HiveMind Core is assembled from four categories of plugins, managed by the **HiveMind Plugin Manager** (HPM). Each category is independently swappable without touching the others.
+In plain terms: HiveMind is built from interchangeable parts. You can swap how it talks to devices, which AI answers requests, how it handles audio, where it stores credentials, and how it decides what each device may do — each independently, without rewriting the rest.
+
+HiveMind Core is assembled from **five families** of plugins, managed by the **HiveMind Plugin Manager** (HPM). Each family is independently swappable without touching the others.
 
 ![HPM diagram](../hpm.png)
 
@@ -52,6 +54,16 @@ Control where client credentials are stored.
 | `hivemind-sqlite-db-plugin` | SQLite (default for new installs) |
 | `hivemind-json-db-plugin` | JSON file |
 | `hivemind-redis-db-plugin` | Redis (from the `hivemind-redis-database` package) |
+
+### Policy plugins
+
+Control admission — what each client is allowed to do. Policy plugins are loaded as an ordered **chain** (group `hivemind.policy`) and are consulted for every inbound message; they configure only via the `policy.chain` JSON block (there is no separate `module` selector like the other families).
+
+| Plugin | Function |
+|---|---|
+| `hivemind-ovos-agent-policy` | Per-client skill/intent blacklists for the OVOS agent (default) |
+
+The built-in `allowed_types` ACL (`MessageTypeACLPolicy`) is always force-prepended to the chain and cannot be removed. See [Security — How the policy chain works](security.md#how-the-policy-chain-works) and [Writing Plugins — Policy plugins](../developers/writing-plugins.md#5-policy).
 
 ## Configuration
 
@@ -131,3 +143,10 @@ agent = AgentProtocolFactory.create("hivemind-ovos-agent-plugin")
 ```
 
 To author your own plugin, see [Writing Plugins](../developers/writing-plugins.md).
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_plugin_manager/__init__.py`](https://github.com/JarbasHiveMind/hivemind-plugin-manager/blob/HEAD/hivemind_plugin_manager/__init__.py) — `HiveMindPluginTypes` (the five families: database, network, agent, binary, policy)
+- [`hivemind_core/config.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/config.py) — default `server.json` wiring, including the `policy.chain` block

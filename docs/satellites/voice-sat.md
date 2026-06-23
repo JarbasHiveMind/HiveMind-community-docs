@@ -50,6 +50,15 @@ hivemind-voice-sat --host <hub_host> --key <access_key> --password <password>
 
 Say your wakeword. The satellite transcribes locally and sends the utterance text to the hub.
 
+!!! tip "Pairing by sound (no `--password`)"
+    If you start voice-sat **without** a `--password` (and none is stored in the
+    identity file), it does not error out. Instead it launches
+    [hivemind-ggwave](https://github.com/JarbasHiveMind/hivemind-ggwave)'s
+    `GGWaveSlave` and **listens for the password to arrive over sound** — a short
+    audio "chirp" played near the device. Once it receives and stores the credentials,
+    it connects automatically. This lets you pair a headless device by playing the
+    pairing tone at it instead of typing a password.
+
 ## CLI reference
 
 ```
@@ -117,3 +126,11 @@ You also choose your own STT and TTS plugins, independent of any hub configurati
 ## Next
 
 Give your hub something to answer with: set up the [OVOS Skills Hub](../server/ovos-hub.md).
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_voice_satellite/__main__.py`](https://github.com/JarbasHiveMind/HiveMind-voice-sat/blob/HEAD/hivemind_voice_satellite/__main__.py) — CLI flags (`--host --key --password --port --selfsigned --siteid`) and the ggwave audio-password pairing path
+- [`hivemind_voice_satellite/service.py`](https://github.com/JarbasHiveMind/HiveMind-voice-sat/blob/HEAD/hivemind_voice_satellite/service.py) — the local STT/TTS voice client
+- [`requirements/requirements.txt`](https://github.com/JarbasHiveMind/HiveMind-voice-sat/blob/HEAD/requirements/requirements.txt) — shipped default plugins (`ovos-stt-plugin-server` / `ovos-tts-plugin-server`, remote HTTP) and `hivemind-ggwave`

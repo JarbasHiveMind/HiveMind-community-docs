@@ -122,6 +122,9 @@ See [Security & Permissions](../concepts/security.md) for the full TLS setup.
 
 List of policy plugin modules applied in order to each incoming message. The default chain contains a single entry: `hivemind-ovos-agent-policy`, which enforces per-client skill and intent blacklists from `Client.metadata`.
 
+!!! note "Removed / ignored key: `policy.fail_open`"
+    The policy chain is **unconditionally fail-closed** — any error in a policy denies the message, and there is no knob to change this. If an old `server.json` still carries a `policy.fail_open` key, `hivemind-core` **strips it on load and logs a warning**; the key has no effect. Operators upgrading a server should delete it.
+
 ### database
 
 | Key | Default | Description |
@@ -161,3 +164,10 @@ Per-plugin settings are nested under the plugin name key. See [Database Backends
 ---
 
 **Next:** [CLI Reference](cli.md) · [Security & Permissions](../concepts/security.md)
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_core/config.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/config.py) — the `_DEFAULT` config, database auto-selection, and the `policy.fail_open` strip-and-warn
+- [`hivemind_core/policy.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/policy.py) — the fail-closed policy chain and `MessageTypeACLPolicy`

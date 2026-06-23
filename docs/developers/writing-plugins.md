@@ -1,5 +1,7 @@
 # Writing Plugins
 
+> **What this is for.** HiveMind has no hard-coded transport, AI backend, or database — each is a swappable plugin. Read this page when you want to add a new one (e.g. a transport HiveMind doesn't ship, or your own AI backend). If you only want to *configure* existing plugins, see [Plugin Architecture](../concepts/plugins.md) instead.
+
 HiveMind Core is assembled entirely from plugins discovered at runtime by the
 **HiveMind Plugin Manager** (HPM) — see [Plugin Architecture](../concepts/plugins.md)
 for the operator-facing view. This page is the developer-facing companion: how to
@@ -131,6 +133,30 @@ Real implementations:
   LLM/solver agent; yields sentences as the model produces them).
 - `hivemind-a2a-agent-plugin` — `A2AAgentProtocol` (bridges the hive to Google
   A2A agents).
+
+??? note "Advanced: per-key routing — `answer_query` and `get_bus`"
+    `natural_language_query(utterance, lang)` is the backend *primitive* — it
+    knows nothing about who asked. Two non-abstract seams sit above it so a
+    **multiplexing** agent (e.g. one isolated brain per access key) can route by
+    caller without the rest of `hivemind-core` having to sniff peers:
+
+    ```python
+    def answer_query(self, utterance: str, lang: str,
+                     client=None) -> Iterator[Optional[str]]:
+        # default: ignores client, delegates to natural_language_query
+        yield from self.natural_language_query(utterance, lang)
+
+    def get_bus(self, client=None):
+        # default: the single shared agent bus
+        return self.bus
+    ```
+
+    `answer_query` is what the QUERY/CASCADE handlers actually call, passing the
+    originating `client`; override it to dispatch to the right per-key sub-agent.
+    `get_bus(client)` is called for every injected message, so returning a
+    per-client bus keeps the inject path isolated too. Both default to the
+    single-agent behaviour, so existing agents that only implement
+    `natural_language_query` need no changes.
 
 ### Minimal skeleton
 
@@ -265,6 +291,34 @@ A database plugin stores `Client` credential records (the client whitelist).
 Real implementation: `hivemind-sqlite-database` (`SQLiteDB`, subclasses
 `AbstractDB`). Others: `hivemind-json-db-plugin`, `hivemind-redis-db-plugin`.
 
+??? note "Advanced: schema migration — `SCHEMA_VERSION`, `migrate()`, `refresh()`"
+    `AbstractDB` carries a class-level `SCHEMA_VERSION` (currently `2`) describing
+    the on-disk `Client` shape this code expects. A backend persists its own
+    version sentinel (SQLite `PRAGMA user_version`, a key in JSON/Redis) and, when
+    the stored value is **lower** than `SCHEMA_VERSION`, calls `migrate()` once
+    during init:
+
+    ```python
+    SCHEMA_VERSION: ClassVar[int] = 2
+
+    def migrate(self, from_version: int) -> None:
+        # v1 -> v2: legacy OVOS blacklist fields move into Client.metadata
+        ...  # must be idempotent and crash-safe
+    ```
+
+    The default `migrate()` is a no-op, so third-party backends keep working
+    unchanged; override it only if you store legacy top-level fields
+    (`skill_blacklist`, `intent_blacklist`, `message_blacklist`) that need moving
+    into `Client.metadata`. A backend whose stored version is *newer* than
+    `SCHEMA_VERSION` must fail loudly rather than silently downgrade
+    (`_check_forward_compat` does this).
+
+    `refresh(client_id)` re-reads a single client from the backing store on the
+    hot admission path (once per inbound message). The default delegates to
+    `get_client_by_id`; override for targeted cache invalidation, but it MUST NOT
+    trigger a full keyspace scan or index rebuild. `sync()` is the coarse "reload
+    from disk if changed" counterpart.
+
 ### Minimal skeleton
 
 ```python
@@ -370,3 +424,11 @@ class MyPolicy(PolicyPlugin):
 
 - [Plugin Architecture](../concepts/plugins.md) — how operators select and configure
   installed plugins in `server.json`.
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_plugin_manager/protocols.py`](https://github.com/JarbasHiveMind/hivemind-plugin-manager/blob/HEAD/hivemind_plugin_manager/protocols.py) — `_SubProtocol`, `NetworkProtocol`, `AgentProtocol` (`natural_language_query`, `answer_query`, `get_bus`), `BinaryDataHandlerProtocol` handler methods
+- [`hivemind_plugin_manager/policy.py`](https://github.com/JarbasHiveMind/hivemind-plugin-manager/blob/HEAD/hivemind_plugin_manager/policy.py) — `PolicyPlugin`, `Verdict`, `Mutation`, `DenyCodes`
+- [`hivemind_plugin_manager/database.py`](https://github.com/JarbasHiveMind/hivemind-plugin-manager/blob/HEAD/hivemind_plugin_manager/database.py) — `AbstractDB` / `AbstractRemoteDB`, the four abstract methods, `SCHEMA_VERSION`, `migrate`, `refresh`

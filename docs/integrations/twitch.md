@@ -1,65 +1,102 @@
 # Twitch Bridge
 
-[HiveMind-twitch-bridge](https://github.com/JarbasHiveMind/HiveMind-twitch-bridge) connects a Twitch channel's live chat to a HiveMind hub. Chat messages are relayed to the AI assistant and responses appear in the stream chat.
+[HiveMind-twitch-bridge](https://github.com/JarbasHiveMind/HiveMind-twitch-bridge)
+relays a [Twitch](https://www.twitch.tv/) channel's live chat to and from a HiveMind
+hub. A viewer who mentions the bot in chat gets their message forwarded to the hub as
+an [utterance](../reference/glossary.md#utterance); the hub's reply is posted back
+into the stream chat.
 
-!!! note "Legacy bridge"
-    This bridge is built on the deprecated `jarbas_hive_mind` stack rather than the
-    current `hivemind-bus-client`. It is unmaintained and provided as-is.
+!!! tip "Beginner's mental model"
+    The bridge joins your Twitch chat as a bot (using a chat OAuth token) and connects
+    to your hub. Only messages that contain a trigger tag are relayed, so it stays
+    quiet until someone calls on it.
 
 ## Install
 
-There is no published package and no `setup.py`/`pyproject.toml`, so `pip install`
-is not available. Clone the repo and install the runtime dependencies:
-
 ```bash
-git clone https://github.com/JarbasHiveMind/HiveMind-twitch-bridge
-cd HiveMind-twitch-bridge
-pip install -r requirements.txt
+pip install HiveMind-twitch-bridge
 ```
 
-## Configuration
+This installs the `hivemind-twitch-bridge` console command.
 
-Authentication is just the channel name plus a Twitch chat OAuth token (of the form
-`oauth:...`, generated at [twitchapps.com/tmi](https://www.twitchapps.com/tmi/)).
-No Twitch application / client ID is required.
+## Get a Twitch chat token
 
-There is no config file. Configuration is done by editing the
-`connect_twitch_to_hivemind(...)` call at the bottom of
-`twitch_bridge/__main__.py`:
-
-```python
-connect_twitch_to_hivemind(
-    channel="my_channel",            # Twitch channel to join
-    oauth="oauth:xxxxx",             # Twitch chat OAuth token
-    tags=["@bot"],                   # trigger tags
-    host="wss://127.0.0.1",          # HiveMind hub host
-    port=5678,                       # HiveMind hub port
-    key="dummy_key",                 # HiveMind access key
-)
-```
-
-The reply trigger is whatever is in `tags`, defaulting to `["@bot"]`. There is no
-rate limiting and the reply prefix is not configurable.
+Authentication is just the channel name plus a Twitch **chat OAuth token** (of the
+form `oauth:...`), which you can generate at
+[twitchapps.com/tmi](https://www.twitchapps.com/tmi/). No Twitch application or client
+ID is required.
 
 ## Usage
 
-Run the bridge as a module:
+```
+Usage: hivemind-twitch-bridge [OPTIONS]
 
-```bash
-python -m twitch_bridge
+Twitch (required):
+  --channel TEXT      Twitch channel name to join
+  --oauth TEXT        Twitch chat OAuth token (oauth:...)
+
+Twitch (optional):
+  --tag TEXT          Trigger tag, repeatable (default: @bot)
+  --nickname TEXT     Twitch bot nickname (default: bot)
+  --lang TEXT         Utterance language (default: en-us)
+
+HiveMind:
+  --access-key TEXT   HiveMind access key
+  --password TEXT     HiveMind password
+  --crypto-key TEXT   HiveMind payload crypto key
+  --host TEXT         HiveMind host, ws:// or wss:// (default: wss://127.0.0.1)
+  --port INTEGER      HiveMind port (default: 5678)
+  --self-signed       Accept self-signed SSL certificates
 ```
 
-A chat message is only relayed if it contains one of the trigger tags; the tag is
-stripped before forwarding. Replies are posted back to the channel addressed to the
-sender as `@user , <answer>`.
+Example:
+
+```bash
+hivemind-twitch-bridge \
+  --channel my_channel \
+  --oauth "oauth:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  --access-key <access_key> \
+  --password <password> \
+  --host wss://127.0.0.1
+```
+
+You can also run it as a module:
+
+```bash
+python -m twitch_bridge --channel my_channel --oauth "oauth:..."
+```
+
+A chat message is relayed only if it contains one of the trigger tags; the tag is
+stripped before forwarding. The reply is posted back to the channel addressed to the
+viewer as `@user , <answer>`:
 
 ```
 Viewer: @bot weather for seattle
 Bot: @viewer , The weather in Seattle is...
 ```
 
+!!! warning "Host must include a scheme"
+    `--host` must start with `ws://` or `wss://`, otherwise the command exits with an
+    error. There is no rate limiting and the reply prefix is fixed.
+
 ## How it works
 
-Twitch chat is read over IRC. A message containing a trigger tag becomes a
-`recognizer_loop:utterance` OVOS message sent to the hub; the hub's `speak`
-response is sent back to the channel as `@user , <answer>`.
+The bridge reads Twitch chat over IRC. A message containing a trigger tag becomes a
+`recognizer_loop:utterance` [BUS message](../reference/glossary.md#bus-message) sent
+to the hub; the hub's `speak` response is sent back to the channel as
+`@user , <answer>`.
+
+## Permissions
+
+The bridge client needs at minimum:
+
+```bash
+hivemind-core allow-msg "speak" <id>
+```
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`pyproject.toml`](https://github.com/JarbasHiveMind/HiveMind-twitch-bridge/blob/HEAD/pyproject.toml) — package name and the `hivemind-twitch-bridge` console script
+- [`twitch_bridge/__main__.py`](https://github.com/JarbasHiveMind/HiveMind-twitch-bridge/blob/HEAD/twitch_bridge/__main__.py) — CLI arguments, reply format, and host validation

@@ -106,3 +106,11 @@ After the wakeword triggers, audio is sent as base64-encoded audio via `recogniz
 ## Next
 
 Set up the hub side: [Audio Binary Protocol](../server/audio-binary-protocol.md).
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_voice_relay/service.py`](https://github.com/JarbasHiveMind/HiveMind-voice-relay/blob/HEAD/hivemind_voice_relay/service.py) — base64-over-bus transport: STT via `recognizer_loop:b64_transcribe`, TTS via `speak:b64_audio`
+- [`hivemind_voice_relay/__main__.py`](https://github.com/JarbasHiveMind/HiveMind-voice-relay/blob/HEAD/hivemind_voice_relay/__main__.py) — CLI flags (`--host --key --password --port --selfsigned --siteid`)
+- [`docs/architecture.md`](https://github.com/JarbasHiveMind/HiveMind-voice-relay/blob/HEAD/docs/architecture.md) — local mic + VAD + wakeword, hub-owned STT/TTS

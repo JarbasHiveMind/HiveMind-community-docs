@@ -1,5 +1,7 @@
 # Mesh Topology
 
+In plain terms: a HiveMind doesn't have to be one server with some devices around it. Hubs can connect to other hubs, forming a tree of rooms, households, or sites — and messages know how to travel up, down, or across that tree to reach the right place.
+
 ## Hubs and satellites
 
 Every HiveMind deployment has at least one **hub** (also called a master) and one or more **satellites** (also called clients or slaves). The hub runs the AI back-end — either an OVOS skills server or a persona/LLM server — and accepts incoming connections from satellites. A satellite connects to the hub, sends utterances or messages, and receives responses.
@@ -75,6 +77,11 @@ A CASCADE sent by Satellite A is forwarded to both Satellite B and up to the Roo
 
 Each hop enforces its own permission chain. A sub-hub can grant clients no more access than the root has granted the sub-hub. This creates a natural permission boundary: a guest sub-hub never inherits root capabilities simply by connecting.
 
+??? note "Advanced: why the boundary actually holds"
+    The boundary is not just a convention — it is enforced at **every hop**. A message arriving at a hub is checked against *that hub's* `allowed_types` ACL by `MessageTypeACLPolicy` (`HiveMind-core/hivemind_core/policy.py`) before it is forwarded onward. So when a sub-hub forwards a satellite's message upstream, it is itself a client of the root and is re-checked against the permissions the root granted *it*. A capability the root never granted the sub-hub can never be smuggled through by a downstream device.
+
+    For concrete multi-hop routing tables and worked topology examples, see the [hivemind-test-harness docs](https://github.com/JarbasHiveMind/hivemind-test-harness/blob/HEAD/docs/index.md) (`07-message-routing.md` and `03-topologies.md` in particular).
+
 ## Use cases
 
 **Multi-room home**: One root hub runs OVOS. Each room has a sub-hub that controls local devices. Satellites in each room connect to the sub-hub. Skills running on the root can BROADCAST to specific rooms.
@@ -97,3 +104,11 @@ A "local hive" is a hub and satellite running on the same machine. This is usefu
 ---
 
 **Next:** [Protocol](protocol.md) for the message types in detail, or [Security](security.md) for how permission chains compose across hops.
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_core/protocol.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/protocol.py) — `bind_upstream`, relay fan-out, and ESCALATE/BROADCAST/PROPAGATE/QUERY/CASCADE routing
+- [`hivemind_core/policy.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/policy.py) — per-hop `allowed_types` re-check that enforces the permission boundary
+- [hivemind-test-harness `docs/`](https://github.com/JarbasHiveMind/hivemind-test-harness/blob/HEAD/docs/index.md) — multi-hop routing tables and topology examples

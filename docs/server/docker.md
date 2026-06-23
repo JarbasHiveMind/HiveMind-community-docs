@@ -8,7 +8,7 @@ namespace. Containers are either:
 - **built locally** from the
   [`hivemind-skills-server-docker`](https://github.com/JarbasHiveMind/hivemind-skills-server-docker)
   compose stack (`Dockerfile.hivemind` → local image `ovos/hivemind-server`,
-  built FROM `smartgic/hivemind-base`), or
+  built `FROM debian:trixie-slim` with a non-root `hivemind` user), or
 - **based on the `smartgic/*` images** published from
   [`hivemind-docker`](https://github.com/JarbasHiveMind/hivemind-docker)
   (default registry `docker.io/smartgic`, e.g. `smartgic/hivemind-base`,
@@ -62,6 +62,12 @@ services:
 `HIVEMIND_SERVER_CONFIG_FOLDER` is a host directory holding your `server.json`;
 edit that file to set hosts, ports, TLS, the agent protocol, and the database
 backend.
+
+!!! note "Where do the `${...}` values come from?"
+    The compose file reads `${HIVEMIND_CONFIG_FOLDER}`, `${HIVEMIND_REDIS_PORT}`,
+    and friends from a `.env` file you create next to `docker-compose.yml`. The
+    stack ships an example `.env` directly (there is no separate `.env.example`) —
+    copy it, fill in your host paths and ports, then `docker compose up`.
 
 Start:
 
@@ -135,9 +141,10 @@ need it for a multi-instance / shared-store deployment.
 ## Persona service
 
 The same stack can run a [persona hub](persona-hub.md) container (`hivemind_persona`,
-built from `Dockerfile.persona`) that exposes HiveMind to OpenAI/Ollama-compatible
-apps. Its `VOICE_SAT_*` env vars are *client credentials* it uses to connect back to
-`hivemind_core`; they must first be provisioned with `hivemind-core add-client`.
+built from `Dockerfile.persona`, which is `FROM smartgic/hivemind-base`) that exposes
+HiveMind to OpenAI/Ollama-compatible apps. Its `VOICE_SAT_*` env vars are *client
+credentials* it uses to connect back to `hivemind_core`; they must first be provisioned
+with `hivemind-core add-client`.
 
 ## With SSL via reverse proxy
 
@@ -181,3 +188,12 @@ docker compose exec hivemind_core hivemind-core blacklist-skill "skill-homeassis
 **Config changes ignored**: confirm your `server.json` is on the host folder mounted at
 `/home/hivemind/.config/hivemind-core`, and restart the container — the persona file
 and most config are read at startup only.
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`docker-compose.yml`](https://github.com/JarbasHiveMind/hivemind-skills-server-docker/blob/HEAD/docker-compose.yml) — the compose stack, mounts, `network_mode: host`, and Redis service
+- [`Dockerfile.hivemind`](https://github.com/JarbasHiveMind/hivemind-skills-server-docker/blob/HEAD/Dockerfile.hivemind) — `FROM debian:trixie-slim`, non-root `hivemind` user, `ovos/hivemind-server` image
+- [`Dockerfile.persona`](https://github.com/JarbasHiveMind/hivemind-skills-server-docker/blob/HEAD/Dockerfile.persona) — `FROM smartgic/hivemind-base`, the persona-service container
+- [`docker-bake.hcl`](https://github.com/JarbasHiveMind/hivemind-docker/blob/HEAD/docker-bake.hcl) — the published `smartgic/*` image build targets

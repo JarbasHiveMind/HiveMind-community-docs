@@ -90,3 +90,10 @@ STT and TTS running on the hub via this plugin are authenticated by the same acc
 ## Security note
 
 Running STT/TTS through the audio binary protocol requires the satellite to have valid HiveMind credentials. There is no open audio endpoint — access is gated by the client's access key and permission settings.
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`setup.py`](https://github.com/JarbasHiveMind/hivemind-audio-binary-protocol/blob/HEAD/setup.py) — the `hivemind-audio-binary-protocol-plugin` entry point in the `hivemind.binary.protocol` group
+- [`hivemind_audio_binary_protocol/protocol.py`](https://github.com/JarbasHiveMind/hivemind-audio-binary-protocol/blob/HEAD/hivemind_audio_binary_protocol/protocol.py) — the binary payload types and the wakeword/STT/TTS/VAD audio flow

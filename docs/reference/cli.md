@@ -66,6 +66,15 @@ Options:
 
 The node ID is auto-assigned; there is no `--node-id` option. Output includes the `Access Key`, `Password`, and deprecated `Encryption Key`.
 
+!!! warning "A new client is fail-closed until you allow a message type"
+    A freshly added non-admin client has an **empty `allowed_types` whitelist**, which means it is **DENIED on every message** until you explicitly allow at least one type. `add-client` prints this same warning. Grant access before the client can do anything, e.g.:
+
+    ```
+    hivemind-core allow-msg recognizer_loop:utterance <NODE_ID>
+    ```
+
+    Admin clients (`--admin true` or `make-admin`) bypass the whitelist entirely.
+
 ### list-clients
 
 Lists all registered clients with their node IDs, names, access keys, and permission summary.
@@ -353,3 +362,11 @@ Options:
 ---
 
 **Next:** [Configuration Reference](config.md) · [Plugin Architecture](../concepts/plugins.md)
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_core/scripts.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/scripts.py) — every `hivemind-core` subcommand, its arguments, and the empty-`allowed_types` warning
+- [`hivemind_bus_client/scripts.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/scripts.py) — every `hivemind-client` subcommand and flag
+- [`hivemind_presence/scripts.py`](https://github.com/JarbasHiveMind/HiveMind-presence/blob/HEAD/hivemind_presence/scripts.py) — the `hivemind-presence` `announce` / `scan` commands

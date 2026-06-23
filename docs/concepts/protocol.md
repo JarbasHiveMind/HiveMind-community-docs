@@ -1,5 +1,7 @@
 # Protocol
 
+In plain terms: this is the shared language HiveMind nodes speak. Every message is wrapped in a small envelope that says what kind of message it is and where it should go, so hubs and satellites can route it correctly.
+
 HiveMind defines a message protocol that runs over pluggable transports. Every message on the wire is a `HiveMessage` — a JSON envelope (or binary-encoded equivalent in protocol v2) carrying a `msg_type` and a payload.
 
 ## HiveMessage types
@@ -146,3 +148,14 @@ The hivemind-core `ProtocolVersion` enum bumps capabilities one step at a time:
 | Binary serialization | ❌ | ❌ | ✅ |
 
 Protocol v0 is JSON only, with no handshake and no binary framing — it uses only a pre-shared encryption key (the legacy, deprecated `Encryption Key` in `add-client` output). Protocol v1 adds the handshake (password/PBKDF2 or RSA), the RSA identity, and zlib compression. Protocol v2 additionally enables binary framing. (This `ProtocolVersion` enum is distinct from the binary-serialization `PROTOCOL_VERSION` constant in `serialization.py`.) New clients should use the highest version both sides support.
+
+!!! note "You don't negotiate v2 to send binary"
+    In practice v2 is effectively unreachable as a *negotiated* version: whether a connection uses binary framing is gated by the `binarize` boolean exchanged in the handshake, **not** by negotiating `ProtocolVersion.TWO`. You enable binary by setting `binarize`, not by bumping the protocol version. See [Protocol Spec](../developers/protocol-spec.md) for the framing details.
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_bus_client/message.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/message.py) — `HiveMessage` and the `HiveMessageType` enum
+- [`hivemind_bus_client/serialization.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/serialization.py) — JSON/binary serialization and the `PROTOCOL_VERSION` constant
+- [`hivemind_core/protocol.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/protocol.py) — listener/client roles, `binarize` gating, routing, and the `ProtocolVersion` enum

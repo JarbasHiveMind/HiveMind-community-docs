@@ -274,3 +274,11 @@ pytest tests/test_routing.py -v
 
 - [Protocol Concepts](../concepts/protocol.md) — message types and routing
 - [Client Library](client-library.md) — `HiveMessageBusClient` API
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivescope/scenarios.py`](https://github.com/JarbasHiveMind/hivescope/blob/HEAD/hivescope/scenarios.py) — `single_satellite`, `three_satellites`, `with_relay`, `star_topology`, `with_acl_enforcement` and the other pre-wired builders
+- [`hivescope/assertions.py`](https://github.com/JarbasHiveMind/hivescope/blob/HEAD/hivescope/assertions.py) — `assert_message_received_by`, `assert_bus_message_routed`, `assert_handshake_complete` and the rest of the ready-made checks
+- [`hivemind-test-harness/docs/index.md`](https://github.com/JarbasHiveMind/hivemind-test-harness/blob/HEAD/docs/index.md) — cross-repo / multi-topology stress suites built on top of hivescope

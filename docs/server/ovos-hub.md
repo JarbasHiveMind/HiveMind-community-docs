@@ -36,7 +36,8 @@ Default configuration (abbreviated):
     "module": "hivemind-ovos-agent-plugin",
     "hivemind-ovos-agent-plugin": {
       "host": "127.0.0.1",
-      "port": 8181
+      "port": 8181,
+      "connection_timeout": 10
     }
   },
   "binary_protocol": {
@@ -73,7 +74,27 @@ Default configuration (abbreviated):
 }
 ```
 
+!!! warning "The HTTP port `5679` is a deliberate override"
+    The WebSocket plugin's source default port is **5678** (correct above). The HTTP
+    plugin's *source* default port is **also 5678** — the `5679` you see in this
+    `server.json` is an explicit override so the two listeners don't collide. If you
+    copy the `hivemind-http-plugin` block but drop the `port` key, HTTP falls back to
+    its `5678` default and clashes with the WebSocket listener. Always keep `port: 5679`
+    (or any free port) on the HTTP block.
+
+The `agent_protocol` block points at the OVOS agent plugin. Its keys are `host`
+(`127.0.0.1`, the OVOS messagebus host), `port` (`8181`, the messagebus port), and
+`connection_timeout` (`10` seconds, how long to wait for the messagebus before giving
+up). The entry-point names above — `hivemind-ovos-agent-plugin`,
+`hivemind-ovos-agent-policy`, `hivemind-websocket-plugin`, `hivemind-http-plugin`, and
+`hivemind-sqlite-db-plugin` — are the strings `hivemind-core` resolves at startup.
+
 TLS is enabled per network protocol by setting `ssl` to `true` and pointing `cert_dir`/`cert_name` at the certificate to serve.
+
+!!! tip "More transports than WebSocket + HTTP"
+    The two `network_protocol` entries above are the defaults, but the carrier is
+    pluggable — MQTT and an experimental Usenet transport also exist. See
+    [Transports](transports.md) for the full status table.
 
 ## Starting the server
 
@@ -140,3 +161,31 @@ sudo systemctl daemon-reload
 sudo systemctl enable hivemind-core
 sudo systemctl start hivemind-core
 ```
+
+## Other hub flavors
+
+Beyond the OVOS, [persona](persona-hub.md), and [A2A](a2a-hub.md) agent plugins, two
+more agent-plugin flavors exist for advanced or experimental setups. Both are
+**alpha / unpublished — install from the repo and read its README**.
+
+??? note "Advanced: other hub flavors"
+    **localhive** ([`hivemind-localhive-agent-plugin`](https://github.com/JarbasHiveMind/hivemind-localhive-agent-plugin))
+    — an "isolated-skills hub". It runs OVOS skills *in-process* (no separate
+    `ovos-core` / `ovos-messagebus`), but each skill only ever sees its own messages.
+    Here `skill_id` is purely a routing label, not a credential — one skill cannot
+    eavesdrop on another's traffic. Useful when you want OVOS skills without a full
+    messagebus and with strict per-skill isolation.
+
+    **multimind** ([`hivemind-multimind-agent-plugin`](https://github.com/JarbasHiveMind/hivemind-multimind-agent-plugin))
+    — a per-access-key agent *multiplexer*. Every access key gets its own isolated
+    agent instance (by default a bundled MiniCroft brain), and each key's
+    `{module, config}` is stored in that client's DB metadata. This is the
+    multi-tenant story: one hub, many independent assistants, one per satellite key.
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_ovos_agent_plugin/__init__.py`](https://github.com/JarbasHiveMind/hivemind-ovos-agent-plugin/blob/HEAD/hivemind_ovos_agent_plugin/__init__.py) — the `host` / `port` / `connection_timeout` agent keys and the `hivemind-ovos-agent-plugin` / `hivemind-ovos-agent-policy` entry points
+- [`hivemind_websocket_protocol/__init__.py`](https://github.com/JarbasHiveMind/hivemind-websocket-protocol/blob/HEAD/hivemind_websocket_protocol/__init__.py) — the WebSocket plugin's default port `5678` and TLS keys
+- [`hivemind_core/config.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/config.py) — the default `server.json` (encodings, ciphers, network/agent/database blocks)

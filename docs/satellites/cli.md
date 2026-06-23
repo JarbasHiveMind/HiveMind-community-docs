@@ -61,3 +61,10 @@ package offers subcommands such as `set-identity`, `terminal`, `send-mycroft`,
 ## Next
 
 New to HiveMind? Start with the [Quick Start](../quickstart.md), or learn how the pieces fit in [Core Concepts](../concepts/mesh.md).
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_cli_terminal/__main__.py`](https://github.com/JarbasHiveMind/HiveMind-cli/blob/HEAD/hivemind_cli_terminal/__main__.py) — flags (`--access-key --password --host --port --no-curses --self-signed`), the `ws://`/`wss://` host requirement, and the UDP-scan fallback when `--host` is omitted
+- [`docs/usage.md`](https://github.com/JarbasHiveMind/HiveMind-cli/blob/HEAD/docs/usage.md) — usage walkthrough

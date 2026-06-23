@@ -1,5 +1,7 @@
 # Protocol Specification
 
+> **Who needs this page?** Only if you are implementing a HiveMind client from scratch in a language without an official library, or debugging the wire format. If you are using the Python or JS client, the library already does everything described here — start with the [Client Library](client-library.md) instead.
+
 This page describes the wire format for HiveMind messages, including the binary framing that is enabled by the `binarize` capability negotiated during the handshake.
 
 If you are implementing an independent (non-Python) client, read the [Handshake state machine](#handshake-state-machine) and [Negotiation & defaults](#negotiation-defaults) sections below first — they are written to be sufficient to bring a client to a fully-encrypted, session-established state without reading the reference implementation.
@@ -326,3 +328,11 @@ published alpha with a complete hub listener; its satellite client is still
 planned. The Usenet wormhole (package `hivemind-usenet`) is experimental and
 unpublished — a high-latency covert/fallback control-plane, not a real-time
 transport.
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_bus_client/serialization.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/serialization.py) — `PROTOCOL_VERSION`, the binary framing encoder/decoder, the `_INT2TYPE` message-type table
+- [`hivemind_bus_client/message.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/message.py) — `HiveMessageType`, `HiveMessage.as_dict`, the `INTERCOM`-defaults-to-`11` encoding
+- [`hivemind_core/protocol.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/protocol.py) — `ProtocolVersion`, `max_protocol_version`, the server-side handshake state machine and capability defaults

@@ -40,6 +40,7 @@ mycroft.mic.unmute
 mycroft.mic.get_status
 recognizer_loop:sleep
 recognizer_loop:wake_up
+recognizer_loop:awoken
 recognizer_loop:state.get
 recognizer_loop:state.set
 ```
@@ -57,8 +58,17 @@ mycroft.gui_service.is_ready
 speak
 mycroft.audio.is_alive
 mycroft.audio.is_ready
+mycroft.audio.is_speaking
 mycroft.audio.speak.status
 ```
+
+!!! note "Readiness and speaking probes"
+    The integration polls each service over its device type with
+    `mycroft.<service>.is_alive` / `mycroft.<service>.is_ready` readiness probes — the
+    `<service>` is one of `skills`, `voice`, `gui_service`, `audio`, or `PHAL`,
+    depending on whether the device is registered as a *voice assistant* or a *media
+    player*. The **Speaking** sensor additionally tracks `mycroft.audio.is_speaking`,
+    so make sure that message type is allowed for the audio service.
 
 ### OCP (OpenVoiceOS Common Play)
 
@@ -107,6 +117,7 @@ mycroft.phal.is_ready
 
 ```
 mycroft.volume.get
+mycroft.volume.set
 mycroft.volume.increase
 mycroft.volume.decrease
 mycroft.volume.mute
@@ -120,6 +131,8 @@ system.reboot
 system.shutdown
 system.mycroft.service.restart
 system.ssh.status
+system.ssh.enable
+system.ssh.disable
 ```
 
 #### ovos-phal-plugin-camera
@@ -144,6 +157,16 @@ hivemind-core make-admin <id>
 
 ## Related projects
 
-- [hivemind-player-protocol](https://github.com/HiveMindInsiders/hivemind-player-protocol) — turn any device into a standalone HiveMind OCP player
+- [Media Player](media-player.md) — turn any device into a standalone HiveMind OCP player
 - [ovos-skill-music-assistant](https://github.com/HiveMindInsiders/ovos-skill-music-assistant) — OVOS skill for Music Assistant media search
 - [ovos-media-plugin-mass](https://github.com/HiveMindInsiders/ovos-media-plugin-mass) — OVOS plugin to control Music Assistant players
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`custom_components/hivemind/__init__.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/__init__.py) — the `hivemind` domain and bus client setup
+- [`custom_components/hivemind/config_flow.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/config_flow.py) — config-flow fields (host, access_key, password, port, allow_self_signed, device_type)
+- [`custom_components/hivemind/binary_sensor.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/binary_sensor.py) — connection / speaking / alive / ready sensors and their probes
+- [`custom_components/hivemind/switch.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/switch.py) — SSH, volume mute, mic mute, and sleep-mode switches
+- [`custom_components/hivemind/media_player.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/media_player.py) — OCP media-player entity

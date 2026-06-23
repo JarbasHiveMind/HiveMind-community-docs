@@ -145,3 +145,10 @@ Any `ovos-solver-*` plugin can back the persona. Common ones:
   ]
 }
 ```
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_persona_agent_plugin/__init__.py`](https://github.com/JarbasHiveMind/hivemind-persona-agent-plugin/blob/HEAD/hivemind_persona_agent_plugin/__init__.py) — the `persona` config key (path or inline dict, read once at startup) and sentence-by-sentence streaming
+- [`ovos-persona`](https://github.com/OpenVoiceOS/ovos-persona) — the persona document format and the solver chain it runs

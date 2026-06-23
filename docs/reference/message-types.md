@@ -1,5 +1,7 @@
 # HiveMessage Types Reference
 
+> **What this is.** A lookup table of every kind of message that travels over a HiveMind network — what each one is for, which direction it flows, and what it carries. Skim the [Quick reference](#quick-reference) first; reach for the per-type sections when you need the details.
+
 All message types are defined in `HiveMessageType` in `hivemind_bus_client.message`.
 
 ## Quick reference
@@ -151,3 +153,10 @@ Reserved for rendezvous-nodes. Defined in the `HiveMessageType` enum but not yet
 ## THIRDPRTY
 
 User-defined payload. Relayed opaquely by the hub without any special processing. Use it for application-level protocols layered on top of HiveMind.
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_bus_client/message.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/message.py) — `HiveMessageType` and the binary payload-type enum
+- [`hivemind_bus_client/serialization.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/serialization.py) — the on-the-wire type encoding and HELLO/HANDSHAKE framing

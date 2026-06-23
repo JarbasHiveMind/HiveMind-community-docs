@@ -1,7 +1,7 @@
 # A2A Hub
 
 An "A2A hub" is a regular `hivemind-core` server whose **agent protocol** is the
-[hivemind-a2a-agent-plugin](https://github.com/TigreGotico/hivemind-a2a-agent-plugin).
+[hivemind-a2a-agent-plugin](https://github.com/JarbasHiveMind/hivemind-a2a-agent-plugin).
 Instead of routing utterances into a full OVOS skills stack, the hub forwards
 natural-language queries to an external **A2A (Agent-to-Agent)** server and streams the
 answer back — no `ovos-core` required.
@@ -71,6 +71,23 @@ The HiveMind `session_id` is mapped 1-to-1 to the A2A `sessionId`, so multi-turn
 conversation context is preserved on the A2A server side; the plugin itself stores no
 conversation state.
 
+??? note "Advanced: configuring from the OVOS global config"
+    The same four keys can also be supplied through the OVOS global configuration
+    under `hivemind` → `a2a_agent` (e.g. in `mycroft.conf`), instead of the
+    `agent_protocol` block in `server.json`:
+
+    ```yaml
+    hivemind:
+      a2a_agent:
+        agent_url: "http://localhost:9999"
+        auth_header: "Bearer secret"   # optional
+        timeout: 60                    # optional
+        streaming: false               # optional
+    ```
+
+    When both are present, explicit values passed in the `agent_protocol` block win
+    over the OVOS-config fallback.
+
 ## Start the server
 
 ```bash
@@ -104,3 +121,10 @@ See [OVOS Skills Hub](ovos-hub.md#managing-clients) for the full client workflow
 - [Persona Hub](persona-hub.md) — answer queries from a local LLM / solver chain instead
   of an external A2A server.
 - [Database Backends](../concepts/databases.md) — where client and permission state lives.
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`hivemind_a2a_agent_plugin/__init__.py`](https://github.com/JarbasHiveMind/hivemind-a2a-agent-plugin/blob/HEAD/hivemind_a2a_agent_plugin/__init__.py) — the `agent_url` / `auth_header` / `timeout` / `streaming` keys, the OVOS-config fallback, and the `session_id` → A2A `sessionId` mapping
+- [`hivemind_a2a_agent_plugin/_client.py`](https://github.com/JarbasHiveMind/hivemind-a2a-agent-plugin/blob/HEAD/hivemind_a2a_agent_plugin/_client.py) — the JSON-RPC `tasks/send` / `tasks/sendSubscribe` calls and error handling

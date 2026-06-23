@@ -4,6 +4,11 @@
 
 Matrix is a federated, end-to-end-encrypted chat protocol. You register a bot account at any Matrix provider and the bridge logs in as that bot.
 
+!!! tip "Beginner's mental model"
+    The bridge logs into Matrix as a bot using an access token, joins a room, and
+    relays whatever is said there to your hub. Its HiveMind credentials come from the
+    [identity](../reference/glossary.md#node) you set once with `hivemind-client set-identity`.
+
 ## Install
 
 ```bash
@@ -51,3 +56,10 @@ hivemind-core allow-msg "speak" <id>
 ```
 
 Add further permissions if your use case requires access to specific skills or message types.
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`pyproject.toml`](https://github.com/JarbasHiveMind/HiveMind-matrix-bridge/blob/HEAD/pyproject.toml) — package name and the `HiveMind-matrix` console script
+- [`hm_matrix_bridge/__main__.py`](https://github.com/JarbasHiveMind/HiveMind-matrix-bridge/blob/HEAD/hm_matrix_bridge/__main__.py) — the `run` subcommand and its options
