@@ -5,10 +5,13 @@ Community documentation for HiveMind, published as a MkDocs static site to GitHu
 ## Setup
 
 ```bash
-pip install mkdocs
+pip install -r requirements.txt
 ```
 
-The site uses the built-in `readthedocs` theme (no extra theme package required).
+The site is built with **Material for MkDocs** (`mkdocs-material`) plus
+`pymdown-extensions`. Pinned in `requirements.txt`. Beginner/advanced layering relies on
+the configured markdown extensions — `admonition`, `pymdownx.details` (collapsible
+`??? note`), and `pymdownx.tabbed` (content tabs) — so keep those enabled.
 
 ## Test
 
@@ -25,13 +28,29 @@ None configured. Keep `mkdocs.yml` `nav` entries in sync with files in `docs/`.
 
 ## Layout
 
-- `mkdocs.yml` — site config and `nav` tree (Home, About, Servers, Satellites, Integrations, Protocol, Security, Developers).
-- `docs/` — all page content as numbered Markdown (`00_index.md` … `19_crypto.md`), plus `gpt_*.md` explainer pages and `img_*.png` / diagram assets referenced inline.
+- `mkdocs.yml` — site config and `nav` tree. Sections: Home, About, Quick Start, FAQ,
+  Core Concepts, Satellites, Hub & Server, Integrations, Developer Guide, Reference. Each
+  section has an `index.md` landing page (enabled via the `navigation.indexes` feature).
+- `docs/` — page content grouped by section folder (`concepts/`, `satellites/`, `server/`,
+  `integrations/`, `developers/`, `reference/`).
+- `docs/assets/` — `logo.png` / `favicon.png` used by the theme.
 - `docs/javascripts/analytics.js` — injected via `extra_javascript`.
-- `.github/workflows/build.yml` — builds and publishes via `mkdocs gh-deploy` on push.
+- `requirements.txt` — pinned build deps (mkdocs, mkdocs-material, pymdown-extensions).
+- `.github/workflows/build.yml` — installs `requirements.txt`, runs `mkdocs build --strict`,
+  then publishes via `mkdocs gh-deploy` on push.
 - `renovate.json` — Renovate dependency dashboard config.
 
 Not a plugin/skill — no entry points, no `pyproject.toml`/`setup.py`.
+
+## Editorial conventions
+
+- **Dual audience.** Every page opens with a plain-language orientation a non-developer
+  understands, then layers depth. Put advanced material in collapsible `??? note "Advanced:
+  …"` blocks so beginners can skip it.
+- **Cross-reference to source.** Each concept/reference/developer page ends with a
+  `## Source` section linking the backing source files via
+  `https://github.com/<owner>/<repo>/blob/HEAD/<path>` (use `HEAD`, never a branch name).
+- Define jargon on first use or link it to `reference/glossary.md`.
 
 ## Conventions
 
@@ -46,7 +65,7 @@ Not a plugin/skill — no entry points, no `pyproject.toml`/`setup.py`.
 
 ## Gotchas
 
-- The publish workflow (`build.yml`) is a hand-rolled `mkdocs gh-deploy`, not a gh-automations reusable workflow, and pins old actions (`actions/checkout@v2`, `actions/setup-python@v2`).
-- New pages must be added to the `nav` in `mkdocs.yml` or they will not appear in the site.
-- Several pages contain inline `TODO` markers and dead/empty links (e.g. `[http bridge]()`); these are content gaps, not build failures.
-- `gpt_*.md` pages are AI-authored explainers — verify accuracy against the protocol pages before relying on them.
+- The publish workflow (`build.yml`) is a hand-rolled `mkdocs gh-deploy`, not a gh-automations reusable workflow.
+- New pages must be added to the `nav` in `mkdocs.yml` or they will not appear in the site. `mkdocs build --strict` fails if a nav entry points at a missing file (and vice-versa with strict).
+- Source-footer links use `/blob/HEAD/` so they don't break when a repo's default branch differs (`dev` vs `master`). Note case-sensitive repo slugs (`HiveMind-core`, but `hivemind-plugin-manager`) and that the a2a plugin lives under the `TigreGotico` org, not `JarbasHiveMind`.
+- The JSON DB plugin's module dir is `hivemind_json_database` (not `…_db_plugin`).
