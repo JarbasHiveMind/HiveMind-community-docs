@@ -35,7 +35,8 @@ Satellites form a spectrum based on where audio processing happens. At one end t
 | **hivemind-mic-satellite** | Mic + [VAD](reference/glossary.md#ovos-voice-vocabulary) | Audio binary protocol for STT/TTS/wakeword |
 | **HiveMind-voice-relay** | Mic + VAD + Wakeword | Audio binary protocol for STT/TTS |
 | **HiveMind-voice-sat** | Mic + VAD + Wakeword + STT + TTS | Any hub (sends text utterances) |
-| **hivemind-webspeech** | Browser mic + VAD | Any hub |
+| **hivemind-webspeech** | Browser mic + VAD | Hub listener + `allow-msg` (see page) |
+| **ESP32 / MicroPython** | Mic (and, on some boards, VAD/wakeword) | Audio binary protocol |
 
 See [Choosing a Satellite](satellites/index.md) for a detailed comparison.
 
@@ -53,7 +54,7 @@ See [Nested Hives](concepts/mesh.md#nested-hives) for details.
 
 ## Security model
 
-Every client authenticates with an **access key** and a **password**. After authentication the session is encrypted with AES-256-GCM. The key is never transmitted; both sides derive it independently via PBKDF2 from the shared password and exchanged nonces.
+Every client authenticates with an **access key** and a **password**. After authentication the session is encrypted with an authenticated cipher — AES-256-GCM or ChaCha20-Poly1305, negotiated per connection. The key is never transmitted; both sides derive it independently via PBKDF2 from the shared password and exchanged nonces.
 
 Permissions are configured per client. The default policy admits only a basic set of message types; you expand or restrict per-client using the `hivemind-core` CLI. Skills and intents can be blacklisted individually.
 
