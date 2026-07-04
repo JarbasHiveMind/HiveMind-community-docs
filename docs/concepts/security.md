@@ -22,8 +22,8 @@ Because the password is the sole secret, its strength is the security of the who
 
 Protocol **v3** replaces the legacy handshake with the **[Noise Protocol Framework](https://noiseprotocol.org/)**. A v3-capable client (Noise primitive available and a password configured) negotiates an always-encrypted, forward-secret session:
 
-- **Default suite:** `Noise_XXpsk2_25519_ChaChaPoly_SHA256` — mutual static-key authentication over X25519, per-handshake ephemeral Diffie-Hellman (forward secrecy), ChaCha20-Poly1305 AEAD, SHA-256. A `Noise_XXpsk2_25519_AESGCM_SHA256` suite is also offered for **Web Crypto / JavaScript** peers that only expose AES-GCM.
-- **PSK derivation:** the shared secret mixed into the handshake is `PSK = argon2id(password, salt = SHA-256(node_id))`. Salting with the server's `node_id` makes the PSK server-specific, so the same password on two servers yields two different PSKs.
+- **Default suite:** `Noise_XXpsk2_25519_ChaChaPoly_SHA256` — mutual static-key authentication over X25519, per-handshake ephemeral Diffie-Hellman (forward secrecy), ChaCha20-Poly1305 AEAD, SHA-256. This is the suite browser and JavaScript clients ([HiveMind-js](https://github.com/JarbasHiveMind/HiveMind-js)) negotiate too: they pair the native Web Crypto API with the pure-JS [`@noble/ciphers`](https://github.com/paulmillr/noble-ciphers) + [`@noble/hashes`](https://github.com/paulmillr/noble-hashes) for the two primitives Web Crypto lacks (ChaCha20-Poly1305 and argon2id), giving **full cipher parity with hivemind-core** — no server-side configuration required. A `Noise_XXpsk2_25519_AESGCM_SHA256` suite is also registered as an AES-GCM alternative for minimal Web-Crypto-only peers (see the browser caveat below).
+- **PSK derivation:** the shared secret mixed into the handshake is `PSK = argon2id(password, salt = SHA-256(node_id))`. Salting with the server's `node_id` makes the PSK server-specific, so the same password on two servers yields two different PSKs. A full browser client derives this **in-browser** with `@noble/hashes` argon2id (same parameters as the server), so a password alone is enough — no provisioning and no server-side KDF change. A pre-provisioned 32-byte `psk` remains an option, and PBKDF2 remains an explicit fallback when a server advertises it.
 - **Pinned-key case:** once a client's static key has been pinned by a prior `XXpsk2` handshake, both ends may use `Noise_KKpsk0_25519_ChaChaPoly_SHA256` (both static keys known in advance).
 - Only `HELLO` and `HANDSHAKE` frames travel unencrypted (they precede session-key establishment). On a `crypto_required` server, any other cleartext frame is rejected and the client disconnected.
 
@@ -35,6 +35,9 @@ Protocol **v3** replaces the legacy handshake with the **[Noise Protocol Framewo
     ```
 
     This prints the hex PSK, which equals `argon2id(password, SHA-256(node_id))` — identical to what a capable peer derives at connect time, so a provisioned device and a password-deriving device interoperate with no server-side distinction. The device never sees the password itself.
+
+!!! note "Browser caveat"
+    Browsers are **not** constrained: with `@noble` loaded (a five-line ESM shim exposing `chacha20poly1305` + `argon2id` on `globalThis.HiveMindNoble`) a HiveMind-js client negotiates the default ChaChaPoly suite and derives the argon2id PSK on-device, exactly like a Python client. Only a **minimal** browser bundle shipped *without* `@noble` degrades to the AES-GCM + PBKDF2 subset, and then needs either a provisioned `psk` or a PBKDF2-advertising server.
 
 ### Legacy handshake (protocol v1 / v2)
 

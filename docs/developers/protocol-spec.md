@@ -28,7 +28,7 @@ Within the **v1/v2** (legacy handshake) family, binary framing is **not** gated 
 | **v0** | JSON | Pre-shared AES key only (legacy, deprecated) | None |
 | **v1** | JSON (and binary framing when `binarize` is negotiated) | Handshake: PBKDF2 password **or** RSA | Optional zlib |
 | **v2** | JSON + binary framing | Handshake: PBKDF2 password **or** RSA | Optional zlib |
-| **v3** | Binary framing, always encrypted | **Noise** (`Noise_XXpsk2_25519_ChaChaPoly_SHA256` default; `AESGCM` suite for Web Crypto peers; `KKpsk0` when the static key is pinned). PSK = `argon2id(password, SHA-256(node_id))` | Optional zlib |
+| **v3** | Binary framing, always encrypted | **Noise** (`Noise_XXpsk2_25519_ChaChaPoly_SHA256` default — negotiated by browser/JS clients too via `@noble`; `AESGCM` suite as a fallback for minimal Web-Crypto-only peers; `KKpsk0` when the static key is pinned). PSK = `argon2id(password, SHA-256(node_id))`, derived in-browser | Optional zlib |
 
 !!! note "v3 Noise wire format"
     The byte-level Noise handshake sequence (message tokens, prologue binding of the `HELLO`/`HANDSHAKE` payloads, PSK slot, and the provisioned-PSK path for constrained devices) is defined by `hivemind_bus_client/noise.py` and `poorman_handshake/noise/`. The [Security](../concepts/security.md#protocol-v3-the-noise-handshake-current-default) page covers the model; a full independent-implementer byte spec for v3 is tracked as follow-up. The v1/v2 state machine below remains authoritative for the legacy handshake.

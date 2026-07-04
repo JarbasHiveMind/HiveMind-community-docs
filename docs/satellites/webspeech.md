@@ -42,10 +42,16 @@ reply.
     `http://localhost`).
 
 ??? note "Advanced: crypto and VAD details"
-    - **Encryption** is HiveMind Protocol V1: a password handshake using
-      **PBKDF2-HMAC-SHA256** key derivation plus **AES-GCM** session encryption, all
-      over the browser's native **Web Crypto** API. The **Password** field in the form
-      is the password from `hivemind-core add-client` — it drives the key derivation.
+    - **Encryption** defaults to the **Protocol v3 Noise handshake** with full parity
+      to hivemind-core: the browser negotiates the default
+      `Noise_XXpsk2_25519_ChaChaPoly_SHA256` suite and derives the PSK as
+      `argon2id(password, SHA-256(node_id))` **in-browser**, pairing the native
+      **Web Crypto** API with the pure-JS `@noble/ciphers` + `@noble/hashes` bundle.
+      The **Password** field in the form is the password from
+      `hivemind-core add-client` — a password alone is enough, with no server-side
+      configuration and no provisioned key. It falls back to the legacy V1 handshake
+      (PBKDF2-HMAC-SHA256 + AES-GCM) against older hubs, or when a minimal bundle
+      ships without `@noble`.
     - **No wakeword.** Capture is push-to-talk, gated by a **Start VAD** / **Stop VAD**
       toggle. Voice activity detection uses the **Silero VAD** model run in the browser
       via **onnxruntime-web** (`@ricky0123/vad-web`), loaded from a CDN — so the page
@@ -84,5 +90,5 @@ side per the requirements above.
 Validated against the HiveMind source:
 
 - [`docs/configuration.md`](https://github.com/JarbasHiveMind/hivemind-webspeech/blob/HEAD/docs/configuration.md) — hub requirements, the TLS/mixed-content rule, the credential form
-- [`README.md`](https://github.com/JarbasHiveMind/hivemind-webspeech/blob/HEAD/README.md) — V1 crypto (PBKDF2-HMAC-SHA256 + AES-GCM), Silero VAD via onnxruntime-web, `recognizer_loop:b64_audio` transport
+- [`README.md`](https://github.com/JarbasHiveMind/hivemind-webspeech/blob/HEAD/README.md) — v3 Noise crypto (ChaChaPoly + in-browser argon2id PSK) with V1 (PBKDF2 + AES-GCM) fallback, Silero VAD via onnxruntime-web, `recognizer_loop:b64_audio` transport
 - [`readme.md`](https://github.com/JarbasHiveMind/HiveMind-js/blob/HEAD/readme.md) — the JavaScript client library this page is built on
