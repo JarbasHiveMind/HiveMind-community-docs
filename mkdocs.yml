@@ -1,41 +1,153 @@
-site_name: Documentation
+site_name: HiveMind Documentation
 site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
-nav:
-    - Home: index.md
-    - About:
-      - Quick start: 01_quickstart.md
-      - Terminology: 02_terminology.md
-      - Auto Discovery: 05_presence.md
-      - Nested Hives: 15_nested.md
-      - Plugins: 04_plugins.md
-    - Servers:
-      - Skills Server: 06_skills_server.md
-      - Sound Server: 06_sound_server.md
-      - Persona Server: 08_persona.md
-    - Satellites:
-      - Voice Satellite: 07_voicesat.md
-      - Voice Relay: 07_voice_relay.md
-      - Mic Satellite: 07_micsat.md
-    - Integrations:
-      - Matrix: 09_matrix.md
-      - DeltaChat: 10_deltachat.md
-      - Home Assistant: 07_homeassistant.md
-    - Protocol:
-      - Transport: 04_protocol.md
-      - Binarization: 18_binarization.md
-      - OVOS Messages: 13_mycroft.md
-    - Security:
-      - Database: 17_database.md
-      - Pairing: 03_pairing.md
-      - Permissions: 16_permissions.md
-      - Handshake: 12_handshake.md
-      - Encryption: 19_crypto.md
-    - Developers:
-      - Libraries: 11_devs.md
-    - ChatGPT was here:
-      - ELI5: gpt_eli5.md
+site_description: >-
+  The official manual for HiveMind — the open-source protocol that connects
+  lightweight satellite devices to a central voice/AI hub over an encrypted mesh.
+repo_url: https://github.com/JarbasHiveMind
+repo_name: JarbasHiveMind
 
-theme: readthedocs
+# With `mkdocs build --strict`, these promote to hard errors — so a broken internal
+# link, a dead anchor, or a page missing from the nav fails CI.
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+theme:
+  name: material
+  logo: assets/logo.png
+  favicon: assets/favicon.png
+  language: en
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: amber
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: amber
+      accent: deep orange
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - def_list
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.keys
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+nav:
+  - Home: index.md
+  - About: about.md
+  - Quick Start: quickstart.md
+  - FAQ: faq.md
+  - Core Concepts:
+    - concepts/index.md
+    - Mesh & Hub Topology: concepts/mesh.md
+    - Protocol & Message Types: concepts/protocol.md
+    - Security & Permissions: concepts/security.md
+    - Database Backends: concepts/databases.md
+    - Auto Discovery: concepts/discovery.md
+    - Plugin Architecture: concepts/plugins.md
+
+  - Satellites:
+    - satellites/index.md
+    - HiveMind CLI: satellites/cli.md
+    - Mic Satellite: satellites/mic-satellite.md
+    - Voice Relay: satellites/voice-relay.md
+    - Voice Satellite: satellites/voice-sat.md
+    - WebSpeech Browser: satellites/webspeech.md
+    - Microcontrollers (ESP32): satellites/microcontrollers.md
+
+  - Hub & Server:
+    - server/index.md
+    - Admin Panel: server/admin-panel.md
+    - OVOS Skills Hub: server/ovos-hub.md
+    - Persona Hub (LLM): server/persona-hub.md
+    - A2A Hub (Agents): server/a2a-hub.md
+    - Transports: server/transports.md
+    - Audio Binary Protocol: server/audio-binary-protocol.md
+    - Docker Deployment: server/docker.md
+    - Operations: server/operations.md
+
+  - Integrations:
+    - integrations/index.md
+    - Home Assistant: integrations/home-assistant.md
+    - Media Player: integrations/media-player.md
+    - Matrix: integrations/matrix.md
+    - DeltaChat: integrations/deltachat.md
+    - Mattermost: integrations/mattermost.md
+    - Twitch: integrations/twitch.md
+    - HackChat: integrations/hackchat.md
+
+  - Developer Guide:
+    - developers/index.md
+    - Client Library: developers/client-library.md
+    - Protocol Specification: developers/protocol-spec.md
+    - Writing Plugins: developers/writing-plugins.md
+    - Testing: developers/testing.md
+
+  - Reference:
+    - reference/index.md
+    - CLI Commands: reference/cli.md
+    - Message Types: reference/message-types.md
+    - Configuration: reference/config.md
+    - Glossary: reference/glossary.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/JarbasHiveMind
+      name: HiveMind on GitHub
+    - icon: simple/matrix
+      link: https://matrix.to/#/#jarbashivemind:matrix.org
+      name: HiveMind Matrix chat
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/channel/UCYoV5kxp2zrH6pnoqVZpKSA/
+      name: HiveMind on YouTube
 
 extra_javascript:
   - javascripts/analytics.js

@@ -1,0 +1,172 @@
+# Home Assistant Integration
+
+[hivemind-homeassistant](https://github.com/JarbasHiveMind/hivemind-homeassistant) is a manual-install Home Assistant custom integration that connects Home Assistant to an OVOS instance via HiveMind.
+
+It exposes the OVOS device as a Home Assistant entity with controls for audio playback, volume, microphone state, system power, and status sensors.
+
+## Installation
+
+1. Copy the `hivemind` folder into your Home Assistant `custom_components` directory:
+
+```bash
+mkdir -p /config/custom_components
+cp -r custom_components/hivemind /config/custom_components/
+```
+
+2. Restart Home Assistant.
+
+3. Add the integration via **Settings → Devices & Services → Add Integration → HiveMind**.
+
+## Required permissions
+
+This integration does more than send voice queries — it injects and reads bus messages at a system level. The HiveMind client used by this integration must have **admin privileges** and must be granted explicit access to the following message types.
+
+### ovos-core
+
+```
+mycroft.stop
+mycroft.skills.is_alive
+mycroft.skills.is_ready
+```
+
+### ovos-dinkum-listener
+
+```
+mycroft.voice.is_alive
+mycroft.voice.is_ready
+mycroft.mic.listen
+mycroft.mic.mute
+mycroft.mic.unmute
+mycroft.mic.get_status
+recognizer_loop:sleep
+recognizer_loop:wake_up
+recognizer_loop:awoken
+recognizer_loop:state.get
+recognizer_loop:state.set
+```
+
+### ovos-gui
+
+```
+mycroft.gui_service.is_alive
+mycroft.gui_service.is_ready
+```
+
+### ovos-audio
+
+```
+speak
+mycroft.audio.is_alive
+mycroft.audio.is_ready
+mycroft.audio.is_speaking
+mycroft.audio.speak.status
+```
+
+!!! note "Readiness and speaking probes"
+    The integration polls each service over its device type with
+    `mycroft.<service>.is_alive` / `mycroft.<service>.is_ready` readiness probes — the
+    `<service>` is one of `skills`, `voice`, `gui_service`, `audio`, or `PHAL`,
+    depending on whether the device is registered as a *voice assistant* or a *media
+    player*. The **Speaking** sensor additionally tracks `mycroft.audio.is_speaking`,
+    so make sure that message type is allowed for the audio service.
+
+### OCP (OpenVoiceOS Common Play)
+
+```
+ovos.common_play.player.status
+ovos.common_play.track_info
+ovos.common_play.get_track_length
+ovos.common_play.get_track_position
+ovos.common_play.playlist.queue
+ovos.common_play.resume
+ovos.common_play.pause
+ovos.common_play.stop
+ovos.common_play.previous
+ovos.common_play.next
+ovos.common_play.set_track_position
+ovos.common_play.playlist.clear
+ovos.common_play.shuffle.set
+ovos.common_play.shuffle.unset
+ovos.common_play.repeat.set
+ovos.common_play.repeat.unset
+ovos.common_play.repeat.one
+```
+
+### Audio Service
+
+*(only if enabled manually — for systems without the OCP Audio Plugin)*
+
+```
+mycroft.audio.service.play
+mycroft.audio.service.resume
+mycroft.audio.service.pause
+mycroft.audio.service.stop
+mycroft.audio.service.prev
+mycroft.audio.service.next
+mycroft.audio.service.set_track_position
+```
+
+### PHAL
+
+```
+mycroft.phal.is_alive
+mycroft.phal.is_ready
+```
+
+#### ovos-phal-plugin-alsa
+
+```
+mycroft.volume.get
+mycroft.volume.set
+mycroft.volume.increase
+mycroft.volume.decrease
+mycroft.volume.mute
+mycroft.volume.unmute
+```
+
+#### ovos-phal-plugin-system
+
+```
+system.reboot
+system.shutdown
+system.mycroft.service.restart
+system.ssh.status
+system.ssh.enable
+system.ssh.disable
+```
+
+#### ovos-phal-plugin-camera
+
+*(work in progress)*
+
+```
+ovos.phal.camera.ping
+ovos.phal.camera.get
+ovos.phal.camera.open
+ovos.phal.camera.close
+```
+
+Grant these permissions using `hivemind-core allow-msg`, passing the client node ID positionally:
+
+```bash
+hivemind-core allow-msg "speak" <id>
+hivemind-core allow-msg "mycroft.volume.get" <id>
+# ... repeat for each message type
+hivemind-core make-admin <id>
+```
+
+## Related projects
+
+- [Media Player](media-player.md) — turn any device into a standalone HiveMind OCP player
+- [ovos-skill-music-assistant](https://github.com/HiveMindInsiders/ovos-skill-music-assistant) — OVOS skill for Music Assistant media search
+- [ovos-media-plugin-mass](https://github.com/HiveMindInsiders/ovos-media-plugin-mass) — OVOS plugin to control Music Assistant players
+
+## Source
+
+Validated against the HiveMind source:
+
+- [`custom_components/hivemind/__init__.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/__init__.py) — the `hivemind` domain and bus client setup
+- [`custom_components/hivemind/config_flow.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/config_flow.py) — config-flow fields (host, access_key, password, port, allow_self_signed, device_type)
+- [`custom_components/hivemind/binary_sensor.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/binary_sensor.py) — connection / speaking / alive / ready sensors and their probes
+- [`custom_components/hivemind/switch.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/switch.py) — SSH, volume mute, mic mute, and sleep-mode switches
+- [`custom_components/hivemind/media_player.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/media_player.py) — OCP media-player entity
