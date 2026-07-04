@@ -16,21 +16,26 @@ Every HiveMind message is a `HiveMessage` with:
 
 ## Protocol versions
 
-The hivemind-core `ProtocolVersion` enum (`ZERO`/`ONE`/`TWO`, in `hivemind_core/protocol.py`) is declared with three members, but on the wire it tops out at **ONE** in practice:
+The hivemind-core `ProtocolVersion` enum (`ZERO`/`ONE`/`TWO`/`THREE`, in `hivemind_core/protocol.py`) is negotiated at connect time:
 
-- The server advertises `max_protocol_version = ProtocolVersion.ONE` (hardcoded). `min_protocol_version` is `ONE` when the client has no pre-shared crypto key and the server requires crypto, otherwise `ZERO`.
-- The serialization-layer `PROTOCOL_VERSION` constant in `serialization.py` is also `1`. The binary framing decoder/encoder only accept `proto_version <= 1` and raise `UnsupportedProtocolVersion` otherwise.
+- The server advertises `max_protocol_version` = **`THREE`** when the Noise primitive is available *and* the client has a password configured (`v3_capable`); otherwise `TWO` when `binarize` is enabled, else `ONE`. It advertises `min_protocol_version` = `max(config floor, crypto-derived minimum)`, where the config floor defaults to **`2`** (`min_protocol_version` in `server.json`). A client that cannot reach the advertised minimum is disconnected.
+- The legacy serialization-layer `PROTOCOL_VERSION` constant in `serialization.py` is `1`; that binary-framing version is distinct from this session `ProtocolVersion` and is not bumped for v3.
 
-Because of this, **`ProtocolVersion.TWO` is effectively unreachable**. Binary framing is **not** gated behind a v2 version bump — it is enabled purely by the `binarize` capability boolean negotiated during the handshake (see [Negotiation & defaults](#negotiation-defaults)). A connection can therefore be `ProtocolVersion.ONE` and still exchange binary-framed messages.
+Within the **v1/v2** (legacy handshake) family, binary framing is **not** gated behind a version bump — it is enabled purely by the `binarize` capability boolean negotiated during the handshake (see [Negotiation & defaults](#negotiation-defaults)). **v3** is a different handshake entirely (Noise), and its session is always encrypted and binary-capable.
 
 | Version | Transport encoding | Key exchange | Compression |
 |---|---|---|---|
 | **v0** | JSON | Pre-shared AES key only (legacy, deprecated) | None |
 | **v1** | JSON (and binary framing when `binarize` is negotiated) | Handshake: PBKDF2 password **or** RSA | Optional zlib |
+| **v2** | JSON + binary framing | Handshake: PBKDF2 password **or** RSA | Optional zlib |
+| **v3** | Binary framing, always encrypted | **Noise** (`Noise_XXpsk2_25519_ChaChaPoly_SHA256` default; `AESGCM` suite for Web Crypto peers; `KKpsk0` when the static key is pinned). PSK = `argon2id(password, SHA-256(node_id))` | Optional zlib |
+
+!!! note "v3 Noise wire format"
+    The byte-level Noise handshake sequence (message tokens, prologue binding of the `HELLO`/`HANDSHAKE` payloads, PSK slot, and the provisioned-PSK path for constrained devices) is defined by `hivemind_bus_client/noise.py` and `poorman_handshake/noise/`. The [Security](../concepts/security.md#protocol-v3-the-noise-handshake-current-default) page covers the model; a full independent-implementer byte spec for v3 is tracked as follow-up. The v1/v2 state machine below remains authoritative for the legacy handshake.
 
 ## Handshake state machine
 
-This section is the authoritative connection-setup sequence for an independent client. Field names are taken verbatim from the reference implementation (`hivemind_core/protocol.py` server side; `hivemind_bus_client/protocol.py` `HiveMindSlaveProtocol` client side). Implement it exactly.
+This section is the authoritative connection-setup sequence for the **legacy v1/v2 handshake** (password or RSA). If the server's step-2 `HANDSHAKE` includes a `noise` object and your client supports it, run the Noise (v3) handshake instead (see the [v3 note above](#protocol-versions)); otherwise take this branch. Field names are taken verbatim from the reference implementation (`hivemind_core/protocol.py` server side; `hivemind_bus_client/protocol.py` `HiveMindSlaveProtocol` client side). Implement it exactly.
 
 ### Framing rules that hold for the whole handshake
 
@@ -85,7 +90,8 @@ Server                                  Client
 |---|---|---|
 | `handshake` | bool | `True` ⇒ client MUST complete a handshake or the connection is dropped. (`needs_handshake = not client.crypto_key and self.handshake_enabled`.) |
 | `min_protocol_version` | int | Minimum acceptable `ProtocolVersion` (`1` if crypto required and no preshared key, else `0`). |
-| `max_protocol_version` | int | Maximum acceptable `ProtocolVersion`. **Hardcoded to `1`.** |
+| `max_protocol_version` | int | Maximum acceptable `ProtocolVersion` the server can offer: `THREE` when Noise + password are available, else `TWO` when `binarize` is on, else `ONE`. |
+| `noise` | object | Present only when the server offers **v3**: `{"patterns": [...], "suites": [...]}` in preference order (`XXpsk2`/`KKpsk0`, `25519_ChaChaPoly_SHA256`/`25519_AESGCM_SHA256`). Absent ⇒ take the legacy branch below. |
 | `binarize` | bool | Server supports the binary framing scheme. From `cfg["binarize"]`, default `False`. |
 | `preshared_key` | bool | Server already holds a pre-shared crypto key for this client (legacy V0 path). |
 | `password` | bool | Server has a password configured for this client ⇒ password handshake is available (V1). If `True` and the client also has a password, the client takes the **password branch**. |

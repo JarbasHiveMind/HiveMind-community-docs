@@ -16,8 +16,30 @@ There are two clients, depending on the language you want to work in:
 !!! tip "Which one?"
     Choose **C / ESP-IDF** for the most control, the best performance, and the only
     on-device wakeword path (ESP32-S3 Voice PE). Choose **MicroPython** if you would
-    rather write Python and value quick iteration over raw efficiency — at the cost of
-    a slower first handshake. Both speak the same HiveMind V1 protocol to the same hub.
+    rather write Python and value quick iteration over raw efficiency. Both speak the
+    same HiveMind protocol to the same hub, including **protocol v3 (Noise)** with a
+    [provisioned PSK](#provisioned-psk), falling back to the legacy handshake on older hubs.
+
+---
+
+## Provisioned PSK
+
+On protocol **v3** the session is protected by a **Noise** handshake
+(`Noise_XXpsk2_25519_ChaChaPoly_SHA256`), which mixes in a 32-byte pre-shared key
+derived from your password as `argon2id(password, SHA-256(node_id))`. argon2id is far
+too heavy to run on a microcontroller, so constrained clients never derive it
+on-device — you **pre-compute** it on the hub and flash the result:
+
+```bash
+hivemind-core derive-psk --password "your-password" --node-id "<hub-node-id>"
+```
+
+The printed hex string is the same PSK a full peer would derive, so the device
+interoperates with no server-side distinction — and the device never stores the
+password itself. Provision it as `noise_psk_hex` (ESP32) or the `psk=` argument
+(MicroPython). If the hub does not advertise v3 (or no PSK is set), the client falls
+back to the legacy password handshake automatically. Optionally pin the hub's static
+X25519 key to enable the lighter `Noise_KKpsk0` pattern.
 
 ---
 
@@ -71,15 +93,18 @@ hivemind-core add-client --name esp32 \
   --access-key "your-access-key" --password "your-password"
 ```
 
-!!! warning "No TLS yet"
-    The ESP32 client is HiveMind **Protocol V1**: it connects over **plain WebSocket
-    (`ws://`)** and protects traffic with **application-layer AEAD encryption**
-    (AES-GCM / ChaCha20-Poly1305) rather than TLS. There is no server-certificate
-    verification. Keep these devices on a trusted network.
+!!! warning "No TLS — encryption is in the handshake"
+    The ESP32 client connects over **plain WebSocket (`ws://`)**; confidentiality and
+    authentication come from the HiveMind handshake itself — the **Noise** session on
+    v3 (with a [provisioned PSK](#provisioned-psk)), or application-layer AEAD
+    (AES-GCM / ChaCha20-Poly1305) on the legacy path — **not** from TLS. There is no
+    server-certificate verification. Keep these devices on a trusted network.
 
-??? note "Advanced: first connection is slow"
-    PBKDF2 at 100k iterations is heavy for a microcontroller, so the **first**
-    handshake takes roughly **10–30 s**. Reconnects reuse the derived key and are fast.
+??? note "Advanced: legacy first connection is slow"
+    On the **legacy** (v1/v2) handshake, PBKDF2 at 100k iterations is heavy for a
+    microcontroller, so the **first** handshake takes roughly **10–30 s** (reconnects
+    reuse the derived key). The **v3 Noise** path avoids this entirely by using the
+    pre-computed [provisioned PSK](#provisioned-psk).
 
 ---
 
@@ -92,10 +117,12 @@ development — the runtime is auto-detected at import. It is for makers who wou
 write Python than C.
 
 The device keeps a tiny footprint by running no OVOS on-device: it performs the full
-HiveMind handshake and encrypted messaging, then streams **PCM audio over the V1 binary
+HiveMind handshake and encrypted messaging, then streams **PCM audio over the binary
 channel** (via the `machine.I2S` peripheral in the mic example) to the hub, which does
-the speech work. Encryption is AES-256-GCM or ChaCha20-Poly1305 with a PBKDF2-HMAC-SHA256
-key derivation — byte-for-byte compatible with `hivemind-core`.
+the speech work. On protocol **v3** the session is a **Noise** handshake using a
+[provisioned PSK](#provisioned-psk); on the legacy path, encryption is AES-256-GCM or
+ChaCha20-Poly1305 with PBKDF2-HMAC-SHA256 key derivation — byte-for-byte compatible
+with `hivemind-core`.
 
 ### Install
 
@@ -114,11 +141,12 @@ For desktop testing on CPython, clone the repo and optionally
 `pip install websockets cryptography z85base91` for faster crypto and the extra
 encodings (all optional; the code falls back to pure Python).
 
-!!! warning "First handshake is slow on-device"
-    Pure-Python PBKDF2 at 100k iterations makes the **first** handshake take roughly
-    **10–30 s** on an ESP32. For production, freeze the `_hivemind_crypto` C module into
-    the firmware — the handshake then drops to a couple of seconds. Reconnects after the
-    first handshake are fast.
+!!! warning "Legacy first handshake is slow on-device"
+    On the **legacy** (v1/v2) handshake, pure-Python PBKDF2 at 100k iterations makes the
+    **first** handshake take roughly **10–30 s** on an ESP32. For production, freeze the
+    `_hivemind_crypto` C module into the firmware — the handshake then drops to a couple
+    of seconds. Reconnects reuse the derived key. The **v3 Noise** path sidesteps this by
+    using a [provisioned PSK](#provisioned-psk) instead of on-device key stretching.
 
 ---
 

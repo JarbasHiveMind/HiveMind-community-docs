@@ -40,8 +40,8 @@ These are handled automatically by `HiveMessageBusClient` and `hivemind-core`. Y
 
 | Type | Purpose |
 |---|---|
-| **`HELLO`** | Node announcement on connection (carries node ID and RSA public key) |
-| **`HANDSHAKE`** | Cryptographic key exchange (password mode → PBKDF2 envelope, or RSA mode → RSA-wrapped secret) |
+| **`HELLO`** | Node announcement on connection (carries node ID and public key) |
+| **`HANDSHAKE`** | Cryptographic key exchange. Protocol **v3** runs a **Noise** handshake (always-encrypted session); the legacy **v1/v2** path uses a password (salted-hash + PBKDF2) or RSA envelope. See [Security](security.md#handshake-and-encryption). |
 
 ## Roles
 
@@ -141,16 +141,22 @@ After `Message.reply()` is called by OVOS, `source` and `destination` are swappe
 
 The hivemind-core `ProtocolVersion` enum bumps capabilities one step at a time:
 
-| Feature | ZERO (v0) | ONE (v1) | TWO (v2) |
-|---|:---:|:---:|:---:|
-| JSON serialization | ✅ | ✅ | ✅ |
-| Handshake (password or RSA) | ❌ | ✅ | ✅ |
-| Binary serialization | ❌ | ❌ | ✅ |
+| Feature | ZERO (v0) | ONE (v1) | TWO (v2) | THREE (v3) |
+|---|:---:|:---:|:---:|:---:|
+| JSON serialization | ✅ | ✅ | ✅ | ✅ |
+| Handshake (password / RSA) | ❌ | ✅ | ✅ | — |
+| Binary serialization | ❌ | ❌ | ✅ | ✅ |
+| Noise handshake, always-encrypted | ❌ | ❌ | ❌ | ✅ |
 
-Protocol v0 is JSON only, with no handshake and no binary framing — it uses only a pre-shared encryption key (the legacy, deprecated `Encryption Key` in `add-client` output). Protocol v1 adds the handshake (password/PBKDF2 or RSA), the RSA identity, and zlib compression. Protocol v2 additionally enables binary framing. (This `ProtocolVersion` enum is distinct from the binary-serialization `PROTOCOL_VERSION` constant in `serialization.py`.) New clients should use the highest version both sides support.
+- **v0** — JSON only, no handshake, no binary framing; uses only a pre-shared encryption key (the legacy, deprecated `Encryption Key` in `add-client` output).
+- **v1** — adds the handshake (password salted-hash + PBKDF2, or RSA), the RSA identity, and zlib compression.
+- **v2** — additionally enables binary framing.
+- **v3** — replaces the v1/v2 handshake with a **Noise** handshake (`Noise_XXpsk2_25519_ChaChaPoly_SHA256` by default), giving an always-encrypted, forward-secret session. This is the current default for capable clients. See [Security → Handshake and encryption](security.md#handshake-and-encryption).
+
+The server admits a connection only if it can negotiate at least `min_protocol_version` (config default **2**, so the oldest JSON-only / no-binary v0/v1 clients are refused by default), and advertises the highest version both sides support (`THREE` whenever the Noise primitive is available and a password is configured for the client). This `ProtocolVersion` enum is distinct from the binary-serialization `PROTOCOL_VERSION` constant in `serialization.py`.
 
 !!! note "You don't negotiate v2 to send binary"
-    In practice v2 is effectively unreachable as a *negotiated* version: whether a connection uses binary framing is gated by the `binarize` boolean exchanged in the handshake, **not** by negotiating `ProtocolVersion.TWO`. You enable binary by setting `binarize`, not by bumping the protocol version. See [Protocol Spec](../developers/protocol-spec.md) for the framing details.
+    Whether a v1/v2 connection uses binary framing is gated by the `binarize` boolean exchanged in the handshake, **not** by negotiating `ProtocolVersion.TWO` on its own. Under v3 the session is always encrypted and binary-capable. See [Protocol Spec](../developers/protocol-spec.md) for the framing and Noise details.
 
 ## Source
 

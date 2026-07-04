@@ -3,13 +3,42 @@
 In plain terms: every device that joins a hive proves it knows a shared password, and after that all traffic is scrambled so nobody on the network can read it. The hub also decides, per device, exactly which kinds of messages that device is allowed to send — and nothing is allowed until you say so.
 
 !!! tip "Three layers protect a HiveMind"
-    1. **Handshake + encryption** — a connecting device proves it knows the password and the two sides agree on a session key without ever sending it over the wire.
+    1. **Handshake + encryption** — a connecting device proves it knows the password and the two sides agree on a session key without ever sending it over the wire. On protocol **v3** this is a **Noise** handshake and the whole session is encrypted end to end.
     2. **Permissions** — the hub checks every message against a per-device allowlist; an unknown message type is dropped.
-    3. **Transport (TLS)** — an optional outer layer of standard WebSocket encryption for defence-in-depth.
+    3. **Transport (TLS)** — an *optional* outer layer of standard WebSocket encryption. HiveMind's own handshake already encrypts every payload, so **TLS is not required** — it is defence-in-depth, useful mainly to hide metadata from a network observer.
+
+## Credentials: access key vs. password
+
+Every satellite is issued two things by `add-client`:
+
+- **`access_key`** — a **non-secret identifier**, like a username. It is sent in the clear in the WebSocket `authorization` header so the hub knows *which* client is connecting. Leaking it does not compromise the hive.
+- **`password`** — the **only secret**, and it is **never transmitted**. Both sides derive the session key from it; a connecting peer that does not know the password simply fails the handshake and is disconnected. There is no password-recovery path over the wire — knowledge of the password is proven, never revealed.
+
+Because the password is the sole secret, its strength is the security of the whole hive (see [Weak-password refusal](#weak-password-refusal)).
 
 ## Handshake and encryption
 
-Every HiveMind connection begins with a handshake that establishes a shared session key without transmitting that key over the wire. The standard handshake (protocol v1) uses PBKDF2-SHA256:
+### Protocol v3 — the Noise handshake (current default)
+
+Protocol **v3** replaces the legacy handshake with the **[Noise Protocol Framework](https://noiseprotocol.org/)**. A v3-capable client (Noise primitive available and a password configured) negotiates an always-encrypted, forward-secret session:
+
+- **Default suite:** `Noise_XXpsk2_25519_ChaChaPoly_SHA256` — mutual static-key authentication over X25519, per-handshake ephemeral Diffie-Hellman (forward secrecy), ChaCha20-Poly1305 AEAD, SHA-256. A `Noise_XXpsk2_25519_AESGCM_SHA256` suite is also offered for **Web Crypto / JavaScript** peers that only expose AES-GCM.
+- **PSK derivation:** the shared secret mixed into the handshake is `PSK = argon2id(password, salt = SHA-256(node_id))`. Salting with the server's `node_id` makes the PSK server-specific, so the same password on two servers yields two different PSKs.
+- **Pinned-key case:** once a client's static key has been pinned by a prior `XXpsk2` handshake, both ends may use `Noise_KKpsk0_25519_ChaChaPoly_SHA256` (both static keys known in advance).
+- Only `HELLO` and `HANDSHAKE` frames travel unencrypted (they precede session-key establishment). On a `crypto_required` server, any other cleartext frame is rejected and the client disconnected.
+
+!!! info "Constrained devices use a provisioned PSK"
+    Microcontrollers (ESP32, MicroPython) cannot run argon2id on-device. Instead you **pre-compute** the 32-byte PSK on the server and flash it onto the device:
+
+    ```bash
+    hivemind-core derive-psk --password <site_password> --node-id <server_node_id>
+    ```
+
+    This prints the hex PSK, which equals `argon2id(password, SHA-256(node_id))` — identical to what a capable peer derives at connect time, so a provisioned device and a password-deriving device interoperate with no server-side distinction. The device never sees the password itself.
+
+### Legacy handshake (protocol v1 / v2)
+
+Older clients that cannot negotiate v3 fall back to the password (or RSA) handshake. It also establishes a shared session key without transmitting it. The password handshake uses a salted hash for proof and PBKDF2-SHA256 for the key:
 
 ```
 Server → Client  HELLO        (node_id, server public key — plaintext)
@@ -30,6 +59,19 @@ The handshake works as follows:
 After the handshake all messages are encrypted with the negotiated cipher using the derived session key. The cipher is **negotiated, not fixed**: the client offers an ordered list of ciphers it supports, the server filters that list against its own config `allowed_ciphers` (default `["CHACHA20-POLY1305", "AES-GCM"]`, with ChaCha20-Poly1305 listed first), and the server picks the client's most-preferred surviving choice. Both **ChaCha20-Poly1305** and **AES-GCM** are supported. Each message carries a unique nonce and an authentication tag. (AES-256-GCM is only the dataclass fallback used when a side offers no cipher list at all.)
 
 An alternative v0 path skips the handshake and uses a pre-shared `crypto_key` directly (the legacy `Encryption Key` printed by `add-client`). This path is kept for backward compatibility only.
+
+### Refusing old clients — `min_protocol_version`
+
+The server will only admit a client that can negotiate at least `min_protocol_version` (config key in `~/.config/hivemind-core/server.json`, **default `2`**). At the default, the oldest JSON-only / no-binary **v0 and v1** clients are refused outright; a v2 client still connects with the legacy binary+handshake path, and a v3 client gets the Noise session. Raise the floor to `3` to require Noise from every client. The `ProtocolVersion` enum is `ZERO`/`ONE` (handshake) / `TWO` (binary) / `THREE` (Noise).
+
+### Weak-password refusal
+
+Because the password is the only secret and its verifier is offline-crackable, `poorman_handshake` **refuses guessable passwords** (`WeakPasswordError`). It estimates guess-resistance with [zxcvbn](https://github.com/dropbox/zxcvbn) and rejects anything below `min_password_bits` (default **40 bits** — enough to reject `Password123!`, `correct_password`, or the xkcd `Tr0ub4dour&3`, while real passphrases pass).
+
+The check runs in **two places**:
+
+1. **At `add-client` (ingestion)** — a weak `--password` is rejected before the credential is ever stored. Override for a known high-entropy machine-generated secret with `--allow-weak-password`.
+2. **At handshake time (runtime backstop)** — re-checked when a client connects, in case the credential database was edited by hand. Disable this backstop with config `runtime_password_strength_check: false` or the env var `HIVEMIND_DISABLE_PASSWORD_STRENGTH_CHECK=1`.
 
 ??? note "Advanced: exact handshake parameters"
     - The handshake IV is **64-bit (8 bytes)**, generated with `os.urandom` (`generate_iv`).
@@ -62,8 +104,8 @@ The identity file at `~/.config/hivemind/_identity.json` stores all credentials 
 
 | Field | Description |
 |---|---|
-| `access_key` | Unique access credential assigned by the hub |
-| `password` | Used for PBKDF2 key derivation during handshake |
+| `access_key` | Non-secret client identifier assigned by the hub (sent in the clear, like a username) |
+| `password` | The only secret; used to derive the session key (v3 Noise PSK, or legacy PBKDF2). Never transmitted |
 | `default_master` | Hub host address |
 | `default_port` | Hub port (default 5678 for WebSocket) |
 | `site_id` | Physical location identifier injected into OVOS context |
@@ -199,7 +241,7 @@ When a client is added via `add-client`, its `allowed_types` whitelist is **empt
 
 ## Transport security (TLS)
 
-HiveMind can use TLS for the WebSocket transport. `hivemind-core listen` takes no flags — TLS is configured in `~/.config/hivemind-core/server.json` under `network_protocol.hivemind-websocket-plugin`:
+TLS is **optional**. HiveMind's own handshake already encrypts and authenticates every payload (Noise on v3, negotiated AEAD on v1/v2), so a hive is fully secure over plain WebSocket. Add TLS only as defence-in-depth — chiefly to hide connection metadata from a passive network observer, or to satisfy an external requirement. `hivemind-core listen` takes no flags — TLS is configured in `~/.config/hivemind-core/server.json` under `network_protocol.hivemind-websocket-plugin`:
 
 ```json
 {
@@ -238,9 +280,9 @@ HiveMind can use TLS for the WebSocket transport. `hivemind-core listen` takes n
 
 ## Limitations
 
-- The password handshake provides confidentiality and mutual authentication but security is proportional to password entropy. Weak passwords are the primary attack surface.
-- Without TLS, a network observer can see the encrypted ciphertext but not its content. TLS adds defence-in-depth.
-- INTERCOM RSA authentication requires both nodes to have pre-exchanged public keys through a trusted channel.
+- Security is proportional to password entropy. Weak passwords are the primary attack surface — which is why `poorman_handshake` refuses guessable ones (see [Weak-password refusal](#weak-password-refusal)).
+- Without TLS, a network observer can see the encrypted ciphertext and connection metadata but not payload content. TLS adds metadata-hiding defence-in-depth; it is not required for confidentiality.
+- INTERCOM authentication requires both nodes to have pre-exchanged public keys through a trusted channel.
 
 ---
 
@@ -251,6 +293,9 @@ HiveMind can use TLS for the WebSocket transport. `hivemind-core listen` takes n
 Validated against the HiveMind source:
 
 - [`hivemind_core/policy.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/policy.py) — `MessageTypeACLPolicy` and the fail-closed policy chain; admins are bound by `allowed_types`
-- [`poorman_handshake/symmetric/__init__.py`](https://github.com/JarbasHiveMind/poorman_handshake/blob/HEAD/poorman_handshake/symmetric/__init__.py) — password handshake, salt = IV XOR IV, PBKDF2-HMAC-SHA256 100k iters
+- [`poorman_handshake/noise/__init__.py`](https://github.com/JarbasHiveMind/poorman_handshake/blob/HEAD/poorman_handshake/noise/__init__.py) — v3 Noise suites (`XXpsk2`/`KKpsk0`, ChaChaPoly/AES-GCM), `derive_psk = argon2id(password, SHA-256(node_id))`
+- [`poorman_handshake/symmetric/strength.py`](https://github.com/JarbasHiveMind/poorman_handshake/blob/HEAD/poorman_handshake/symmetric/strength.py) — `WeakPasswordError`, zxcvbn-based 40-bit floor
+- [`hivemind_core/config.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/config.py) — `min_protocol_version` (default 2), `min_password_bits`, `runtime_password_strength_check`
+- [`poorman_handshake/symmetric/__init__.py`](https://github.com/JarbasHiveMind/poorman_handshake/blob/HEAD/poorman_handshake/symmetric/__init__.py) — legacy password handshake, salt = IV XOR IV, PBKDF2-HMAC-SHA256 100k iters
 - [`poorman_handshake/asymmetric/utils.py`](https://github.com/JarbasHiveMind/poorman_handshake/blob/HEAD/poorman_handshake/asymmetric/utils.py) — hybrid RSA + AES-256-GCM INTERCOM encryption
 - [`hivemind_bus_client/identity.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/identity.py) — identity file fields and `trusted_keys`
