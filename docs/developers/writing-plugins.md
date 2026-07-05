@@ -20,10 +20,11 @@ into place. This is the builder's-side companion to the operator view in
 
 ## The plugin-manager model
 
-HPM is built on Python entry points. Each plugin family has a dedicated
-**entry-point group** and a matching **factory** in the `hivemind_plugin_manager`
-package. The groups are the values of the `HiveMindPluginTypes` enum
-(`hivemind_plugin_manager/__init__.py`):
+The whole system rides on one Python mechanism you may already know: entry points. Each
+family gets a dedicated **entry-point group** to register under and a matching **factory**
+that instantiates it. Learn this table and you've learned the shape of every plugin you'll
+ever write — the group name on the left is the string you'll put in your `pyproject.toml`,
+the base class on the right is what you'll subclass:
 
 | Family | Entry-point group | Factory | Base class |
 |---|---|---|---|
@@ -50,8 +51,10 @@ So authoring a plugin is two steps: (1) subclass the right base class and implem
 its contract, (2) register the class under the right entry-point group so
 `find_plugins` can see it. Each section below gives both.
 
-Every protocol base derives from a shared `_SubProtocol` dataclass
-(`hivemind_plugin_manager/protocols.py`) and so receives, for free:
+One convenience before the walkthrough: you're never handed an empty object. Every
+protocol base derives from a shared `_SubProtocol` dataclass
+(`hivemind_plugin_manager/protocols.py`), so whatever family you're writing, these come
+wired up for free:
 
 - `self.config` — the plugin's config dict
 - `self.hm_protocol` — the `HiveMindListenerProtocol` (hivemind-core) once wired up
@@ -60,6 +63,10 @@ Every protocol base derives from a shared `_SubProtocol` dataclass
 - `self.clients` — the connected `HiveMindClientConnection` map, via hivemind-core
 - `self.callbacks` — `ClientCallbacks` (`on_connect` / `on_disconnect` /
   `on_invalid_key` / `on_invalid_protocol`)
+
+Now the five families in turn. Each follows the identical rhythm — a base class, a small
+contract to implement, and an entry point to register — so once you've read one, the other
+four are quick.
 
 ---
 
