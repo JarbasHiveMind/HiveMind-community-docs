@@ -25,8 +25,8 @@
 ??? question "Which AI backend does it use?"
     HiveMind is **backend-agnostic**. By default hivemind-core runs
     [OpenVoiceOS](reference/glossary.md#ovos-voice-vocabulary) skills, but you can instead
-    point it at an LLM/chatbot ([Persona Server](server/persona-hub.md)) or an external agent
-    ([A2A Server](server/a2a-hub.md)). The choice is just *which
+    point it at an LLM/chatbot ([Persona Server](server/persona-server.md)) or an external agent
+    ([A2A Server](server/a2a-server.md)). The choice is just *which
     [agent plugin](concepts/plugins.md)* hivemind-core loads.
 
 ??? question "Do satellites talk directly to each other?"
@@ -100,7 +100,7 @@
 
 ??? question "Can I run OVOS skills?"
     Yes — the OVOS skills backend runs the full skill stack; existing OVOS skills work as-is.
-    See [OVOS Skills Server](server/ovos-hub.md).
+    See [OVOS Skills Server](server/ovos-server.md).
 
 ??? question "How do I connect a chat platform or smart home?"
     Use a [bridge](integrations/index.md): [Home Assistant](integrations/home-assistant.md),

@@ -126,14 +126,14 @@ hivemind-core list-clients
 hivemind-core delete-client 2
 ```
 
-See [OVOS Skills Server](ovos-hub.md#managing-clients) for the full client workflow.
+See [OVOS Skills Server](ovos-server.md#managing-clients) for the full client workflow.
 
 ---
 
 ## Next
 
 - [Operations](operations.md) — TLS, reverse proxy, systemd, observability, and scaling.
-- [Persona Server](persona-hub.md) — answer queries from a local LLM / solver chain instead
+- [Persona Server](persona-server.md) — answer queries from a local LLM / solver chain instead
   of an external A2A server.
 - [Database Backends](../concepts/databases.md) — where client and permission state lives.
 

@@ -110,7 +110,7 @@ hivemind-core list-clients
 hivemind-core delete-client 2
 ```
 
-See [OVOS Skills Server](ovos-hub.md#managing-clients) for the full client workflow.
+See [OVOS Skills Server](ovos-server.md#managing-clients) for the full client workflow.
 
 ---
 

@@ -48,7 +48,7 @@ Choose the path that fits you:
     | Run everything from a friendly web UI | [Admin Panel](server/admin-panel.md) |
     | Pick the right satellite for my hardware | [Choosing a Satellite](satellites/index.md) |
     | Run HiveMind in Docker | [Docker Deployment](server/docker.md) |
-    | Just chat with an LLM (no skills) | [Persona Server](server/persona-hub.md) |
+    | Just chat with an LLM (no skills) | [Persona Server](server/persona-server.md) |
     | Integrate with Home Assistant | [Home Assistant](integrations/home-assistant.md) |
     | Get unstuck | [FAQ](faq.md) · [Glossary](reference/glossary.md) |
 

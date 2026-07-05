@@ -18,7 +18,7 @@ The **HiveMind Admin Panel** is a web browser dashboard for running and administ
 ## What it is
 
 `hivemind-admin-panel` is a standalone, optional package (a FastAPI backend plus a
-single-page web UI) that administers [`hivemind-core`](ovos-hub.md). From the browser you
+single-page web UI) that administers [`hivemind-core`](ovos-server.md). From the browser you
 can:
 
 - **Clients & access keys** — create, list, update, and revoke satellite credentials,
@@ -123,7 +123,7 @@ has TLS — and stays red until the critical items clear.
 ## See also
 
 - [Quick Start](../quickstart.md) — the CLI flow; the panel is the easier alternative to it.
-- [OVOS Skills Server](ovos-hub.md) — what the in-process `hivemind-core` actually runs.
+- [OVOS Skills Server](ovos-server.md) — what the in-process `hivemind-core` actually runs.
 - [Security](../concepts/security.md) — access keys, certificates, and permissions.
 
 ---

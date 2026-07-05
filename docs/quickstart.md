@@ -29,7 +29,7 @@ ovos-core
 
 See the [OVOS documentation](https://openvoiceos.github.io/community-docs) for a full OVOS setup.
 
-> **Want the simplest possible first run with no OVOS?** Use the [persona backend](server/persona-hub.md) instead — it serves an LLM/chatbot via `hivemind-persona-agent-plugin` + `ovos-persona` and needs neither `ovos-core` nor `ovos-messagebus`. The HiveMind steps below are otherwise identical.
+> **Want the simplest possible first run with no OVOS?** Use the [persona backend](server/persona-server.md) instead — it serves an LLM/chatbot via `hivemind-persona-agent-plugin` + `ovos-persona` and needs neither `ovos-core` nor `ovos-messagebus`. The HiveMind steps below are otherwise identical.
 
 ---
 

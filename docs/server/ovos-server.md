@@ -185,7 +185,7 @@ sudo systemctl start hivemind-core
 
 ## Other agent flavors
 
-Beyond the OVOS, [persona](persona-hub.md), and [A2A](a2a-hub.md) agent plugins, two
+Beyond the OVOS, [persona](persona-server.md), and [A2A](a2a-server.md) agent plugins, two
 more agent-plugin flavors exist for advanced or experimental setups. Both are
 **alpha / unpublished — install from the repo and read its README**.
 

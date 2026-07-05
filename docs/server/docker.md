@@ -27,7 +27,7 @@ its hivemind image locally.
 ## How config works in the container
 
 `hivemind-core` reads **no environment variables**. All configuration is the
-`server.json` file described in [OVOS Skills Server](ovos-hub.md#configuration). In a
+`server.json` file described in [OVOS Skills Server](ovos-server.md#configuration). In a
 container you supply it by mounting a host folder onto the config directory of the
 non-root `hivemind` user:
 
@@ -153,7 +153,7 @@ need it for a multi-instance / shared-store deployment.
 
 ## Persona service
 
-The same stack can run a [persona server](persona-hub.md) container (`hivemind_persona`,
+The same stack can run a [persona server](persona-server.md) container (`hivemind_persona`,
 built from `Dockerfile.persona`, which is `FROM smartgic/hivemind-base`) that exposes
 HiveMind to OpenAI/Ollama-compatible apps. Its `VOICE_SAT_*` env vars are *client
 credentials* it uses to connect back to `hivemind_core`; they must first be provisioned

@@ -14,7 +14,7 @@
 | Term | Definition |
 |---|---|
 | <span id="node"></span>**Node** | Any device or process that participates in a HiveMind network. |
-| **hivemind-core** | A node that accepts connections, authenticates clients, isolates sessions, and authorizes individual messages. Runs the AI workload (skills, LLM, or audio processing) on behalf of its satellites. See [OVOS Skills backend](../server/ovos-hub.md) and [Persona backend](../server/persona-hub.md). |
+| **hivemind-core** | A node that accepts connections, authenticates clients, isolates sessions, and authorizes individual messages. Runs the AI workload (skills, LLM, or audio processing) on behalf of its satellites. See [OVOS Skills backend](../server/ovos-server.md) and [Persona backend](../server/persona-server.md). |
 | **Satellite** | A user-facing node that connects to hivemind-core but does not accept connections of its own. Ranges from text-only ([CLI](../satellites/cli.md)) to a full local voice stack ([voice satellite](../satellites/voice-sat.md)). See [Choosing a Satellite](../satellites/index.md). |
 | **Mind** | Protocol term for a node that listens for connections and understands natural-language commands — i.e. hivemind-core. A Mind authenticates other nodes, isolates their connections, and authorizes each message. |
 | **Master** | The node at the top of a hive that receives connections but does not itself connect upward as a client. |
@@ -98,7 +98,7 @@ Terms a HiveMind user runs into that come from the OVOS voice stack hivemind-cor
 | **STT (Speech-to-Text)** | Transcribes audio into text. |
 | **TTS (Text-to-Speech)** | Synthesizes spoken audio from text. |
 | **Solver** | An `ovos-persona` plugin that answers a query (e.g. an LLM backend); personas chain solvers together. |
-| **Persona** | An `ovos-persona` config — a named chain of solvers — that a [Persona backend](../server/persona-hub.md) serves instead of full skills. |
+| **Persona** | An `ovos-persona` config — a named chain of solvers — that a [Persona backend](../server/persona-server.md) serves instead of full skills. |
 | <span id="ocp-ovos-common-play"></span>**OCP (OVOS Common Play)** | The OVOS media/audio playback framework. |
 | **PHAL** | OVOS's Platform Hardware Abstraction Layer — plugins for volume, system control, and similar; relevant to the Home Assistant integration's permission list. |
 

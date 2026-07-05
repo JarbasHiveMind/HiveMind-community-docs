@@ -145,7 +145,7 @@ You also choose your own STT and TTS plugins, independent of any hivemind-core c
 
 ## Next
 
-Give hivemind-core something to answer with: set up an [OVOS Skills backend](../server/ovos-hub.md).
+Give hivemind-core something to answer with: set up an [OVOS Skills backend](../server/ovos-server.md).
 
 ---
 

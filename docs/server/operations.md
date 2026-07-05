@@ -61,7 +61,7 @@ The Docker deployment guide covers a concrete proxy setup; see
 ## systemd
 
 Run `hivemind-core` as a managed service. Reuse the unit from the
-[OVOS Skills Server](ovos-hub.md#systemd-service) guide:
+[OVOS Skills Server](ovos-server.md#systemd-service) guide:
 
 ```ini
 # /etc/systemd/system/hivemind-core.service
@@ -89,7 +89,7 @@ sudo systemctl start hivemind-core
 
 The `After=`/`Requires=ovos-messagebus.service` lines matter for an **OVOS skills server**:
 its agent protocol talks to `ovos-messagebus`, which must be up first. An
-[A2A server](a2a-hub.md) or [persona server](persona-hub.md) does not require `ovos-messagebus`
+[A2A server](a2a-server.md) or [persona server](persona-server.md) does not require `ovos-messagebus`
 — drop those two lines if you are not running OVOS.
 
 ---

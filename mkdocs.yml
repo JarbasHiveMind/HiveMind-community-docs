@@ -105,9 +105,9 @@ nav:
   - Self-Hosting:
     - server/index.md
     - Admin Panel: server/admin-panel.md
-    - OVOS Skills Server: server/ovos-hub.md
-    - Persona Server (LLM): server/persona-hub.md
-    - A2A Server (Agents): server/a2a-hub.md
+    - OVOS Skills Server: server/ovos-server.md
+    - Persona Server (LLM): server/persona-server.md
+    - A2A Server (Agents): server/a2a-server.md
     - Transports: server/transports.md
     - Audio Binary Protocol: server/audio-binary-protocol.md
     - Docker Deployment: server/docker.md
