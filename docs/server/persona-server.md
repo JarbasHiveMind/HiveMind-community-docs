@@ -39,8 +39,9 @@ This provides the `ovos-solver-openai-plugin` solver.
 
 ## Configure the persona
 
-An `ovos-persona` persona is a JSON document listing the solver(s) and their config.
-Save it somewhere (for example `~/.config/ovos_persona/persona.json`):
+A persona is just a small JSON file — a name and a list of "solvers," where a solver is
+whatever actually produces the answer (usually an LLM). Here's the whole thing for an
+OpenAI-compatible backend; save it somewhere like `~/.config/ovos_persona/persona.json`:
 
 ```json
 {
@@ -129,6 +130,10 @@ Any `ovos-solver-*` plugin can back the persona. Common ones:
 ---
 
 ## Example personas
+
+The persona file is where you decide *who* your assistant talks to. Swapping from a cloud
+model to one running on your own machine is a one-line change — the `api_url`. Two ends of
+that spectrum:
 
 **Local LLM via LocalAI / Ollama** (same OpenAI solver, pointed at a local `api_url`):
 

@@ -59,7 +59,8 @@ plugin and give it the URL of your A2A server:
 }
 ```
 
-Only `agent_url` is required. The configuration keys are:
+In practice you set one key and ignore the rest: point `agent_url` at your agent and
+you're done. The others are there for when you need auth, a longer timeout, or streaming:
 
 | Key           | Default | Description                                              |
 |---------------|---------|----------------------------------------------------------|

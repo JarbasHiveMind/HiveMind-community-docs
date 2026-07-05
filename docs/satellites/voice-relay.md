@@ -112,6 +112,10 @@ voice-relay reads `~/.config/mycroft/mycroft.conf`.
 
 ## How audio flows
 
+The same end-to-end trace as the mic satellite, with one decisive difference: the wake
+word sits on the device, so nothing leaves the room until it fires. Everything to the left
+of that arrow is silent and local:
+
 ```
 [Microphone] → [VAD] → [Wakeword detector]
                               ↓ (after activation)
