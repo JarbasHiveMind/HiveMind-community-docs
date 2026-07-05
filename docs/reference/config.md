@@ -1,6 +1,9 @@
 # Configuration Reference
 
-**The complete `server.json` schema with every default value**, plus the satellite identity file and the default ports.
+One file decides how your server behaves: `~/.config/hivemind-core/server.json`. There
+are no start-up flags to hunt for — every port, every cipher, every plugin choice lives
+here. This page lays out that file in full, block by block, with every default spelled
+out, plus the satellite identity file and the ports everything listens on.
 
 !!! abstract "In a nutshell"
     - `hivemind-core` reads `~/.config/hivemind-core/server.json` at startup; `hivemind-core listen` takes no flags, so all settings live in this file.
