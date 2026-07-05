@@ -1,6 +1,12 @@
 # Protocol Specification
 
-**The HiveMind protocol is the byte-level wire format for `HiveMessage` traffic** — the message envelope, the negotiated handshake, encryption, and the optional binary framing enabled by the `binarize` capability.
+This is the page you reach for when you're writing a HiveMind client from scratch — in
+Rust, in Go, on a microcontroller, in whatever the Python and JavaScript libraries don't
+already cover — and you need to get every byte exactly right. It is the ground truth: the
+shape of the envelope, the step-by-step handshake, how the session key is derived, and
+the compact binary framing that kicks in when both sides agree to it. Nothing is
+hand-waved. Follow it literally and an independent client will reach a fully encrypted,
+session-established connection that hivemind-core accepts.
 
 !!! abstract "In a nutshell"
     - Every message is a `HiveMessage` (`msg_type`, `payload`, `context`); `BUS` messages carry OVOS `Message` objects.

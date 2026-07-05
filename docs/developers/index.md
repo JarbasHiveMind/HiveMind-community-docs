@@ -1,8 +1,11 @@
 # Developer Guide
 
-**The Developer Guide is for writing code against HiveMind** — building a custom
-satellite, embedding a client in an app, implementing a new transport or backend, or
-testing a protocol implementation.
+Off-the-shelf satellites cover a lot of ground — but sooner or later you'll want to
+build something that isn't in the box. A satellite of your own. A client tucked inside an
+app you're writing. A brand-new transport, a different brain, a policy that enforces your
+own rules. Maybe a clean-room implementation of the protocol in another language
+entirely. This is the section for that: writing code *against* HiveMind rather than just
+running it.
 
 !!! tip "Not a developer? You can skip this whole section."
     Running hivemind-core and connecting off-the-shelf satellites needs no code — see

@@ -1,6 +1,12 @@
 # Writing Plugins
 
-**HiveMind Core is assembled entirely from plugins discovered at runtime by the HiveMind Plugin Manager (HPM)** — no transport, AI backend, or database is hard-coded, so each is added by authoring a plugin. This is the developer-facing companion to the operator view in [Plugin Architecture](../concepts/plugins.md).
+Every part of hivemind-core that you might want to change is a plugin, and writing one is
+smaller than you'd expect. Want a new way for bytes to arrive, a new brain to answer
+questions, a new place to keep the guest list, a new rule about who may do what? You
+don't fork the server — you subclass one base class, implement a handful of methods, and
+register it under an entry point. The plugin manager finds it at startup and snaps it
+into place. This is the builder's-side companion to the operator view in
+[Plugin Architecture](../concepts/plugins.md).
 
 !!! abstract "In a nutshell"
     - Five plugin families cover the extension points: network protocol, agent protocol, binary data handler, database, and policy.
