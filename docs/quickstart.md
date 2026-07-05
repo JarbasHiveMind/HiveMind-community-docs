@@ -175,6 +175,11 @@ With hivemind-core running (Steps 0–2) and the satellite running (Step 6), spe
 
 ## Managing clients
 
+That first satellite won't be your last. Everything you do to manage the ones that follow
+happens with the same `hivemind-core` command you've already been using — listing who's
+registered, removing a device, or loosening what a client may do. A taste of the common
+ones:
+
 ```bash
 # List all registered clients
 hivemind-core list-clients

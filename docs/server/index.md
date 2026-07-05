@@ -36,14 +36,19 @@ is for whoever **runs** it.
 
 ## How a request flows through hivemind-core
 
+Whichever flavour you pick, every question a satellite asks takes the same short journey
+through the server. Follow one utterance left to right:
+
 ```
 satellite ──▶ transport plugin ──▶ permission check ──▶ agent plugin ──▶ AI backend
  (mic, CLI)    (WebSocket/HTTP…)     (allowed? )         (OVOS/LLM/A2A)   (skills/LLM)
 ```
 
-The **transport** decides *how* bytes arrive, the **permission check** decides *whether*
-the message is allowed, and the **agent plugin** decides *who answers*. Each of those
-three is swappable — see [Plugin Architecture](../concepts/plugins.md).
+Three checkpoints, three questions: the **transport** decides *how* the bytes arrive, the
+**permission check** decides *whether* the message is allowed through, and the **agent
+plugin** decides *who answers* it. What makes hivemind-core hivemind-core is that all
+three are swappable parts, not fixed wiring — which is the whole story of
+[Plugin Architecture](../concepts/plugins.md).
 
 ---
 

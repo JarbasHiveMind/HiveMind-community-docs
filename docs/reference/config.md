@@ -17,6 +17,11 @@ out, plus the satellite identity file and the ports everything listens on.
 
 `hivemind-core` reads `~/.config/hivemind-core/server.json` at startup. `hivemind-core listen` takes no command-line flags; edit this file to change any setting.
 
+Rather than describe the blocks in the abstract, here's the entire default file first —
+what you'd get on a fresh install. Read it once top to bottom to see the shape, then the
+sections after it unpack each block key by key. Everything you can tune lives somewhere in
+here:
+
 ### Full default configuration
 
 ```json
