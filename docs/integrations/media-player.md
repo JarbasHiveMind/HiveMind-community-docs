@@ -1,10 +1,12 @@
 # Media Player
 
-**[hivemind-media-player](https://github.com/JarbasHiveMind/hivemind-media-player) turns
-a headless device into a network-controlled media player driven over HiveMind.**
-Remote controllers send standard [OCP](../reference/glossary.md#ocp-ovos-common-play)
-playback commands across the encrypted HiveMind connection, and this device plays the
-audio locally.
+Turn a spare Raspberry Pi or an old speaker into a networked player you drive from your
+hive. [hivemind-media-player](https://github.com/JarbasHiveMind/hivemind-media-player)
+makes a headless device do one thing well: play audio on command. Tell it — from
+anywhere in your hive — to play a track, pause, skip, or turn up, and it does the actual
+playing while you do the controlling. The commands are standard
+[OCP](../reference/glossary.md#ocp-ovos-common-play) playback messages travelling across
+the encrypted HiveMind connection; the device just listens and plays.
 
 !!! abstract "In a nutshell"
     - The `hivemind-player-protocol` package registers a `hivemind.agent.protocol` entry point exposing `HiveMindPlayerProtocol` — an agent plugin, not an OVOS skill.

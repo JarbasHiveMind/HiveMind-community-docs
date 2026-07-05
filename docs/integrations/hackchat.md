@@ -1,10 +1,12 @@
 # HackChat
 
-**[HiveMind-HackChatBridge](https://github.com/JarbasHiveMind/HiveMind-HackChatBridge)
-relays a [hack.chat](https://hack.chat/) channel to and from a HiveMind.** Whatever
-is said in the channel is forwarded to `hivemind-core` as an
-[utterance](../reference/glossary.md#utterance), and the spoken reply is posted
-back into the same channel.
+This is the fastest bridge to try, because there's nothing to sign up for. [hack.chat](https://hack.chat/)
+is a bare-bones anonymous chat where you join a channel just by naming it — no account,
+no token, no API key. Point the bridge at a channel and a nickname, and it relays
+whatever's said there to your hive, posting the answer right back into the room. If you
+just want to *see a bridge work* in under a minute, start here: the only credentials it
+needs are your HiveMind identity. It relays [utterances](../reference/glossary.md#utterance)
+to hivemind-core like every other bridge.
 
 !!! abstract "In a nutshell"
     - Runs as the `hivemind-hackchat-bridge` console command; pick any channel name and a bot nickname.

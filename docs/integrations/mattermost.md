@@ -1,9 +1,11 @@
 # Mattermost Bridge
 
-**[HiveMind-mattermost-bridge](https://github.com/JarbasHiveMind/HiveMind_mattermost_bridge)
-connects a [Mattermost](https://mattermost.com/) team server to a HiveMind.** People
-talk to the assistant through direct messages or by mentioning the bot in a channel;
-the reply from `hivemind-core` is posted back into the same conversation.
+Put the assistant where your team already works. The Mattermost bridge joins your
+[Mattermost](https://mattermost.com/) server as a bot user: message it directly, or
+@-mention it in a channel, and the answer from your hive comes back in the same thread.
+It's the same idea as a Slack bot, but pointed at your own private assistant instead of
+someone's cloud. Like every bridge, it's a HiveMind satellite forwarding what it hears to
+hivemind-core.
 
 !!! abstract "In a nutshell"
     - Runs as the `hivemind-mattermost-bridge` console command, logging into Mattermost as a bot user account (email/login and password).

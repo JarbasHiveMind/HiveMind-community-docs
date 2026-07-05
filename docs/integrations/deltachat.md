@@ -1,10 +1,12 @@
 # DeltaChat Bridge
 
-**[HiveMind-deltachat-bridge](https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge)
-connects a [DeltaChat](https://delta.chat/) account to a HiveMind.** Anyone who
-emails the bot account gets their message forwarded to `hivemind-core` as an
-[utterance](../reference/glossary.md#utterance); the spoken reply comes back as
-a chat message in the same conversation.
+Here's a quietly clever one: talk to your assistant over plain email. [DeltaChat](https://delta.chat/)
+is an encrypted messenger that rides on ordinary email accounts, and this bridge gives it
+a bot on the other end. Email the bot, and your message goes to the hive; the reply
+arrives as a chat message in the same conversation. No chat server to run, no app to
+mandate — if you can send an email, you can reach your hive. It's a HiveMind satellite
+that happens to speak email, relaying [utterances](../reference/glossary.md#utterance) to
+hivemind-core.
 
 !!! abstract "In a nutshell"
     - Runs as the `hm-deltachat-bridge` console command, relaying between an email account and `hivemind-core`.

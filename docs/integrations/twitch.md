@@ -1,10 +1,11 @@
 # Twitch Bridge
 
-**[HiveMind-twitch-bridge](https://github.com/JarbasHiveMind/HiveMind-twitch-bridge)
-relays a [Twitch](https://www.twitch.tv/) channel's live chat to and from a
-HiveMind.** A viewer who mentions the bot in chat gets their message forwarded to `hivemind-core` as
-an [utterance](../reference/glossary.md#utterance); the reply is posted back
-into the stream chat.
+Give your stream a co-host that answers viewers. The Twitch bridge sits in your
+[Twitch](https://www.twitch.tv/) chat as a bot: when a viewer tags it, their message goes
+to your hive and the answer is posted straight back into chat, addressed to them by name.
+It only speaks when spoken to — a trigger tag keeps it quiet the rest of the time — so it
+rides along with your stream without talking over it. Under the hood it's a HiveMind
+satellite relaying [utterances](../reference/glossary.md#utterance) to hivemind-core.
 
 !!! abstract "In a nutshell"
     - Runs as the `hivemind-twitch-bridge` console command, joining chat over IRC with a channel name and a Twitch chat OAuth token.
