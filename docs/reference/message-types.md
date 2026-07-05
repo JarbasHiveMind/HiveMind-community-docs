@@ -18,6 +18,11 @@ All message types are defined in `HiveMessageType` in `hivemind_bus_client.messa
 
 ## Quick reference
 
+If you only need to jog your memory, this table is the whole page — every type, its
+category, which way it flows, and what it's for, on one screen. Skim the Category column
+first: it groups the thirteen types into the four jobs they do, and the per-type sections
+below expand whichever one you landed on.
+
 | Type | Category | Direction | Purpose |
 |---|---|---|---|
 | `BUS` | Payload | Bidirectional | Single-hop message to/from AI back-end |
@@ -34,6 +39,10 @@ All message types are defined in `HiveMessageType` in `hivemind_bus_client.messa
 | `RENDEZVOUS` | Transport | Bidirectional | Reserved for rendezvous-nodes |
 | `HELLO` | Connection | Bidirectional | Node announcement on connect |
 | `HANDSHAKE` | Connection | Bidirectional | Cryptographic key exchange |
+
+The sections that follow take the types one at a time, roughly in order of how often
+you'll touch them — the everyday `BUS` first, the mesh-routing verbs next, and the
+connection frames you never send by hand last.
 
 ---
 
