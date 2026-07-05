@@ -1,6 +1,13 @@
 # Home Assistant Integration
 
-**[hivemind-homeassistant](https://github.com/JarbasHiveMind/hivemind-homeassistant) is a manual-install Home Assistant custom integration** that connects Home Assistant to an OVOS instance via HiveMind. It exposes the OVOS device as a Home Assistant entity with controls for audio playback, volume, microphone state, system power, and status sensors.
+Home Assistant runs your house; your hive runs your voice. This integration introduces
+them. Once it's installed, your OVOS device shows up in Home Assistant as a first-class
+entity — play and pause its audio, nudge the volume, mute the mic, read its status, even
+power-cycle it — right alongside your lights and thermostats. From HA's side it's just
+another device on the dashboard; underneath, every button press rides the encrypted
+HiveMind connection to the OVOS instance and back. It's a manual-install custom
+integration ([hivemind-homeassistant](https://github.com/JarbasHiveMind/hivemind-homeassistant)),
+added like any other from **Settings → Devices & Services**.
 
 !!! abstract "In a nutshell"
     - A `custom_components/hivemind` integration installed by hand, then added via **Settings → Devices & Services**.

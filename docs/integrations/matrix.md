@@ -1,6 +1,11 @@
 # Matrix Bridge
 
-**[HiveMind-matrix-bridge](https://github.com/JarbasHiveMind/HiveMind-matrix-bridge) connects a [Matrix](https://matrix.org/) chat room to a HiveMind.** Messages posted in the room are forwarded to `hivemind-core` as utterances; responses come back as messages in the room.
+Drop your assistant into a group chat and let anyone in the room talk to it. The Matrix
+bridge logs into a [Matrix](https://matrix.org/) room as a bot, listens to what's said,
+and relays it to your hive — the reply lands back in the room as an ordinary message. To
+everyone chatting, it's just another member who happens to know the weather and can set
+timers. Behind the scenes it's a HiveMind satellite like any other, holding an access
+key and forwarding utterances to hivemind-core.
 
 !!! abstract "In a nutshell"
     - Logs into Matrix as a bot with an access token and relays room messages to `hivemind-core`.
