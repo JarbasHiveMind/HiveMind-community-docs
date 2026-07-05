@@ -15,7 +15,11 @@ whoever needs to hear. The pieces are the same as before; you've just stacked th
 
 ## hivemind-core and satellites
 
-Every HiveMind deployment has at least one **hivemind-core instance** (also called a master) and one or more **satellites** (also called clients or slaves). hivemind-core runs the AI back-end — either an OVOS skills server or a persona/LLM server — and accepts incoming connections from satellites. A satellite connects to hivemind-core, sends utterances or messages, and receives responses.
+Start with the simplest shape, the one nearly everyone runs. At the centre is a single
+**hivemind-core instance** (the protocol also calls it a *master*); around it sit one or
+more **satellites** (also called *clients* or *slaves*). hivemind-core holds the brain —
+an OVOS skills server or a persona/LLM — and waits for connections. A satellite dials in,
+sends what it heard, and gets an answer back. That's the whole loop:
 
 ```
 [Satellite A] ──┐
@@ -23,19 +27,30 @@ Every HiveMind deployment has at least one **hivemind-core instance** (also call
 [Satellite C] ───┘
 ```
 
-The protocol itself is transport-agnostic: WebSocket is the default, but HTTP, MQTT, and other transports are supported via network protocol plugins.
+Notice what the diagram *doesn't* pin down: the arrows aren't any particular wire. The
+protocol is transport-agnostic — WebSocket is the default, but HTTP, MQTT, and others plug
+in underneath without changing the picture.
 
 ---
 
 ## site_id
 
-Every satellite carries a `site_id` — a free-form string identifying its physical location (e.g. `"living-room"`, `"kitchen"`). hivemind-core injects `site_id` into OVOS message context, allowing skills to return location-aware responses. It also lets you target `BROADCAST` messages at a specific room.
+One small tag makes a satellite location-aware. Every satellite carries a `site_id` — a
+free-form label for where it physically is, like `"living-room"` or `"kitchen"`.
+hivemind-core slips that tag into the OVOS message context, so a skill can answer
+differently depending on the room, and so you can aim a `BROADCAST` at one place instead
+of the whole house. Hold onto `site_id` — it's what makes "announce dinner *in the
+kitchen*" possible a few sections from now.
 
 ---
 
 ## Nested hives
 
-hivemind-core instances can connect to other instances. A child instance acts as a client to its parent (sending `ESCALATE` up the chain) while acting as a server to its own satellites (sending `BROADCAST` down the chain). This creates a hierarchy:
+Here's where the single-server picture opens up. A hivemind-core instance doesn't only
+accept satellites — it can also become a satellite of *another* hivemind-core. When it
+does, it wears two hats at once: a client to its parent (sending `ESCALATE` up) and a
+server to its own satellites (sending `BROADCAST` down). Stack a few of those and you get
+a tree:
 
 ```
 [Root hivemind-core]
@@ -43,6 +58,10 @@ hivemind-core instances can connect to other instances. A child instance acts as
     │               └──→ [Satellite A2]
     └──→ [Child B]  ──→ [Satellite B1]
 ```
+
+Once there's a tree, a message needs to know which way to travel through it — and that's
+exactly what the routing verbs from the [Protocol](protocol.md) page are for. Each one is
+a direction of travel. Watch them move:
 
 ### ESCALATE — upward routing
 
@@ -76,9 +95,13 @@ hivemind-core instances can connect to other instances. A child instance acts as
 
 ## Relay nodes
 
-A **relay node** is a hivemind-core instance that is simultaneously connected upstream to a parent master. It serves its own downstream satellites while forwarding traffic in both directions.
+A child in the tree usually answers for itself. But sometimes you want a middle node that
+*doesn't* — one that just passes traffic through in both directions, like a repeater
+extending the hive one hop further. That's a **relay node**: a hivemind-core instance
+wired to a parent upstream and satellites downstream, forwarding between them.
 
-A relay is created by calling `HiveMindListenerProtocol.bind_upstream(slave_protocol)` after the slave is bound to a bus. Once bound:
+You create one by calling `HiveMindListenerProtocol.bind_upstream(slave_protocol)` after
+the slave is bound to a bus. From then on it fans traffic both ways:
 
 - `BROADCAST` and `PROPAGATE` from the upstream master are fanned out to all downstream clients.
 - `QUERY` and `CASCADE` from the upstream master are also fanned out downstream.
@@ -100,7 +123,11 @@ A CASCADE sent by Satellite A is forwarded to both Satellite B and up to the roo
 
 ## Permissions across nested hives
 
-Each hop enforces its own permission chain. A child instance can grant clients no more access than the root has granted the child instance. This creates a natural permission boundary: a guest instance never inherits root capabilities simply by connecting.
+Stacking servers raises a fair worry: if a guest connects to a child hive, could it reach
+past that child and command the root? No — and the reason is worth internalising. Each hop
+enforces its *own* permission chain. A child can hand its clients no more than the root
+handed the child. So capability shrinks as you go down, never grows: a guest instance
+inherits nothing just by plugging in.
 
 ??? note "Advanced: why the boundary actually holds"
     The boundary is not just a convention — it is enforced at **every hop**. A message arriving at a hivemind-core instance is checked against *that instance's* `allowed_types` ACL by `MessageTypeACLPolicy` (`HiveMind-core/hivemind_core/policy.py`) before it is forwarded onward. So when a child instance forwards a satellite's message upstream, it is itself a client of the root and is re-checked against the permissions the root granted *it*. A capability the root never granted the child instance can never be smuggled through by a downstream device.
@@ -110,6 +137,9 @@ Each hop enforces its own permission chain. A child instance can grant clients n
 ---
 
 ## Use cases
+
+That's a lot of machinery; here's what it's *for*. Three shapes people actually build,
+each leaning on a different piece of what you just read.
 
 **Multi-room home**: One root hivemind-core runs OVOS. Each room has a child instance that controls local devices. Satellites in each room connect to the child instance. Skills running on the root can BROADCAST to specific rooms.
 
@@ -128,7 +158,11 @@ Each hop enforces its own permission chain. A child instance can grant clients n
 
 ## Local hives (no network)
 
-A "local hive" is a hivemind-core instance and satellite running on the same machine. This is useful when you want separate processes communicating via the HiveMind protocol without a real network hop — for example, a skill running as a satellite that delegates some intents to another OVOS instance on the same host.
+One last shape, and it barely looks like a network at all. A "local hive" is a
+hivemind-core instance and a satellite running on the *same machine* — no real hop between
+them. Why bother? Because it lets two processes on one host talk over the HiveMind
+protocol as if they were across the room: a skill can run as a satellite and hand certain
+intents off to a second OVOS instance next door, all without a wire.
 
 ---
 

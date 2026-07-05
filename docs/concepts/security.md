@@ -22,9 +22,15 @@ everything — are the whole security model.
 
 ---
 
+Those three layers are the map. The rest of this page walks them in order — starting with
+the credentials a device carries, then the handshake that proves them, then the
+permissions that fence in what it can do once it's in.
+
 ## Credentials: access key vs. password
 
-Every satellite is issued two things by `add-client`:
+When you run `add-client`, the device walks away with two things — and the difference
+between them is the whole game. One is a name it can shout across the room; the other is a
+secret it must never say out loud:
 
 - **`access_key`** — a **non-secret identifier**, like a username. It is sent in the clear in the WebSocket `authorization` header so hivemind-core knows *which* client is connecting. Leaking it does not compromise the hive.
 - **`password`** — the **only secret**, and it is **never transmitted**. Both sides derive the session key from it; a connecting peer that does not know the password simply fails the handshake and is disconnected. There is no password-recovery path over the wire — knowledge of the password is proven, never revealed.
@@ -35,9 +41,20 @@ Because the password is the sole secret, its strength is the security of the who
 
 ## Handshake and encryption
 
+So the password is the one secret, and it's never sent. That raises the obvious question:
+how do two machines agree on an encryption key from a password *without* one of them
+transmitting it? That's the handshake's whole job — a short back-and-forth at the start of
+every connection that leaves both sides holding the same key, while an eavesdropper who
+watched every byte learns nothing.
+
+There are two ways it can go, depending on how modern the client is. The good one first.
+
 ### Protocol v3 — the Noise handshake (current default)
 
-Protocol **v3** replaces the legacy handshake with the **[Noise Protocol Framework](https://noiseprotocol.org/)**. A v3-capable client (Noise primitive available and a password configured) negotiates an always-encrypted, forward-secret session:
+Any reasonably capable client — a laptop, a phone, a browser — gets the strong path.
+Protocol **v3** replaces the legacy handshake with the **[Noise Protocol Framework](https://noiseprotocol.org/)**, giving a session that's encrypted from the first real
+message and stays secret even if the password later leaks (forward secrecy). Here's what a
+v3-capable client (Noise primitive available, password configured) actually negotiates:
 
 - **Default suite:** `Noise_XXpsk2_25519_ChaChaPoly_SHA256` — mutual static-key authentication over X25519, per-handshake ephemeral Diffie-Hellman (forward secrecy), ChaCha20-Poly1305 AEAD, SHA-256. This is the suite browser and JavaScript clients ([HiveMind-js](https://github.com/JarbasHiveMind/HiveMind-js)) negotiate too: they pair the native Web Crypto API with the pure-JS [`@noble/ciphers`](https://github.com/paulmillr/noble-ciphers) + [`@noble/hashes`](https://github.com/paulmillr/noble-hashes) for the two primitives Web Crypto lacks (ChaCha20-Poly1305 and argon2id), giving **full cipher parity with hivemind-core** — no server-side configuration required. A `Noise_XXpsk2_25519_AESGCM_SHA256` suite is also registered as an AES-GCM alternative for minimal Web-Crypto-only peers (see the browser caveat below).
 - **PSK derivation:** the shared secret mixed into the handshake is `PSK = argon2id(password, salt = SHA-256(node_id))`. Salting with the server's `node_id` makes the PSK server-specific, so the same password on two servers yields two different PSKs. A full browser client derives this **in-browser** with `@noble/hashes` argon2id (same parameters as the server), so a password alone is enough — no provisioning and no server-side KDF change. A pre-provisioned 32-byte `psk` remains an option, and PBKDF2 remains an explicit fallback when a server advertises it.
@@ -58,7 +75,12 @@ Protocol **v3** replaces the legacy handshake with the **[Noise Protocol Framewo
 
 ### Legacy handshake (protocol v1 / v2)
 
-Older clients that cannot negotiate v3 fall back to the password (or RSA) handshake. It also establishes a shared session key without transmitting it. The password handshake uses a salted hash for proof and PBKDF2-SHA256 for the key:
+Not everything can run Noise, and HiveMind doesn't abandon those clients — it drops to an
+older but still sound handshake. It reaches the same destination (a shared key neither
+side transmitted); it just gets there by different math. The steps below are worth reading
+once even if you never implement them, because they show *why* watching the wire doesn't
+help an attacker. The password handshake proves the password with a salted hash and
+derives the key with PBKDF2-SHA256:
 
 ```
 Server → Client  HELLO        (node_id, server public key — plaintext)
@@ -76,7 +98,11 @@ The handshake works as follows:
 4. A common salt is derived: `salt = IV_client XOR IV_server`
 5. The session key is derived with PBKDF2: `key = PBKDF2-HMAC-SHA256(password, salt, 100_000 iterations)` — 256 bits
 
-After the handshake all messages are encrypted with the negotiated cipher using the derived session key. The cipher is **negotiated, not fixed**: the client offers an ordered list of ciphers it supports, the server filters that list against its own config `allowed_ciphers` (default `["CHACHA20-POLY1305", "AES-GCM"]`, with ChaCha20-Poly1305 listed first), and the server picks the client's most-preferred surviving choice. Both **ChaCha20-Poly1305** and **AES-GCM** are supported. Each message carries a unique nonce and an authentication tag. (AES-256-GCM is only the dataclass fallback used when a side offers no cipher list at all.)
+Read step 5 again and the point clicks: the key is derived from the password on *both*
+ends, but the password itself never crossed the wire — only the harmless IVs did. An
+eavesdropper who caught every packet still doesn't have the password, and without it can't
+compute the key. Once both sides hold that key, everything after the handshake is
+encrypted with the negotiated cipher. The cipher is **negotiated, not fixed**: the client offers an ordered list of ciphers it supports, the server filters that list against its own config `allowed_ciphers` (default `["CHACHA20-POLY1305", "AES-GCM"]`, with ChaCha20-Poly1305 listed first), and the server picks the client's most-preferred surviving choice. Both **ChaCha20-Poly1305** and **AES-GCM** are supported. Each message carries a unique nonce and an authentication tag. (AES-256-GCM is only the dataclass fallback used when a side offers no cipher list at all.)
 
 An alternative v0 path skips the handshake and uses a pre-shared `crypto_key` directly (the legacy `Encryption Key` printed by `add-client`). This path is kept for backward compatibility only.
 
@@ -122,7 +148,10 @@ For INTERCOM (and the signed trust checks on PROPAGATE / CASCADE), a node only a
 
 ## Identity file
 
-The identity file at `~/.config/hivemind/_identity.json` stores all credentials a satellite needs to connect:
+A satellite shouldn't have to be handed its password every time it starts up, so it keeps
+everything it needs to reconnect in one small file on disk: `~/.config/hivemind/_identity.json`.
+This is the file `hivemind-client set-identity` writes, and it's why a device can reboot
+and rejoin the hive on its own. Here's what lives in it:
 
 | Field | Description |
 |---|---|
@@ -149,11 +178,19 @@ hivemind-client set-identity \
 
 ## Permissions
 
-Permissions in HiveMind are configured per client — there are no roles. Each client has its own `allowed_types` whitelist and per-client skill/intent blacklists.
+The handshake proved *who* a device is. Now comes the second question: what is it allowed
+to *do*? This is the layer people underestimate, and it's the one that makes leaked
+credentials far less scary than they sound.
+
+HiveMind has no roles, no "admin can do everything" shortcut. Permissions are per client:
+each one carries its own `allowed_types` whitelist and its own skill/intent blacklists.
+And the default posture is refusal — a brand-new device can send *nothing* until you say
+otherwise.
 
 ### How the policy chain works
 
-For every message received from a satellite, hivemind-core runs a policy admission chain:
+Every message a satellite sends runs a little gauntlet before it reaches the agent. Two
+gates, always in this order:
 
 1. **`allowed_types` check** — the client's per-client whitelist is checked first. If the OVOS message type is not in the allowed list, the message is dropped immediately. This is fail-closed: a new client with an empty whitelist can send nothing.
 
@@ -220,7 +257,10 @@ See [Writing Plugins — Policy plugins](../developers/writing-plugins.md#5-poli
 
 ### Managing permissions via CLI
 
-The node ID is a **positional** argument (not a `--node-id` option). If omitted, the command prompts you to pick a client.
+In practice you'll do all of this from the command line, one grant at a time. The pattern
+is always the same — a verb, what you're granting, and which client — so once you've seen
+a few they all read the same way. (The node ID is a **positional** argument, not a
+`--node-id` option; leave it off and the command lets you pick a client from a list.)
 
 ```bash
 # Allow a message type
@@ -267,7 +307,10 @@ When a client is added via `add-client`, its `allowed_types` whitelist is **empt
 
 ## Transport security (TLS)
 
-TLS is **optional**. HiveMind's own handshake already encrypts and authenticates every payload (Noise on v3, negotiated AEAD on v1/v2), so a hive is fully secure over plain WebSocket. Add TLS only as defence-in-depth — chiefly to hide connection metadata from a passive network observer, or to satisfy an external requirement. `hivemind-core listen` takes no flags — TLS is configured in `~/.config/hivemind-core/server.json` under `network_protocol.hivemind-websocket-plugin`:
+Here's the thing that surprises people coming from the web world: you do **not** need
+`https://` for a HiveMind to be secure. TLS is optional. HiveMind's own handshake already
+encrypts and authenticates every payload (Noise on v3, negotiated AEAD on v1/v2), so a
+hive is fully private over plain WebSocket. Add TLS only as defence-in-depth — chiefly to hide connection metadata from a passive network observer, or to satisfy an external requirement. `hivemind-core listen` takes no flags — TLS is configured in `~/.config/hivemind-core/server.json` under `network_protocol.hivemind-websocket-plugin`:
 
 ```json
 {
@@ -290,6 +333,10 @@ TLS is **optional**. HiveMind's own handshake already encrypts and authenticates
 ---
 
 ## Security checklist
+
+Enough theory — here's what actually matters when you set one up. The list splits by where
+your hive lives, because a homelab on your own LAN and a server reachable from the open
+internet call for very different care.
 
 **Local/private networks:**
 
