@@ -1,11 +1,17 @@
 # Microcontrollers (ESP32)
 
-The thinnest possible *hardware* satellite. These clients turn a bare
-microcontroller — an ESP32, or a Raspberry Pi Pico W — into a HiveMind
-[satellite](../reference/glossary.md), without running OVOS or a full Python desktop
-on the device. The chip captures the microphone and ships audio to the
-[hub](../reference/glossary.md); the hub does all the speech-to-text, intents, skills,
+**The microcontroller clients are the thinnest possible *hardware* satellites** — they turn a bare
+microcontroller (an ESP32, or a Raspberry Pi Pico W) into a HiveMind
+[satellite](../reference/glossary.md) without running OVOS or a full Python desktop
+on the device. The chip captures the microphone and ships audio to
+[hivemind-core](../reference/glossary.md); hivemind-core does all the speech-to-text, intents, skills,
 and text-to-speech.
+
+!!! abstract "In a nutshell"
+    - Two clients: **ESP32 (C / ESP-IDF)** for maximum control and on-device wakeword, and **MicroPython** for pure-Python hacking.
+    - STT, TTS, and intents run on hivemind-core; the two HiveMind audio modes need `hivemind-audio-binary-protocol` on hivemind-core.
+    - On protocol v3 the session uses a Noise handshake with a [provisioned PSK](#provisioned-psk) pre-computed on hivemind-core, since argon2id is too heavy to derive on-device.
+    - Devices connect over plain `ws://` — confidentiality comes from the handshake, not TLS — so keep them on a trusted network.
 
 There are two clients, depending on the language you want to work in:
 
@@ -17,8 +23,8 @@ There are two clients, depending on the language you want to work in:
     Choose **C / ESP-IDF** for the most control, the best performance, and the only
     on-device wakeword path (ESP32-S3 Voice PE). Choose **MicroPython** if you would
     rather write Python and value quick iteration over raw efficiency. Both speak the
-    same HiveMind protocol to the same hub, including **protocol v3 (Noise)** with a
-    [provisioned PSK](#provisioned-psk), falling back to the legacy handshake on older hubs.
+    same HiveMind protocol to the same hivemind-core instance, including **protocol v3 (Noise)** with a
+    [provisioned PSK](#provisioned-psk), falling back to the legacy handshake on older hivemind-core versions.
 
 ---
 
@@ -28,17 +34,17 @@ On protocol **v3** the session is protected by a **Noise** handshake
 (`Noise_XXpsk2_25519_ChaChaPoly_SHA256`), which mixes in a 32-byte pre-shared key
 derived from your password as `argon2id(password, SHA-256(node_id))`. argon2id is far
 too heavy to run on a microcontroller, so constrained clients never derive it
-on-device — you **pre-compute** it on the hub and flash the result:
+on-device — you **pre-compute** it on hivemind-core and flash the result:
 
 ```bash
-hivemind-core derive-psk --password "your-password" --node-id "<hub-node-id>"
+hivemind-core derive-psk --password "your-password" --node-id "<hivemind-core-node-id>"
 ```
 
 The printed hex string is the same PSK a full peer would derive, so the device
 interoperates with no server-side distinction — and the device never stores the
 password itself. Provision it as `noise_psk_hex` (ESP32) or the `psk=` argument
-(MicroPython). If the hub does not advertise v3 (or no PSK is set), the client falls
-back to the legacy password handshake automatically. Optionally pin the hub's static
+(MicroPython). If hivemind-core does not advertise v3 (or no PSK is set), the client falls
+back to the legacy password handshake automatically. Optionally pin hivemind-core's static
 X25519 key to enable the lighter `Noise_KKpsk0` pattern.
 
 ---
@@ -57,9 +63,9 @@ ESP32-C3. Requires **ESP-IDF 5.0+** on the build host.
 
 - On-device **microphone** (INMP441 I2S mic in the mic example).
 - On the **ESP32-S3 Voice PE** build: on-device **VAD** and an optional **wakeword**
-  (ESP-SR **WakeNet9**). On a plain ESP32 the mic streams audio and the hub does the
+  (ESP-SR **WakeNet9**). On a plain ESP32 the mic streams audio and hivemind-core does the
   rest.
-- **STT and TTS are off-device** — the hub provides them.
+- **STT and TTS are off-device** — hivemind-core provides them.
 
 ??? note "Advanced: audio transport modes"
     The component can ship audio three ways, and the example lets you pick per axis:
@@ -70,9 +76,9 @@ ESP32-C3. Requires **ESP-IDF 5.0+** on the build host.
     - **HiveMind base64** — batches a WAV over the bus via `recognizer_loop:b64_transcribe`,
       with TTS via `speak:b64_audio`.
     - **OVOS HTTP** — POST/GET against a standalone OVOS STT/TTS HTTP server, bypassing
-      the hub for speech.
+      hivemind-core for speech.
 
-    For the two HiveMind modes the hub needs
+    For the two HiveMind modes hivemind-core needs
     [`hivemind-audio-binary-protocol`](../server/audio-binary-protocol.md). Encryption
     is AES-256-GCM (hardware-accelerated on the ESP32) or ChaCha20-Poly1305, with the
     session key derived from your password via PBKDF2-HMAC-SHA256.
@@ -82,11 +88,11 @@ ESP32-C3. Requires **ESP-IDF 5.0+** on the build host.
 ```bash
 # from an example directory, e.g. examples/mic_satellite
 idf.py set-target esp32s3        # or esp32, esp32c3
-idf.py menuconfig                # set Wi-Fi SSID/password and the hub host/key/password
+idf.py menuconfig                # set Wi-Fi SSID/password and the server host/key/password
 idf.py build flash monitor
 ```
 
-Register the device on the hub first, as with any satellite:
+Register the device on hivemind-core first, as with any satellite:
 
 ```bash
 hivemind-core add-client --name esp32 \
@@ -118,7 +124,7 @@ write Python than C.
 
 The device keeps a tiny footprint by running no OVOS on-device: it performs the full
 HiveMind handshake and encrypted messaging, then streams **PCM audio over the binary
-channel** (via the `machine.I2S` peripheral in the mic example) to the hub, which does
+channel** (via the `machine.I2S` peripheral in the mic example) to hivemind-core, which does
 the speech work. On protocol **v3** the session is a **Noise** handshake using a
 [provisioned PSK](#provisioned-psk); on the legacy path, encryption is AES-256-GCM or
 ChaCha20-Poly1305 with PBKDF2-HMAC-SHA256 key derivation — byte-for-byte compatible

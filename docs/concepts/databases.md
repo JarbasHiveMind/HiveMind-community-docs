@@ -1,14 +1,19 @@
 # Database Backends
 
-In plain terms: the hub needs somewhere to remember which devices are allowed to connect and what each one is permitted to do. That store is swappable — a single file for simple setups, or a shared Redis server when you run several hubs.
+**hivemind-core stores which devices may connect and what each is permitted to do in a swappable database backend.** `hivemind-core` keeps client credentials and settings there — a single file for simple setups, or a shared Redis server when you run several hivemind-core instances.
 
-`hivemind-core` stores client credentials and settings in a pluggable database backend.
+!!! abstract "In a nutshell"
+    - Three backends: SQLite (default for new installs), JSON (human-readable, unsafe under concurrent writes), and Redis (for multi-instance deployments).
+    - The backend is chosen in the `database` block of `~/.config/hivemind-core/server.json`, never as a CLI flag; `listen` and every client command read the same config.
+    - Migrate between backends with `migrate-db`; both file backends support encryption at rest via a `password` key.
 
 | Backend | Module (package) | Default location | Best for |
 |---|---|---|---|
 | **SQLite** | `hivemind-sqlite-db-plugin` (`hivemind-sqlite-database`) | XDG data dir, e.g. `~/.local/share/hivemind-core/clients.db` | New installations (default) |
 | **JSON** | `hivemind-json-db-plugin` | XDG data dir, e.g. `~/.local/share/hivemind-core/clients.json` | Existing installs; manual inspection |
 | **Redis** | `hivemind-redis-db-plugin` (`hivemind-redis-database`) | `127.0.0.1:6379` | Distributed or multi-instance deployments |
+
+---
 
 ## Choosing a backend
 
@@ -26,6 +31,8 @@ In plain terms: the hub needs somewhere to remember which devices are allowed to
 
     Relatedly, `migrate-db` defaults to `--from json --to sqlite`, matching the most common upgrade path.
 
+---
+
 ## Migrating between backends
 
 `migrate-db` takes the full plugin module names for source and target. `--from` defaults to the JSON backend; `--to` defaults to SQLite. There is no auto-detection.
@@ -37,6 +44,8 @@ hivemind-core migrate-db \
 ```
 
 Records are copied with their full credentials and metadata; the source database is left untouched.
+
+---
 
 ## Selecting a backend
 
@@ -58,6 +67,8 @@ Backend selection is **not** a command-line flag — `hivemind-core listen` take
 ```
 
 Set `module` to the desired plugin (`hivemind-sqlite-db-plugin`, `hivemind-json-db-plugin`, or `hivemind-redis-db-plugin`) and provide a same-named sub-block with that backend's connection settings. The same configuration is read by `listen` and by every client-management command (`add-client`, `allow-msg`, …), so they always operate on the same database.
+
+---
 
 ## Security notes
 
@@ -86,6 +97,8 @@ General:
 - Audit database access logs periodically
 - Store backup files encrypted
 - Monitor for unexpected access patterns
+
+---
 
 ## Source
 

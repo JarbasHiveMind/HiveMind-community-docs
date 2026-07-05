@@ -1,6 +1,13 @@
-# OVOS Skills Hub
+# OVOS Skills Server
 
-The canonical `hivemind-core` hub, backed by an OpenVoiceOS instance. Satellites connect to it and route utterances to OVOS skills.
+**The OVOS Skills Server is the canonical `hivemind-core` setup**, backed by an OpenVoiceOS instance. Satellites connect to it and route utterances to OVOS skills, STT, and TTS.
+
+!!! abstract "In a nutshell"
+    - A `hivemind-core` server whose agent protocol talks to a local `ovos-core` / `ovos-messagebus` on `127.0.0.1:8181`.
+    - All settings live in `~/.config/hivemind-core/server.json`; `hivemind-core listen` takes no flags.
+    - Manage satellites with the `hivemind-core` client CLI (node IDs are positional).
+
+---
 
 ## Prerequisites
 
@@ -12,11 +19,15 @@ pip install ovos-core ovos-messagebus
 
 See the [OVOS documentation](https://openvoiceos.github.io/community-docs) for a complete OVOS setup guide.
 
+---
+
 ## Install
 
 ```bash
 pip install hivemind-core
 ```
+
+---
 
 ## Configuration
 
@@ -96,6 +107,8 @@ TLS is enabled per network protocol by setting `ssl` to `true` and pointing `cer
     pluggable — MQTT and an experimental Usenet transport also exist. See
     [Transports](transports.md) for the full status table.
 
+---
+
 ## Starting the server
 
 ```bash
@@ -103,6 +116,8 @@ hivemind-core listen
 ```
 
 All behaviour comes from `server.json`; there are no flags to pass here.
+
+---
 
 ## Managing clients
 
@@ -124,6 +139,8 @@ hivemind-core rename-client --name "new-name" 2
 
 See [CLI Reference](../reference/cli.md) for all commands and [Security](../concepts/security.md#permissions) for permission management.
 
+---
+
 ## Adding server-side audio processing
 
 To support mic-satellite and voice-relay, install the audio binary protocol plugin:
@@ -133,6 +150,8 @@ pip install hivemind-audio-binary-protocol
 ```
 
 Then configure `server.json` to enable it. See [Audio Binary Protocol](audio-binary-protocol.md).
+
+---
 
 ## Systemd service
 
@@ -162,15 +181,17 @@ sudo systemctl enable hivemind-core
 sudo systemctl start hivemind-core
 ```
 
-## Other hub flavors
+---
+
+## Other agent flavors
 
 Beyond the OVOS, [persona](persona-hub.md), and [A2A](a2a-hub.md) agent plugins, two
 more agent-plugin flavors exist for advanced or experimental setups. Both are
 **alpha / unpublished — install from the repo and read its README**.
 
-??? note "Advanced: other hub flavors"
+??? note "Advanced: other agent flavors"
     **localhive** ([`hivemind-localhive-agent-plugin`](https://github.com/JarbasHiveMind/hivemind-localhive-agent-plugin))
-    — an "isolated-skills hub". It runs OVOS skills *in-process* (no separate
+    — an "isolated-skills" agent. It runs OVOS skills *in-process* (no separate
     `ovos-core` / `ovos-messagebus`), but each skill only ever sees its own messages.
     Here `skill_id` is purely a routing label, not a credential — one skill cannot
     eavesdrop on another's traffic. Useful when you want OVOS skills without a full
@@ -180,7 +201,9 @@ more agent-plugin flavors exist for advanced or experimental setups. Both are
     — a per-access-key agent *multiplexer*. Every access key gets its own isolated
     agent instance (by default a bundled MiniCroft brain), and each key's
     `{module, config}` is stored in that client's DB metadata. This is the
-    multi-tenant story: one hub, many independent assistants, one per satellite key.
+    multi-tenant story: one server, many independent assistants, one per satellite key.
+
+---
 
 ## Source
 

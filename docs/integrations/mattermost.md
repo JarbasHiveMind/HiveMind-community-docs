@@ -1,14 +1,21 @@
 # Mattermost Bridge
 
-[HiveMind-mattermost-bridge](https://github.com/JarbasHiveMind/HiveMind_mattermost_bridge)
-connects a [Mattermost](https://mattermost.com/) team server to a HiveMind hub. People
+**[HiveMind-mattermost-bridge](https://github.com/JarbasHiveMind/HiveMind_mattermost_bridge)
+connects a [Mattermost](https://mattermost.com/) team server to a HiveMind.** People
 talk to the assistant through direct messages or by mentioning the bot in a channel;
-the hub's reply is posted back into the same conversation.
+the reply from `hivemind-core` is posted back into the same conversation.
+
+!!! abstract "In a nutshell"
+    - Runs as the `hivemind-mattermost-bridge` console command, logging into Mattermost as a bot user account (email/login and password).
+    - HiveMind connection details default to the stored node identity; pass the Mattermost flags each run.
+    - The bridge client needs at minimum `allow-msg "speak"`.
 
 !!! tip "Beginner's mental model"
     The bridge logs into Mattermost as a normal **bot user account** (an email/login
-    and password, not an API token), and connects to your hub using your stored
+    and password, not an API token), and connects to `hivemind-core` using your stored
     HiveMind identity. It relays messages between the two.
+
+---
 
 ## Install
 
@@ -17,6 +24,8 @@ pip install HiveMind-mattermost-bridge
 ```
 
 This installs the `hivemind-mattermost-bridge` console command.
+
+---
 
 ## Set your HiveMind identity
 
@@ -27,6 +36,8 @@ machine that runs the bridge, then you only need to pass the Mattermost flags:
 ```bash
 hivemind-client set-identity
 ```
+
+---
 
 ## Usage
 
@@ -87,12 +98,16 @@ Bot: @user , The weather is...
     webhook or listener port is needed on the Mattermost side. The Mattermost listen
     loop runs in a daemon thread alongside the HiveMind bus client.
 
+---
+
 ## How it works
 
 The bridge runs as a HiveMind client. A direct message or mention becomes a
 `recognizer_loop:utterance` [BUS message](../reference/glossary.md#bus-message)
-tagged with the sender and channel. The hub's `speak` response is posted back to that
+tagged with the sender and channel. The `speak` response from `hivemind-core` is posted back to that
 channel, addressed to the sender as `@user , <answer>`.
+
+---
 
 ## Permissions
 
@@ -101,6 +116,8 @@ The bridge client needs at minimum:
 ```bash
 hivemind-core allow-msg "speak" <id>
 ```
+
+---
 
 ## Source
 

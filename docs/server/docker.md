@@ -1,6 +1,11 @@
 # Docker Deployment
 
-Run `hivemind-core` in Docker for easy deployment and isolation.
+**`hivemind-core` runs in Docker for easy deployment and isolation.**
+
+!!! abstract "In a nutshell"
+    - There is no published all-in-one image; containers are built locally from the `hivemind-skills-server-docker` compose stack or based on the `smartgic/*` images.
+    - `hivemind-core` reads no environment variables — all configuration is the `server.json` file mounted into the non-root `hivemind` user's config directory.
+    - The stack uses `network_mode: host`; SQLite is the default database, with Redis for multi-instance deployments.
 
 There is no published "all-in-one" hivemind-core image on the JarbasHiveMind
 namespace. Containers are either:
@@ -17,10 +22,12 @@ namespace. Containers are either:
 The examples below follow the `hivemind-skills-server-docker` stack, which builds
 its hivemind image locally.
 
+---
+
 ## How config works in the container
 
 `hivemind-core` reads **no environment variables**. All configuration is the
-`server.json` file described in [OVOS Skills Hub](ovos-hub.md#configuration). In a
+`server.json` file described in [OVOS Skills Server](ovos-hub.md#configuration). In a
 container you supply it by mounting a host folder onto the config directory of the
 non-root `hivemind` user:
 
@@ -33,6 +40,8 @@ non-root `hivemind` user:
 The client database, certificates, etc. live under
 `/home/hivemind/.local/share/hivemind` — not `/root/...`, because the image runs as
 the unprivileged `hivemind` user.
+
+---
 
 ## Basic deployment
 
@@ -84,6 +93,8 @@ docker compose logs -f hivemind_core
 > The stack uses `network_mode: host`, so the WebSocket (5678) and HTTP (5679)
 > listeners are reachable directly on the host; published `ports:` are cosmetic
 > under host networking.
+
+---
 
 ## Redis backend
 
@@ -138,21 +149,27 @@ services:
 The default backend is SQLite (stdlib, transactional); switch to Redis only if you
 need it for a multi-instance / shared-store deployment.
 
+---
+
 ## Persona service
 
-The same stack can run a [persona hub](persona-hub.md) container (`hivemind_persona`,
+The same stack can run a [persona server](persona-hub.md) container (`hivemind_persona`,
 built from `Dockerfile.persona`, which is `FROM smartgic/hivemind-base`) that exposes
 HiveMind to OpenAI/Ollama-compatible apps. Its `VOICE_SAT_*` env vars are *client
 credentials* it uses to connect back to `hivemind_core`; they must first be provisioned
 with `hivemind-core add-client`.
 
+---
+
 ## With SSL via reverse proxy
 
-For production you can terminate TLS at a reverse proxy (nginx, Caddy) in front of the
-hub, or enable TLS natively per network protocol in `server.json`
+For production you can terminate TLS at a reverse proxy (nginx, Caddy) in front of
+`hivemind-core`, or enable TLS natively per network protocol in `server.json`
 (`network_protocol.<plugin>.ssl = true`, plus `cert_dir`/`cert_name`).
 
 When proxying, don't also expose 5678/5679 directly to the internet.
+
+---
 
 ## Management commands
 
@@ -176,9 +193,11 @@ docker compose exec hivemind_core hivemind-core allow-msg "speak" 2
 docker compose exec hivemind_core hivemind-core blacklist-skill "skill-homeassistant.openvoiceos" 2
 ```
 
+---
+
 ## Troubleshooting
 
-**Satellite cannot reach the hub**: with `network_mode: host`, check the host's port
+**Satellite cannot reach `hivemind-core`**: with `network_mode: host`, check the host's port
 5678 (and 5679) is reachable from the satellite network and not firewalled.
 
 **Cannot connect to Redis**: verify Redis is running
@@ -188,6 +207,8 @@ docker compose exec hivemind_core hivemind-core blacklist-skill "skill-homeassis
 **Config changes ignored**: confirm your `server.json` is on the host folder mounted at
 `/home/hivemind/.config/hivemind-core`, and restart the container — the persona file
 and most config are read at startup only.
+
+---
 
 ## Source
 

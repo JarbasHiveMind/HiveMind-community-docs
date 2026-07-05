@@ -1,10 +1,15 @@
 # Media Player
 
-[hivemind-media-player](https://github.com/JarbasHiveMind/hivemind-media-player) turns
-a headless device into a **network-controlled media player** driven over HiveMind.
+**[hivemind-media-player](https://github.com/JarbasHiveMind/hivemind-media-player) turns
+a headless device into a network-controlled media player driven over HiveMind.**
 Remote controllers send standard [OCP](../reference/glossary.md#ocp-ovos-common-play)
 playback commands across the encrypted HiveMind connection, and this device plays the
 audio locally.
+
+!!! abstract "In a nutshell"
+    - The `hivemind-player-protocol` package registers a `hivemind.agent.protocol` entry point exposing `HiveMindPlayerProtocol` — an agent plugin, not an OVOS skill.
+    - For devices with no voice assistant of their own; it plays OCP/audio bus messages through a local `ovos-audio` stack.
+    - Complements the [Home Assistant integration](home-assistant.md): player devices appear as Home Assistant media players.
 
 !!! tip "Beginner's mental model"
     Turn a Raspberry Pi or a spare speaker into a player you control from your hive.
@@ -16,6 +21,8 @@ networked speaker, for example. It complements the
 [Home Assistant integration](home-assistant.md): with both installed, your HiveMind
 player devices show up as media players in Home Assistant (and Music Assistant can
 browse and play music to them).
+
+---
 
 ## How it fits in
 
@@ -32,6 +39,8 @@ available) and routes incoming playback messages to it.
     `hivemind-core` and play them through the local audio stack. Running it as an agent
     protocol inside `hivemind-core` (rather than a skill inside `ovos-core`) is what
     lets a device with no assistant of its own act purely as a remote player.
+
+---
 
 ## Install
 
@@ -53,6 +62,8 @@ register a client credential, and start `hivemind-core listen`. See the reposito
 README for the full step-by-step quickstart and the bundled `hivemind-player-ctl`
 control CLI.
 
+---
+
 ## Permissions
 
 The player client needs at minimum the core audio and OCP playback messages, for
@@ -71,11 +82,15 @@ hivemind-core allow-msg "ovos.common_play.previous" <id>
 The repository's permissions reference lists the full OCP, audio, and (optional) PHAL
 volume message sets.
 
+---
+
 ## Related projects
 
 - [hivemind-homeassistant](home-assistant.md) — exposes HiveMind player devices as Home Assistant media players
 - [ovos-skill-music-assistant](https://github.com/HiveMindInsiders/ovos-skill-music-assistant) — OVOS skill for Music Assistant media search
 - [ovos-media-plugin-mass](https://github.com/HiveMindInsiders/ovos-media-plugin-mass) — OVOS plugin to control Music Assistant players
+
+---
 
 ## Source
 

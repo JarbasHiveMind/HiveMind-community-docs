@@ -1,10 +1,17 @@
 # Protocol Specification
 
-> **Who needs this page?** Only if you are implementing a HiveMind client from scratch in a language without an official library, or debugging the wire format. If you are using the Python or JS client, the library already does everything described here — start with the [Client Library](client-library.md) instead.
+**The HiveMind protocol is the byte-level wire format for `HiveMessage` traffic** — the message envelope, the negotiated handshake, encryption, and the optional binary framing enabled by the `binarize` capability.
 
-This page describes the wire format for HiveMind messages, including the binary framing that is enabled by the `binarize` capability negotiated during the handshake.
+!!! abstract "In a nutshell"
+    - Every message is a `HiveMessage` (`msg_type`, `payload`, `context`); `BUS` messages carry OVOS `Message` objects.
+    - The session `ProtocolVersion` is negotiated at connect time: v1/v2 use a password or RSA handshake, v3 uses a Noise handshake and is always encrypted.
+    - The [handshake state machine](#handshake-state-machine) and [negotiation defaults](#negotiation-defaults) are sufficient to bring an independent client to a fully-encrypted, session-established state.
+    - `binarize` is a per-connection capability, not a version bump: it packs messages into a compact binary frame instead of JSON.
 
-If you are implementing an independent (non-Python) client, read the [Handshake state machine](#handshake-state-machine) and [Negotiation & defaults](#negotiation-defaults) sections below first — they are written to be sufficient to bring a client to a fully-encrypted, session-established state without reading the reference implementation.
+!!! note "Using the Python or JS client?"
+    The library already implements everything on this page. Read it only to implement a HiveMind client from scratch in another language, or to debug the wire format; otherwise start with the [Client Library](client-library.md).
+
+---
 
 ## Message envelope
 
@@ -13,6 +20,8 @@ Every HiveMind message is a `HiveMessage` with:
 - `msg_type` — a `HiveMessageType` enum value (see [Protocol Concepts](../concepts/protocol.md))
 - `payload` — the message content (an OVOS `Message` object, a nested `HiveMessage`, or raw bytes)
 - `context` — optional routing metadata dict
+
+---
 
 ## Protocol versions
 
@@ -31,7 +40,9 @@ Within the **v1/v2** (legacy handshake) family, binary framing is **not** gated 
 | **v3** | Binary framing, always encrypted | **Noise** (`Noise_XXpsk2_25519_ChaChaPoly_SHA256` default — negotiated by browser/JS clients too via `@noble`; `AESGCM` suite as a fallback for minimal Web-Crypto-only peers; `KKpsk0` when the static key is pinned). PSK = `argon2id(password, SHA-256(node_id))`, derived in-browser | Optional zlib |
 
 !!! note "v3 Noise wire format"
-    The byte-level Noise handshake sequence (message tokens, prologue binding of the `HELLO`/`HANDSHAKE` payloads, PSK slot, and the provisioned-PSK path for constrained devices) is defined by `hivemind_bus_client/noise.py` and `poorman_handshake/noise/`. The [Security](../concepts/security.md#protocol-v3-the-noise-handshake-current-default) page covers the model; a full independent-implementer byte spec for v3 is tracked as follow-up. The v1/v2 state machine below remains authoritative for the legacy handshake.
+    The v1/v2 state machine below is the authoritative byte-level reference for the legacy handshake. The v3 Noise wire format — message tokens, prologue binding of the `HELLO`/`HANDSHAKE` payloads, PSK slot, and the provisioned-PSK path for constrained devices — is defined by the `hivemind_bus_client/noise.py` and `poorman_handshake/noise/` source modules; the [Security](../concepts/security.md#protocol-v3-the-noise-handshake-current-default) page covers its model.
+
+---
 
 ## Handshake state machine
 
@@ -141,6 +152,8 @@ On receipt the client derives `crypto_key`:
 
 > Note: a client requesting `session_id == "default"` is disconnected unless it is an administrator.
 
+---
+
 ## Negotiation & defaults
 
 ### Default encoding is `JSON_HEX`, not `JSON_B64`
@@ -206,6 +219,8 @@ The session key math lives in the external **`poorman_handshake`** package, not 
 - The receiver strips the signature (first `key_size_in_bytes` bytes), RSA-decrypts the remainder with its private key to recover the 32-byte `secret`, and (in `receive_and_verify`) first verifies the PSS signature against the known peer public key.
 - That 32-byte `secret` becomes `crypto_key`. No PBKDF2 is involved in RSA mode.
 
+---
+
 ## Binary framing
 
 When both sides negotiate `binarize: true` in the handshake, messages are framed in a compact binary format instead of JSON. This is a per-connection capability flag, not a protocol-version increment — the wire `ProtocolVersion` remains `ONE`.
@@ -259,7 +274,7 @@ For `BINARY` (`msg_type = 12`) messages, a 4-bit unsigned integer immediately af
 | 3 | FILE | File transfer; see context for filename |
 | 4 | STT_AUDIO_TRANSCRIBE | Full audio utterance — return transcript only |
 | 5 | STT_AUDIO_HANDLE | Full audio utterance — transcribe and handle intent |
-| 6 | TTS_AUDIO | Synthesized speech audio (hub → satellite) |
+| 6 | TTS_AUDIO | Synthesized speech audio (hivemind-core → satellite) |
 
 ### Versioned vs unversioned framing
 
@@ -289,13 +304,19 @@ The `versioned` bit is **0** by default in the reference encoder (`get_bitstring
 - `0001` — RAW_AUDIO binary payload type
 - `<audio_bytes>` — PCM audio data
 
+---
+
 ## Compression
 
 When the compression flag is set, both the metadata and payload are compressed independently with zlib (each typically ~49–50% smaller). Compression is most effective on large payloads; it adds overhead for small messages.
 
+---
+
 ## Session context
 
-See [Protocol Concepts — Session and context keys](../concepts/protocol.md#session-and-context-keys) for the full reference of keys injected into `Message.context` by the hub.
+See [Protocol Concepts — Session and context keys](../concepts/protocol.md#session-and-context-keys) for the full reference of keys injected into `Message.context` by hivemind-core.
+
+---
 
 ## OVOS messages (payload format)
 
@@ -318,6 +339,8 @@ OVOS `Message` objects are the standard payload for `BUS` messages. The structur
 
 The full OVOS message specification is maintained at [OpenVoiceOS/message_spec](https://github.com/OpenVoiceOS/message_spec).
 
+---
+
 ## Transports
 
 The protocol runs over any transport that can carry byte streams:
@@ -329,11 +352,12 @@ The protocol runs over any transport that can carry byte streams:
 | MQTT (broker) | `hivemind-mqtt-plugin` | 1883 |
 | Usenet wormhole | `hivemind-usenet-wormhole` | — |
 
-WebSocket/HTTP are stable defaults. MQTT (package `hivemind-mqtt-protocol`) is a
-published alpha with a complete hub listener; its satellite client is still
-planned. The Usenet wormhole (package `hivemind-usenet`) is experimental and
-unpublished — a high-latency covert/fallback control-plane, not a real-time
-transport.
+WebSocket and HTTP are the stable defaults. MQTT (package `hivemind-mqtt-protocol`)
+is a published alpha providing a complete hivemind-core listener without a satellite client.
+The Usenet wormhole (package `hivemind-usenet`) is experimental and unpublished — a
+high-latency covert/fallback control-plane, not a real-time transport.
+
+---
 
 ## Source
 

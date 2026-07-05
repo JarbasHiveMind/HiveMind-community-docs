@@ -1,8 +1,11 @@
 # Plugin Architecture
 
-In plain terms: HiveMind is built from interchangeable parts. You can swap how it talks to devices, which AI answers requests, how it handles audio, where it stores credentials, and how it decides what each device may do — each independently, without rewriting the rest.
+**HiveMind is built from interchangeable parts.** HiveMind Core is assembled from **five families** of plugins, managed by the **HiveMind Plugin Manager** (HPM), and each family is independently swappable without touching the others: how it talks to devices, which AI answers requests, how it handles audio, where it stores credentials, and how it decides what each device may do.
 
-HiveMind Core is assembled from **five families** of plugins, managed by the **HiveMind Plugin Manager** (HPM). Each family is independently swappable without touching the others.
+!!! abstract "In a nutshell"
+    - Five plugin families: network protocol, agent protocol, binary data handler, database, and policy.
+    - Defaults are the WebSocket + HTTP transports, the OVOS agent, the SQLite database, and the OVOS agent policy; no binary plugin loads by default.
+    - Plugins are wired up in `~/.config/hivemind-core/server.json`; installed package names may differ from the plugin (entry-point) names used in config.
 
 ![HPM diagram](../hpm.png)
 
@@ -20,8 +23,8 @@ Control how HiveMind listens for and connects to satellites.
 | `hivemind-usenet-wormhole` | Usenet store-and-forward | — | experimental, unpublished |
 
 WebSocket and HTTP are enabled by default in `server.json`. The MQTT plugin
-(package `hivemind-mqtt-protocol`) is published as an alpha and ships the hub-side
-listener; a satellite-side MQTT client is still planned. The Usenet wormhole
+(package `hivemind-mqtt-protocol`) is published as an alpha and ships the server-side
+listener; a satellite-side MQTT client is planned. The Usenet wormhole
 (package `hivemind-usenet`) is an experimental covert/fallback transport — not a
 real-time channel, not on PyPI (it pulls git-only carrier libraries).
 
@@ -37,7 +40,7 @@ Control which AI back-end handles incoming messages.
 
 ### Binary data handler plugins
 
-Control how binary payloads (audio, images, files) are processed on the hub.
+Control how binary payloads (audio, images, files) are processed on hivemind-core.
 
 | Plugin | Function |
 |---|---|
@@ -64,6 +67,8 @@ Control admission — what each client is allowed to do. Policy plugins are load
 | `hivemind-ovos-agent-policy` | Per-client skill/intent blacklists for the OVOS agent (default) |
 
 The built-in `allowed_types` ACL (`MessageTypeACLPolicy`) is always force-prepended to the chain and cannot be removed. See [Security — How the policy chain works](security.md#how-the-policy-chain-works) and [Writing Plugins — Policy plugins](../developers/writing-plugins.md#5-policy).
+
+---
 
 ## Configuration
 
@@ -106,6 +111,8 @@ Plugins are wired up in `~/.config/hivemind-core/server.json`. The default confi
 }
 ```
 
+---
+
 ## Installing plugins
 
 Plugins are installed as Python packages via pip:
@@ -116,6 +123,8 @@ pip install hivemind-redis-database
 ```
 
 After installation, update `server.json` to reference the new plugin (entry-point) name — note that the installed package name may differ from the plugin name used in config (e.g. the `hivemind-redis-database` package provides the `hivemind-redis-db-plugin` plugin, and `hivemind-audio-binary-protocol` provides `hivemind-audio-binary-protocol-plugin`).
+
+---
 
 ## Developing plugins
 
@@ -143,6 +152,8 @@ agent = AgentProtocolFactory.create("hivemind-ovos-agent-plugin")
 ```
 
 To author your own plugin, see [Writing Plugins](../developers/writing-plugins.md).
+
+---
 
 ## Source
 

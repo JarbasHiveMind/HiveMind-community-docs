@@ -1,10 +1,15 @@
-# A2A Hub
+# A2A Server
 
-An "A2A hub" is a regular `hivemind-core` server whose **agent protocol** is the
-[hivemind-a2a-agent-plugin](https://github.com/JarbasHiveMind/hivemind-a2a-agent-plugin).
-Instead of routing utterances into a full OVOS skills stack, the hub forwards
+**An A2A server is a regular `hivemind-core` server whose agent protocol is the
+[hivemind-a2a-agent-plugin](https://github.com/JarbasHiveMind/hivemind-a2a-agent-plugin).**
+Instead of routing utterances into a full OVOS skills stack, it forwards
 natural-language queries to an external **A2A (Agent-to-Agent)** server and streams the
 answer back — no `ovos-core` required.
+
+!!! abstract "In a nutshell"
+    - Swaps the `agent_protocol` for `hivemind-a2a-agent-plugin`, forwarding queries to any Google A2A-compliant server.
+    - Only `agent_url` is required; `auth_header`, `timeout`, and `streaming` are optional.
+    - The HiveMind `session_id` maps 1-to-1 to the A2A `sessionId`, so multi-turn context lives on the A2A server.
 
 [A2A](https://google.github.io/A2A/) is Google's open protocol for agent
 interoperability. An A2A server publishes an **agent card** at
@@ -14,9 +19,11 @@ requests as JSON-RPC 2.0 — either a blocking `tasks/send` or a streaming
 CrewAI, a custom FastAPI service, …) works behind this plugin.
 
 Satellites built for `hivemind-core` (text-based ones like HiveMind-cli, voice-sat, or
-bridges) work against an A2A hub. Satellites that depend on the audio binary protocol
-(`hivemind-audio-binary-protocol`) do **not** apply here — like a persona hub, an A2A
-hub exposes a text/query agent, not server-side audio processing.
+bridges) work against an A2A server. Satellites that depend on the audio binary protocol
+(`hivemind-audio-binary-protocol`) do **not** apply here — like a persona server, an A2A
+server exposes a text/query agent, not server-side audio processing.
+
+---
 
 ## Install
 
@@ -29,6 +36,8 @@ The plugin registers itself under the `hivemind.agent.protocol` entry-point grou
 
 You also need a running A2A server to point it at. Any compliant A2A server works; the
 plugin only owns the outbound HTTP connection to it.
+
+---
 
 ## Configure hivemind-core
 
@@ -58,7 +67,7 @@ Only `agent_url` is required. The configuration keys are:
 | `timeout`     | `60.0`  | HTTP timeout in seconds.                                 |
 | `streaming`   | `false` | Prefer `tasks/sendSubscribe` (SSE) when `true`.          |
 
-With `streaming` left at `false` the hub submits a blocking `tasks/send` and returns the
+With `streaming` left at `false` `hivemind-core` submits a blocking `tasks/send` and returns the
 final text. Set it to `true` to use `tasks/sendSubscribe` and stream chunks back to the
 satellite as the agent produces them, provided the A2A server advertises streaming.
 
@@ -88,14 +97,18 @@ conversation state.
     When both are present, explicit values passed in the `agent_protocol` block win
     over the OVOS-config fallback.
 
+---
+
 ## Start the server
 
 ```bash
 hivemind-core listen
 ```
 
-Satellites connecting to this hub now receive answers from the A2A agent — streamed
+Satellites connecting to this server now receive answers from the A2A agent — streamed
 chunk by chunk when `streaming` is enabled, or as a single response otherwise.
+
+---
 
 ## Managing clients
 
@@ -113,14 +126,18 @@ hivemind-core list-clients
 hivemind-core delete-client 2
 ```
 
-See [OVOS Skills Hub](ovos-hub.md#managing-clients) for the full client workflow.
+See [OVOS Skills Server](ovos-hub.md#managing-clients) for the full client workflow.
+
+---
 
 ## Next
 
 - [Operations](operations.md) — TLS, reverse proxy, systemd, observability, and scaling.
-- [Persona Hub](persona-hub.md) — answer queries from a local LLM / solver chain instead
+- [Persona Server](persona-hub.md) — answer queries from a local LLM / solver chain instead
   of an external A2A server.
 - [Database Backends](../concepts/databases.md) — where client and permission state lives.
+
+---
 
 ## Source
 

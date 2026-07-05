@@ -1,8 +1,18 @@
 # Developer Guide — Client Library
 
-> **New here?** This page is for writing a program that talks to a HiveMind hub. If you just want to *use* a satellite, see [Choosing a Satellite](../satellites/index.md) instead — you only need this if you are building your own client in Python.
+**`hivemind-bus-client` (repo: `hivemind-websocket-client`) is the primary Python library for building HiveMind clients.** It handles connection management, the PBKDF2 handshake, AES-256-GCM encryption, and serialization transparently.
 
-`hivemind-bus-client` (repo: `hivemind-websocket-client`) is the primary Python library for building HiveMind clients. It handles connection management, the PBKDF2 handshake, AES-256-GCM encryption, and serialization transparently.
+!!! abstract "In a nutshell"
+    - Connect to hivemind-core from Python with `HiveMessageBusClient`, send/receive OVOS messages, and let the library handle the handshake, encryption, and serialization.
+    - Sync (thread-based), async (`asyncio`), and HTTP (polling) clients share the same message API; only the sync client reconnects on its own.
+    - Higher-level helpers cover blocking request/response, binary audio, topology discovery, CASCADE aggregation, end-to-end INTERCOM, and trusted-key identity.
+
+!!! note "Building your own client in Python?"
+    This page is for writing a program that talks to a hivemind-core server. To simply *use* a satellite, see [Choosing a Satellite](../satellites/index.md) instead.
+
+`hivemind-bus-client` is available on [PyPI](https://pypi.org/project/hivemind-bus-client) and [GitHub](https://github.com/JarbasHiveMind/hivemind_websocket_client).
+
+---
 
 ## Install
 
@@ -10,13 +20,17 @@
 pip install hivemind-bus-client
 ```
 
+---
+
 ## Libraries
 
 | Library | Language | Notes |
 |---|---|---|
 | [hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) | Python | Primary client; WebSocket + HTTP + async + MQTT |
 | [HiveMind-js](https://github.com/JarbasHiveMind/HiveMind-js) | JavaScript | Browser and Node.js |
-| [ovos-solver-hivemind-plugin](https://github.com/JarbasHiveMind/ovos-solver-hivemind-plugin) | Python | OVOS solver plugin — chat with a HiveMind hub |
+| [ovos-solver-hivemind-plugin](https://github.com/JarbasHiveMind/ovos-solver-hivemind-plugin) | Python | OVOS solver plugin — chat with a hivemind-core server |
+
+---
 
 ## Basic connection
 
@@ -40,6 +54,8 @@ client = HiveMessageBusClient(
 client.connect()
 ```
 
+---
+
 ## Sending utterances
 
 ```python
@@ -54,6 +70,8 @@ msg = HiveMessage(
 client.emit(msg)
 ```
 
+---
+
 ## Handling responses
 
 ```python
@@ -62,6 +80,8 @@ def handle_speak(message):
 
 client.on_mycroft("speak", handle_speak)
 ```
+
+---
 
 ## Conversational loop
 
@@ -92,12 +112,16 @@ while True:
 
 The synchronous `HiveMessageBusClient` runs its WebSocket on a background thread; there is no `close()` method — interrupting the loop is enough to stop sending. (An explicit `close()` exists only on the async client in `hivemind_bus_client.async_client`.)
 
+---
+
 ## Sending binary data (audio)
 
 ```python
 audio_bytes = b"..."  # Raw PCM data
 client.emit(HiveMessage(HiveMessageType.BINARY, audio_bytes))
 ```
+
+---
 
 ## HTTP client
 
@@ -109,6 +133,8 @@ from hivemind_bus_client.http_client import HiveMindHTTPClient
 client = HiveMindHTTPClient(host="http://192.168.1.10", port=5679)
 client.connect()
 ```
+
+---
 
 ## Identity management
 
@@ -127,6 +153,8 @@ hivemind-client test-identity
 
 The identity file is at `~/.config/hivemind/_identity.json`.
 
+---
+
 ## Receiving binary data
 
 Inbound binary payloads (TTS audio, files) are dispatched through a
@@ -144,13 +172,15 @@ class MyBinaryHandler(BinaryDataCallbacks):
             f.write(bin_data)
 
     def handle_receive_file(self, bin_data: bytes, file_name: str):
-        # arbitrary file pushed from the hub
+        # arbitrary file pushed from hivemind-core
         with open(file_name, "wb") as f:
             f.write(bin_data)
 
 client = HiveMessageBusClient(bin_callbacks=MyBinaryHandler())
 client.connect()
 ```
+
+---
 
 ## Serialization and encryption
 
@@ -160,6 +190,8 @@ client.connect()
 2. The payload is compressed with zlib if enabled
 3. The result is encrypted with AES-256-GCM using the session key
 4. The encrypted payload is encoded (Z85 + Base91) for text transport
+
+---
 
 ## Decorator helpers
 
@@ -184,6 +216,8 @@ Other decorators target specific `HiveMessageType` envelopes:
 `on_hive_message`, `on_payload`, `on_ping`, `on_broadcast`, `on_propagate`,
 `on_escalate`, `on_handshake`, `on_hello`, `on_query`, `on_cascade`,
 `on_rendezvous`, `on_third_party`, and `on_shared_bus`.
+
+---
 
 ## Topology mapping (PING flood)
 
@@ -222,6 +256,8 @@ For automated topology collection use `HiveMapper` from
 `hivemind_bus_client.hive_map`. Call `mapper.start_ping(flood_id)`, feed each
 received inner `PING` to `mapper.on_ping(ping_msg)`, and read back the discovered
 `mapper.nodes` / `mapper.edges`.
+
+---
 
 ## Request / response
 
@@ -271,6 +307,8 @@ if reply is not None:
 The same five helpers exist on the async client as coroutines — `await
 client.wait_for_response(...)`.
 
+---
+
 ## INTERCOM — end-to-end satellite-to-satellite
 
 `emit_intercom` sends a message addressed to one specific peer, encrypted so that
@@ -289,7 +327,7 @@ base64 fields `encrypted_key`, `ciphertext`, `tag`, `nonce`, and `signature`,
 wrapped in a `HiveMessageType.INTERCOM` message.
 
 ```python
-recipient_pubkey = client.identity.trusted_keys["living-room-hub"]
+recipient_pubkey = client.identity.trusted_keys["living-room-satellite"]
 client.emit_intercom(
     HiveMessage(HiveMessageType.BUS,
                 Message("speak", {"utterance": "psst"})),
@@ -307,6 +345,8 @@ accepted.
 > `encrypt_RSA(pubkey, ...)`, signs it, and sends a payload of just
 > `{"ciphertext": ..., "signature": ...}` (both base64). Don't mix the two
 > formats across transports.
+
+---
 
 ## Async client
 
@@ -352,6 +392,8 @@ Use the async client when your app already runs an event loop (aiohttp/FastAPI,
 discord.py, etc.). Use the sync `HiveMessageBusClient` for scripts and
 thread-based apps — it runs its WebSocket on a background thread and needs no loop.
 
+---
+
 ## HTTP client specifics
 
 `HiveMindHTTPClient` (`hivemind_bus_client.http_client`) is a
@@ -376,6 +418,8 @@ resp = client.emit(some_hive_message)    # returns a requests.Response
   `on_mycroft(ovos_type, func)` for inner OVOS messages; `remove` /
   `remove_mycroft` unregister them.
 - `disconnect()` (POST `/disconnect`) and `shutdown()` stop the loop.
+
+---
 
 ## CASCADE aggregation
 
@@ -404,6 +448,8 @@ Inside `HiveMindSlaveProtocol.handle_cascade`, a node builds one per query:
 known to the `HiveMapper`, and `emit_callback` injects the winner's inner BUS
 payload onto the internal bus.
 
+---
+
 ## Identity & trusted keys
 
 `NodeIdentity` (`hivemind_bus_client.identity`) wraps the identity file
@@ -415,7 +461,7 @@ payload onto the internal bus.
 ```python
 identity = NodeIdentity()
 identity.create_keys()                       # generate + store an RSA keypair
-identity.add_trusted_key("living-room-hub",  # alias -> public key
+identity.add_trusted_key("living-room-satellite",  # alias -> public key
                          peer_public_key)     # True if added, False if alias exists
 identity.save()                              # persist to the identity file
 identity.reload()                            # re-read from disk
@@ -427,6 +473,8 @@ CASCADE, and INTERCOM handling — only messages from a trusted key (or explicit
 targeted at this node) are injected onto the bus. Related helpers:
 `remove_trusted_key(alias)`, `is_trusted_key(pubkey)`,
 `get_trusted_alias(pubkey)`.
+
+---
 
 ## Reconnection
 
@@ -443,6 +491,8 @@ and needs resilience against dropped connections, build your own supervisor:
 detect the drop (e.g. emit failures, the async receive loop emitting `"close"`,
 or your own heartbeat) and re-run `connect()` on a fresh client with backoff.
 
+---
+
 ## Encodings & ciphers
 
 The JSON transport encoding and the symmetric cipher are configurable. The enums
@@ -456,9 +506,8 @@ live in `hivemind_bus_client.encryption`:
 `SupportedCiphers`: `AES_GCM` (`"AES-GCM"`), `CHACHA20_POLY1305`
 (`"CHACHA20-POLY1305"`).
 
-Clients default to `JSON_HEX` + `AES_GCM` (the server defaults before they became
-configurable; the actual values are negotiated during the handshake). To force
-them, set the attributes after construction:
+Clients default to `JSON_HEX` + `AES_GCM`; the actual values in use are negotiated
+during the handshake. To force them, set the attributes after construction:
 
 ```python
 from hivemind_bus_client.encryption import SupportedEncodings, SupportedCiphers
@@ -469,16 +518,15 @@ client.cipher = SupportedCiphers.CHACHA20_POLY1305
 client.connect()
 ```
 
-## Next
-
-- [Protocol Specification](protocol-spec.md) — wire format, message types, routing
-- [Testing Guide](testing.md) — writing tests with the in-process harness
+---
 
 ## See also
 
-- [Protocol Reference](protocol-spec.md) — wire format, message types, routing
+- [Protocol Specification](protocol-spec.md) — wire format, message types, routing
 - [Testing Guide](testing.md) — writing tests with the in-process harness
 - [CLI Reference](../reference/cli.md) — `hivemind-client` commands
+
+---
 
 ## Source
 

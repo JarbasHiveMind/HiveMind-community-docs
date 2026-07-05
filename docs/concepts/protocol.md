@@ -1,8 +1,11 @@
 # Protocol
 
-In plain terms: this is the shared language HiveMind nodes speak. Every message is wrapped in a small envelope that says what kind of message it is and where it should go, so hubs and satellites can route it correctly.
+**The HiveMind protocol is the shared language its nodes speak.** It runs over pluggable transports, and every message on the wire is a `HiveMessage` — a JSON envelope (or binary-encoded equivalent) carrying a `msg_type` and a payload that says what kind of message it is and where it should go, so hivemind-core instances and satellites route it correctly.
 
-HiveMind defines a message protocol that runs over pluggable transports. Every message on the wire is a `HiveMessage` — a JSON envelope (or binary-encoded equivalent in protocol v2) carrying a `msg_type` and a payload.
+!!! abstract "In a nutshell"
+    - Every message is a `HiveMessage` with a `msg_type` from the `HiveMessageType` enum: payload messages (`BUS`, `SHARED_BUS`, `THIRDPRTY`, `BINARY`), routing messages (`ESCALATE`, `BROADCAST`, `PROPAGATE`, `QUERY`, `CASCADE`, `INTERCOM`, `PING`), and connection messages (`HELLO`, `HANDSHAKE`).
+    - `BUS` is the workhorse: a single-hop request/response between a satellite and the AI back-end.
+    - hivemind-core injects routing and session context into each OVOS message and uses `Message.reply()` to route replies back to the right satellite.
 
 ## HiveMessage types
 
@@ -15,7 +18,7 @@ These carry OVOS `Message` objects (or other application payloads) as their cont
 | Type | Purpose | Direction |
 |---|---|---|
 | **`BUS`** | Single-hop message to/from the AI back-end | Bidirectional |
-| **`SHARED_BUS`** | Passive monitoring of a satellite's local OVOS bus | Satellite → Hub |
+| **`SHARED_BUS`** | Passive monitoring of a satellite's local OVOS bus | Satellite → hivemind-core |
 | **`THIRDPRTY`** | User-defined payload, relayed opaquely | Application-defined |
 | **`BINARY`** | Raw binary data (audio, images, files) | Bidirectional |
 
@@ -25,8 +28,8 @@ These wrap another `HiveMessage` as their payload and control how it is routed t
 
 | Type | Purpose | Direction |
 |---|---|---|
-| **`ESCALATE`** | Multi-hop upward — satellite asks parent for help | Satellite → Hub (up the chain) |
-| **`BROADCAST`** | Multi-hop downward — hub commands all satellites | Hub → All satellites (down the chain) |
+| **`ESCALATE`** | Multi-hop upward — satellite asks parent for help | Satellite → hivemind-core (up the chain) |
+| **`BROADCAST`** | Multi-hop downward — hivemind-core commands all satellites | hivemind-core → All satellites (down the chain) |
 | **`PROPAGATE`** | Flood in all directions — reaches all reachable nodes | Bidirectional |
 | **`QUERY`** | Routed request with a single expected response | Bidirectional |
 | **`CASCADE`** | Scatter/gather — every node may answer; originator picks best | Bidirectional |
@@ -43,9 +46,11 @@ These are handled automatically by `HiveMessageBusClient` and `hivemind-core`. Y
 | **`HELLO`** | Node announcement on connection (carries node ID and public key) |
 | **`HANDSHAKE`** | Cryptographic key exchange. Protocol **v3** runs a **Noise** handshake (always-encrypted session); the legacy **v1/v2** path uses a password (salted-hash + PBKDF2) or RSA envelope. See [Security](security.md#handshake-and-encryption). |
 
+---
+
 ## Roles
 
-### Hub (listener protocol)
+### hivemind-core (listener protocol)
 
 - **Accepts**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`, `QUERY`, `CASCADE`, `INTERCOM`
 - **Emits**: `BUS`, `PROPAGATE`, `BROADCAST`, `QUERY`, `CASCADE`, `INTERCOM`
@@ -55,9 +60,11 @@ These are handled automatically by `HiveMessageBusClient` and `hivemind-core`. Y
 - **Accepts**: `BUS`, `PROPAGATE`, `BROADCAST`, `QUERY`, `CASCADE`, `INTERCOM`
 - **Emits**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`, `QUERY`, `CASCADE`, `INTERCOM`
 
+---
+
 ## BUS message — the workhorse
 
-`BUS` is the standard single-hop request/response. A satellite wraps an OVOS `Message` in a `HiveMessage(HiveMessageType.BUS, ovos_message)` and sends it to the hub. The hub:
+`BUS` is the standard single-hop request/response. A satellite wraps an OVOS `Message` in a `HiveMessage(HiveMessageType.BUS, ovos_message)` and sends it to hivemind-core, which:
 
 1. Checks the client's `allowed_types` whitelist — if the OVOS message type is not allowed, the message is dropped
 2. Runs the configured policy chain (by default `OVOSAgentPolicy`) which injects per-client session data including skill/intent blacklists
@@ -66,15 +73,21 @@ These are handled automatically by `HiveMessageBusClient` and `hivemind-core`. Y
 
 The `Message.reply()` mechanism (from `ovos-bus-client`) swaps `source` ↔ `destination` on every reply, so all downstream skill messages (`speak`, `intent.handled`, etc.) automatically carry the originating satellite's peer ID in `destination`. `hivemind-core` reads that field and routes each reply to the correct connection.
 
+---
+
 ## SHARED_BUS — passive monitoring
 
-`SHARED_BUS` lets a satellite share its own local OVOS bus with the hub passively. The hub observes but does not inject the messages into its own bus. Typically used by the [ovos-skill-fallback-hivemind](https://github.com/JarbasHiveMind/ovos-skill-fallback-hivemind) skill.
+`SHARED_BUS` lets a satellite share its own local OVOS bus with hivemind-core passively. hivemind-core observes but does not inject the messages into its own bus. Typically used by the [ovos-skill-fallback-hivemind](https://github.com/JarbasHiveMind/ovos-skill-fallback-hivemind) skill.
+
+---
 
 ## INTERCOM — end-to-end encrypted peer-to-peer
 
-`INTERCOM` messages are sealed in a **hybrid envelope**: a random AES-256-GCM session key is wrapped with the **recipient node's RSA public key** (PKCS#1 OAEP) and the payload is encrypted with AES-256-GCM. The envelope carries base64 fields `encrypted_key`, `ciphertext`, `tag`, `nonce`, and `signature`. Intermediate nodes — including the hub — cannot read the payload. Only the target node, which holds the corresponding RSA private key, can unwrap the session key and decrypt it. After decryption, the node verifies the sender's RSA signature (PSS over SHA-256) using the sender's public key (stored in the trust store).
+`INTERCOM` messages are sealed in a **hybrid envelope**: a random AES-256-GCM session key is wrapped with the **recipient node's RSA public key** (PKCS#1 OAEP) and the payload is encrypted with AES-256-GCM. The envelope carries base64 fields `encrypted_key`, `ciphertext`, `tag`, `nonce`, and `signature`. Intermediate nodes — including hivemind-core — cannot read the payload. Only the target node, which holds the corresponding RSA private key, can unwrap the session key and decrypt it. After decryption, the node verifies the sender's RSA signature (PSS over SHA-256) using the sender's public key (stored in the trust store).
 
 `INTERCOM` is usually the payload of a transport message (`ESCALATE` or `PROPAGATE`) so it reaches its destination through the mesh. Intermediate nodes forward it without being able to read it.
+
+---
 
 ## Request/response — QUERY
 
@@ -82,9 +95,9 @@ The `Message.reply()` mechanism (from `ovos-bus-client`) swaps `source` ↔ `des
 
 **Request flow:**
 
-1. A satellite wraps an OVOS `Message` in `HiveMessage(HiveMessageType.QUERY, bus_hive_message)` and sends it to the hub, including a `query_id` in the message metadata.
-2. Each hub in the chain attempts to answer from its local agent (within a timeout). If the local agent produces a response, the hub wraps it as a QUERY response and sends it back downstream.
-3. If the local agent does not answer, the hub forwards the QUERY upstream via `query_to_master`. At the top-level master with no upstream, a `hive.query.timeout` error response is returned instead.
+1. A satellite wraps an OVOS `Message` in `HiveMessage(HiveMessageType.QUERY, bus_hive_message)` and sends it to hivemind-core, including a `query_id` in the message metadata.
+2. Each instance in the chain attempts to answer from its local agent (within a timeout). If the local agent produces a response, that instance wraps it as a QUERY response and sends it back downstream.
+3. If the local agent does not answer, the instance forwards the QUERY upstream via `query_to_master`. At the top-level master with no upstream, a `hive.query.timeout` error response is returned instead.
 
 **Response envelope:**
 
@@ -99,6 +112,8 @@ A QUERY response is itself a `HiveMessage(HiveMessageType.QUERY, ...)` with `met
 
 **Relay nodes** receiving a QUERY response with `is_response = True` route it toward `originator_peer` without re-processing it as a new request.
 
+---
+
 ## Scatter/gather — CASCADE
 
 `CASCADE` is like `PROPAGATE`, but every reachable node may answer. Use it when you want to collect responses from across the hive and pick the best one — for example, asking all nodes for their current status or broadcasting a question to all connected agents.
@@ -106,7 +121,7 @@ A QUERY response is itself a `HiveMessage(HiveMessageType.QUERY, ...)` with `met
 **Request flow:**
 
 1. A satellite sends `HiveMessage(HiveMessageType.CASCADE, bus_hive_message)` with a `query_id`.
-2. Each hub that receives the CASCADE: (a) tries its local agent and, if it gets a response, sends that back as a CASCADE response; (b) forwards the CASCADE onward to all other connected peers and upstream.
+2. Each instance that receives the CASCADE: (a) tries its local agent and, if it gets a response, sends that back as a CASCADE response; (b) forwards the CASCADE onward to all other connected peers and upstream.
 3. Multiple responses can arrive at the originator from different nodes.
 
 **Response collection:**
@@ -117,13 +132,17 @@ On the client side, `CascadeAggregator` buffers responses for a configurable `ca
 
 Unlike QUERY (where responses come from a known upstream chain), CASCADE responses can originate from any node in the hive. The select callback is responsible for evaluating and choosing among responses that may come from untrusted nodes.
 
+---
+
 ## PING and topology mapping
 
 `PING` is always wrapped inside a `PROPAGATE` — it floods to all reachable nodes. There is no separate reply message type: each node that receives a `PING` re-emits *its own* `PING` (carrying the same `flood_id`), flooded onward via `PROPAGATE`. Receivers deduplicate by `flood_id` so each probe is processed once. The PING payload is `{flood_id, peer, site_id, timestamp}`. `HiveMapper` in `hivemind_core.hive_map` observes these re-emitted PINGs to build a topology map of the live hive.
 
+---
+
 ## Session and context keys
 
-When a satellite sends a BUS message, the hub injects routing metadata into `Message.context` before passing it to OVOS:
+When a satellite sends a BUS message, hivemind-core injects routing metadata into `Message.context` before passing it to OVOS:
 
 | Key | Value | Purpose |
 |---|---|---|
@@ -136,6 +155,8 @@ When a satellite sends a BUS message, the hub injects routing metadata into `Mes
 | `context["session"]["blacklisted_intents"]` | List of intent names | Enforced by `IntentService` |
 
 After `Message.reply()` is called by OVOS, `source` and `destination` are swapped, so `destination` becomes the satellite's peer ID. `HiveMindListenerProtocol.handle_internal_mycroft()` reads this field to route the response to the correct satellite connection.
+
+---
 
 ## Protocol versions
 
@@ -157,6 +178,8 @@ The server admits a connection only if it can negotiate at least `min_protocol_v
 
 !!! note "You don't negotiate v2 to send binary"
     Whether a v1/v2 connection uses binary framing is gated by the `binarize` boolean exchanged in the handshake, **not** by negotiating `ProtocolVersion.TWO` on its own. Under v3 the session is always encrypted and binary-capable. See [Protocol Spec](../developers/protocol-spec.md) for the framing and Noise details.
+
+---
 
 ## Source
 

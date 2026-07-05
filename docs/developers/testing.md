@@ -1,15 +1,16 @@
 # Testing Guide
 
-[`hivescope`](https://github.com/JarbasHiveMind/hivescope) is the in-process E2E
-testing library for HiveMind. It wires `MasterNode`, `SatelliteNode`, and
-`RelayNode` objects together directly — no real sockets, no running servers, no
-network processes — and records every `HiveMessage` for inspection. Use it to
-validate message routing, session handling, ACL enforcement, and protocol
-compliance.
+**[`hivescope`](https://github.com/JarbasHiveMind/hivescope) is the in-process end-to-end testing library for HiveMind.** It wires `MasterNode`, `SatelliteNode`, and `RelayNode` objects together directly — no real sockets, no running servers, no network processes — and records every `HiveMessage` for inspection.
 
-(`hivemind-test-harness` builds on top of hivescope for cross-repo stress and
-multi-topology suites; for testing a single client or skill, target hivescope
-directly.)
+!!! abstract "In a nutshell"
+    - Assemble a test topology from `MasterNode`, `SatelliteNode`, and `RelayNode` objects to validate message routing, session handling, ACL enforcement, and protocol compliance.
+    - Every node carries a `MessageRecorder`; the master's `TestAgentProtocol` records every OVOS message injected onto its agent bus.
+    - `hivescope.scenarios` ships pre-wired topology builders and `hivescope.assertions` ships ready-made checks; `pytest` fixtures wire the common ones up automatically.
+
+`hivemind-test-harness` builds on top of hivescope for cross-repo stress and
+multi-topology suites; to test a single client or skill, target hivescope directly.
+
+---
 
 ## Install
 
@@ -24,11 +25,13 @@ For OVOS skill-level tests backed by a live MiniCroft instance, install the
 pip install "hivescope[ovos]" pytest
 ```
 
+---
+
 ## Overview
 
 A test topology is assembled by a `TopologyBuilder` and made of nodes:
 
-- **`MasterNode`** — wraps the `HiveMindListenerProtocol` (the hub). Its
+- **`MasterNode`** — wraps the `HiveMindListenerProtocol` (hivemind-core). Its
   `agent_protocol` is a `TestAgentProtocol` that records every OVOS message
   injected onto the agent bus.
 - **`SatelliteNode`** — simulates a connected satellite client (slave protocol)
@@ -44,10 +47,12 @@ and outbound `HiveMessage`s as `RecordedMessage` entries.
 **not-yet-started** builder — call `.start_all()` before testing and
 `.stop_all()` in a `finally` block.
 
-## Pattern A: Direct hub injection
+---
+
+## Pattern A: Direct hivemind-core injection
 
 Emit an OVOS message on the master's agent bus and assert it was seen there
-(`emit_on_bus` simulates a skill response on the hub).
+(`emit_on_bus` simulates a skill response on hivemind-core).
 
 ```python
 from hivescope import TopologyBuilder
@@ -67,7 +72,9 @@ def test_direct_injection():
         b.stop_all()
 ```
 
-## Pattern B: Satellite-to-hub round-trip
+---
+
+## Pattern B: Satellite-to-hivemind-core round-trip
 
 Send a `BUS` message from a satellite and assert the master injected the inner
 OVOS utterance onto its agent bus. `single_satellite(allowed_types=[...])` grants
@@ -94,6 +101,8 @@ def test_satellite_roundtrip():
     finally:
         b.stop_all()
 ```
+
+---
 
 ## Pattern C: Multi-satellite topology
 
@@ -126,10 +135,12 @@ def test_downstream_routing():
         b.stop_all()
 ```
 
+---
+
 ## Pattern D: Session and context verification
 
 Attach an OVOS `Session` to the outgoing message and assert it survives injection
-on the hub.
+on hivemind-core.
 
 ```python
 from hivescope.scenarios import single_satellite
@@ -156,6 +167,8 @@ def test_session_propagation():
         b.stop_all()
 ```
 
+---
+
 ## Pytest fixtures
 
 Enable hivescope's fixtures from your `tests/conftest.py`:
@@ -180,6 +193,8 @@ def test_with_fixtures(master_node, restricted_satellite):
         "recognizer_loop:utterance", count=1
     )
 ```
+
+---
 
 ## Common assertions
 
@@ -207,6 +222,8 @@ from hivescope.assertions import (
 assert_bus_message_routed(m, count=1)
 ```
 
+---
+
 ## Message flow in tests
 
 ```
@@ -229,6 +246,8 @@ SatelliteNode.recorder records it; SatelliteNode.internal_bus fires
 Test assertion (recorder / agent_protocol.injected / assertions.*)
 ```
 
+---
+
 ## CI integration
 
 ```yaml
@@ -249,6 +268,8 @@ jobs:
       - run: pytest tests/ -v --cov=mypackage --cov-report=term-missing
 ```
 
+---
+
 ## Running locally
 
 ```bash
@@ -265,15 +286,15 @@ pytest tests/ -v --cov=mypackage --cov-report=term-missing
 pytest tests/test_routing.py -v
 ```
 
-## Next
-
-- [Client Library](client-library.md) — `HiveMessageBusClient` API
-- [Writing Plugins](writing-plugins.md) — building HiveMind plugins
+---
 
 ## See also
 
-- [Protocol Concepts](../concepts/protocol.md) — message types and routing
 - [Client Library](client-library.md) — `HiveMessageBusClient` API
+- [Writing Plugins](writing-plugins.md) — building HiveMind plugins
+- [Protocol Concepts](../concepts/protocol.md) — message types and routing
+
+---
 
 ## Source
 

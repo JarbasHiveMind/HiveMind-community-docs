@@ -2,7 +2,7 @@ site_name: HiveMind Documentation
 site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
 site_description: >-
   The official manual for HiveMind — the open-source protocol that connects
-  lightweight satellite devices to a central voice/AI hub over an encrypted mesh.
+  lightweight satellite devices to a central hivemind-core server over an encrypted mesh.
 repo_url: https://github.com/JarbasHiveMind
 repo_name: JarbasHiveMind
 
@@ -22,15 +22,15 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: amber
-      accent: deep orange
+      primary: light blue
+      accent: blue
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: amber
-      accent: deep orange
+      primary: light blue
+      accent: blue
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
@@ -86,7 +86,7 @@ nav:
   - FAQ: faq.md
   - Core Concepts:
     - concepts/index.md
-    - Mesh & Hub Topology: concepts/mesh.md
+    - Mesh Topology: concepts/mesh.md
     - Protocol & Message Types: concepts/protocol.md
     - Security & Permissions: concepts/security.md
     - Database Backends: concepts/databases.md
@@ -102,12 +102,12 @@ nav:
     - WebSpeech Browser: satellites/webspeech.md
     - Microcontrollers (ESP32): satellites/microcontrollers.md
 
-  - Hub & Server:
+  - Self-Hosting:
     - server/index.md
     - Admin Panel: server/admin-panel.md
-    - OVOS Skills Hub: server/ovos-hub.md
-    - Persona Hub (LLM): server/persona-hub.md
-    - A2A Hub (Agents): server/a2a-hub.md
+    - OVOS Skills Server: server/ovos-hub.md
+    - Persona Server (LLM): server/persona-hub.md
+    - A2A Server (Agents): server/a2a-hub.md
     - Transports: server/transports.md
     - Audio Binary Protocol: server/audio-binary-protocol.md
     - Docker Deployment: server/docker.md

@@ -1,11 +1,16 @@
 # Writing Plugins
 
-> **What this is for.** HiveMind has no hard-coded transport, AI backend, or database — each is a swappable plugin. Read this page when you want to add a new one (e.g. a transport HiveMind doesn't ship, or your own AI backend). If you only want to *configure* existing plugins, see [Plugin Architecture](../concepts/plugins.md) instead.
+**HiveMind Core is assembled entirely from plugins discovered at runtime by the HiveMind Plugin Manager (HPM)** — no transport, AI backend, or database is hard-coded, so each is added by authoring a plugin. This is the developer-facing companion to the operator view in [Plugin Architecture](../concepts/plugins.md).
 
-HiveMind Core is assembled entirely from plugins discovered at runtime by the
-**HiveMind Plugin Manager** (HPM) — see [Plugin Architecture](../concepts/plugins.md)
-for the operator-facing view. This page is the developer-facing companion: how to
-author your own plugin for each of the five families.
+!!! abstract "In a nutshell"
+    - Five plugin families cover the extension points: network protocol, agent protocol, binary data handler, database, and policy.
+    - Authoring a plugin is two steps: subclass the family's base class and implement its contract, then register the class under the family's entry-point group.
+    - Every protocol base derives from a shared `_SubProtocol` dataclass, so each plugin receives `config`, `hm_protocol`, `identity`, `database`, `clients`, and `callbacks` for free.
+
+!!! note "Only configuring existing plugins?"
+    To select and configure installed plugins rather than author a new one, see [Plugin Architecture](../concepts/plugins.md).
+
+---
 
 ## The plugin-manager model
 
@@ -43,10 +48,10 @@ Every protocol base derives from a shared `_SubProtocol` dataclass
 (`hivemind_plugin_manager/protocols.py`) and so receives, for free:
 
 - `self.config` — the plugin's config dict
-- `self.hm_protocol` — the `HiveMindListenerProtocol` (the hub) once wired up
+- `self.hm_protocol` — the `HiveMindListenerProtocol` (hivemind-core) once wired up
 - `self.identity` — the node `NodeIdentity`
-- `self.database` — the active client `AbstractDB`, via the hub
-- `self.clients` — the connected `HiveMindClientConnection` map, via the hub
+- `self.database` — the active client `AbstractDB`, via hivemind-core
+- `self.clients` — the connected `HiveMindClientConnection` map, via hivemind-core
 - `self.callbacks` — `ClientCallbacks` (`on_connect` / `on_disconnect` /
   `on_invalid_key` / `on_invalid_protocol`)
 
@@ -55,7 +60,7 @@ Every protocol base derives from a shared `_SubProtocol` dataclass
 ## 1. Network protocol
 
 A network protocol is the transport: it accepts satellite connections and feeds
-their `HiveMessage` traffic into the hub.
+their `HiveMessage` traffic into hivemind-core.
 
 - **Entry-point group:** `hivemind.network.protocol`
 - **Base class:** `NetworkProtocol` (`hivemind_plugin_manager/protocols.py`)
@@ -68,10 +73,10 @@ their `HiveMessage` traffic into the hub.
   ```
 
   `run()` starts the transport (bind a socket / start a server loop) and keeps it
-  running, accepting client connections and dispatching their messages to the hub.
+  running, accepting client connections and dispatching their messages to hivemind-core.
   It is invoked by `NetworkProtocolFactory.create(...)` consumers in
   `hivemind-core`. In addition to the shared `_SubProtocol` members, a network
-  protocol exposes `self.agent_protocol` (the active `AgentProtocol`, via the hub).
+  protocol exposes `self.agent_protocol` (the active `AgentProtocol`, via hivemind-core).
 
 Real implementation: `hivemind-websocket-protocol`
 (`HiveMindWebsocketProtocol`, a Tornado WebSocket server).
@@ -186,7 +191,7 @@ class MyAgentProtocol(AgentProtocol):
 ## 3. Binary data handler
 
 A binary data handler processes binary `HiveMessage` payloads — raw audio, images,
-files — on the hub (server-side wakeword/STT/VAD/TTS, camera frames, etc.).
+files — on hivemind-core (server-side wakeword/STT/VAD/TTS, camera frames, etc.).
 
 - **Entry-point group:** `hivemind.binary.protocol`
 - **Base class:** `BinaryDataHandlerProtocol` (`hivemind_plugin_manager/protocols.py`)
@@ -424,6 +429,8 @@ class MyPolicy(PolicyPlugin):
 
 - [Plugin Architecture](../concepts/plugins.md) — how operators select and configure
   installed plugins in `server.json`.
+
+---
 
 ## Source
 
