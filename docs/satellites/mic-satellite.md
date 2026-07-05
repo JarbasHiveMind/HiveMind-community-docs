@@ -120,6 +120,10 @@ Example `mycroft.conf` excerpt:
 
 ## How audio flows
 
+It helps to trace one spoken sentence end to end. The device does only the first two
+steps; the moment there's sound, everything else happens on the server and comes back as
+audio to play:
+
 ```
 [Microphone] → [VAD] → raw audio chunks → [hivemind-core]
                                               ↓

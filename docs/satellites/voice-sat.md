@@ -101,7 +101,10 @@ All flags fall back to the identity file written by `hivemind-client set-identit
 
 ## Configuration
 
-voice-sat reads `~/.config/mycroft/mycroft.conf` (standard OVOS configuration). Override STT, TTS, VAD, and wakeword plugins there.
+Because the whole speech stack runs here, this is where you get to choose every piece of
+it — which recogniser, which voice, which wake word. It's standard OVOS configuration in
+`~/.config/mycroft/mycroft.conf`. The example below shows the shipped remote STT/TTS; to
+go fully offline, this is the block where you swap in local plugins.
 
 Example:
 
