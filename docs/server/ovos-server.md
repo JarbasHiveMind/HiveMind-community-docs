@@ -38,7 +38,10 @@ pip install hivemind-core
 
 All server configuration lives at `~/.config/hivemind-core/server.json`. `hivemind-core listen` takes no command-line flags — edit the file to change any setting. Run `hivemind-core print-config` to dump the effective configuration.
 
-Default configuration (abbreviated):
+Don't be daunted by the block below — for a standard OVOS server you barely touch it. It's
+printed in full so you can see the defaults, but the one line that matters for this setup
+is the `agent_protocol` block pointing at your OVOS messagebus. Everything else already
+does the right thing:
 
 ```json
 {
@@ -160,7 +163,10 @@ Then configure `server.json` to enable it. See [Audio Binary Protocol](audio-bin
 
 ## Systemd service
 
-To run `hivemind-core` as a system service:
+Once it works from the terminal, you'll want it to come back on its own after a reboot.
+The unit below does that — the one detail worth copying carefully is the ordering: OVOS's
+messagebus has to be up before hivemind-core tries to reach it, which the `After=` /
+`Requires=` lines guarantee.
 
 ```ini
 # /etc/systemd/system/hivemind-core.service

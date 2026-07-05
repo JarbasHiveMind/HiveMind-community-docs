@@ -33,7 +33,16 @@ cp -r custom_components/hivemind /config/custom_components/
 
 ## Required permissions
 
-This integration does more than send voice queries — it injects and reads bus messages at a system level. The HiveMind client used by this integration must have **admin privileges** and must be granted explicit access to the following message types.
+This is the one place this integration asks more of you than a chat bridge does — so
+here's *why* before the long lists. A bridge only needs to hear `speak`. This integration
+actually drives the device: it mutes the mic, reads whether a service is alive, changes
+the volume, controls playback. Each of those is a distinct bus message, and HiveMind's
+deny-by-default posture means you have to allow every one you want to use.
+
+You don't have to grant them all — grant the ones behind the controls you care about. The
+lists below are grouped by the OVOS service each message belongs to, so you can pick whole
+capabilities at a time (skip the OCP block if you don't need media controls, skip the PHAL
+blocks if you don't need volume or power). This client also needs the **admin** flag.
 
 ### ovos-core
 
@@ -160,7 +169,9 @@ ovos.phal.camera.open
 ovos.phal.camera.close
 ```
 
-Grant these permissions using `hivemind-core allow-msg`, passing the client node ID positionally:
+However many of those you decided you need, you grant them the same way — one
+`allow-msg` per message type, then the admin flag once at the end (the node ID goes last,
+positionally):
 
 ```bash
 hivemind-core allow-msg "speak" <id>
