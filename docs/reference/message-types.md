@@ -1,6 +1,10 @@
 # HiveMessage Types Reference
 
-**A lookup table of every kind of message that travels over a HiveMind network** — what each one is for, which direction it flows, and what it carries.
+Every message crossing a hive is one of a small, fixed set of kinds — a `BUS` request, a
+`BROADCAST` rolling downhill, an `INTERCOM` sealed for a single recipient. This is the
+catalogue of all of them: what each one is for, which way it flows, and what it carries.
+When you're reading a packet capture or wiring up routing and need to know precisely what
+a `CASCADE` does, look it up here.
 
 !!! abstract "In a nutshell"
     - Message types fall into **payload** (`BUS`, `SHARED_BUS`, `THIRDPRTY`, `BINARY`), **transport** (`ESCALATE`, `BROADCAST`, `PROPAGATE`, `QUERY`, `CASCADE`, `INTERCOM`, `RENDEZVOUS`), **discovery** (`PING`), and **connection** (`HELLO`, `HANDSHAKE`) categories.

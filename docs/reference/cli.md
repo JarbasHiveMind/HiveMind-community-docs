@@ -1,6 +1,9 @@
 # CLI Reference
 
-**Every command and flag across the three HiveMind command-line tools**, grouped by the package that provides them.
+When you can't quite remember whether it's `--node-id` or a positional argument (it's
+positional), this is the page to keep open. Every command and flag across the three
+HiveMind command-line tools, grouped by the tool that provides them — `hivemind-core` for
+the server, `hivemind-client` for satellites, `hivemind-presence` for discovery.
 
 !!! abstract "In a nutshell"
     - `hivemind-core` — server-side management: client credentials, permissions, policy, and database.

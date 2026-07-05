@@ -1,6 +1,9 @@
 # Quick Start
 
-**This guide takes you from zero to a working hivemind-core server** with one connected satellite in under ten minutes.
+By the end of this page you'll say "hey mycroft, what time is it?" to one device and
+hear the answer come back — proof that the whole path works. It takes about ten minutes:
+stand up hivemind-core on a machine you own, hand a satellite a key, and watch it join.
+Everything after that is just adding more devices.
 
 !!! abstract "In a nutshell"
     - Install `hivemind-core` on the server, register a client with `add-client`, then connect a satellite with its access key and password.
