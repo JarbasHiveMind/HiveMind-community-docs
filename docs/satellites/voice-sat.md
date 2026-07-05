@@ -1,12 +1,20 @@
 # Voice Satellite
 
-**The voice satellite is the full-stack OVOS satellite: microphone, VAD, wakeword, and the STT/TTS plugins all run on the device.** Only the transcribed text utterance is sent to hivemind-core — never audio. Responses arrive as text and are spoken locally.
+At the thick end of the spectrum, the device does the listening *and* the hearing. The
+voice satellite runs the whole speech stack itself — microphone, wake word,
+transcription, and speech synthesis — and hands hivemind-core nothing but the finished
+sentence: plain text, never audio. The reply comes back as text and the device speaks it
+aloud on its own. Point it at local speech plugins and your voice never leaves the
+room; the connection to the server carries only words. It's the most private and the
+most connection-tolerant option — a flaky network can't garble audio that was never
+sent — in exchange for needing a board with real CPU behind it (a Pi 4, a laptop, a
+mini PC).
 
 !!! abstract "In a nutshell"
-    - **Runs locally**: microphone, VAD, wakeword, plus STT and TTS.
-    - **hivemind-core provides**: skills, intents, and reasoning — no `hivemind-audio-binary-protocol` needed.
-    - Sends only text utterances, so audio never reaches hivemind-core and STT/TTS are chosen independently of any hivemind-core config.
-    - The shipped default plugins (`ovos-stt-plugin-server` / `ovos-tts-plugin-server`) are remote HTTP services; swap in local plugins for fully on-device, offline operation.
+    - **On the device:** microphone, VAD, wake word, *and* STT + TTS.
+    - **On hivemind-core:** skills, intents, reasoning — and no `hivemind-audio-binary-protocol` required.
+    - It sends only text, so audio never reaches the server and you pick your own STT/TTS regardless of what the server runs.
+    - Heads-up: the *shipped defaults* (`ovos-stt-plugin-server` / `ovos-tts-plugin-server`) are remote HTTP services, so out of the box audio still leaves the device for transcription. Swap in local plugins for a fully on-device, offline satellite.
 
 > **Note**: STT and TTS are chosen on the satellite, but the *shipped defaults*
 > (`ovos-stt-plugin-server` / `ovos-tts-plugin-server`) are remote HTTP services

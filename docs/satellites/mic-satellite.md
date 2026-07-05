@@ -1,12 +1,19 @@
 # Microphone Satellite
 
-**The mic satellite is the thinnest software satellite: it runs only microphone capture and Voice Activity Detection (VAD) on-device.** Everything else — wakeword detection, STT, intent handling, and TTS synthesis — runs on hivemind-core.
+Take an old Raspberry Pi Zero, plug in a microphone, and let it do almost nothing but
+listen. The mic satellite runs just enough to notice *when* someone is speaking — a
+microphone and voice-activity detection — and streams that audio straight to
+hivemind-core. It doesn't even wait for a wake word; the server handles that too, along
+with the transcription, the skills, and the spoken reply. That makes it the simplest
+software satellite to run and the least demanding on the device. The trade-off is candid:
+because it forwards every scrap of detected speech, it's chatty on the network and leans
+hard on the server, so it's happiest on a small, fast home LAN.
 
 !!! abstract "In a nutshell"
-    - **Runs locally**: microphone + VAD.
-    - **hivemind-core provides**: wakeword, STT, intent processing, and TTS — requires `hivemind-audio-binary-protocol` on hivemind-core.
-    - Streams every VAD-gated voice segment to hivemind-core as binary `RAW_AUDIO`, so it is bandwidth-heavy and best suited to a small LAN homelab.
-    - For multi-user or at-scale deployments, prefer [voice-relay](voice-relay.md), which gates audio behind a local wakeword.
+    - **On the device:** a microphone and VAD. That's it.
+    - **On hivemind-core:** wakeword, STT, intents, and TTS — which means the server needs `hivemind-audio-binary-protocol` installed.
+    - It streams every VAD-gated segment of speech as binary `RAW_AUDIO`, so it's bandwidth-heavy — a good fit for a handful of devices on a homelab LAN.
+    - Serving many users or running at scale? Reach for [voice-relay](voice-relay.md) instead — it holds audio back until a local wake word fires.
 
 ---
 

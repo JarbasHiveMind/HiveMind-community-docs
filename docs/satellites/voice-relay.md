@@ -1,12 +1,19 @@
 # Voice Relay
 
-**Voice-relay runs microphone, VAD, and wakeword detection locally, then forwards audio to hivemind-core only after the wakeword triggers.** STT and TTS synthesis run on hivemind-core.
+The mic satellite forwards everything it hears; the voice relay waits to be spoken to.
+It listens for the wake word right there on the device, and only once you say it does
+any audio leave the room. Silence stays silent. That one change — a wake word on the
+device — buys you two things at once: far less traffic on the network, and the quiet
+comfort of knowing the microphone isn't shipping your kitchen conversations upstream
+between commands. Transcription and speech still happen on the server, so the relay
+needs a capable-enough board to run a wake-word engine (a Pi 3 or 4 is plenty) but
+nothing heavier.
 
 !!! abstract "In a nutshell"
-    - **Runs locally**: microphone + VAD + wakeword.
-    - **hivemind-core provides**: STT and TTS — requires `hivemind-audio-binary-protocol` on hivemind-core.
-    - Audio leaves the device only after wakeword activation, saving bandwidth and improving privacy over the [mic satellite](mic-satellite.md).
-    - STT/TTS are centrally governed by the hivemind-core operator — the "HiveMind as a service" model — so a relay cannot pick its own speech engines.
+    - **On the device:** microphone, VAD, and the wake word.
+    - **On hivemind-core:** STT and TTS — so the server needs `hivemind-audio-binary-protocol`.
+    - Audio only leaves the device after the wake word fires, saving bandwidth and keeping more to yourself than the [mic satellite](mic-satellite.md) does.
+    - The server operator owns the STT and TTS engines and voice — the "HiveMind as a service" model — so a relay can't swap in speech engines of its own.
 
 ---
 

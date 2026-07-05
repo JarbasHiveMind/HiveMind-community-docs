@@ -1,12 +1,19 @@
 # Choosing a Satellite
 
-**HiveMind satellites form a spectrum defined by where audio processing happens** — from a text-only terminal, through microcontrollers and microphones processed by hivemind-core, up to a full local voice stack. Choose the one that fits your hardware and use case.
+A satellite is whatever you talk *to* — but not every satellite carries the same load.
+At one end sits a terminal where you type and the server does absolutely everything. At
+the other sits a Raspberry Pi that hears the wake word, transcribes your speech, and
+speaks the reply all on its own, handing the server nothing but finished text. Every
+device in between is a question of one thing: **how much of the listening happens on the
+device, and how much on the server.** The thinner the satellite, the cheaper the
+hardware and the more it leans on the network. The thicker it is, the more it keeps to
+itself — even the audio stays home. This page helps you find your spot on that line.
 
 !!! abstract "In a nutshell"
-    - Satellites differ by **which stages run on the device** (mic, VAD, wakeword, STT, TTS) and **what crosses the wire** (text, raw audio, or audio after wakeword).
-    - Audio satellites need matching server support: raw-audio and base64-audio clients require `hivemind-audio-binary-protocol`; text satellites work with any hivemind-core instance.
-    - The [voice satellite](voice-sat.md) keeps all speech local and sends only text; the [mic satellite](mic-satellite.md) is the cheapest device but puts STT/TTS on hivemind-core.
-    - Use the [decision guide](#decision-guide) to map a device to its satellite.
+    - Satellites differ by **which stages run on the device** (mic, VAD, wakeword, STT, TTS) and **what actually crosses the wire** (typed text, raw audio, or audio only after the wake word fires).
+    - Anything that ships audio needs a server ready to catch it: raw-audio and base64-audio clients require `hivemind-audio-binary-protocol` on hivemind-core; text-only satellites work with any server.
+    - The [voice satellite](voice-sat.md) keeps all speech on the device and sends only text; the [mic satellite](mic-satellite.md) is the cheapest device to build but hands STT/TTS to the server.
+    - Not sure? The [decision guide](#decision-guide) maps a device to its satellite in a few questions.
 
 ---
 

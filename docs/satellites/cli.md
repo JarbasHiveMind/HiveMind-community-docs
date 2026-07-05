@@ -1,12 +1,17 @@
 # HiveMind CLI
 
-**HiveMind-cli is the simplest satellite — a text-only terminal client that needs no audio hardware.** You type utterances and hivemind-core does everything; responses arrive as text.
+No microphone, no speaker, no models — just a cursor blinking in a terminal. You type a
+question, hit enter, and the answer prints back. That's the whole satellite. It's the
+thinnest possible way to reach your hive: the device does nothing but shuttle text, and
+hivemind-core carries every bit of the thinking. Which makes it perfect for the moments
+audio would only get in the way — poking at a new server over SSH, scripting a question
+into a cron job, or wiring up a headless box that has a network cable and nothing else.
 
 !!! abstract "In a nutshell"
-    - **Runs locally**: a terminal interface — no audio processing at all.
-    - **hivemind-core provides**: STT, TTS, skills, and intents; replies come back as text.
+    - **On the device:** a terminal, and not one ounce of audio processing.
+    - **On hivemind-core:** everything — STT, TTS, skills, intents. Replies come back as text.
     - Installs as the `hivemind-cli` console script (`pip install HiveMind-cli`).
-    - Ideal for testing hivemind-core instances and skills, scripting, and audio-less IoT devices.
+    - The natural choice for testing servers and skills, scripting, and audio-less IoT boxes.
 
 ---
 
