@@ -3,6 +3,9 @@
 
 ![HiveMind Logo](https://github.com/JarbasHiveMind/HiveMind-assets/raw/master/logo/hivemind-512.png)
 
+!!! warning "Pre-release software"
+    HiveMind is under active development. Expect bugs and breaking changes between releases.
+
 **HiveMind is an open-source protocol and platform** that connects lightweight **[satellite](reference/glossary.md#roles)** devices to a central AI server — **[hivemind-core](reference/glossary.md#roles)** — over the network. Satellites range from text-only CLI clients to full voice-capable devices. hivemind-core can run an [OpenVoiceOS](https://openvoiceos.github.io/community-docs) skills server or a standalone LLM/persona server.
 
 !!! abstract "In a nutshell"
