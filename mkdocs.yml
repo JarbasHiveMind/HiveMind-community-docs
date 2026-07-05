@@ -87,6 +87,7 @@ nav:
   - Core Concepts:
     - concepts/index.md
     - Mesh Topology: concepts/mesh.md
+    - Nested Hives: concepts/nested-hives.md
     - Protocol & Message Types: concepts/protocol.md
     - Security & Permissions: concepts/security.md
     - Database Backends: concepts/databases.md
