@@ -80,11 +80,15 @@ These are handled automatically by `HiveMessageBusClient` and `hivemind-core`. Y
 
 The `Message.reply()` mechanism (from `ovos-bus-client`) swaps `source` ↔ `destination` on every reply, so all downstream skill messages (`speak`, `intent.handled`, etc.) automatically carry the originating satellite's peer ID in `destination`. `hivemind-core` reads that field and routes each reply to the correct connection.
 
+![A BUS message and its reply, one hop each way](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/bus.gif)
+
 ---
 
 ## SHARED_BUS — passive monitoring
 
 `SHARED_BUS` lets a satellite share its own local OVOS bus with hivemind-core passively. hivemind-core observes but does not inject the messages into its own bus. Typically used by the [ovos-skill-fallback-hivemind](https://github.com/JarbasHiveMind/ovos-skill-fallback-hivemind) skill.
+
+![SHARED_BUS mirrors a satellite's local bus up to hivemind-core](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/shared_bus.gif)
 
 ---
 

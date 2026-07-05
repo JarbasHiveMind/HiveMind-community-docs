@@ -48,13 +48,19 @@ hivemind-core instances can connect to other instances. A child instance acts as
 
 `ESCALATE` travels from a satellite up through intermediate hivemind-core instances toward the root. Use it when a node cannot handle a request locally and wants the parent to try.
 
+![ESCALATE climbs toward the root](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/escalate.gif)
+
 ### BROADCAST — downward routing
 
-`BROADCAST` travels from a master down to all connected satellites. Supports a `target_site_id` field to reach only satellites in a specific location — for example, announcing dinner is ready in the kitchen.
+`BROADCAST` travels from a hivemind-core instance down to all connected satellites. Supports a `target_site_id` field to reach only satellites in a specific location — for example, announcing dinner is ready in the kitchen.
+
+![BROADCAST rolls down to every satellite](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/broadcast.gif)
 
 ### PROPAGATE — all-directions flood
 
 `PROPAGATE` delivers a message to all connected nodes, both up and down the tree simultaneously. Useful for mesh-wide announcements and topology discovery (PING is always wrapped in PROPAGATE).
+
+![PROPAGATE floods the whole mesh](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/propagate.gif)
 
 ### QUERY — routed request with response
 
