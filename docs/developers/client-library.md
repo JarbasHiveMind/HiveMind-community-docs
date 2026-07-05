@@ -39,6 +39,10 @@ pip install hivemind-bus-client
 
 ## Basic connection
 
+Everything starts with two lines: make a client, connect it. If you've already run
+`hivemind-client set-identity`, the client picks up host, port, key, and password from the
+identity file on its own — you don't pass a thing:
+
 ```python
 from hivemind_bus_client.client import HiveMessageBusClient
 
@@ -63,6 +67,10 @@ client.connect()
 
 ## Sending utterances
 
+Connected. Now say something. Sending an utterance is just wrapping an OVOS `Message` in a
+`BUS` envelope and emitting it — the same `BUS` message from the protocol page, built by
+hand:
+
 ```python
 from ovos_bus_client.message import Message
 from hivemind_bus_client.message import HiveMessage, HiveMessageType
@@ -79,12 +87,20 @@ client.emit(msg)
 
 ## Handling responses
 
+The reply comes back asynchronously, so you don't wait on the emit — you register a
+callback and let it fire when the answer arrives. `on_mycroft` listens for a specific
+inner OVOS message type, and `speak` is the one that carries spoken text:
+
 ```python
 def handle_speak(message):
     print(f"AI says: {message.data['utterance']}")
 
 client.on_mycroft("speak", handle_speak)
 ```
+
+Send, listen, react — that's the entire loop. Everything below is refinement on top of
+these three moves: blocking instead of callbacks, binary instead of text, many nodes
+instead of one.
 
 ---
 
@@ -189,7 +205,9 @@ client.connect()
 
 ## Serialization and encryption
 
-`client.emit()` and `client.on()` handle all serialization and encryption automatically:
+You may have noticed you never once touched a cipher. That's deliberate — `client.emit()`
+and `client.on()` do the whole cryptographic dance for you, in this order, on every
+message:
 
 1. The `HiveMessage` is serialized (JSON or binary framing for protocol v1)
 2. The payload is compressed with zlib if enabled
@@ -266,8 +284,9 @@ received inner `PING` to `mapper.on_ping(ping_msg)`, and read back the discovere
 
 ## Request / response
 
-`HiveMessageBusClient` ships blocking helpers that emit a message and wait for a
-matching reply on the background thread. All take a `timeout` (seconds, default
+Callbacks are great for a UI, awkward for a script that just wants an answer *now*. For
+those, the client ships blocking helpers: emit a message, then wait on the background
+thread until the matching reply lands (or a timeout gives up). All take a `timeout` (seconds, default
 `3.0`) and return the received message or `None` on timeout.
 
 ```python
@@ -482,6 +501,9 @@ targeted at this node) are injected onto the bus. Related helpers:
 ---
 
 ## Reconnection
+
+Networks drop. Whether your client copes on its own depends entirely on which one you
+picked — and this catches people out, so it's worth stating plainly before you ship.
 
 **The sync `HiveMessageBusClient` reconnects automatically; the async and HTTP
 clients do not.** On a dropped websocket the sync client's `on_error` clears its
