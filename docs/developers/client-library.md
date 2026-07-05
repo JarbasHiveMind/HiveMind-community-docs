@@ -1,11 +1,16 @@
 # Developer Guide — Client Library
 
-**`hivemind-bus-client` (repo: `hivemind-websocket-client`) is the primary Python library for building HiveMind clients.** It handles connection management, the PBKDF2 handshake, AES-256-GCM encryption, and serialization transparently.
+Twenty lines of Python and you're holding a conversation with your hive. That's the
+promise of `hivemind-bus-client` (the repo is named `hivemind-websocket-client`): you
+create a client, call `connect()`, and send a message — and everything gnarly underneath
+happens without you lifting a finger. The handshake, the key derivation, the
+authenticated encryption, the wire serialization: all handled. You write "what time is
+it?"; the library does the cryptography.
 
 !!! abstract "In a nutshell"
-    - Connect to hivemind-core from Python with `HiveMessageBusClient`, send/receive OVOS messages, and let the library handle the handshake, encryption, and serialization.
-    - Sync (thread-based), async (`asyncio`), and HTTP (polling) clients share the same message API; only the sync client reconnects on its own.
-    - Higher-level helpers cover blocking request/response, binary audio, topology discovery, CASCADE aggregation, end-to-end INTERCOM, and trusted-key identity.
+    - Talk to hivemind-core from Python with `HiveMessageBusClient` — send and receive OVOS messages while the library handles the handshake, encryption, and serialization for you.
+    - Three flavours share one message API: sync (thread-based), async (`asyncio`), and HTTP (polling). Only the sync client reconnects on its own.
+    - Higher-level helpers cover the things you'd otherwise hand-roll: blocking request/response, binary audio, topology discovery, CASCADE aggregation, end-to-end INTERCOM, and trusted-key identity.
 
 !!! note "Building your own client in Python?"
     This page is for writing a program that talks to a hivemind-core server. To simply *use* a satellite, see [Choosing a Satellite](../satellites/index.md) instead.

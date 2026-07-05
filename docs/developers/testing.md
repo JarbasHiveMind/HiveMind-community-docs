@@ -1,6 +1,13 @@
 # Testing Guide
 
-**[`hivescope`](https://github.com/JarbasHiveMind/hivescope) is the in-process end-to-end testing library for HiveMind.** It wires `MasterNode`, `SatelliteNode`, and `RelayNode` objects together directly — no real sockets, no running servers, no network processes — and records every `HiveMessage` for inspection.
+Testing distributed software usually means standing up servers, opening sockets, and
+praying the timing lines up. [`hivescope`](https://github.com/JarbasHiveMind/hivescope)
+throws that whole ceremony out. You build a hive — a master, a couple of satellites,
+maybe a relay — as plain Python objects wired directly together in memory. No real
+sockets, no running processes, no network at all. Every `HiveMessage` that flows between
+them is recorded, so you can assert exactly what was routed where, whether an ACL held,
+and whether a session survived the trip. A whole multi-node topology becomes a fast,
+ordinary unit test.
 
 !!! abstract "In a nutshell"
     - Assemble a test topology from `MasterNode`, `SatelliteNode`, and `RelayNode` objects to validate message routing, session handling, ACL enforcement, and protocol compliance.
