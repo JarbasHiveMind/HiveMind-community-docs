@@ -17,9 +17,14 @@ one board they all plug into, and a manager that snaps the right ones in at star
 
 ## Plugin categories
 
+Five families, five jobs. The tables below list what's available in each — but as you read
+them, the useful question isn't "what are all these?" so much as "which one would I swap to
+change *this*?" Each family answers exactly one such question.
+
 ### Network protocol plugins
 
-Control how HiveMind listens for and connects to satellites.
+**The question they answer: how do bytes get in and out?** These control how HiveMind
+listens for and connects to satellites.
 
 | Plugin | Transport | Default port | Status |
 |---|---|---|---|
@@ -36,7 +41,9 @@ real-time channel, not on PyPI (it pulls git-only carrier libraries).
 
 ### Agent protocol plugins
 
-Control which AI back-end handles incoming messages.
+**The question they answer: who actually thinks?** This is the one swap that changes what
+your assistant *is* — skills, an LLM, or someone else's agent — while the satellites never
+notice.
 
 | Plugin | Back-end |
 |---|---|
@@ -46,7 +53,8 @@ Control which AI back-end handles incoming messages.
 
 ### Binary data handler plugins
 
-Control how binary payloads (audio, images, files) are processed on hivemind-core.
+**The question they answer: what happens to raw audio?** This is the ear on the server —
+the piece a thin satellite leans on to have its speech transcribed.
 
 | Plugin | Function |
 |---|---|
@@ -56,7 +64,8 @@ No binary plugin is loaded by default. Install and configure one when you need s
 
 ### Database plugins
 
-Control where client credentials are stored.
+**The question they answer: where does the guest list live?** A file for one server, Redis
+when several share it.
 
 | Plugin | Backend |
 |---|---|
@@ -66,7 +75,8 @@ Control where client credentials are stored.
 
 ### Policy plugins
 
-Control admission — what each client is allowed to do. Policy plugins are loaded as an ordered **chain** (group `hivemind.policy`) and are consulted for every inbound message; they configure only via the `policy.chain` JSON block (there is no separate `module` selector like the other families).
+**The question they answer: who's allowed to do what?** Admission control — the gate every
+message passes before it reaches the agent. Policy plugins are loaded as an ordered **chain** (group `hivemind.policy`) and are consulted for every inbound message; they configure only via the `policy.chain` JSON block (there is no separate `module` selector like the other families).
 
 | Plugin | Function |
 |---|---|
@@ -78,7 +88,9 @@ The built-in `allowed_types` ACL (`MessageTypeACLPolicy`) is always force-prepen
 
 ## Configuration
 
-Plugins are wired up in `~/.config/hivemind-core/server.json`. The default configuration:
+All five families meet in one place: `server.json`. Reading the default file is the
+fastest way to see how the parts name each other — every `module` key is one part snapping
+into its socket:
 
 ```json
 {

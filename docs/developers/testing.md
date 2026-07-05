@@ -56,10 +56,15 @@ and outbound `HiveMessage`s as `RecordedMessage` entries.
 
 ---
 
+The four patterns below climb from simplest to richest — one server alone, then a
+satellite talking to it, then a crowd, then sessions. Most real tests are a remix of these
+four, so read them in order and you'll have the vocabulary for almost anything.
+
 ## Pattern A: Direct hivemind-core injection
 
-Emit an OVOS message on the master's agent bus and assert it was seen there
-(`emit_on_bus` simulates a skill response on hivemind-core).
+Start with the smallest possible hive: one master, nobody else. Emit an OVOS message on
+its agent bus and assert it landed — `emit_on_bus` stands in for a skill answering on
+hivemind-core.
 
 ```python
 from hivescope import TopologyBuilder
