@@ -21,22 +21,32 @@ session-established connection that hivemind-core accepts.
 
 ## Message envelope
 
-Every HiveMind message is a `HiveMessage` with:
+Start with the shape of a single message, because everything else is a variation on it.
+No matter its type, a `HiveMessage` is only ever three fields:
 
 - `msg_type` — a `HiveMessageType` enum value (see [Protocol Concepts](../concepts/protocol.md))
 - `payload` — the message content (an OVOS `Message` object, a nested `HiveMessage`, or raw bytes)
 - `context` — optional routing metadata dict
 
+Get those three right and you can represent any message on the wire. The rest of this
+page is about the two hard parts: agreeing on encryption before you send them, and packing
+them tightly once you do.
+
 ---
 
 ## Protocol versions
 
-The hivemind-core `ProtocolVersion` enum (`ZERO`/`ONE`/`TWO`/`THREE`, in `hivemind_core/protocol.py`) is negotiated at connect time:
+The first thing two nodes settle is *which* protocol they're speaking, because it decides
+everything downstream — the handshake, the encryption, whether frames are JSON or binary.
+The `ProtocolVersion` enum (`ZERO`/`ONE`/`TWO`/`THREE`, in `hivemind_core/protocol.py`) is
+that dial, negotiated the moment a connection opens:
 
 - The server advertises `max_protocol_version` = **`THREE`** when the Noise primitive is available *and* the client has a password configured (`v3_capable`); otherwise `TWO` when `binarize` is enabled, else `ONE`. It advertises `min_protocol_version` = `max(config floor, crypto-derived minimum)`, where the config floor defaults to **`2`** (`min_protocol_version` in `server.json`). A client that cannot reach the advertised minimum is disconnected.
 - The legacy serialization-layer `PROTOCOL_VERSION` constant in `serialization.py` is `1`; that binary-framing version is distinct from this session `ProtocolVersion` and is not bumped for v3.
 
-Within the **v1/v2** (legacy handshake) family, binary framing is **not** gated behind a version bump — it is enabled purely by the `binarize` capability boolean negotiated during the handshake (see [Negotiation & defaults](#negotiation-defaults)). **v3** is a different handshake entirely (Noise), and its session is always encrypted and binary-capable.
+One subtlety trips up every first implementation, so read it before the table: within the
+**v1/v2** family, binary framing is **not** a version bump — it's switched on by the
+`binarize` boolean negotiated during the handshake (see [Negotiation & defaults](#negotiation-defaults)). **v3** is a different animal entirely (Noise), always encrypted and always binary-capable. With that in mind, here's the full ladder:
 
 | Version | Transport encoding | Key exchange | Compression |
 |---|---|---|---|
@@ -51,6 +61,11 @@ Within the **v1/v2** (legacy handshake) family, binary framing is **not** gated 
 ---
 
 ## Handshake state machine
+
+This is the heart of the page — the exact choreography that takes a fresh socket to an
+encrypted session. If you get one thing byte-for-byte right, make it this. Follow it
+literally: the field names below are lifted straight from the reference implementation, and
+hivemind-core is unforgiving about them.
 
 This section is the authoritative connection-setup sequence for the **legacy v1/v2 handshake** (password or RSA). If the server's step-2 `HANDSHAKE` includes a `noise` object and your client supports it, run the Noise (v3) handshake instead (see the [v3 note above](#protocol-versions)); otherwise take this branch. Field names are taken verbatim from the reference implementation (`hivemind_core/protocol.py` server side; `hivemind_bus_client/protocol.py` `HiveMindSlaveProtocol` client side). Implement it exactly.
 
@@ -92,6 +107,10 @@ Server                                  Client
   |  <encrypted BUS / QUERY / ... >       |   (6) encrypted
   |<====================================>|
 ```
+
+That diagram is the whole dance at a glance. The rest of this section zooms into each of
+those six frames and names every field it carries — this is the part you keep open in a
+second window while you code. Taking them in order:
 
 #### (1) Server → Client `HELLO` — `payload` fields
 
@@ -162,6 +181,10 @@ On receipt the client derives `crypto_key`:
 
 ## Negotiation & defaults
 
+The handshake left a few things "negotiated" — the encoding, the cipher, the key math.
+This section pins down exactly what those resolve to, including the two defaults that bite
+newcomers most often. Start with the sneakiest one.
+
 ### Default encoding is `JSON_HEX`, not `JSON_B64`
 
 Several helper functions (`encrypt_as_json`, `decrypt_from_json`) carry a Python default argument of `JSON_B64`, but those defaults are **never the protocol default**. The protocol default everywhere it matters is **`JSON_HEX`**:
@@ -229,7 +252,11 @@ The session key math lives in the external **`poorman_handshake`** package, not 
 
 ## Binary framing
 
-When both sides negotiate `binarize: true` in the handshake, messages are framed in a compact binary format instead of JSON. This is a per-connection capability flag, not a protocol-version increment — the wire `ProtocolVersion` remains `ONE`.
+Everything so far assumed JSON on the wire — readable, but chatty. When both sides agree
+to `binarize`, the same messages get packed into a tight bitstream instead, which is how
+raw audio rides the protocol without drowning it. (Remember: this is a per-connection flag,
+not a version bump — the wire `ProtocolVersion` stays `ONE`.) The format is a small header
+followed by the payload, and the header is bit-packed, so read the widths carefully:
 
 ### Header layout
 
