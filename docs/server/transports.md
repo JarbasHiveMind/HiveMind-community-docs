@@ -21,9 +21,10 @@ why, for almost everyone, this page ends at one word: WebSocket.
 
 ## Status at a glance
 
-Transports register under the `hivemind.network.protocol`
-[plugin](../concepts/plugins.md) entry-point group. They differ a lot in maturity —
-read the **PyPI status** column before you build on one:
+Four roads exist, but they are not equally paved. Before you fall for a clever one, read
+the **PyPI status** column — it's the difference between "ship it" and "fun to read
+about." All four register under the same `hivemind.network.protocol`
+[plugin](../concepts/plugins.md) entry-point group:
 
 | Transport | Package | Entry point (`hivemind.network.protocol`) | PyPI status | Notes |
 |---|---|---|---|---|

@@ -12,6 +12,9 @@ that out never touches the rest of your setup.
     - You pick the backend in the `database` block of `~/.config/hivemind-core/server.json` — never a command-line flag. `listen` and every client command read that same file, so they always agree on where the list lives.
     - Move between them with `migrate-db`, and lock either file backend at rest with a `password` key.
 
+Three backends, and honestly most people never leave the first. Here they are side by side
+— read the "Best for" column and you'll know which one is you:
+
 | Backend | Module (package) | Default location | Best for |
 |---|---|---|---|
 | **SQLite** | `hivemind-sqlite-db-plugin` (`hivemind-sqlite-database`) | XDG data dir, e.g. `~/.local/share/hivemind-core/clients.db` | New installations (default) |
@@ -54,7 +57,10 @@ Records are copied with their full credentials and metadata; the source database
 
 ## Selecting a backend
 
-Backend selection is **not** a command-line flag — `hivemind-core listen` takes no arguments. The backend is chosen in `~/.config/hivemind-core/server.json` under the `database` block:
+Whichever you pick, you point at it the same way — and it's a config edit, never a flag
+(`hivemind-core listen` takes no arguments). Name the backend in the `database` block of
+`~/.config/hivemind-core/server.json`, with a matching sub-block for its connection
+details. Redis, for instance:
 
 ```json
 {

@@ -15,7 +15,10 @@ the server, `hivemind-client` for satellites, `hivemind-presence` for discovery.
 
 ## hivemind-core
 
-Server-side management commands for `hivemind-core`.
+This is the server operator's toolbox — everything you do to run the server and manage who
+may connect. The full command list first, then each command's flags below it. Two habits
+cover most of them: `add-client` mints credentials, and the `allow-*` / `blacklist-*` pairs
+tune what a client may do.
 
 ```
 Usage: hivemind-core [OPTIONS] COMMAND [ARGS]...
@@ -221,7 +224,10 @@ Usage: hivemind-core policy test API_KEY MSG_TYPE
 
 ## hivemind-client
 
-Satellite-side commands provided by `hivemind-websocket-client`.
+Where `hivemind-core` runs the server, `hivemind-client` runs on the *satellite* side —
+storing its identity, opening an interactive terminal to the hive, and firing individual
+messages by hand for testing. The one you'll use constantly is `set-identity`; the rest
+are for poking at a live hive.
 
 ```
 Usage: hivemind-client [OPTIONS] COMMAND [ARGS]...

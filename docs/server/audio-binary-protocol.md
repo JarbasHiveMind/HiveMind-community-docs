@@ -25,7 +25,10 @@ pip install hivemind-audio-binary-protocol
 
 ## Configuration
 
-In `~/.config/hivemind-core/server.json`, set the `binary_protocol` section:
+Turning the ear on means naming, in one place, every piece of the speech pipeline the
+server will now own: what listens for the wake word, what transcribes, what speaks, and
+what detects silence. That's the `binary_protocol` block. Each sub-key is one of those
+jobs:
 
 ```json
 {
@@ -92,6 +95,10 @@ pip install ovos-tts-plugin-server     # or any other TTS plugin
 ---
 
 ## Binary payload types
+
+Audio doesn't all arrive the same way — a continuous mic stream is a different thing from
+a single finished sentence, and a satellite signals which it's sending with a small type
+number on the binary frame. These are the ones this plugin recognises:
 
 | Value | Name | Description |
 |---|---|---|

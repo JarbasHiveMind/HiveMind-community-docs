@@ -22,6 +22,10 @@ fine with an address typed in by hand — but when you want it, it's here.
 
 ## Discovery transports
 
+"Calling out on the network" isn't one fixed technique — there are a couple of ways a
+server can announce itself, and which one works depends on your network. The default
+covers almost everyone; the others are fallbacks for when it doesn't.
+
 **mDNS / Zeroconf (default)**: Standard multicast DNS service discovery. Enabled by default (`--zeroconf` defaults to `True`). Requires the optional `zeroconf` package (LGPL, imported lazily); without it, announce/scan silently fall back to UPnP only.
 
 **UPnP / SSDP (legacy, off by default)**: An SSDP server advertises a UPnP device descriptor; satellites scan for it. Supported but disabled by default (`--upnp` defaults to `False`). Useful where mDNS is unavailable.
