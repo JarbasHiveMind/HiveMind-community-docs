@@ -1,10 +1,17 @@
 # Auto Discovery
 
-In plain terms: instead of typing the hub's network address into every device by hand, discovery lets satellites find the hub on their own — either by listening for it on the local network, or (for first-time setup with no keyboard) by exchanging credentials through sound.
+**Discovery lets satellites find hivemind-core on their own** instead of having its network address typed into every device by hand — either by listening for it on the local network, or (for first-time setup with no keyboard) by exchanging credentials through sound.
 
-> **Auto-discovery is optional.** `hivemind-core` works fine with a manually configured `--host` (or a `default_master` in the identity file) — satellites connect straight to a known address with no discovery layer. Install [HiveMind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) only if you want satellites to find the hub automatically.
+!!! abstract "In a nutshell"
+    - Discovery is optional and provided by the separate [HiveMind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) package; `hivemind-core` runs fine with a manually configured host.
+    - mDNS/Zeroconf is the default network transport; UPnP/SSDP is supported but off by default.
+    - GGWave audio pairing exchanges credentials through sound for keyboard-free first-time setup.
+
+> **Auto-discovery is optional.** `hivemind-core` works fine with a manually configured `--host` (or a `default_master` in the identity file) — satellites connect straight to a known address with no discovery layer. Install [HiveMind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) only if you want satellites to find hivemind-core automatically.
 
 [HiveMind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) enables automatic discovery of HiveMind nodes on the local network without manual address configuration. It is an optional extra package — `hivemind-core` runs without it.
+
+---
 
 ## Discovery transports
 
@@ -12,18 +19,22 @@ In plain terms: instead of typing the hub's network address into every device by
 
 **UPnP / SSDP (legacy, off by default)**: An SSDP server advertises a UPnP device descriptor; satellites scan for it. Supported but disabled by default (`--upnp` defaults to `False`). Useful where mDNS is unavailable.
 
-**HiveBeacon (planned)**: A zero-dependency UDP-broadcast transport is on the roadmap and is intended to become the default once it ships, with mDNS kept as an optional transport. It is **not yet implemented** — until it lands, mDNS/Zeroconf and UPnP/SSDP are the available transports.
+**HiveBeacon (planned)**: A zero-dependency UDP-broadcast transport, intended to become the default with mDNS kept as an optional transport. It is **not implemented** — mDNS/Zeroconf and UPnP/SSDP are the available transports.
+
+---
 
 ## Integration with hivemind-core
 
-When `hivemind-presence` is installed, start the announcer alongside the hub. The `hivemind-presence announce` command is independent of `hivemind-core listen` — run them together, or configure `hivemind-presence` as a separate service on the same machine. No changes to `~/.config/hivemind-core/server.json` are required.
+When `hivemind-presence` is installed, start the announcer alongside hivemind-core. The `hivemind-presence announce` command is independent of `hivemind-core listen` — run them together, or configure `hivemind-presence` as a separate service on the same machine. No changes to `~/.config/hivemind-core/server.json` are required.
 
-## Running the hub announcer
+---
 
-On the hub machine, start advertising:
+## Running the announcer
+
+On the hivemind-core machine, start advertising:
 
 ```bash
-hivemind-presence announce --port 5678 --name "living-room-hub"
+hivemind-presence announce --port 5678 --name "living-room-server"
 ```
 
 Options:
@@ -38,7 +49,9 @@ Options:
   --ssl BOOLEAN        Report SSL support (default: False)
 ```
 
-## Scanning for hubs
+---
+
+## Scanning for hivemind-core instances
 
 On a satellite (or any device on the same network):
 
@@ -67,14 +80,16 @@ Options:
   --service-type TEXT  HiveMind service type (default: HiveMind-websocket)
 ```
 
+---
+
 ## Audio pairing (GGWave)
 
 > **Note**: This feature is a proof-of-concept and is a work in progress.
 
-GGWave encodes data as audio tones, allowing a hub and satellite to exchange pairing credentials when they are in audible range of each other — useful for initial setup without a keyboard.
+GGWave encodes data as audio tones, allowing hivemind-core and a satellite to exchange pairing credentials when they are in audible range of each other — useful for initial setup without a keyboard.
 
 **Prerequisites:**
-- Hub device with microphone and speaker
+- hivemind-core device with microphone and speaker
 - Satellite device with microphone and speaker
 - Any GGWave transmitter to initiate the exchange — the [browser GGWave tool](https://jarbashivemind.github.io/hivemind-ggwave/) **or** the native `ggwave-cli` / `ggwave-rx` binaries
 - All devices within audible range of each other
@@ -83,21 +98,25 @@ GGWave encodes data as audio tones, allowing a hub and satellite to exchange pai
 
 1. A password is broadcast as audio (`HMPSWD`), e.g. via the [browser GGWave tool](https://jarbashivemind.github.io/hivemind-ggwave/)
 2. The satellite decodes the password, generates an access key, and sends it back as audio (`HMKEY`)
-3. The hub receives the key, adds the client, and sends an acknowledgement containing the host address as audio (`HMHOST`)
+3. hivemind-core receives the key, adds the client, and sends an acknowledgement containing the host address as audio (`HMHOST`)
 4. The satellite decodes the acknowledgement and connects
 
 After a successful GGWave pairing the satellite has a populated identity file and can connect as normal.
+
+---
 
 ## See also: hivemind-rendezvous (proof-of-concept)
 
 !!! note "Optional / proof-of-concept"
     [hivemind-rendezvous](https://github.com/JarbasHiveMind/hivemind-rendezvous) is a separate, experimental package — not part of normal discovery and not required to run a hive.
 
-Discovery above assumes nodes are online at the same time. **hivemind-rendezvous** solves the opposite case: an asynchronous **store-and-forward dead-drop** that lets two hives which are *never* online simultaneously still exchange [`INTERCOM`](protocol.md#intercom-end-to-end-encrypted-peer-to-peer) messages. A sender deposits an encrypted message keyed by the **recipient's RSA public key**; the recipient retrieves it later by proving ownership of that key with a **signed timestamp** (no server-side challenge state). It is a proof-of-concept — useful to understand the model, but not something to design a production deployment around yet.
+Discovery above assumes nodes are online at the same time. **hivemind-rendezvous** solves the opposite case: an asynchronous **store-and-forward dead-drop** that lets two hives which are *never* online simultaneously still exchange [`INTERCOM`](protocol.md#intercom-end-to-end-encrypted-peer-to-peer) messages. A sender deposits an encrypted message keyed by the **recipient's RSA public key**; the recipient retrieves it later by proving ownership of that key with a **signed timestamp** (no server-side challenge state). It is a proof-of-concept — useful to understand the model, but not something to design a production deployment around.
 
 ---
 
 **Next:** [Security](security.md) for the handshake, credentials, and admission control, or [Mesh Topology](mesh.md) for how discovered nodes route messages.
+
+---
 
 ## Source
 

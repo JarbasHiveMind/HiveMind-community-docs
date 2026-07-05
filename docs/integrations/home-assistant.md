@@ -1,8 +1,13 @@
 # Home Assistant Integration
 
-[hivemind-homeassistant](https://github.com/JarbasHiveMind/hivemind-homeassistant) is a manual-install Home Assistant custom integration that connects Home Assistant to an OVOS instance via HiveMind.
+**[hivemind-homeassistant](https://github.com/JarbasHiveMind/hivemind-homeassistant) is a manual-install Home Assistant custom integration** that connects Home Assistant to an OVOS instance via HiveMind. It exposes the OVOS device as a Home Assistant entity with controls for audio playback, volume, microphone state, system power, and status sensors.
 
-It exposes the OVOS device as a Home Assistant entity with controls for audio playback, volume, microphone state, system power, and status sensors.
+!!! abstract "In a nutshell"
+    - A `custom_components/hivemind` integration installed by hand, then added via **Settings → Devices & Services**.
+    - Its HiveMind client must have **admin privileges** and explicit access to a broad set of bus message types.
+    - Grant those message types with `hivemind-core allow-msg` and `hivemind-core make-admin`, passing the node ID positionally.
+
+---
 
 ## Installation
 
@@ -16,6 +21,8 @@ cp -r custom_components/hivemind /config/custom_components/
 2. Restart Home Assistant.
 
 3. Add the integration via **Settings → Devices & Services → Add Integration → HiveMind**.
+
+---
 
 ## Required permissions
 
@@ -155,11 +162,15 @@ hivemind-core allow-msg "mycroft.volume.get" <id>
 hivemind-core make-admin <id>
 ```
 
+---
+
 ## Related projects
 
 - [Media Player](media-player.md) — turn any device into a standalone HiveMind OCP player
 - [ovos-skill-music-assistant](https://github.com/HiveMindInsiders/ovos-skill-music-assistant) — OVOS skill for Music Assistant media search
 - [ovos-media-plugin-mass](https://github.com/HiveMindInsiders/ovos-media-plugin-mass) — OVOS plugin to control Music Assistant players
+
+---
 
 ## Source
 

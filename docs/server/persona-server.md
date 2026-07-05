@@ -1,14 +1,21 @@
-# Persona Hub
+# Persona Server
 
-A "persona hub" is a regular `hivemind-core` server whose **agent protocol** is the
-[ovos-persona](https://github.com/OpenVoiceOS/ovos-persona) plugin. Instead of routing
-utterances into a full OVOS skills stack, the hub answers natural-language queries
+**A persona server is a regular `hivemind-core` server whose agent protocol is the
+[ovos-persona](https://github.com/OpenVoiceOS/ovos-persona) plugin.** Instead of routing
+utterances into a full OVOS skills stack, it answers natural-language queries
 directly from an LLM / chatbot / solver-chain persona — no `ovos-core` required.
 
+!!! abstract "In a nutshell"
+    - Swaps the `agent_protocol` for `hivemind-persona-agent-plugin`, so `hivemind-core` answers queries from an LLM / solver chain.
+    - The persona is a JSON document listing solver plugins (e.g. `ovos-solver-openai-plugin`) and their config.
+    - Text-based satellites and bridges work against it; audio-binary-protocol satellites do not.
+
 Satellites built for `hivemind-core` (text-based ones like HiveMind-cli, voice-sat, or
-bridges) work against a persona hub. Satellites that depend on the audio binary
-protocol (`hivemind-audio-binary-protocol`) do **not** apply here — a persona hub
+bridges) work against a persona server. Satellites that depend on the audio binary
+protocol (`hivemind-audio-binary-protocol`) do **not** apply here — a persona server
 exposes a text/query agent, not server-side audio processing.
+
+---
 
 ## Install
 
@@ -24,6 +31,8 @@ pip install ovos-openai-plugin
 ```
 
 This provides the `ovos-solver-openai-plugin` solver.
+
+---
 
 ## Configure the persona
 
@@ -50,6 +59,8 @@ Save it somewhere (for example `~/.config/ovos_persona/persona.json`):
 The OpenAI solver keys are `api_url`, `key`, `model`, and `system_prompt` — there is no
 `persona` key inside the solver block; the persona is the surrounding document.
 
+---
+
 ## Configure hivemind-core
 
 Point the `agent_protocol` block in `~/.config/hivemind-core/server.json` at the
@@ -70,14 +81,18 @@ persona plugin, and give it the persona to run:
 persona config dict. The file is read once at startup; restart `hivemind-core` to pick
 up edits.
 
+---
+
 ## Start the server
 
 ```bash
 hivemind-core listen
 ```
 
-Satellites connecting to this hub now receive answers streamed from the persona,
+Satellites connecting to this server now receive answers streamed from the persona,
 sentence by sentence.
+
+---
 
 ## Managing clients
 
@@ -95,7 +110,9 @@ hivemind-core list-clients
 hivemind-core delete-client 2
 ```
 
-See [OVOS Skills Hub](ovos-hub.md#managing-clients) for the full client workflow.
+See [OVOS Skills Server](ovos-server.md#managing-clients) for the full client workflow.
+
+---
 
 ## Solver plugins
 
@@ -105,6 +122,8 @@ Any `ovos-solver-*` plugin can back the persona. Common ones:
   vLLM, …), installed via `pip install ovos-openai-plugin`.
 - `ovos-solver-failure-plugin` — always returns a fallback response (useful for
   testing).
+
+---
 
 ## Example personas
 
@@ -145,6 +164,8 @@ Any `ovos-solver-*` plugin can back the persona. Common ones:
   ]
 }
 ```
+
+---
 
 ## Source
 

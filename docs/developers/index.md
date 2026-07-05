@@ -1,13 +1,15 @@
 # Developer Guide
 
-This section is for people **writing code against HiveMind** — building a custom
+**The Developer Guide is for writing code against HiveMind** — building a custom
 satellite, embedding a client in an app, implementing a new transport or backend, or
 testing a protocol implementation.
 
 !!! tip "Not a developer? You can skip this whole section."
-    Running a hub and connecting off-the-shelf satellites needs no code — see
+    Running hivemind-core and connecting off-the-shelf satellites needs no code — see
     [Quick Start](../quickstart.md) and [Satellites](../satellites/index.md). Come back
     here when you want to build something new.
+
+---
 
 ## What's in this section
 
@@ -16,7 +18,9 @@ testing a protocol implementation.
 | [Client Library](client-library.md) | Connect to a hive from Python — send/receive messages, handle encryption, reconnect. |
 | [Protocol Specification](protocol-spec.md) | Implement HiveMind in another language, or understand the exact wire format byte-for-byte. |
 | [Writing Plugins](writing-plugins.md) | Add a new transport, agent backend, database, or permission policy. |
-| [Testing](testing.md) | Write end-to-end tests for satellites, hubs, or whole mesh topologies. |
+| [Testing](testing.md) | Write end-to-end tests for satellites, hivemind-core, or whole mesh topologies. |
+
+---
 
 ## Which layer are you extending?
 

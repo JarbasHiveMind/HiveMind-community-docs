@@ -1,14 +1,23 @@
 # Audio Binary Protocol
 
-`hivemind-audio-binary-protocol` is a binary data handler plugin for `hivemind-core`. It enables the hub to receive audio streams from satellites, run wakeword detection, STT, and TTS synthesis, and return synthesized audio to the satellite.
+**`hivemind-audio-binary-protocol` is a binary data handler plugin for `hivemind-core`.** It enables `hivemind-core` to receive audio streams from satellites, run wakeword detection, STT, and TTS synthesis, and return synthesized audio to the satellite.
+
+!!! abstract "In a nutshell"
+    - A `hivemind.binary.protocol` plugin that lets `hivemind-core` process raw audio; required for mic-satellite and voice-relay.
+    - `hivemind-core` owns the wakeword/STT/TTS/VAD plugins centrally — a satellite cannot choose the engine or voice.
+    - Access is gated by the client's access key and permissions; there is no open audio endpoint.
 
 Without this plugin, `hivemind-core` cannot process audio. It is required for mic-satellite and voice-relay.
+
+---
 
 ## Install
 
 ```bash
 pip install hivemind-audio-binary-protocol
 ```
+
+---
 
 ## Configuration
 
@@ -55,10 +64,12 @@ pip install ovos-stt-plugin-server     # or any other STT plugin
 pip install ovos-tts-plugin-server     # or any other TTS plugin
 ```
 
+---
+
 ## Audio flow
 
 ```
-[mic-satellite]                     [HiveMind Hub]
+[mic-satellite]                     [hivemind-core]
   Mic + VAD                         AudioBinaryProtocol
      │                                    │
      │── BINARY (RAW_AUDIO) ─────────────→│
@@ -74,6 +85,8 @@ pip install ovos-tts-plugin-server     # or any other TTS plugin
   Playback
 ```
 
+---
+
 ## Binary payload types
 
 | Value | Name | Description |
@@ -81,15 +94,21 @@ pip install ovos-tts-plugin-server     # or any other TTS plugin
 | 1 | `RAW_AUDIO` | Continuous microphone stream (VAD-gated) |
 | 4 | `STT_AUDIO_TRANSCRIBE` | Full audio sentence — return transcript only |
 | 5 | `STT_AUDIO_HANDLE` | Full audio sentence — transcribe and handle intent |
-| 6 | `TTS_AUDIO` | Synthesized speech audio (hub → satellite) |
+| 6 | `TTS_AUDIO` | Synthesized speech audio (server → satellite) |
+
+---
 
 ## The service model
 
-STT and TTS running on the hub via this plugin are authenticated by the same access-key mechanism as all other HiveMind messages. A satellite cannot choose the engine or voice — the hub operator configures them centrally. This is intentional: the hive owns its speech services, just as it owns its skills.
+STT and TTS running on `hivemind-core` via this plugin are authenticated by the same access-key mechanism as all other HiveMind messages. A satellite cannot choose the engine or voice — the server operator configures them centrally. This is intentional: the hive owns its speech services, just as it owns its skills.
+
+---
 
 ## Security note
 
 Running STT/TTS through the audio binary protocol requires the satellite to have valid HiveMind credentials. There is no open audio endpoint — access is gated by the client's access key and permission settings.
+
+---
 
 ## Source
 

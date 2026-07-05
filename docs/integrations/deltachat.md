@@ -1,10 +1,15 @@
 # DeltaChat Bridge
 
-[HiveMind-deltachat-bridge](https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge)
-connects a [DeltaChat](https://delta.chat/) account to a HiveMind hub. Anyone who
-emails the bot account gets their message forwarded to the hub as an
-[utterance](../reference/glossary.md#utterance); the hub's spoken reply comes back as
+**[HiveMind-deltachat-bridge](https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge)
+connects a [DeltaChat](https://delta.chat/) account to a HiveMind.** Anyone who
+emails the bot account gets their message forwarded to `hivemind-core` as an
+[utterance](../reference/glossary.md#utterance); the spoken reply comes back as
 a chat message in the same conversation.
+
+!!! abstract "In a nutshell"
+    - Runs as the `hm-deltachat-bridge` console command, relaying between an email account and `hivemind-core`.
+    - Needs two credential sets: an email account for DeltaChat and the stored HiveMind node identity.
+    - The bridge client needs at minimum `allow-msg "speak"`.
 
 DeltaChat is an end-to-end encrypted messenger that rides on ordinary **email** — any
 mailbox works as its transport, so there is no separate chat server to run. To people
@@ -13,7 +18,9 @@ chatting with it, the bot looks like a normal DeltaChat contact.
 !!! tip "Beginner's mental model"
     You give the bridge two sets of credentials: an **email account** (so it can send
     and receive DeltaChat messages) and your **HiveMind identity** (so it can talk to
-    the hub). It sits in the middle and relays between the two.
+    `hivemind-core`). It sits in the middle and relays between the two.
+
+---
 
 ## Install
 
@@ -22,6 +29,8 @@ pip install HiveMind-deltachat-bridge
 ```
 
 This installs the `hm-deltachat-bridge` console command.
+
+---
 
 ## Set your HiveMind identity
 
@@ -35,6 +44,8 @@ hivemind-client set-identity
 
 If no identity is stored and you don't pass the connection flags manually, the bridge
 exits with `NodeIdentity not set`.
+
+---
 
 ## Usage
 
@@ -68,12 +79,16 @@ hm-deltachat-bridge \
     command blocks until it receives an exit signal (Ctrl-C), then cleanly stops the
     bridge node.
 
+---
+
 ## How it works
 
 The bridge runs as a HiveMind client. An incoming DeltaChat message becomes a
 `recognizer_loop:utterance` [BUS message](../reference/glossary.md#bus-message) sent
-to the hub. The hub's `speak` response is delivered back to the originating DeltaChat
+to `hivemind-core`. The `speak` response is delivered back to the originating DeltaChat
 conversation.
+
+---
 
 ## Permissions
 
@@ -84,6 +99,8 @@ hivemind-core allow-msg "speak" <id>
 ```
 
 Grant additional message types if your use case needs them.
+
+---
 
 ## Source
 

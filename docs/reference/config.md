@@ -1,5 +1,15 @@
 # Configuration Reference
 
+**The complete `server.json` schema with every default value**, plus the satellite identity file and the default ports.
+
+!!! abstract "In a nutshell"
+    - `hivemind-core` reads `~/.config/hivemind-core/server.json` at startup; `hivemind-core listen` takes no flags, so all settings live in this file.
+    - Configurable blocks: `binarize`, `allowed_encodings`/`allowed_ciphers`, `agent_protocol`, `binary_protocol`, `network_protocol`, `policy.chain`, and `database`.
+    - The database backend and TLS certificates are auto-selected on first run.
+    - Satellites store credentials in `~/.config/hivemind/_identity.json`, written by `hivemind-client set-identity`.
+
+---
+
 ## server.json
 
 `hivemind-core` reads `~/.config/hivemind-core/server.json` at startup. `hivemind-core listen` takes no command-line flags; edit this file to change any setting.
@@ -104,7 +114,7 @@ Multiple network protocol plugins can be active simultaneously. Each key is the 
 An MQTT transport is available as an alpha: package `hivemind-mqtt-protocol`,
 plugin name `hivemind-mqtt-plugin`, broker port 1883 (config keys `broker_host`,
 `broker_port`, `broker_username`, `broker_password`, `tls`, `topic_prefix`, `qos`,
-`idle_timeout`). It currently provides the hub-side listener only. An experimental
+`idle_timeout`). It provides the server-side listener only. An experimental
 Usenet wormhole transport (`hivemind-usenet`, plugin `hivemind-usenet-wormhole`)
 also exists but is unpublished.
 
@@ -143,10 +153,10 @@ Per-plugin settings are nested under the plugin name key. See [Database Backends
 
 | Field | Description |
 |---|---|
-| `access_key` | Access credential assigned by the hub |
+| `access_key` | Access credential assigned by hivemind-core |
 | `password` | Used for PBKDF2 key derivation |
-| `default_master` | Hub host address (ws:// or wss://) |
-| `default_port` | Hub port (default: 5678) |
+| `default_master` | hivemind-core host address (ws:// or wss://) |
+| `default_port` | hivemind-core port (default: 5678) |
 | `site_id` | Location identifier injected into OVOS context |
 | `public_key` | RSA public key string |
 | `secret_key` | Path to the RSA private key (PEM) file |
@@ -164,6 +174,8 @@ Per-plugin settings are nested under the plugin name key. See [Database Backends
 ---
 
 **Next:** [CLI Reference](cli.md) · [Security & Permissions](../concepts/security.md)
+
+---
 
 ## Source
 

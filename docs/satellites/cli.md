@@ -1,17 +1,23 @@
 # HiveMind CLI
 
-The simplest HiveMind satellite — text only, no audio hardware required.
+**HiveMind-cli is the simplest satellite — a text-only terminal client that needs no audio hardware.** You type utterances and hivemind-core does everything; responses arrive as text.
 
-**What runs locally**: A CLI interface. No audio processing whatsoever.
+!!! abstract "In a nutshell"
+    - **Runs locally**: a terminal interface — no audio processing at all.
+    - **hivemind-core provides**: STT, TTS, skills, and intents; replies come back as text.
+    - Installs as the `hivemind-cli` console script (`pip install HiveMind-cli`).
+    - Ideal for testing hivemind-core instances and skills, scripting, and audio-less IoT devices.
 
-**What the hub provides**: All processing (STT, TTS, skills, intents). Responses arrive as text.
+---
 
 ## When to use it
 
-- Testing and debugging a hub or a skill
+- Testing and debugging a hivemind-core instance or a skill
 - Scripting and automation from a server
 - IoT devices with network connectivity but no audio hardware
 - Any scenario where you want to interact via keyboard or piped input
+
+---
 
 ## Install
 
@@ -21,6 +27,8 @@ pip install HiveMind-cli
 
 This provides the `hivemind-cli` console script — a terminal client with no
 subcommands, just flags.
+
+---
 
 ## Usage
 
@@ -40,6 +48,8 @@ Plain output (no curses UI) for scripting or SSH sessions:
 hivemind-cli --access-key <key> --password <password> --host wss://192.168.1.10 --no-curses
 ```
 
+---
+
 ## CLI flags
 
 | Flag | Default | Description |
@@ -51,6 +61,8 @@ hivemind-cli --access-key <key> --password <password> --host wss://192.168.1.10 
 | `--no-curses` | off | Disable the curses UI; use plain stdout/stdin instead. |
 | `--self-signed` | off | Accept self-signed SSL certificates. |
 
+---
+
 ## See also
 
 For scriptable, non-interactive use, the `hivemind-client` command from the
@@ -58,9 +70,13 @@ For scriptable, non-interactive use, the `hivemind-client` command from the
 package offers subcommands such as `set-identity`, `terminal`, `send-mycroft`,
 `escalate`, `propagate`, and `ping`. That is a separate package from `HiveMind-cli`.
 
+---
+
 ## Next
 
 New to HiveMind? Start with the [Quick Start](../quickstart.md), or learn how the pieces fit in [Core Concepts](../concepts/mesh.md).
+
+---
 
 ## Source
 

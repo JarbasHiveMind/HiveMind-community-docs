@@ -3,13 +3,15 @@
 A **bridge** connects HiveMind to a chat network or smart-home platform, so people can
 talk to your hive from apps they already use — Matrix, a Twitch stream, Home Assistant,
 and more. Under the hood every bridge is just another [satellite](../reference/glossary.md#roles):
-it holds an access key and relays messages to the hub.
+it holds an access key and relays messages to `hivemind-core`.
 
 !!! note "Bridges are satellites too"
     Anything in this section connects the same way the [Quick Start](../quickstart.md)
     satellite did — register it with `hivemind-core add-client`, give it the access key
-    and password, point it at the hub. The integration-specific part is only *which
+    and password, point it at `hivemind-core`. The integration-specific part is only *which
     outside service* it relays to.
+
+---
 
 ## What's in this section
 

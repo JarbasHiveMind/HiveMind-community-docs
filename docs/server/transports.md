@@ -1,15 +1,22 @@
 # Transports
 
-A **transport** is *how* bytes travel between a satellite and the hub. WebSocket is the
+**A transport is how bytes travel between a satellite and `hivemind-core`.** WebSocket is the
 default; the others suit special cases. The important part: the
 [encryption](../concepts/security.md) and the message format are **identical across all
-of them** — only the carrier changes. A satellite and a hub agree on a transport, but
+of them** — only the carrier changes. A satellite and `hivemind-core` agree on a transport, but
 what they send over it is the same encrypted HiveMind protocol either way.
+
+!!! abstract "In a nutshell"
+    - Transports register under the `hivemind.network.protocol` plugin entry-point group; the carrier is swappable without touching encryption or the message format.
+    - WebSocket (port `5678`) is the reference and default; HTTP is request/response.
+    - MQTT is broker-mediated (alpha) and Usenet is store-and-forward (experimental, git-only) — in both the carrier only ever sees ciphertext.
 
 !!! tip "You rarely need to change this"
     If you don't know which transport you want, you want WebSocket — it's the
     reference implementation and the default in every example. The rest of this page is
     for people with a specific need (broker-mediated IoT, censorship-resistant relay).
+
+---
 
 ## Status at a glance
 
@@ -29,12 +36,16 @@ read the **PyPI status** column before you build on one:
     `pip install hivemind-usenet` works — it is not on PyPI, and it depends on
     git-only carrier libraries. Treat both as for-the-curious until they ship to PyPI.
 
+---
+
 ## WebSocket (default)
 
 The reference transport. A persistent, bidirectional socket on port `5678`. TLS is
 enabled per protocol in `server.json` by setting `ssl: true` and pointing
 `cert_dir` / `cert_name` at the certificate to serve (see
 [Operations → TLS](operations.md#tls)). This is what every quickstart and example uses.
+
+---
 
 ## HTTP
 
@@ -47,6 +58,8 @@ back in the response.
     default `server.json` ships it on `5679` as a deliberate override. If you enable
     the HTTP plugin and forget to set `port`, it will collide with the WebSocket
     listener. Always give the HTTP block its own port.
+
+---
 
 ## MQTT (alpha)
 
@@ -69,6 +82,8 @@ back in the response.
 
     This is **alpha** — pin and test before relying on it.
 
+---
+
 ## Usenet (experimental)
 
 ??? note "Advanced: censorship-resistant store-and-forward"
@@ -79,19 +94,25 @@ back in the response.
     carrier libraries. Do not write deployment docs that assume
     `pip install hivemind-usenet` works.
 
+---
+
 ## Not a transport: the audio binary protocol
 
 The [Audio Binary Protocol](audio-binary-protocol.md) is a *different* kind of plugin.
 It is **not** a network transport — it's a binary **payload handler** (entry-point group
 `hivemind.binary.protocol`) that runs *on top of* whichever transport you chose, so the
-hub can receive raw audio, run wake-word/STT/TTS, and stream audio back. You can mix it
+server can receive raw audio, run wake-word/STT/TTS, and stream audio back. You can mix it
 with any transport above. See [Audio Binary Protocol](audio-binary-protocol.md).
+
+---
 
 ## How this all plugs together
 
 Every transport is a [plugin](../concepts/plugins.md) discovered by entry point, which
 is why swapping the carrier doesn't touch the encryption or the message format. See
-[Plugin Architecture](../concepts/plugins.md) for how the hub resolves and loads them.
+[Plugin Architecture](../concepts/plugins.md) for how `hivemind-core` resolves and loads them.
+
+---
 
 ## Source
 

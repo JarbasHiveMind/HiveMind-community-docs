@@ -1,5 +1,15 @@
 # CLI Reference
 
+**Every command and flag across the three HiveMind command-line tools**, grouped by the package that provides them.
+
+!!! abstract "In a nutshell"
+    - `hivemind-core` — server-side management: client credentials, permissions, policy, and database.
+    - `hivemind-client` — satellite-side: identity, terminal, and message injection (`escalate`, `propagate`, `ping`).
+    - `hivemind-presence` — local-network discovery: `announce` and `scan`.
+    - `NODE_ID`, `MSG_TYPE`, `SKILL_ID`, and `INTENT_ID` are positional arguments; omit `NODE_ID` to pick a client interactively.
+
+---
+
 ## hivemind-core
 
 Server-side management commands for `hivemind-core`.
@@ -218,7 +228,7 @@ Commands:
   terminal           Interactive CLI: inject utterances and print speech
   test-identity      Test connection using the identity file
   reset-pgp          Recreate the RSA key pair for inter-node communication
-  send-mycroft       Send a raw OVOS message to the hub
+  send-mycroft       Send a raw OVOS message to hivemind-core
   escalate           Send an OVOS message wrapped in ESCALATE
   propagate          Send an OVOS message wrapped in PROPAGATE
   ping               Flood-ping the mesh and print the responding topology
@@ -232,8 +242,8 @@ Usage: hivemind-client set-identity [OPTIONS]
 Options:
   --key TEXT       Access key
   --password TEXT  Password
-  --host TEXT      Hub host (ws:// or wss://)
-  --port INTEGER   Hub port (default: 5678)
+  --host TEXT      Server host (ws:// or wss://)
+  --port INTEGER   Server port (default: 5678)
   --siteid TEXT    Site identifier for context routing
 ```
 
@@ -252,7 +262,7 @@ Options:
   --siteid TEXT    Site identifier
 ```
 
-Interactive CLI: type utterances to inject and the hub's speech is printed back.
+Interactive CLI: type utterances to inject and hivemind-core's speech is printed back.
 
 ### send-mycroft
 
@@ -264,7 +274,7 @@ Options:
   --payload TEXT   OVOS message data (JSON string)
   --key TEXT       Access key
   --password TEXT  Password
-  --host TEXT      Hub host
+  --host TEXT      Server host
   --port INTEGER   Port (default: 5678)
   --siteid TEXT    Site identifier
 ```
@@ -279,7 +289,7 @@ Options:
   --payload TEXT   OVOS message data (JSON string)
   --key TEXT       Access key (default: from identity file)
   --password TEXT  Password (default: from identity file)
-  --host TEXT      Hub host (default: from identity file)
+  --host TEXT      Server host (default: from identity file)
   --port INTEGER   Port (default: 5678)
   --siteid TEXT    Site identifier (default: from identity file)
 ```
@@ -296,7 +306,7 @@ Options:
   --payload TEXT   OVOS message data (JSON string)
   --key TEXT       Access key (default: from identity file)
   --password TEXT  Password (default: from identity file)
-  --host TEXT      Hub host (default: from identity file)
+  --host TEXT      Server host (default: from identity file)
   --port INTEGER   Port (default: 5678)
   --siteid TEXT    Site identifier (default: from identity file)
 ```
@@ -322,7 +332,7 @@ Flood-pings the mesh and prints the peers that respond.
 
 ### reset-pgp
 
-Recreates the private RSA key used for inter-node communication. (The command name is `reset-pgp` for historical reasons, but it generates an RSA key pair.)
+Recreates the private RSA key used for inter-node communication. Despite the name, it generates an RSA key pair.
 
 ---
 
@@ -362,6 +372,8 @@ Options:
 ---
 
 **Next:** [Configuration Reference](config.md) · [Plugin Architecture](../concepts/plugins.md)
+
+---
 
 ## Source
 

@@ -1,10 +1,14 @@
 # Microphone Satellite
 
-The thinnest HiveMind satellite. Runs microphone capture and Voice Activity Detection (VAD) on-device; everything else — wakeword detection, STT, intent handling, TTS synthesis — runs on the hub.
+**The mic satellite is the thinnest software satellite: it runs only microphone capture and Voice Activity Detection (VAD) on-device.** Everything else — wakeword detection, STT, intent handling, and TTS synthesis — runs on hivemind-core.
 
-**What runs locally**: Microphone + VAD
+!!! abstract "In a nutshell"
+    - **Runs locally**: microphone + VAD.
+    - **hivemind-core provides**: wakeword, STT, intent processing, and TTS — requires `hivemind-audio-binary-protocol` on hivemind-core.
+    - Streams every VAD-gated voice segment to hivemind-core as binary `RAW_AUDIO`, so it is bandwidth-heavy and best suited to a small LAN homelab.
+    - For multi-user or at-scale deployments, prefer [voice-relay](voice-relay.md), which gates audio behind a local wakeword.
 
-**What the hub provides**: Wakeword, STT, intent processing, TTS (requires `hivemind-audio-binary-protocol` on the hub)
+---
 
 ## When to use it
 
@@ -12,9 +16,13 @@ The thinnest HiveMind satellite. Runs microphone capture and Voice Activity Dete
 - Scenarios where you want zero local model downloads
 - Personal homelab with a handful of devices on a fast LAN
 
+---
+
 ## When not to use it
 
-mic-satellite streams every detected voice segment to the hub continuously (VAD-gated but not wakeword-gated). This is bandwidth-intensive and puts the full STT load on the server for all speech activity. It is appropriate for a small homelab. For a deployment serving multiple users, prefer [voice-relay](voice-relay.md) — local wakeword means audio only leaves the device after activation.
+mic-satellite streams every detected voice segment to hivemind-core continuously (VAD-gated but not wakeword-gated). This is bandwidth-intensive and puts the full STT load on the server for all speech activity. It is appropriate for a small homelab. For a deployment serving multiple users, prefer [voice-relay](voice-relay.md) — local wakeword means audio only leaves the device after activation.
+
+---
 
 ## Install
 
@@ -24,17 +32,21 @@ pip install hivemind-mic-satellite
 
 Requires Python ≥ 3.10.
 
-## Hub requirements
+---
 
-The hub must have `hivemind-audio-binary-protocol` installed and configured. Plain `hivemind-core` does not handle audio.
+## Server requirements
+
+hivemind-core must have `hivemind-audio-binary-protocol` installed and configured. On its own, hivemind-core does not handle audio.
 
 See [Audio Binary Protocol](../server/audio-binary-protocol.md).
 
+---
+
 ## Quickstart
 
-> **Pre-flight:** this satellite sends audio to the hub, so **the hub MUST have the [Audio Binary Protocol](../server/audio-binary-protocol.md) configured** — it provides the VAD-gated STT, TTS, and wakeword. Without it the satellite connects but its audio is silently dropped, with no error.
+> **Pre-flight:** this satellite sends audio to hivemind-core, so **hivemind-core MUST have the [Audio Binary Protocol](../server/audio-binary-protocol.md) configured** — it provides the VAD-gated STT, TTS, and wakeword. Without it the satellite connects but its audio is silently dropped, with no error.
 
-**1. On the hub** — register a client:
+**1. On hivemind-core** — register a client:
 
 ```bash
 hivemind-core add-client --name my-mic-sat
@@ -47,7 +59,7 @@ hivemind-core add-client --name my-mic-sat
 hivemind-client set-identity \
   --key <access_key> \
   --password <password> \
-  --host <hub_host_or_ip>
+  --host <server_host_or_ip>
 ```
 
 **3. Run:**
@@ -66,9 +78,11 @@ The full flag set is `--key --password --host --port --siteid`. Each falls back 
 identity file written by `hivemind-client set-identity`.
 
 !!! note
-    mic-satellite has **no** `--selfsigned` flag. If your hub uses a self-signed
+    mic-satellite has **no** `--selfsigned` flag. If hivemind-core uses a self-signed
     certificate, prefer a plain `ws://` LAN connection or a properly issued
     certificate.
+
+---
 
 ## Configuration
 
@@ -95,10 +109,12 @@ Example `mycroft.conf` excerpt:
 }
 ```
 
+---
+
 ## How audio flows
 
 ```
-[Microphone] → [VAD] → raw audio chunks → [HiveMind Hub]
+[Microphone] → [VAD] → raw audio chunks → [hivemind-core]
                                               ↓
                                     [hivemind-audio-binary-protocol]
                                               ↓
@@ -109,15 +125,19 @@ Example `mycroft.conf` excerpt:
                                     [Satellite plays TTS audio]
 ```
 
-Audio is sent as `BINARY` messages with payload type `RAW_AUDIO` (type 1). The hub's `AudioBinaryProtocol.handle_microphone_input()` processes the stream.
+Audio is sent as `BINARY` messages with payload type `RAW_AUDIO` (type 1). hivemind-core's `AudioBinaryProtocol.handle_microphone_input()` processes the stream.
+
+---
 
 ## Next
 
-Set up the hub side: [Audio Binary Protocol](../server/audio-binary-protocol.md).
+Set up the server side: [Audio Binary Protocol](../server/audio-binary-protocol.md).
+
+---
 
 ## Source
 
 Validated against the HiveMind source:
 
 - [`hivemind_mic_sat/__init__.py`](https://github.com/JarbasHiveMind/hivemind-mic-satellite/blob/HEAD/hivemind_mic_sat/__init__.py) — CLI flags (`--key --password --host --port --siteid`) and the binary `RAW_AUDIO` transport
-- [`docs/architecture.md`](https://github.com/JarbasHiveMind/hivemind-mic-satellite/blob/HEAD/docs/architecture.md) — audio flow and hub-side processing
+- [`docs/architecture.md`](https://github.com/JarbasHiveMind/hivemind-mic-satellite/blob/HEAD/docs/architecture.md) — audio flow and server-side processing
