@@ -68,25 +68,30 @@ See [Audio Binary Protocol](../server/audio-binary-protocol.md) for server-side 
 
 ## Decision guide
 
-1. **Do you need voice input?**
-   - No → use **HiveMind-cli**
-   - Yes → continue
+Answer a handful of questions about your device and this points you at the right
+satellite. Follow the arrows:
 
-2. **Is the device a bare microcontroller (ESP32, Raspberry Pi Pico W)?**
-   - Yes → use the [Microcontrollers (ESP32)](microcontrollers.md) clients — C/ESP-IDF
-     or MicroPython
-   - No → continue
+```mermaid
+flowchart TD
+    A([What are you<br/>putting it on?]) --> B{A web browser<br/>or web app?}
+    B -->|Yes| WS[WebSpeech Browser]
+    B -->|No| C{Do you need<br/>voice input?}
+    C -->|No, text only| CLI[HiveMind-cli]
+    C -->|Yes| D{A bare microcontroller?<br/>ESP32 · Pico W}
+    D -->|Yes| MC[Microcontrollers<br/>ESP32 / MicroPython]
+    D -->|No| E{Can it run local<br/>STT + TTS models?}
+    E -->|"Yes, capable CPU/GPU"| VS[HiveMind-voice-sat<br/>most private · works offline]
+    E -->|No| F{Wakeword on<br/>the device?}
+    F -->|"Yes, saves bandwidth"| VR[HiveMind-voice-relay]
+    F -->|No| MS[hivemind-mic-satellite<br/>cheapest hardware]
 
-3. **Can your device run local STT and TTS models?** (needs a capable CPU/GPU)
-   - Yes → use **HiveMind-voice-sat** (most private, works offline after setup)
-   - No → continue
+    classDef pick fill:#e3f2fd,stroke:#1976d2,color:#0d47a1;
+    class WS,CLI,MC,VS,VR,MS pick;
+```
 
-4. **Do you need a wakeword on the device?** (saves bandwidth; needed for service-at-scale)
-   - Yes → use **HiveMind-voice-relay** (local wakeword; STT/TTS on hivemind-core)
-   - No → use **hivemind-mic-satellite** (cheapest hardware; everything on hivemind-core)
-
-5. **Is this a web browser or web app?**
-   - Yes → use **WebSpeech Browser**
+Each blue box links to its full setup page in the [comparison table](#comparison) above:
+[WebSpeech](webspeech.md) · [CLI](cli.md) · [Microcontrollers](microcontrollers.md) ·
+[voice-sat](voice-sat.md) · [voice-relay](voice-relay.md) · [mic-satellite](mic-satellite.md).
 
 ---
 

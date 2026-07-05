@@ -5,54 +5,10 @@ hear the answer come back — proof that the whole path works. It takes about te
 stand up hivemind-core on a machine you own, hand a satellite a key, and watch it join.
 Everything after that is just adding more devices.
 
-!!! abstract "In a nutshell"
-    - Install `hivemind-core` on the server, register a client with `add-client`, then connect a satellite with its access key and password.
-    - The default OVOS skills backend needs `ovos-core` and `ovos-messagebus` running first; a persona backend needs neither.
-    - Success is a full round trip: wakeword → speech → the server's skill → a spoken answer on the satellite.
+## What you're building
 
-**Scope:** this guide sets up **one hivemind-core server + one voice satellite on the same LAN**. To try it all on a single machine, use `--host 127.0.0.1` everywhere. Find your server's LAN IP with `hostname -I`. Each step below is labelled **(ON THE SERVER)** or **(ON THE SATELLITE)** so you know where to run it.
-
-New to the terms here? Keep the [Glossary](reference/glossary.md) open in another tab.
-
----
-
-## Step 0 — Prerequisites (ON THE SERVER)
-
-The OVOS skills backend runs your skills on top of OpenVoiceOS, so `ovos-core` and `ovos-messagebus` must be installed and running on the server machine before HiveMind can talk to them:
-
-```bash
-pip install ovos-core ovos-messagebus
-
-# start the OVOS messagebus (keep it running, e.g. in its own terminal)
-ovos-messagebus
-
-# start ovos-core (in another terminal)
-ovos-core
-```
-
-See the [OVOS documentation](https://openvoiceos.github.io/community-docs) for a full OVOS setup.
-
-> **Want the simplest possible first run with no OVOS?** Use the [persona backend](server/persona-server.md) instead — it serves an LLM/chatbot via `hivemind-persona-agent-plugin` + `ovos-persona` and needs neither `ovos-core` nor `ovos-messagebus`. The HiveMind steps below are otherwise identical.
-
----
-
-## Step 1 — Install HiveMind Core on the server (ON THE SERVER)
-
-```bash
-pip install hivemind-core
-```
-
----
-
-## Step 2 — Start the server (ON THE SERVER)
-
-```bash
-hivemind-core listen
-```
-
-The server accepts satellite connections on port 5678 (WebSocket) and port 5679 (HTTP). `listen` takes no flags — all server settings (host, ports, SSL, database backend) are read from `~/.config/hivemind-core/server.json`. See [Server Configuration](reference/config.md), or run `hivemind-core print-config` to inspect the active configuration.
-
-### What you are building
+One server does the thinking; one satellite does the listening and speaking. They talk
+over your LAN:
 
 ```
             ON THE SERVER                              ON THE SATELLITE
@@ -67,13 +23,77 @@ The server accepts satellite connections on port 5678 (WebSocket) and port 5679 
  └─────────────────────────────┘           └──────────────────────────┘
 ```
 
-The voice satellite captures audio and does its own speech-to-text, then sends the text utterance to hivemind-core; hivemind-core runs the skill and sends a spoken reply back. (Other satellite types push more of that work onto hivemind-core — see [Choosing a Satellite](satellites/index.md).)
+The voice satellite captures audio and turns it into text, then sends that text to
+hivemind-core; hivemind-core runs the skill and sends a spoken reply back. (Other
+satellite types push more of that work onto the server — see
+[Choosing a Satellite](satellites/index.md).)
+
+!!! tip "Just want the simplest possible first run — an LLM to chat with, no OVOS?"
+    This guide builds a full **voice assistant** on OpenVoiceOS. If you'd rather stand up
+    a plain **LLM/chatbot** with nothing extra to install, follow the
+    [Persona Server](server/persona-server.md) guide instead. The HiveMind half — pairing
+    a client, connecting a satellite — is identical; you just skip the OVOS install and
+    point hivemind-core at a persona backend. Pick one path and follow it start to finish.
+
+!!! abstract "In a nutshell"
+    - Install `ovos-core` + `ovos-messagebus` (the assistant), then `hivemind-core` (the gateway), then register a client and connect a satellite with its access key and password.
+    - `hivemind-core listen` runs with sensible defaults — no config file needed for a first run.
+    - Success is a full round trip: wakeword → speech → the server's skill → a spoken answer on the satellite.
+
+**Scope:** this guide sets up **one hivemind-core server + one voice satellite on the same LAN**. To try it all on a single machine, use `127.0.0.1` everywhere. Find your server's LAN IP with `hostname -I`. Each step below is labelled **(ON THE SERVER)** or **(ON THE SATELLITE)** so you always know where to run it.
+
+New to the terms here? Keep the [Glossary](reference/glossary.md) open in another tab.
 
 ---
 
-## Step 3 — Register credentials for a satellite (ON THE SERVER)
+## Step 1 — Install and start OVOS (ON THE SERVER)
 
-On the server machine, add a client entry:
+hivemind-core is a gateway to an assistant, not the assistant itself, so the assistant
+goes up first. The default backend is OpenVoiceOS, which runs as two pieces — a message
+bus and the skills core — that must be running before HiveMind can reach them:
+
+```bash
+pip install ovos-core ovos-messagebus
+
+# start the OVOS messagebus (keep it running, e.g. in its own terminal)
+ovos-messagebus
+
+# start ovos-core (in another terminal)
+ovos-core
+```
+
+See the [OVOS documentation](https://openvoiceos.github.io/community-docs) for a full OVOS setup.
+
+---
+
+## Step 2 — Install hivemind-core (ON THE SERVER)
+
+With the assistant running, add the gateway in front of it:
+
+```bash
+pip install hivemind-core
+```
+
+---
+
+## Step 3 — Start the server (ON THE SERVER)
+
+```bash
+hivemind-core listen
+```
+
+That's the whole command — **no configuration required for a first run.** `listen` takes
+no flags; it comes up with sensible defaults and accepts satellite connections on port
+5678 (WebSocket) and 5679 (HTTP). When you later want to change ports, turn on TLS, or
+switch the database backend, those live in `~/.config/hivemind-core/server.json` — see
+[Server Configuration](reference/config.md), or run `hivemind-core print-config` to see
+what's currently in effect. For now, leave it on defaults and move on.
+
+---
+
+## Step 4 — Register credentials for a satellite (ON THE SERVER)
+
+A satellite needs its own identity before it can connect. Create one on the server:
 
 ```bash
 hivemind-core add-client --name "my-satellite"
@@ -92,15 +112,18 @@ Encryption Key: 4185240103de0770
 WARNING: Encryption Key is deprecated, only use if your client does not support password
 ```
 
-Note the **Access Key** and **Password** — you will need them on the satellite. In the steps below, replace `<ACCESS_KEY>` and `<PASSWORD>` with the values printed by `add-client`, and `<SERVER_IP>` with the server's LAN IP from `hostname -I` (or `127.0.0.1` on a single machine).
+Note the **Access Key** and **Password** — you'll hand them to the satellite next. In the
+steps below, replace `<ACCESS_KEY>` and `<PASSWORD>` with these values, and `<SERVER_IP>`
+with the server's LAN IP from `hostname -I` (or `127.0.0.1` on a single machine).
 
-> Use `hivemind-core add-client --help` to supply your own key and password instead of generated ones. Other options: `--name`, `--access-key`, `--password`, `--crypto-key`, `--admin`, `--metadata`.
+> Want to choose your own key and password instead of generated ones? `hivemind-core add-client --help` lists the options: `--name`, `--access-key`, `--password`, `--crypto-key`, `--admin`, `--metadata`.
 
 ---
 
-## Step 4 — Install and configure the satellite (ON THE SATELLITE)
+## Step 5 — Install and configure the satellite (ON THE SATELLITE)
 
-On the satellite device, choose a satellite package. For a full voice satellite:
+Now move to the device that will do the listening. Pick a satellite package — for a full
+voice satellite:
 
 ```bash
 # Linux audio dependencies
@@ -111,7 +134,7 @@ pip install HiveMind-voice-sat
 
 Not sure which satellite fits your hardware? See [Choosing a Satellite](satellites/index.md).
 
-Write the identity file:
+Then hand it the credentials from Step 4 by writing its identity file:
 
 ```bash
 hivemind-client set-identity \
@@ -122,11 +145,13 @@ hivemind-client set-identity \
   --siteid living-room
 ```
 
-This writes `~/.config/hivemind/_identity.json`. All satellite commands read this file by default.
+This writes `~/.config/hivemind/_identity.json`. Every satellite command reads it by default, so you only do this once.
 
 ---
 
-## Step 5 — Test the connection (ON THE SATELLITE)
+## Step 6 — Test the connection (ON THE SATELLITE)
+
+Before starting the microphone, confirm the satellite can actually reach the server:
 
 ```bash
 hivemind-client test-identity
@@ -138,9 +163,11 @@ Expected output:
 == Identity successfully connected to HiveMind!
 ```
 
+If that fails, fix it here — it's the cheapest place to catch a wrong IP, key, or a server that isn't listening.
+
 ---
 
-## Step 6 — Start the satellite (ON THE SATELLITE)
+## Step 7 — Start the satellite (ON THE SATELLITE)
 
 ```bash
 hivemind-voice-sat
@@ -156,20 +183,24 @@ hivemind-voice-sat --host <SERVER_IP> --key <ACCESS_KEY> --password <PASSWORD>
 
 ---
 
-## Step 7 — Talk to it (ON THE SATELLITE)
+## Step 8 — Talk to it (ON THE SATELLITE)
 
-With hivemind-core running (Steps 0–2) and the satellite running (Step 6), speak to the satellite:
+Everything is running: hivemind-core on the server, the satellite listening. Speak to the
+satellite:
 
 > **"hey mycroft, what time is it?"**
 
-**Success looks like:** the satellite plays a spoken reply (the current time). That round trip — wakeword → your speech → the server's skill → a spoken answer — means the whole path works.
+**Success looks like:** the satellite plays a spoken reply — the current time. That round
+trip — wakeword → your speech → the server's skill → a spoken answer — means the whole
+path works. From here, adding a second device is just Step 4 (register) plus Steps 5–7
+(connect) again.
 
 **No reply?**
 
 - Check the satellite's terminal logs for connection or audio errors.
 - Re-run `hivemind-client test-identity` on the satellite to confirm it still reaches the server.
-- Remember that `hivemind-voice-sat`'s **default STT and TTS are remote services** hosted at `*.openvoiceos.org`, so the satellite needs internet access on first run. To go fully local, install and configure local STT/TTS plugins on the satellite — see [Voice Satellite](satellites/voice-sat.md).
-- Confirm `ovos-core` and `ovos-messagebus` are still running on the server (Step 0).
+- `hivemind-voice-sat`'s **default STT and TTS are remote services** at `*.openvoiceos.org`, so the satellite needs internet access on first run. To go fully local, install local STT/TTS plugins on the satellite — see [Voice Satellite](satellites/voice-sat.md).
+- Confirm `ovos-core` and `ovos-messagebus` are still running on the server (Step 1).
 
 ---
 
@@ -204,7 +235,7 @@ For the full CLI reference see [CLI Reference](reference/cli.md) and [Permission
 - [Permissions](concepts/security.md#permissions) — restrict what each client can do
 - [Auto Discovery](concepts/discovery.md) — find hivemind-core automatically over the local network
 - [Docker Deployment](server/docker.md) — run hivemind-core in a container
-- [Nested Hives](concepts/mesh.md#nested-hives) — connect hivemind-core instances to other instances
+- [Nested Hives](concepts/nested-hives.md) — connect hivemind-core instances to other instances
 
 ---
 
