@@ -1,8 +1,10 @@
 # hivemind-core Server
 
-**`hivemind-core`** is the central brain of a HiveMind. It accepts connections from
-satellites, decides what AI backend answers them, and enforces who is allowed to do
-what. This section is for whoever **runs** the server.
+Everything in a HiveMind points back to one machine: the server in the closet, on the
+desk, in the container. hivemind-core is what accepts every satellite's connection,
+decides which AI actually answers, and holds the line on who's allowed to do what. The
+satellites are interchangeable; this is the piece that makes them a hive. This section
+is for whoever **runs** it.
 
 !!! tip "Which server do I want?"
     A server's "personality" is set by one choice: **which agent plugin answers

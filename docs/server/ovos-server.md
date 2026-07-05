@@ -1,11 +1,16 @@
 # OVOS Skills Server
 
-**The OVOS Skills Server is the canonical `hivemind-core` setup**, backed by an OpenVoiceOS instance. Satellites connect to it and route utterances to OVOS skills, STT, and TTS.
+This is the setup that turns your hive into a real voice assistant — weather, timers,
+music, home control, hundreds of skills. Behind hivemind-core sits a full
+[OpenVoiceOS](https://openvoiceos.github.io/community-docs) install, and every satellite
+that connects gets the whole thing: ask any of them a question and an OVOS skill answers.
+It's the default flavour, and the one most people want when they picture "a private
+smart speaker I actually own." hivemind-core is the gateway; OVOS is the brain behind it.
 
 !!! abstract "In a nutshell"
-    - A `hivemind-core` server whose agent protocol talks to a local `ovos-core` / `ovos-messagebus` on `127.0.0.1:8181`.
-    - All settings live in `~/.config/hivemind-core/server.json`; `hivemind-core listen` takes no flags.
-    - Manage satellites with the `hivemind-core` client CLI (node IDs are positional).
+    - A `hivemind-core` server whose agent talks to a local `ovos-core` / `ovos-messagebus` on `127.0.0.1:8181`.
+    - Every setting lives in `~/.config/hivemind-core/server.json` — `hivemind-core listen` takes no flags.
+    - Manage satellites with the `hivemind-core` CLI (node IDs are positional).
 
 ---
 

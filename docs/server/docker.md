@@ -1,11 +1,16 @@
 # Docker Deployment
 
-**`hivemind-core` runs in Docker for easy deployment and isolation.**
+Prefer to keep hivemind-core boxed up — one command to start, one to stop, nothing
+scattered across your host? Docker is a clean way to run it: the server and its OVOS
+stack live in containers, and your configuration lives in a folder you mount in. The one
+habit to unlearn from other images is environment variables — hivemind-core ignores
+them entirely. Everything it needs is the `server.json` file you mount into the
+container, exactly the same file you'd edit on bare metal.
 
 !!! abstract "In a nutshell"
-    - There is no published all-in-one image; containers are built locally from the `hivemind-skills-server-docker` compose stack or based on the `smartgic/*` images.
-    - `hivemind-core` reads no environment variables — all configuration is the `server.json` file mounted into the non-root `hivemind` user's config directory.
-    - The stack uses `network_mode: host`; SQLite is the default database, with Redis for multi-instance deployments.
+    - There's no published all-in-one image — you build one locally from the `hivemind-skills-server-docker` compose stack, or base it on the `smartgic/*` images.
+    - `hivemind-core` reads **no** environment variables. All config is the `server.json` file mounted into the non-root `hivemind` user's config directory.
+    - The stack runs with `network_mode: host`. SQLite is the default guest list; add Redis when several instances share one.
 
 There is no published "all-in-one" hivemind-core image on the JarbasHiveMind
 namespace. Containers are either:
