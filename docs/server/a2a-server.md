@@ -5,7 +5,7 @@ crew, a hand-rolled FastAPI service — and you'd rather your satellites talk to
 than to OVOS skills. The A2A server is the bridge. hivemind-core forwards each question
 to your external agent over Google's open **Agent-to-Agent** protocol and streams the
 answer back to whoever asked. Your agent stays where it lives and keeps its own memory;
-the hive just becomes a fleet of microphones and screens in front of it.
+the hive just becomes a spread of microphones and screens in front of it.
 
 !!! abstract "In a nutshell"
     - Swaps the `agent_protocol` for `hivemind-a2a-agent-plugin`, forwarding every query to any Google A2A-compliant server.
