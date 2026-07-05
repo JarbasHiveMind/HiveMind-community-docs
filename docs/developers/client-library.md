@@ -335,14 +335,17 @@ client.wait_for_response(...)`.
 
 ## INTERCOM — end-to-end satellite-to-satellite
 
-`emit_intercom` sends a message addressed to one specific peer, encrypted so that
-relays along the path cannot read it. The recipient's RSA **public key is
-required**.
+Everything so far has been you talking to hivemind-core. `emit_intercom` is different: it
+lets you whisper to one *specific other peer*, sealed so tightly that the servers relaying
+the message can't read a word of it. Reach for it when two devices need a private side
+channel — one satellite nudging another — and hivemind-core should only ferry the envelope,
+never open it. The one thing you must have in hand is the recipient's RSA **public key**:
 
 ```python
 def emit_intercom(self, message, pubkey):  # pubkey: str | bytes | RSA.RsaKey
 ```
 
+Notice you never manage a session key here — the library builds a fresh one per message.
 On the WebSocket/async client the payload is hybrid-encrypted via
 `hybrid_encrypt` (encryption.py): a random AES-256 key encrypts the serialized
 message with AES-GCM, that AES key is RSA-OAEP-wrapped with `pubkey`, and the
