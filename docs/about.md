@@ -1,87 +1,84 @@
 # What is HiveMind?
 
-**HiveMind is an open-source protocol and platform** that connects lightweight **satellite** devices to a central AI server — **hivemind-core** — over the network, including hardware that cannot run a full AI system on its own.
+Voice assistants like Alexa or Google Home are two things wearing one shell: the
+*ears and mouth* (a microphone and a speaker) and the *brain* (the part that
+understands you and answers). In those products the brain lives in someone else's
+data center, and every word you say takes a trip to the cloud.
+
+HiveMind pulls those two apart. You run the brain once, on a computer in your own
+home, and the ears and mouth become small, cheap, interchangeable devices —
+**satellites** — that connect to it over your network. The brain is
+**hivemind-core**. Everything else plugs into it.
 
 !!! abstract "In a nutshell"
-    - Satellites delegate reasoning, skills, and audio processing to hivemind-core, which serves many of them with independent sessions and permissions.
-    - Configure hivemind-core with an OVOS skills backend for home automation and skills, or a persona backend to just chat with an LLM.
-    - Satellites range from text-only CLI clients to full local voice stacks; hivemind-core instances can chain into a mesh.
-    - HiveMind is a gateway around OVOS, not a replacement for it, and runs entirely on your own hardware.
+    - Satellites handle *hearing and speaking*; hivemind-core handles *understanding and answering* — and serves many satellites at once, each with its own identity and permissions.
+    - Give hivemind-core an OVOS skills back end for a full voice assistant, or a persona back end to just chat with an LLM.
+    - Satellites range from a one-line CLI to a full offline voice stack — the thinner the device, the more hivemind-core does for it.
+    - It's a private gateway around your own assistant, running entirely on hardware you own.
 
-## The core idea
+## Why split them apart?
 
-HiveMind separates AI workload from edge devices. Satellites (microphones, voice devices, browsers, chat clients) delegate processing to hivemind-core, which handles reasoning, skills, and audio processing. hivemind-core can serve many satellites simultaneously with independent sessions and permissions for each.
+Because the brain is expensive and the ears are cheap.
 
-New here? The [Glossary](reference/glossary.md) defines every term on this page.
+Speech recognition, intent parsing, and an LLM need real memory and CPU. A doorway
+sensor, a desk button, or a ten-dollar board has none of that — but it has a
+microphone, and that's all a satellite needs. Run the brain *once*, on a machine
+that can handle it, and every underpowered gadget in the house can offer the full
+assistant just by forwarding audio to hivemind-core and playing back the reply.
+
+Three things fall out of that split, for free:
+
+- **Privacy.** The brain is in your closet, not a cloud. Your voice never leaves the
+  building unless *you* send it somewhere.
+- **Reach.** Anything that can open a network connection can be a satellite — a
+  browser tab, a microcontroller, a phone, a Raspberry Pi, a chat room.
+- **Resilience.** No internet? No problem. Satellites talk to hivemind-core over the
+  local network, so the assistant keeps working in a blackout or a cabin off the grid.
 
 ```
 [Mic Satellite]  ──┐
-[Voice Relay]    ───┤──→ [hivemind-core] ──→ skills / LLM / intents
-[Voice Satellite]──┤         │
-[CLI Client]     ───┘        └──→ responses back to each satellite
+[Voice Relay]    ──┤──→  hivemind-core  ──→  skills · LLM · intents
+[Browser Tab]    ──┤        (the brain)
+[CLI Client]     ──┘        └──→  the reply goes back to whichever satellite asked
 ```
 
----
+## What's the brain, exactly?
 
-## Backend types
+hivemind-core is the meeting point — it authenticates satellites, routes messages,
+and enforces permissions. It is *not* the intelligence itself. You choose that and
+plug it in:
 
-Pick the **[OVOS](reference/glossary.md#ovos-voice-vocabulary) skills backend** if you want skills/home-automation; pick the **[Persona](reference/glossary.md#ovos-voice-vocabulary) backend** if you just want to chat with an LLM and want the simplest setup (no OVOS required).
-
-| Backend | Package | Agent backend |
+| Back end | You get | Good for |
 |---|---|---|
-| OVOS skills server | `hivemind-core` | OpenVoiceOS (full skill ecosystem) |
-| Audio server | `hivemind-core` + `hivemind-audio-binary-protocol` | OVOS + server-side [STT](reference/glossary.md#ovos-voice-vocabulary)/[TTS](reference/glossary.md#ovos-voice-vocabulary)/wakeword |
-| Persona server | `hivemind-core` + `hivemind-persona-agent-plugin` | LLMs and chatbots via `ovos-persona` |
+| **OVOS skills server** | a full private voice assistant — weather, timers, music, home control, hundreds of skills | replacing a smart speaker |
+| **Persona (LLM)** | an LLM with a personality, no skills, simplest setup | open-ended conversation |
+| **Your own** | anything, via the agent-protocol plugins | custom back ends |
 
----
+Swap the back end and the satellites never notice — they only ever talk to
+hivemind-core. HiveMind is a *gateway* around an assistant like OVOS, not a
+replacement for it.
 
-## Satellite types
+## What's a satellite, exactly?
 
-Satellites form a spectrum based on where audio processing happens. At one end the satellite does nothing but pass text; at the other it handles the complete voice stack locally.
+Satellites form a spectrum, and the only question that places a device on it is
+**where the audio is processed**. At the thin end, the device forwards raw audio and
+hivemind-core does everything. At the thick end, the device runs wake word, speech
+recognition, and speech synthesis itself, and sends hivemind-core only the final text.
 
-| Satellite | Local processing | Server requirements |
+| Satellite | Runs on the device | Runs on hivemind-core |
 |---|---|---|
-| **HiveMind-cli** | Text I/O only | Any hivemind-core |
-| **hivemind-mic-satellite** | Mic + [VAD](reference/glossary.md#ovos-voice-vocabulary) | Audio binary protocol for STT/TTS/wakeword |
-| **HiveMind-voice-relay** | Mic + VAD + Wakeword | Audio binary protocol for STT/TTS |
-| **HiveMind-voice-sat** | Mic + VAD + Wakeword + STT + TTS | Any hivemind-core (sends text utterances) |
-| **hivemind-webspeech** | Browser mic + VAD | hivemind-core listener + `allow-msg` (see page) |
-| **ESP32 / MicroPython** | Mic (and, on some boards, VAD/wakeword) | Audio binary protocol |
+| [CLI client](satellites/cli.md) | nothing (you type) | everything |
+| [WebSpeech](satellites/webspeech.md) (browser) | mic capture, VAD | speech · intents · skills |
+| [Mic satellite](satellites/mic-satellite.md) | mic, VAD | speech · intents · skills |
+| [Voice relay](satellites/voice-relay.md) | mic, VAD, wake word | speech · intents · skills |
+| [Voice satellite](satellites/voice-sat.md) | the whole voice stack | intents · skills |
 
-See [Choosing a Satellite](satellites/index.md) for a detailed comparison.
+A thin satellite is cheaper and simpler but leans on the network; a thick one keeps
+even the audio private and rides out a flaky connection. Most people start thin and
+thicken the devices that need it. See [Choosing a Satellite](satellites/index.md).
 
----
+!!! tip "Keep this open"
+    The [Glossary](reference/glossary.md) defines every term used across the manual on
+    a single page — handy on your first read.
 
-## Mesh topology
-
-HiveMind-core instances can connect to other instances, forming a hierarchy. A child instance acts as a client to its parent while being a server to its own satellites. `ESCALATE` messages travel up the chain; `BROADCAST` messages travel down. This enables multi-room or multi-household topologies where each instance controls its local devices but can route requests upward.
-
-```
-[Root hivemind-core]
-    ├──→ [Child A] ──→ satellites
-    └──→ [Child B] ──→ satellites
-```
-
-See [Nested Hives](concepts/mesh.md#nested-hives) for details.
-
----
-
-## Security model
-
-Every client authenticates with an **access key** and a **password**. After authentication the session is encrypted with an authenticated cipher — AES-256-GCM or ChaCha20-Poly1305, negotiated per connection. The key is never transmitted; both sides derive it independently via PBKDF2 from the shared password and exchanged nonces.
-
-Permissions are configured per client. The default policy admits only a basic set of message types; you expand or restrict per-client using the `hivemind-core` CLI. Skills and intents can be blacklisted individually.
-
-See [Security](concepts/security.md) for the full model.
-
----
-
-## What HiveMind is not
-
-- It is **not** a replacement for OVOS when running as a skills server. OVOS remains the AI back-end; HiveMind is the external-facing gateway.
-- It is **not** a cloud service. Everything runs on your own hardware.
-- It does **not** replace the OVOS messagebus for local communication. The messagebus remains internal.
-
----
-
-**Next:** [Quick Start](quickstart.md) to set up your first hivemind-core and satellite, or [Core Concepts](concepts/protocol.md) for how the protocol works.
+**Next:** [Quick Start](quickstart.md) — stand up hivemind-core and connect your first satellite.
