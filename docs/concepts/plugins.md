@@ -1,11 +1,17 @@
 # Plugin Architecture
 
-**HiveMind is built from interchangeable parts.** HiveMind Core is assembled from **five families** of plugins, managed by the **HiveMind Plugin Manager** (HPM), and each family is independently swappable without touching the others: how it talks to devices, which AI answers requests, how it handles audio, where it stores credentials, and how it decides what each device may do.
+hivemind-core is less a monolith than a socket board. Almost nothing about it is
+welded in place: the way it talks to devices, which AI actually answers a question, how
+it deals with raw audio, where it files the guest list, and how it decides what each
+device may do — every one of those is a part you can pull out and replace. Want the LLM
+brain instead of the skills brain? Swap one part; the satellites never notice. Want to
+store credentials in Redis instead of a file? Swap another. Five families of parts,
+one board they all plug into, and a manager that snaps the right ones in at startup.
 
 !!! abstract "In a nutshell"
-    - Five plugin families: network protocol, agent protocol, binary data handler, database, and policy.
-    - Defaults are the WebSocket + HTTP transports, the OVOS agent, the SQLite database, and the OVOS agent policy; no binary plugin loads by default.
-    - Plugins are wired up in `~/.config/hivemind-core/server.json`; installed package names may differ from the plugin (entry-point) names used in config.
+    - Five families of swappable parts: **network protocol** (how bytes arrive), **agent protocol** (who answers), **binary data handler** (raw audio), **database** (the guest list), and **policy** (who may do what).
+    - Out of the box you get the WebSocket + HTTP transports, the OVOS brain, a SQLite guest list, and the OVOS permission policy. No audio handler loads until you ask for one.
+    - You wire the parts together in `~/.config/hivemind-core/server.json`. Heads-up: the name you `pip install` isn't always the name you write in config — the package and the plugin can differ.
 
 ![HPM diagram](../hpm.png)
 

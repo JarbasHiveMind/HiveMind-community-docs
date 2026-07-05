@@ -1,11 +1,18 @@
 # Protocol
 
-**The HiveMind protocol is the shared language its nodes speak.** It runs over pluggable transports, and every message on the wire is a `HiveMessage` — a JSON envelope (or binary-encoded equivalent) carrying a `msg_type` and a payload that says what kind of message it is and where it should go, so hivemind-core instances and satellites route it correctly.
+A kitchen Pi, a server in the closet, a phone on the couch, maybe a second server
+upstairs — for any of them to talk, they have to agree on two things: what a message
+*looks like*, and where it goes *next*. That agreement is the HiveMind protocol. Every
+message that crosses the wire is a single, uniform object — a `HiveMessage` — a JSON
+envelope (or its compact binary twin) stamped with a `msg_type` that says what the
+message is for and which way it should travel. The carrier underneath can be anything;
+the envelope is always the same shape, so a satellite and hivemind-core never have to
+guess.
 
 !!! abstract "In a nutshell"
-    - Every message is a `HiveMessage` with a `msg_type` from the `HiveMessageType` enum: payload messages (`BUS`, `SHARED_BUS`, `THIRDPRTY`, `BINARY`), routing messages (`ESCALATE`, `BROADCAST`, `PROPAGATE`, `QUERY`, `CASCADE`, `INTERCOM`, `PING`), and connection messages (`HELLO`, `HANDSHAKE`).
-    - `BUS` is the workhorse: a single-hop request/response between a satellite and the AI back-end.
-    - hivemind-core injects routing and session context into each OVOS message and uses `Message.reply()` to route replies back to the right satellite.
+    - Every message is a `HiveMessage` tagged with a `msg_type`. There are only three flavours: **payloads** that carry content (`BUS`, `SHARED_BUS`, `THIRDPRTY`, `BINARY`), **routing verbs** that steer a message up, down, or across the mesh (`ESCALATE`, `BROADCAST`, `PROPAGATE`, `QUERY`, `CASCADE`, `INTERCOM`, `PING`), and **connection** frames for setup (`HELLO`, `HANDSHAKE`).
+    - `BUS` is the one you'll meet most: a single hop from a satellite to the brain and back.
+    - hivemind-core tags each message with who asked and which session it belongs to, then uses `Message.reply()` to make sure the answer finds its way home to the right satellite.
 
 ## HiveMessage types
 

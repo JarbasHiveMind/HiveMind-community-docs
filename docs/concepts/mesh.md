@@ -1,11 +1,17 @@
 # Mesh Topology
 
-**A HiveMind can be more than one server with devices around it.** hivemind-core instances connect to other instances, forming a tree of rooms, households, or sites, and messages travel up, down, or across that tree to reach the right place.
+Start with one server and a handful of devices and you have the whole picture most
+people ever need. But nothing says a HiveMind stops there. A server can itself connect
+*upward* to a bigger server, the way a room reports to a household and a household to a
+whole building. Give every housemate their own hivemind-core, wire them all into a
+shared one that owns the front-door lock and the living-room speakers, and you have a
+tree — questions climb toward whoever can answer them, announcements roll back down to
+whoever needs to hear. The pieces are the same as before; you've just stacked them.
 
 !!! abstract "In a nutshell"
-    - A hivemind-core instance runs the AI back-end and accepts satellite connections; a child instance is a client to its parent and a server to its own satellites.
-    - `ESCALATE` and `QUERY` travel up the tree, `BROADCAST` travels down, and `PROPAGATE`/`CASCADE` flood in all directions.
-    - Every hop re-checks its own permission ACL, so a child instance never inherits more access than the root granted it.
+    - Every hivemind-core runs the brain and accepts satellites. Stack two of them and the lower one wears two hats at once: a client to its parent, a server to its own satellites.
+    - Messages know which way to go: `ESCALATE` and `QUERY` climb toward the root, `BROADCAST` rolls down to the leaves, and `PROPAGATE`/`CASCADE` flood everywhere.
+    - Trust doesn't leak between floors — every hop re-checks its own permission list, so a child hive can never hand out more than the root gave it.
 
 ## hivemind-core and satellites
 
