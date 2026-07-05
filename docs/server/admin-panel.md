@@ -1,9 +1,12 @@
 # Admin Panel
 
-The **HiveMind Admin Panel** is a web browser dashboard for running and administering
-`hivemind-core`. It is the **easiest** way to stand up and manage a HiveMind: one command starts
-`hivemind-core` *and* opens a UI to administer it — no editing `server.json` by hand and no separate
-`hivemind-core` process to babysit.
+If editing JSON by hand and juggling CLI flags isn't your idea of a good evening, this
+is the door you want. The Admin Panel is a web dashboard for your whole hive: one
+command starts `hivemind-core` *and* opens a browser page to run it from. Pair a new
+satellite by scanning a QR code, flip a client's permissions with a toggle, install a
+plugin, watch the mesh light up on a live topology graph — all without touching
+`server.json` or babysitting a second process. It is the easiest way to stand up and
+manage a HiveMind, full stop.
 
 !!! abstract "In a nutshell"
     - One command starts `hivemind-core` in-process and serves a web UI to administer it.

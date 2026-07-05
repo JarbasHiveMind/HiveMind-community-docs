@@ -1,14 +1,17 @@
 # Persona Server
 
-**A persona server is a regular `hivemind-core` server whose agent protocol is the
-[ovos-persona](https://github.com/OpenVoiceOS/ovos-persona) plugin.** Instead of routing
-utterances into a full OVOS skills stack, it answers natural-language queries
-directly from an LLM / chatbot / solver-chain persona — no `ovos-core` required.
+Sometimes you don't want timers and weather skills — you just want to *talk to
+something*. A persona server is the simplest hive there is: swap the skills brain for an
+LLM with a personality, and every satellite becomes a way to chat with it. No
+`ovos-core`, no messagebus, no skill stack to stand up — just hivemind-core, a persona,
+and whatever language model you point it at (OpenAI, a local Ollama, anything
+OpenAI-shaped). Answers stream back sentence by sentence, so the satellite can start
+speaking before the model has finished thinking.
 
 !!! abstract "In a nutshell"
-    - Swaps the `agent_protocol` for `hivemind-persona-agent-plugin`, so `hivemind-core` answers queries from an LLM / solver chain.
-    - The persona is a JSON document listing solver plugins (e.g. `ovos-solver-openai-plugin`) and their config.
-    - Text-based satellites and bridges work against it; audio-binary-protocol satellites do not.
+    - Swaps the `agent_protocol` for `hivemind-persona-agent-plugin`, so `hivemind-core` answers from an LLM / solver chain instead of skills.
+    - A persona is just a JSON document naming the solver plugins (e.g. `ovos-solver-openai-plugin`) and their config.
+    - Text satellites and bridges work against it; audio-binary-protocol satellites don't apply — a persona serves words, not server-side audio.
 
 Satellites built for `hivemind-core` (text-based ones like HiveMind-cli, voice-sat, or
 bridges) work against a persona server. Satellites that depend on the audio binary

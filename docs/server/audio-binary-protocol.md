@@ -1,13 +1,17 @@
 # Audio Binary Protocol
 
-**`hivemind-audio-binary-protocol` is a binary data handler plugin for `hivemind-core`.** It enables `hivemind-core` to receive audio streams from satellites, run wakeword detection, STT, and TTS synthesis, and return synthesized audio to the satellite.
+A thin satellite — a bare microcontroller, a mic satellite, a voice relay — can capture
+sound but can't make sense of it. So it ships the raw audio to the server and asks the
+server to listen *for* it. This plugin is the ear on the server side: install it and
+hivemind-core can take an incoming audio stream, spot the wake word, transcribe the
+speech, run the skill, synthesize the reply, and send the finished audio back for the
+device to play. Without it, hivemind-core has no way to touch audio at all — which is why
+the mic satellite and voice relay simply won't work until it's in place.
 
 !!! abstract "In a nutshell"
-    - A `hivemind.binary.protocol` plugin that lets `hivemind-core` process raw audio; required for mic-satellite and voice-relay.
-    - `hivemind-core` owns the wakeword/STT/TTS/VAD plugins centrally — a satellite cannot choose the engine or voice.
-    - Access is gated by the client's access key and permissions; there is no open audio endpoint.
-
-Without this plugin, `hivemind-core` cannot process audio. It is required for mic-satellite and voice-relay.
+    - A `hivemind.binary.protocol` plugin that gives hivemind-core ears — required for the mic satellite and voice relay.
+    - The server owns the wakeword/STT/TTS/VAD engines centrally, so a satellite can't choose the engine or the voice.
+    - There's no open audio endpoint: a client still needs a valid access key and the right permissions before a single byte is processed.
 
 ---
 

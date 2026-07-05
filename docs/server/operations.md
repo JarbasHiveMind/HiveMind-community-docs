@@ -1,9 +1,11 @@
 # Operations
 
-**This page covers running `hivemind-core` in production** — TLS, reverse-proxy,
-service-management, observability, and scaling concerns for an operator. Everything here
-is driven by `~/.config/hivemind-core/server.json` and standard system tooling;
-`hivemind-core listen` takes no command-line flags.
+Getting a hive running is the easy part; keeping one up, encrypted, and observable while
+real people lean on it is the day-2 job. This page is the operator's toolkit — turning on
+TLS, tucking hivemind-core behind a reverse proxy, running it as a managed service,
+watching who connects and who gets turned away, and growing past a single instance. None
+of it needs special flags: `hivemind-core listen` takes none. It's all
+`~/.config/hivemind-core/server.json` and the ordinary system tooling you already know.
 
 !!! abstract "In a nutshell"
     - TLS is configured per network protocol in `server.json`, or terminated at a reverse proxy in front of `hivemind-core`.

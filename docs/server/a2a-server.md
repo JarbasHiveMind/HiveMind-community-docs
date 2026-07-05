@@ -1,15 +1,16 @@
 # A2A Server
 
-**An A2A server is a regular `hivemind-core` server whose agent protocol is the
-[hivemind-a2a-agent-plugin](https://github.com/JarbasHiveMind/hivemind-a2a-agent-plugin).**
-Instead of routing utterances into a full OVOS skills stack, it forwards
-natural-language queries to an external **A2A (Agent-to-Agent)** server and streams the
-answer back — no `ovos-core` required.
+Maybe you've already built an agent — a LangChain pipeline, a Google ADK bot, a CrewAI
+crew, a hand-rolled FastAPI service — and you'd rather your satellites talk to *that*
+than to OVOS skills. The A2A server is the bridge. hivemind-core forwards each question
+to your external agent over Google's open **Agent-to-Agent** protocol and streams the
+answer back to whoever asked. Your agent stays where it lives and keeps its own memory;
+the hive just becomes a fleet of microphones and screens in front of it.
 
 !!! abstract "In a nutshell"
-    - Swaps the `agent_protocol` for `hivemind-a2a-agent-plugin`, forwarding queries to any Google A2A-compliant server.
+    - Swaps the `agent_protocol` for `hivemind-a2a-agent-plugin`, forwarding every query to any Google A2A-compliant server.
     - Only `agent_url` is required; `auth_header`, `timeout`, and `streaming` are optional.
-    - The HiveMind `session_id` maps 1-to-1 to the A2A `sessionId`, so multi-turn context lives on the A2A server.
+    - HiveMind's `session_id` maps one-to-one to the A2A `sessionId`, so the back-and-forth of a conversation is remembered on the agent's side, not here.
 
 [A2A](https://google.github.io/A2A/) is Google's open protocol for agent
 interoperability. An A2A server publishes an **agent card** at

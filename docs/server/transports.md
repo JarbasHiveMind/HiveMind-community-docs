@@ -1,10 +1,11 @@
 # Transports
 
-**A transport is how bytes travel between a satellite and `hivemind-core`.** WebSocket is the
-default; the others suit special cases. The important part: the
-[encryption](../concepts/security.md) and the message format are **identical across all
-of them** — only the carrier changes. A satellite and `hivemind-core` agree on a transport, but
-what they send over it is the same encrypted HiveMind protocol either way.
+Think of a transport as the road the message drives on, not the message itself. A
+satellite and hivemind-core have to agree on *a* road — a WebSocket, an HTTP request, an
+MQTT broker — but the cargo riding on it is the same encrypted HiveMind protocol no
+matter which they pick. Swap the road and the [encryption](../concepts/security.md) and
+message format don't change a bit; the carrier only ever sees sealed envelopes. Which is
+why, for almost everyone, this page ends at one word: WebSocket.
 
 !!! abstract "In a nutshell"
     - Transports register under the `hivemind.network.protocol` plugin entry-point group; the carrier is swappable without touching encryption or the message format.
