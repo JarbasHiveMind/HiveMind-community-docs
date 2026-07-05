@@ -1,11 +1,13 @@
 # Microcontrollers (ESP32)
 
-**The microcontroller clients are the thinnest possible *hardware* satellites** — they turn a bare
-microcontroller (an ESP32, or a Raspberry Pi Pico W) into a HiveMind
-[satellite](../reference/glossary.md) without running OVOS or a full Python desktop
-on the device. The chip captures the microphone and ships audio to
-[hivemind-core](../reference/glossary.md); hivemind-core does all the speech-to-text, intents, skills,
-and text-to-speech.
+A chip the size of a postage stamp, costing a few dollars, with kilobytes of memory —
+and yet it can be a full front-end to your assistant. That's the trick these clients
+pull off. An ESP32 (or a Raspberry Pi Pico W) can't run speech recognition or an LLM,
+and it doesn't try to: it captures the microphone, ships the audio to
+[hivemind-core](../reference/glossary.md), and plays back whatever comes home. All the
+heavy lifting — transcription, intents, skills, speech — happens on the server. No OVOS,
+no Python desktop, no operating system to speak of runs on the device. This is what lets
+a satellite cost less than a cup of coffee.
 
 !!! abstract "In a nutshell"
     - Two clients: **ESP32 (C / ESP-IDF)** for maximum control and on-device wakeword, and **MicroPython** for pure-Python hacking.

@@ -1,12 +1,18 @@
 # WebSpeech Browser Satellite
 
-**The WebSpeech satellite is a JavaScript client that runs in any modern web browser**, capturing microphone audio in the browser and streaming it to hivemind-core for processing.
+No install, no hardware, no app store — just open a web page. The WebSpeech satellite is
+a satellite that lives entirely in a browser tab: it grabs the microphone right there in
+the page and streams what it hears to hivemind-core. Anyone you can hand a URL to can
+talk to your hive from their phone, their laptop, a borrowed computer — whatever has a
+browser. And it's no toy in the security department: the browser runs the same modern
+Noise handshake as a native client, deriving its key from the password in-page, so a
+password alone is all it takes.
 
 !!! abstract "In a nutshell"
-    - **Runs locally**: browser microphone + VAD (JavaScript, Silero via onnxruntime-web).
-    - **hivemind-core provides**: STT, TTS, skills, and intents.
-    - Ships captured audio as base64 over the bus (`recognizer_loop:b64_audio`), so hivemind-core needs `ovos-dinkum-listener >= 0.0.3a19` and `hivemind-core allow-msg "recognizer_loop:b64_audio"` — not the binary `RAW_AUDIO` protocol.
-    - Encryption defaults to the Noise v3 handshake with full parity to hivemind-core, deriving the PSK from the password in-browser; a password alone is enough.
+    - **On the device (the browser):** microphone capture and VAD (JavaScript — Silero via onnxruntime-web).
+    - **On hivemind-core:** STT, TTS, skills, and intents.
+    - It ships audio as base64 over the bus (`recognizer_loop:b64_audio`), *not* the binary `RAW_AUDIO` protocol — so the server needs `ovos-dinkum-listener >= 0.0.3a19` and a one-time `hivemind-core allow-msg "recognizer_loop:b64_audio"`.
+    - Encryption defaults to the Noise v3 handshake with full parity to hivemind-core, deriving the key from the password in-browser. A password is enough — nothing to provision.
 
 ---
 
