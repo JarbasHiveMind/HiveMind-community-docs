@@ -1,9 +1,11 @@
 # Core Concepts
 
-**This section explains how HiveMind works** — the ideas behind the mesh, not the
-commands to run it. You don't need to read it all before setting things up
-([Quick Start](../quickstart.md) gets you running in ten minutes), but a skim here
-makes every other page click into place.
+You can run HiveMind without ever reading this section — the [Quick Start](../quickstart.md)
+gets you talking to a satellite in ten minutes flat. But at some point you'll wonder
+*why* a new device can't do anything until you allow it, or *how* a question finds its
+way to the right server, or *what* actually crosses the wire. This is where those
+answers live: the ideas behind the mesh, not the commands to run it. Skim it once and
+every other page clicks into place.
 
 !!! tip "New here? Read these two first"
     Start with **[Mesh Topology](mesh.md)** (what the pieces are) and

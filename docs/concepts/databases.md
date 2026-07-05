@@ -1,11 +1,16 @@
 # Database Backends
 
-**hivemind-core stores which devices may connect and what each is permitted to do in a swappable database backend.** `hivemind-core` keeps client credentials and settings there — a single file for simple setups, or a shared Redis server when you run several hivemind-core instances.
+Somewhere, hivemind-core has to remember the guest list: which devices are allowed to
+knock, what key each one holds, and what each is permitted to say once inside. For a
+home setup that's a single file sitting quietly on disk — nothing to install, nothing to
+run. Scale up to several servers sharing one guest list and that file becomes a shared
+Redis instead. Same information either way; only *where it lives* changes, and swapping
+that out never touches the rest of your setup.
 
 !!! abstract "In a nutshell"
-    - Three backends: SQLite (default for new installs), JSON (human-readable, unsafe under concurrent writes), and Redis (for multi-instance deployments).
-    - The backend is chosen in the `database` block of `~/.config/hivemind-core/server.json`, never as a CLI flag; `listen` and every client command read the same config.
-    - Migrate between backends with `migrate-db`; both file backends support encryption at rest via a `password` key.
+    - Three places to keep the guest list: **SQLite** (the default — a transactional file, nothing extra to run), **JSON** (the same idea but human-readable, and not safe if two processes write at once), and **Redis** (a shared store for when several servers need one list).
+    - You pick the backend in the `database` block of `~/.config/hivemind-core/server.json` — never a command-line flag. `listen` and every client command read that same file, so they always agree on where the list lives.
+    - Move between them with `migrate-db`, and lock either file backend at rest with a `password` key.
 
 | Backend | Module (package) | Default location | Best for |
 |---|---|---|---|

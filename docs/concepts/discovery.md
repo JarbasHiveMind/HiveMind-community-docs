@@ -1,6 +1,13 @@
 # Auto Discovery
 
-**Discovery lets satellites find hivemind-core on their own** instead of having its network address typed into every device by hand — either by listening for it on the local network, or (for first-time setup with no keyboard) by exchanging credentials through sound.
+Typing a server's IP address into a phone is tedious. Typing it into a five-dollar
+microcontroller that has no keyboard is impossible. Discovery is how a satellite finds
+hivemind-core without you reciting its address — the server calls out "I'm over here" on
+the local network, and satellites that are listening simply hear it. And for that very
+first pairing on a device with no screen and no keys, there's a trick worthy of a
+sci-fi film: hivemind-core and the satellite can hand each other credentials *through
+sound*, a short chirp played across the room. None of this is required — a hive works
+fine with an address typed in by hand — but when you want it, it's here.
 
 !!! abstract "In a nutshell"
     - Discovery is optional and provided by the separate [HiveMind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) package; `hivemind-core` runs fine with a manually configured host.

@@ -1,6 +1,13 @@
 # Security
 
-**Every device that joins a hive proves it knows a shared password, and all traffic is then encrypted.** hivemind-core also decides, per device, exactly which kinds of messages that device may send — and nothing is allowed until you grant it.
+Think of adding a device to your hive like handing someone a key to the house. Before
+they get in, they have to prove they hold the right key — without ever sliding it under
+the door where someone could copy it. Once they're inside, they still can't touch
+everything: a new device arrives able to do *nothing at all*, and you decide, one
+permission at a time, what it's allowed to say. And everything spoken between the device
+and the server is scrambled the moment the door closes, whether or not you ever bother
+with TLS. Those three ideas — prove the key, grant nothing by default, encrypt
+everything — are the whole security model.
 
 !!! abstract "In a nutshell"
     - The `access_key` is a non-secret identifier sent in the clear; the `password` is the only secret and is never transmitted — both sides derive the session key from it.
