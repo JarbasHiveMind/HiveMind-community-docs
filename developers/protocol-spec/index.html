@@ -1,0 +1,3367 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="The official manual for HiveMind — the open-source protocol that connects lightweight satellite devices to a central hivemind-core server over an encrypted mesh.">
+      
+      
+      
+        <link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/developers/protocol-spec/">
+      
+      
+        <link rel="prev" href="../client-library/">
+      
+      
+        <link rel="next" href="../writing-plugins/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Protocol Specification - HiveMind Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#protocol-specification" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="HiveMind Documentation" class="md-header__button md-logo" aria-label="HiveMind Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            HiveMind Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Protocol Specification
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="light-blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="light-blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/JarbasHiveMind" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JarbasHiveMind
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="HiveMind Documentation" class="md-nav__button md-logo" aria-label="HiveMind Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    HiveMind Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/JarbasHiveMind" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JarbasHiveMind
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../concepts/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/mesh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mesh Topology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/nested-hives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nested Hives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protocol & Message Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Permissions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Database Backends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auto Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/plugins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plugin Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../satellites/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Satellites
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Satellites
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../satellites/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HiveMind CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../satellites/mic-satellite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mic Satellite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../satellites/voice-relay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Voice Relay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../satellites/voice-sat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Voice Satellite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../satellites/webspeech/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WebSpeech Browser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../satellites/microcontrollers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microcontrollers (ESP32)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../server/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-Hosting
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Self-Hosting
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/admin-panel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Panel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/ovos-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OVOS Skills Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/persona-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persona Server (LLM)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/a2a-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A2A Server (Agents)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/transports/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/audio-binary-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio Binary Protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../integrations/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/home-assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/media-player/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media Player
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/deltachat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DeltaChat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/mattermost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mattermost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/twitch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Twitch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/hackchat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HackChat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developer Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client-library/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Client Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protocol Specification
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protocol Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#message-envelope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message envelope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protocol-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol versions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#handshake-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handshake state machine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Handshake state machine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#framing-rules-that-hold-for-the-whole-handshake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Framing rules that hold for the whole handshake
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-setup-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection setup sequence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#negotiation-defaults" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negotiation &amp; defaults
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Negotiation &amp; defaults">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-encoding-is-json_hex-not-json_b64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default encoding is JSON_HEX, not JSON_B64
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encrypted-json-envelope-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encrypted-JSON envelope shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supportedencodings-from-encryptionpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SupportedEncodings (from encryption.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supportedciphers-from-encryptionpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SupportedCiphers (from encryption.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-derivation-delegated-to-poorman_handshake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key derivation (delegated to poorman_handshake)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#binary-framing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary framing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Binary framing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#header-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Header layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message-type-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message type encoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binary-payload-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary payload type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#versioned-vs-unversioned-framing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioned vs unversioned framing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-bus-message-uncompressed-versioned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: BUS message (uncompressed, versioned)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-binary-message-raw-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: BINARY message (raw audio)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compression
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#session-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ovos-messages-payload-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OVOS messages (payload format)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Source
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../writing-plugins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/message-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Message Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#message-envelope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message envelope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protocol-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol versions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#handshake-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handshake state machine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Handshake state machine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#framing-rules-that-hold-for-the-whole-handshake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Framing rules that hold for the whole handshake
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-setup-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection setup sequence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#negotiation-defaults" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negotiation &amp; defaults
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Negotiation &amp; defaults">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-encoding-is-json_hex-not-json_b64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default encoding is JSON_HEX, not JSON_B64
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encrypted-json-envelope-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encrypted-JSON envelope shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supportedencodings-from-encryptionpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SupportedEncodings (from encryption.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supportedciphers-from-encryptionpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SupportedCiphers (from encryption.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-derivation-delegated-to-poorman_handshake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key derivation (delegated to poorman_handshake)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#binary-framing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary framing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Binary framing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#header-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Header layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message-type-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message type encoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binary-payload-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary payload type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#versioned-vs-unversioned-framing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioned vs unversioned framing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-bus-message-uncompressed-versioned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: BUS message (uncompressed, versioned)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-binary-message-raw-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: BINARY message (raw audio)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compression
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#session-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ovos-messages-payload-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OVOS messages (payload format)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Source
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="protocol-specification">Protocol Specification<a class="headerlink" href="#protocol-specification" title="Permanent link">&para;</a></h1>
+<p>This is the page you reach for when you're writing a HiveMind client from scratch — in
+Rust, in Go, on a microcontroller, in whatever the Python and JavaScript libraries don't
+already cover — and you need to get every byte exactly right. It is the ground truth: the
+shape of the envelope, the step-by-step handshake, how the session key is derived, and
+the compact binary framing that kicks in when both sides agree to it. Nothing is
+hand-waved. Follow it literally and an independent client will reach a fully encrypted,
+session-established connection that hivemind-core accepts.</p>
+<div class="admonition abstract">
+<p class="admonition-title">In a nutshell</p>
+<ul>
+<li>Every message is a <code>HiveMessage</code> (<code>msg_type</code>, <code>payload</code>, <code>context</code>); <code>BUS</code> messages carry OVOS <code>Message</code> objects.</li>
+<li>The session <code>ProtocolVersion</code> is negotiated at connect time: v1/v2 use a password or RSA handshake, v3 uses a Noise handshake and is always encrypted.</li>
+<li>The <a href="#handshake-state-machine">handshake state machine</a> and <a href="#negotiation-defaults">negotiation defaults</a> are sufficient to bring an independent client to a fully-encrypted, session-established state.</li>
+<li><code>binarize</code> is a per-connection capability, not a version bump: it packs messages into a compact binary frame instead of JSON.</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Using the Python or JS client?</p>
+<p>The library already implements everything on this page. Read it only to implement a HiveMind client from scratch in another language, or to debug the wire format; otherwise start with the <a href="../client-library/">Client Library</a>.</p>
+</div>
+<hr />
+<h2 id="message-envelope">Message envelope<a class="headerlink" href="#message-envelope" title="Permanent link">&para;</a></h2>
+<p>Start with the shape of a single message, because everything else is a variation on it.
+No matter its type, a <code>HiveMessage</code> is only ever three fields:</p>
+<ul>
+<li><code>msg_type</code> — a <code>HiveMessageType</code> enum value (see <a href="../../concepts/protocol/">Protocol Concepts</a>)</li>
+<li><code>payload</code> — the message content (an OVOS <code>Message</code> object, a nested <code>HiveMessage</code>, or raw bytes)</li>
+<li><code>context</code> — optional routing metadata dict</li>
+</ul>
+<p>Get those three right and you can represent any message on the wire. The rest of this
+page is about the two hard parts: agreeing on encryption before you send them, and packing
+them tightly once you do.</p>
+<hr />
+<h2 id="protocol-versions">Protocol versions<a class="headerlink" href="#protocol-versions" title="Permanent link">&para;</a></h2>
+<p>The first thing two nodes settle is <em>which</em> protocol they're speaking, because it decides
+everything downstream — the handshake, the encryption, whether frames are JSON or binary.
+The <code>ProtocolVersion</code> enum (<code>ZERO</code>/<code>ONE</code>/<code>TWO</code>/<code>THREE</code>, in <code>hivemind_core/protocol.py</code>) is
+that dial, negotiated the moment a connection opens:</p>
+<ul>
+<li>The server advertises <code>max_protocol_version</code> = <strong><code>THREE</code></strong> when the Noise primitive is available <em>and</em> the client has a password configured (<code>v3_capable</code>); otherwise <code>TWO</code> when <code>binarize</code> is enabled, else <code>ONE</code>. It advertises <code>min_protocol_version</code> = <code>max(config floor, crypto-derived minimum)</code>, where the config floor defaults to <strong><code>2</code></strong> (<code>min_protocol_version</code> in <code>server.json</code>). A client that cannot reach the advertised minimum is disconnected.</li>
+<li>The legacy serialization-layer <code>PROTOCOL_VERSION</code> constant in <code>serialization.py</code> is <code>1</code>; that binary-framing version is distinct from this session <code>ProtocolVersion</code> and is not bumped for v3.</li>
+</ul>
+<p>One subtlety trips up every first implementation, so read it before the table: within the
+<strong>v1/v2</strong> family, binary framing is <strong>not</strong> a version bump — it's switched on by the
+<code>binarize</code> boolean negotiated during the handshake (see <a href="#negotiation-defaults">Negotiation &amp; defaults</a>). <strong>v3</strong> is a different animal entirely (Noise), always encrypted and always binary-capable. With that in mind, here's the full ladder:</p>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Transport encoding</th>
+<th>Key exchange</th>
+<th>Compression</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>v0</strong></td>
+<td>JSON</td>
+<td>Pre-shared AES key only (legacy, deprecated)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><strong>v1</strong></td>
+<td>JSON (and binary framing when <code>binarize</code> is negotiated)</td>
+<td>Handshake: PBKDF2 password <strong>or</strong> RSA</td>
+<td>Optional zlib</td>
+</tr>
+<tr>
+<td><strong>v2</strong></td>
+<td>JSON + binary framing</td>
+<td>Handshake: PBKDF2 password <strong>or</strong> RSA</td>
+<td>Optional zlib</td>
+</tr>
+<tr>
+<td><strong>v3</strong></td>
+<td>Binary framing, always encrypted</td>
+<td><strong>Noise</strong> (<code>Noise_XXpsk2_25519_ChaChaPoly_SHA256</code> default — negotiated by browser/JS clients too via <code>@noble</code>; <code>AESGCM</code> suite as a fallback for minimal Web-Crypto-only peers; <code>KKpsk0</code> when the static key is pinned). PSK = <code>argon2id(password, SHA-256(node_id))</code>, derived in-browser</td>
+<td>Optional zlib</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">v3 Noise wire format</p>
+<p>The v1/v2 state machine below is the authoritative byte-level reference for the legacy handshake. The v3 Noise wire format — message tokens, prologue binding of the <code>HELLO</code>/<code>HANDSHAKE</code> payloads, PSK slot, and the provisioned-PSK path for constrained devices — is defined by the <code>hivemind_bus_client/noise.py</code> and <code>poorman_handshake/noise/</code> source modules; the <a href="../../concepts/security/#protocol-v3-the-noise-handshake-current-default">Security</a> page covers its model.</p>
+</div>
+<hr />
+<h2 id="handshake-state-machine">Handshake state machine<a class="headerlink" href="#handshake-state-machine" title="Permanent link">&para;</a></h2>
+<p>This is the heart of the page — the exact choreography that takes a fresh socket to an
+encrypted session. If you get one thing byte-for-byte right, make it this. Follow it
+literally: the field names below are lifted straight from the reference implementation, and
+hivemind-core is unforgiving about them.</p>
+<p>This section is the authoritative connection-setup sequence for the <strong>legacy v1/v2 handshake</strong> (password or RSA). If the server's step-2 <code>HANDSHAKE</code> includes a <code>noise</code> object and your client supports it, run the Noise (v3) handshake instead (see the <a href="#protocol-versions">v3 note above</a>); otherwise take this branch. Field names are taken verbatim from the reference implementation (<code>hivemind_core/protocol.py</code> server side; <code>hivemind_bus_client/protocol.py</code> <code>HiveMindSlaveProtocol</code> client side). Implement it exactly.</p>
+<h3 id="framing-rules-that-hold-for-the-whole-handshake">Framing rules that hold for the whole handshake<a class="headerlink" href="#framing-rules-that-hold-for-the-whole-handshake" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>HELLO</code> and <code>HANDSHAKE</code> messages always travel in PLAINTEXT JSON</strong>, even after the session key has been established. This includes the client's <em>second</em> <code>HELLO</code> (the one carrying session data), which is emitted <strong>after</strong> <code>crypto_key</code> is set but is still sent unencrypted. Only the post-handshake <code>BUS</code>/<code>QUERY</code>/etc. traffic is encrypted. A client must therefore be able to send/receive <code>HELLO</code> and <code>HANDSHAKE</code> as plain <code>HiveMessage</code> JSON regardless of crypto state.</li>
+<li>The transport-layer JSON for any <code>HiveMessage</code> is the object returned by <code>HiveMessage.as_dict</code>: <code>{"msg_type", "payload", "metadata", "route", "node", "target_site_id", "target_pubkey", "source_peer"}</code>. For <code>HELLO</code>/<code>HANDSHAKE</code> only <code>msg_type</code> and <code>payload</code> matter.</li>
+<li><code>msg_type</code> values are the <strong>string</strong> enum values, not the binary integers: <code>HELLO = "hello"</code>, <code>HANDSHAKE = "shake"</code>.</li>
+<li><strong>A <code>HANDSHAKE</code> is a REQUEST vs a RESPONSE distinguished ONLY by the presence of the <code>envelope</code> field.</strong> There is no separate type or flag. The client decides which branch of its <code>HANDSHAKE</code> handler to run purely by <code>if "envelope" in payload</code>. A server→client <code>HANDSHAKE</code> <em>without</em> <code>envelope</code> is the "please start the handshake" request advertising capabilities; a message <em>with</em> <code>envelope</code> is the response that completes the exchange.</li>
+</ul>
+<h3 id="connection-setup-sequence">Connection setup sequence<a class="headerlink" href="#connection-setup-sequence" title="Permanent link">&para;</a></h3>
+<p>Authentication to the WebSocket itself happens first via HTTP headers (<code>authorization: &lt;access_key&gt;</code>, <code>x-hm-site-id</code>), before any HiveMessage — that is outside this state machine. Once the socket is open:</p>
+<ol>
+<li><strong>Server → Client <code>HELLO</code></strong> (plaintext). Announces the server identity.</li>
+<li><strong>Server → Client <code>HANDSHAKE</code></strong> (plaintext, <strong>no <code>envelope</code></strong>). Advertises server capabilities and asks the client to start the handshake.</li>
+<li><strong>Client → Server <code>HANDSHAKE</code></strong> (plaintext, <strong>with <code>envelope</code></strong>). Carries the client's handshake material plus its cipher/encoding/binarize selections.</li>
+<li><strong>Server → Client <code>HANDSHAKE</code></strong> (plaintext, <strong>with <code>envelope</code></strong>). Carries the server's handshake material and the final selected <code>encoding</code>/<code>cipher</code>. After this, <strong>both sides can derive the same <code>crypto_key</code>.</strong></li>
+<li><strong>Client → Server <code>HELLO</code></strong> (plaintext, but sent <em>after</em> crypto is established). Carries the client's session, site_id, and public key.</li>
+<li>From here on, all other message types are encrypted with the negotiated <code>crypto_key</code>/<code>cipher</code>/<code>encoding</code>.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Server                                  Client
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  |  HELLO {pubkey, peer, node_id}        |   (1) plaintext
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  | ------------------------------------&gt; |
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  |  HANDSHAKE {handshake, min/max_proto, |   (2) plaintext, NO envelope = REQUEST
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  |   binarize, preshared_key, password,  |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  |   crypto_required, encodings, ciphers}|
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  | ------------------------------------&gt; |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  |                                       |   client picks branch on `password`
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  |  HANDSHAKE {envelope, encodings,      |   (3) plaintext, HAS envelope
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  |   ciphers, binarize [, pubkey]}       |
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  | &lt;------------------------------------ |
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  |  HANDSHAKE {envelope, encoding,       |   (4) plaintext, HAS envelope = RESPONSE
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  |   cipher}                             |       both sides now hold crypto_key
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  | ------------------------------------&gt; |
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  |  HELLO {pubkey, session, site_id}     |   (5) plaintext, sent AFTER crypto set
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  | &lt;------------------------------------ |
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  |  &lt;encrypted BUS / QUERY / ... &gt;       |   (6) encrypted
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  |&lt;====================================&gt;|
+</code></pre></div>
+<p>That diagram is the whole dance at a glance. The rest of this section zooms into each of
+those six frames and names every field it carries — this is the part you keep open in a
+second window while you code. Taking them in order:</p>
+<h4 id="1-server-client-hello-payload-fields">(1) Server → Client <code>HELLO</code> — <code>payload</code> fields<a class="headerlink" href="#1-server-client-hello-payload-fields" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pubkey</code></td>
+<td>str (PEM)</td>
+<td>Server's RSA public key. The client stores this as <code>mpubkey</code> and uses it to authenticate the server in RSA mode. Only honored on the first HELLO (before <code>node_id</code> is set).</td>
+</tr>
+<tr>
+<td><code>peer</code></td>
+<td>str</td>
+<td>Identifies this client in OVOS <code>message.context</code> (server's view of the connection).</td>
+</tr>
+<tr>
+<td><code>node_id</code></td>
+<td>str</td>
+<td>The server's peer id; becomes the client's <code>node_id</code> (how the local bus refers to the master).</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-server-client-handshake-request-payload-capability-fields">(2) Server → Client <code>HANDSHAKE</code> (request) — <code>payload</code> capability fields<a class="headerlink" href="#2-server-client-handshake-request-payload-capability-fields" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>handshake</code></td>
+<td>bool</td>
+<td><code>True</code> ⇒ client MUST complete a handshake or the connection is dropped. (<code>needs_handshake = not client.crypto_key and self.handshake_enabled</code>.)</td>
+</tr>
+<tr>
+<td><code>min_protocol_version</code></td>
+<td>int</td>
+<td>Minimum acceptable <code>ProtocolVersion</code> (<code>1</code> if crypto required and no preshared key, else <code>0</code>).</td>
+</tr>
+<tr>
+<td><code>max_protocol_version</code></td>
+<td>int</td>
+<td>Maximum acceptable <code>ProtocolVersion</code> the server can offer: <code>THREE</code> when Noise + password are available, else <code>TWO</code> when <code>binarize</code> is on, else <code>ONE</code>.</td>
+</tr>
+<tr>
+<td><code>noise</code></td>
+<td>object</td>
+<td>Present only when the server offers <strong>v3</strong>: <code>{"patterns": [...], "suites": [...]}</code> in preference order (<code>XXpsk2</code>/<code>KKpsk0</code>, <code>25519_ChaChaPoly_SHA256</code>/<code>25519_AESGCM_SHA256</code>). Absent ⇒ take the legacy branch below.</td>
+</tr>
+<tr>
+<td><code>binarize</code></td>
+<td>bool</td>
+<td>Server supports the binary framing scheme. From <code>cfg["binarize"]</code>, default <code>False</code>.</td>
+</tr>
+<tr>
+<td><code>preshared_key</code></td>
+<td>bool</td>
+<td>Server already holds a pre-shared crypto key for this client (legacy V0 path).</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>bool</td>
+<td>Server has a password configured for this client ⇒ password handshake is available (V1). If <code>True</code> and the client also has a password, the client takes the <strong>password branch</strong>.</td>
+</tr>
+<tr>
+<td><code>crypto_required</code></td>
+<td>bool</td>
+<td>Server rejects unencrypted payloads.</td>
+</tr>
+<tr>
+<td><code>encodings</code></td>
+<td>list[str]</td>
+<td>Server-allowed <code>SupportedEncodings</code>, server preference order. Defaults to <strong>all</strong> encodings.</td>
+</tr>
+<tr>
+<td><code>ciphers</code></td>
+<td>list[str]</td>
+<td>Server-allowed <code>SupportedCiphers</code>, server preference order. Defaults to <code>["AES-GCM"]</code>.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="3-client-server-handshake-with-envelope-payload-fields">(3) Client → Server <code>HANDSHAKE</code> (with <code>envelope</code>) — <code>payload</code> fields<a class="headerlink" href="#3-client-server-handshake-with-envelope-payload-fields" title="Permanent link">&para;</a></h4>
+<p>The client always sends:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>binarize</code></td>
+<td>bool</td>
+<td>Client's choice (it echoes the server's advertised value in the reference client).</td>
+</tr>
+<tr>
+<td><code>encodings</code></td>
+<td>list[str]</td>
+<td>Client's <strong>preference-ordered</strong> acceptable encodings (reference client sends <code>list(SupportedEncodings)</code>).</td>
+</tr>
+<tr>
+<td><code>ciphers</code></td>
+<td>list[str]</td>
+<td>Client's <strong>preference-ordered</strong> acceptable ciphers (reference client sends <code>optimal_ciphers()</code>, i.e. AES first if the CPU has AES-NI, else ChaCha20 first).</td>
+</tr>
+</tbody>
+</table>
+<p>Plus exactly one of:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>envelope</code></td>
+<td>str (hex)</td>
+<td><strong>Password branch.</strong> Present when the client uses a <code>PasswordHandShake</code>. This is the field that marks the message as carrying handshake material.</td>
+</tr>
+<tr>
+<td><code>pubkey</code></td>
+<td>str (PEM)</td>
+<td><strong>RSA branch.</strong> Present when no password is used; the client sends its RSA public key instead and there is <strong>no</strong> <code>envelope</code> in <em>this</em> client message.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Selection ownership: the client <em>proposes</em> <code>encodings</code>/<code>ciphers</code> in preference order. The <strong>server</strong> intersects them with its own allowed sets and then selects the client's element <code>[0]</code> of each filtered list (<code>client.cipher = ciphers[0]</code>, <code>client.encoding = encodings[0]</code>). If the intersection is empty for either, the server disconnects the client. <strong>This negotiation runs ONLY on the password branch.</strong> On the RSA-pubkey branch the server never reads the client's <code>encodings</code>/<code>ciphers</code>, so the encoding/cipher silently stay at the server defaults (see <a href="#negotiation-defaults">Negotiation &amp; defaults</a>).</p>
+</blockquote>
+<h4 id="4-server-client-handshake-response-with-envelope-payload-fields">(4) Server → Client <code>HANDSHAKE</code> (response, with <code>envelope</code>) — <code>payload</code> fields<a class="headerlink" href="#4-server-client-handshake-response-with-envelope-payload-fields" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>envelope</code></td>
+<td>str (hex)</td>
+<td>Server handshake material. In password mode this is <code>PasswordHandShake.generate_handshake()</code> (an hSub). In RSA mode it is <code>HandShake.generate_handshake(client_pubkey)</code> = <code>hexlify(signature + ciphertext)</code>.</td>
+</tr>
+<tr>
+<td><code>encoding</code></td>
+<td>str</td>
+<td><strong>Final</strong> selected encoding (the value the client must use for all encrypted JSON from now on). The client reads <code>payload.get("encoding") or JSON_HEX</code>.</td>
+</tr>
+<tr>
+<td><code>cipher</code></td>
+<td>str</td>
+<td><strong>Final</strong> selected cipher. The client reads <code>payload.get("cipher") or AES_GCM</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>On receipt the client derives <code>crypto_key</code>:</p>
+<ul>
+<li><strong>Password mode:</strong> <code>pswd_handshake.receive_and_verify(envelope)</code> validates the server proved the same password, then <code>crypto_key = pswd_handshake.secret</code> (see PBKDF2 math below).</li>
+<li><strong>RSA mode:</strong> if the client knows the server pubkey (<code>mpubkey</code>, from HELLO) it calls <code>handshake.receive_and_verify(envelope, mpubkey)</code> (verifies the PSS signature over the ciphertext, then decrypts); otherwise <code>handshake.receive_handshake(envelope)</code> (trust-on-first-use). Then <code>crypto_key = handshake.secret</code>.</li>
+</ul>
+<h4 id="5-client-server-hello-payload-fields-sent-plaintext-after-crypto_key-is-set">(5) Client → Server <code>HELLO</code> — <code>payload</code> fields (sent plaintext, after crypto_key is set)<a class="headerlink" href="#5-client-server-hello-payload-fields-sent-plaintext-after-crypto_key-is-set" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pubkey</code></td>
+<td>str (PEM)</td>
+<td>The client's own RSA public key (<code>identity.public_key</code>).</td>
+</tr>
+<tr>
+<td><code>session</code></td>
+<td>str (JSON)</td>
+<td>Serialized OVOS <code>Session</code> for <code>session_id</code>. The server deserializes this as the client's session.</td>
+</tr>
+<tr>
+<td><code>site_id</code></td>
+<td>str</td>
+<td>The client's site id (used for <code>BROADCAST</code>/<code>PROPAGATE</code> <code>target_site_id</code> filtering).</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Note: a client requesting <code>session_id == "default"</code> is disconnected unless it is an administrator.</p>
+</blockquote>
+<hr />
+<h2 id="negotiation-defaults">Negotiation &amp; defaults<a class="headerlink" href="#negotiation-defaults" title="Permanent link">&para;</a></h2>
+<p>The handshake left a few things "negotiated" — the encoding, the cipher, the key math.
+This section pins down exactly what those resolve to, including the two defaults that bite
+newcomers most often. Start with the sneakiest one.</p>
+<h3 id="default-encoding-is-json_hex-not-json_b64">Default encoding is <code>JSON_HEX</code>, not <code>JSON_B64</code><a class="headerlink" href="#default-encoding-is-json_hex-not-json_b64" title="Permanent link">&para;</a></h3>
+<p>Several helper functions (<code>encrypt_as_json</code>, <code>decrypt_from_json</code>) carry a Python default argument of <code>JSON_B64</code>, but those defaults are <strong>never the protocol default</strong>. The protocol default everywhere it matters is <strong><code>JSON_HEX</code></strong>:</p>
+<ul>
+<li>The client's handshake handler falls back to <code>SupportedEncodings.JSON_HEX</code> when the server response omits <code>encoding</code>.</li>
+<li>The server's handshake handler falls back to <code>[SupportedEncodings.JSON_HEX]</code> when the client omits <code>encodings</code>.</li>
+</ul>
+<p>So an independent client that never negotiates an encoding (e.g. RSA branch) must encode encrypted JSON using <strong>hex</strong> (<code>JSON-HEX</code>), and the cipher default is <strong><code>AES-GCM</code></strong>.</p>
+<h3 id="encrypted-json-envelope-shape">Encrypted-JSON envelope shape<a class="headerlink" href="#encrypted-json-envelope-shape" title="Permanent link">&para;</a></h3>
+<p>After the handshake, encrypted messages are JSON objects (then text-encoded per the negotiated encoding) of the form produced by <code>encrypt_as_json</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">&quot;ciphertext&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;encoded&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;tag&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;encoded&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;nonce&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;encoded&gt;&quot;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>For <code>AES-GCM</code>: <code>nonce</code> is 16 bytes, <code>tag</code> is 16 bytes, key is 16/24/32 bytes (poorman secrets are 32 → AES-256).</li>
+<li>For <code>CHACHA20-POLY1305</code>: <code>nonce</code> is 12 bytes (RFC 7539), <code>tag</code> is 16 bytes, key is 32 bytes.</li>
+<li>Each of <code>ciphertext</code>/<code>tag</code>/<code>nonce</code> is independently text-encoded with the negotiated <code>SupportedEncodings</code> codec (default hexlify/unhexlify for <code>JSON-HEX</code>).</li>
+<li>Web-Crypto compatibility: if <code>tag</code> is absent, the last 16 bytes of <code>ciphertext</code> are treated as the tag.</li>
+</ul>
+<h3 id="supportedencodings-from-encryptionpy"><code>SupportedEncodings</code> (from <code>encryption.py</code>)<a class="headerlink" href="#supportedencodings-from-encryptionpy" title="Permanent link">&para;</a></h3>
+<p>The string value on the wire is the right column.</p>
+<table>
+<thead>
+<tr>
+<th>Enum</th>
+<th>Wire value</th>
+<th>Codec</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>JSON_B91</code></td>
+<td><code>JSON-B91</code></td>
+<td>Base91</td>
+</tr>
+<tr>
+<td><code>JSON_Z85B</code></td>
+<td><code>JSON-Z85B</code></td>
+<td>Z85B</td>
+</tr>
+<tr>
+<td><code>JSON_Z85P</code></td>
+<td><code>JSON-Z85P</code></td>
+<td>Z85P</td>
+</tr>
+<tr>
+<td><code>JSON_B64</code></td>
+<td><code>JSON-B64</code></td>
+<td>Base64</td>
+</tr>
+<tr>
+<td><code>JSON_URLSAFE_B64</code></td>
+<td><code>JSON-URLSAFE-B64</code></td>
+<td>URL-safe Base64</td>
+</tr>
+<tr>
+<td><code>JSON_B32</code></td>
+<td><code>JSON-B32</code></td>
+<td>Base32</td>
+</tr>
+<tr>
+<td><code>JSON_HEX</code></td>
+<td><code>JSON-HEX</code></td>
+<td>Base16/hex (<strong>protocol default</strong>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="supportedciphers-from-encryptionpy"><code>SupportedCiphers</code> (from <code>encryption.py</code>)<a class="headerlink" href="#supportedciphers-from-encryptionpy" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Enum</th>
+<th>Wire value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AES_GCM</code></td>
+<td><code>AES-GCM</code></td>
+<td>Default; 16/24/32-byte key, 16-byte nonce, 16-byte tag</td>
+</tr>
+<tr>
+<td><code>CHACHA20_POLY1305</code></td>
+<td><code>CHACHA20-POLY1305</code></td>
+<td>RFC 7539; 32-byte key, 12-byte nonce, 16-byte tag</td>
+</tr>
+</tbody>
+</table>
+<p><code>optimal_ciphers()</code> orders these by CPU AES-NI support: <code>[AES-GCM, CHACHA20-POLY1305]</code> when AES-NI is present, <code>[CHACHA20-POLY1305, AES-GCM]</code> otherwise.</p>
+<h3 id="key-derivation-delegated-to-poorman_handshake">Key derivation (delegated to <code>poorman_handshake</code>)<a class="headerlink" href="#key-derivation-delegated-to-poorman_handshake" title="Permanent link">&para;</a></h3>
+<p>The session key math lives in the external <strong><code>poorman_handshake</code></strong> package, not in <code>hivemind-bus-client</code>. A non-Python client must reimplement it.</p>
+<p><strong>Password mode (<code>PasswordHandShake</code>):</strong></p>
+<ul>
+<li><strong>Handshake envelope = an hSub</strong> (hashed subject), NOT PBKDF2. <code>generate_handshake()</code> produces <code>hsub = iv + SHA256(iv + password)</code>, hex-encoded and <strong>truncated to 48 hex chars</strong> (<code>create_hsub(..., hsublen=48)</code>). The <code>iv</code> is 8 random bytes (16 hex chars).</li>
+<li><strong>Verification:</strong> the receiver re-derives the hSub using the <code>iv</code> parsed from the first 16 hex chars of the peer's hSub and checks for collision (<code>match_hsub</code>) — this proves both ends share the password without transmitting it.</li>
+<li><strong>Shared salt:</strong> <code>salt = iv_client XOR iv_server</code> (byte-wise XOR of the two 8-byte IVs; <code>receive_handshake</code> does <code>bytes(a ^ b for a, b in zip(self.iv, iv_from_hsub(peer_shake)))</code>).</li>
+<li><strong>Session key:</strong> <code>secret = PBKDF2-HMAC-SHA256(password, salt, iterations=100000)</code> → 32 bytes. This is the AES/ChaCha key (<code>crypto_key</code>).</li>
+<li>Note the HSUB uses a <strong>plain salted SHA-256</strong>, while the session key uses <strong>PBKDF2 (100000 iters)</strong> — they are different primitives; do not conflate them.</li>
+</ul>
+<p><strong>RSA mode (<code>HandShake</code>):</strong></p>
+<ul>
+<li>The party generating the handshake (the <strong>server</strong>, which calls <code>generate_handshake(peer_pubkey)</code>) picks a random 32-byte <code>secret</code>, RSA-encrypts it for the peer with <strong>PKCS#1 OAEP</strong>, and prepends a <strong>PSS-over-SHA-256</strong> signature of the ciphertext. The wire envelope is <code>hexlify(signature + ciphertext)</code>; the signature length equals the signer's RSA key size in bytes.</li>
+<li>The receiver strips the signature (first <code>key_size_in_bytes</code> bytes), RSA-decrypts the remainder with its private key to recover the 32-byte <code>secret</code>, and (in <code>receive_and_verify</code>) first verifies the PSS signature against the known peer public key.</li>
+<li>That 32-byte <code>secret</code> becomes <code>crypto_key</code>. No PBKDF2 is involved in RSA mode.</li>
+</ul>
+<hr />
+<h2 id="binary-framing">Binary framing<a class="headerlink" href="#binary-framing" title="Permanent link">&para;</a></h2>
+<p>Everything so far assumed JSON on the wire — readable, but chatty. When both sides agree
+to <code>binarize</code>, the same messages get packed into a tight bitstream instead, which is how
+raw audio rides the protocol without drowning it. (Remember: this is a per-connection flag,
+not a version bump — the wire <code>ProtocolVersion</code> stays <code>ONE</code>.) The format is a small header
+followed by the payload, and the header is bit-packed, so read the widths carefully:</p>
+<h3 id="header-layout">Header layout<a class="headerlink" href="#header-layout" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>&lt;uint:1=start_marker&gt; &lt;uint:1=versioned_bit&gt; [&lt;uint:8=protocol_version&gt;] &lt;uint:5=msg_type&gt; &lt;uint:1=compression_bit&gt; &lt;uint:8=metadata_len&gt;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Bits</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Start marker</td>
+<td>1</td>
+<td>Always <code>1</code>; used for alignment</td>
+</tr>
+<tr>
+<td>Versioned flag</td>
+<td>1</td>
+<td><code>1</code> if protocol version follows</td>
+</tr>
+<tr>
+<td>Protocol version</td>
+<td>8</td>
+<td>Present only if versioned flag is <code>1</code></td>
+</tr>
+<tr>
+<td>Message type</td>
+<td>5</td>
+<td><code>HiveMessageType</code> encoded as 5-bit uint (up to 32 types)</td>
+</tr>
+<tr>
+<td>Compression flag</td>
+<td>1</td>
+<td><code>1</code> if payload is zlib-compressed</td>
+</tr>
+<tr>
+<td>Metadata length</td>
+<td>8</td>
+<td>Length of metadata block in bytes</td>
+</tr>
+</tbody>
+</table>
+<p>Followed by: metadata bytes, then payload bytes. To pad to a byte boundary, zero bits are <strong>prepended</strong> to the left of the start marker; the decoder skips these leading zeros until it reads the first <code>1</code>. The metadata length is a <code>uint:8</code> (max 255 bytes).</p>
+<h3 id="message-type-encoding">Message type encoding<a class="headerlink" href="#message-type-encoding" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>HANDSHAKE</td>
+</tr>
+<tr>
+<td>1</td>
+<td>BUS</td>
+</tr>
+<tr>
+<td>2</td>
+<td>SHARED_BUS</td>
+</tr>
+<tr>
+<td>3</td>
+<td>BROADCAST</td>
+</tr>
+<tr>
+<td>4</td>
+<td>PROPAGATE</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ESCALATE</td>
+</tr>
+<tr>
+<td>6</td>
+<td>HELLO</td>
+</tr>
+<tr>
+<td>7</td>
+<td>QUERY</td>
+</tr>
+<tr>
+<td>8</td>
+<td>CASCADE</td>
+</tr>
+<tr>
+<td>9</td>
+<td>PING</td>
+</tr>
+<tr>
+<td>10</td>
+<td>RENDEZVOUS</td>
+</tr>
+<tr>
+<td>11</td>
+<td>THIRDPRTY</td>
+</tr>
+<tr>
+<td>12</td>
+<td>BINARY</td>
+</tr>
+</tbody>
+</table>
+<p><code>INTERCOM</code> has no dedicated binary integer slot — it defaults to <code>11</code> when encoded. The type field is a 5-bit unsigned integer.</p>
+<h3 id="binary-payload-type">Binary payload type<a class="headerlink" href="#binary-payload-type" title="Permanent link">&para;</a></h3>
+<p>For <code>BINARY</code> (<code>msg_type = 12</code>) messages, a 4-bit unsigned integer immediately after the metadata block indicates the binary content type:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>UNDEFINED</td>
+<td>Opaque binary content</td>
+</tr>
+<tr>
+<td>1</td>
+<td>RAW_AUDIO</td>
+<td>Continuous microphone stream</td>
+</tr>
+<tr>
+<td>2</td>
+<td>NUMPY_IMAGE</td>
+<td>Numpy array image (e.g., webcam frame)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>FILE</td>
+<td>File transfer; see context for filename</td>
+</tr>
+<tr>
+<td>4</td>
+<td>STT_AUDIO_TRANSCRIBE</td>
+<td>Full audio utterance — return transcript only</td>
+</tr>
+<tr>
+<td>5</td>
+<td>STT_AUDIO_HANDLE</td>
+<td>Full audio utterance — transcribe and handle intent</td>
+</tr>
+<tr>
+<td>6</td>
+<td>TTS_AUDIO</td>
+<td>Synthesized speech audio (hivemind-core → satellite)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="versioned-vs-unversioned-framing">Versioned vs unversioned framing<a class="headerlink" href="#versioned-vs-unversioned-framing" title="Permanent link">&para;</a></h3>
+<p>The <code>versioned</code> bit is <strong>0</strong> by default in the reference encoder (<code>get_bitstring(..., versioned=False)</code>). When <code>0</code>, the 8-bit protocol-version field is <strong>omitted</strong> and the decoder assumes <code>PROTOCOL_VERSION</code> (= 1). Only set the versioned bit to <code>1</code> if you also emit the <code>uint:8</code> version byte. The two examples below show the versioned form for clarity.</p>
+<h3 id="example-bus-message-uncompressed-versioned">Example: BUS message (uncompressed, versioned)<a class="headerlink" href="#example-bus-message-uncompressed-versioned" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1 | 1 | 00000001 | 00001 | 0 | 00000000 | &lt;metadata&gt; | &lt;payload&gt;
+</code></pre></div>
+<ul>
+<li><code>1</code> — start marker</li>
+<li><code>1</code> — versioned flag</li>
+<li><code>00000001</code> — protocol version 1</li>
+<li><code>00001</code> — BUS (type 1)</li>
+<li><code>0</code> — not compressed</li>
+<li><code>00000000</code> — no metadata</li>
+<li><code>&lt;payload&gt;</code> — UTF-8 JSON string</li>
+</ul>
+<h3 id="example-binary-message-raw-audio">Example: BINARY message (raw audio)<a class="headerlink" href="#example-binary-message-raw-audio" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1 | 1 | 00000001 | 01100 | 0 | 00000000 | &lt;metadata&gt; | 0001 | &lt;audio_bytes&gt;
+</code></pre></div>
+<ul>
+<li><code>01100</code> — BINARY (type 12)</li>
+<li><code>0001</code> — RAW_AUDIO binary payload type</li>
+<li><code>&lt;audio_bytes&gt;</code> — PCM audio data</li>
+</ul>
+<hr />
+<h2 id="compression">Compression<a class="headerlink" href="#compression" title="Permanent link">&para;</a></h2>
+<p>When the compression flag is set, both the metadata and payload are compressed independently with zlib (each typically ~49–50% smaller). Compression is most effective on large payloads; it adds overhead for small messages.</p>
+<hr />
+<h2 id="session-context">Session context<a class="headerlink" href="#session-context" title="Permanent link">&para;</a></h2>
+<p>See <a href="../../concepts/protocol/#session-and-context-keys">Protocol Concepts — Session and context keys</a> for the full reference of keys injected into <code>Message.context</code> by hivemind-core.</p>
+<hr />
+<h2 id="ovos-messages-payload-format">OVOS messages (payload format)<a class="headerlink" href="#ovos-messages-payload-format" title="Permanent link">&para;</a></h2>
+<p>OVOS <code>Message</code> objects are the standard payload for <code>BUS</code> messages. The structure:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;recognizer_loop:utterance&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">&quot;utterances&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;what time is it?&quot;</span><span class="p">],</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">&quot;lang&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;en-us&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nt">&quot;context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">&quot;session&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hive&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nt">&quot;destination&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;skills&quot;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">}</span>
+</code></pre></div>
+<p>The full OVOS message specification is maintained at <a href="https://github.com/OpenVoiceOS/message_spec">OpenVoiceOS/message_spec</a>.</p>
+<hr />
+<h2 id="transports">Transports<a class="headerlink" href="#transports" title="Permanent link">&para;</a></h2>
+<p>The protocol runs over any transport that can carry byte streams:</p>
+<table>
+<thead>
+<tr>
+<th>Transport</th>
+<th>Plugin</th>
+<th>Default port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WebSocket</td>
+<td><code>hivemind-websocket-plugin</code></td>
+<td>5678</td>
+</tr>
+<tr>
+<td>HTTP (polling)</td>
+<td><code>hivemind-http-plugin</code></td>
+<td>5679</td>
+</tr>
+<tr>
+<td>MQTT (broker)</td>
+<td><code>hivemind-mqtt-plugin</code></td>
+<td>1883</td>
+</tr>
+<tr>
+<td>Usenet wormhole</td>
+<td><code>hivemind-usenet-wormhole</code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>WebSocket and HTTP are the stable defaults. MQTT (package <code>hivemind-mqtt-protocol</code>)
+is a published alpha providing a complete hivemind-core listener without a satellite client.
+The Usenet wormhole (package <code>hivemind-usenet</code>) is experimental and unpublished — a
+high-latency covert/fallback control-plane, not a real-time transport.</p>
+<hr />
+<h2 id="source">Source<a class="headerlink" href="#source" title="Permanent link">&para;</a></h2>
+<p>Validated against the HiveMind source:</p>
+<ul>
+<li><a href="https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/serialization.py"><code>hivemind_bus_client/serialization.py</code></a> — <code>PROTOCOL_VERSION</code>, the binary framing encoder/decoder, the <code>_INT2TYPE</code> message-type table</li>
+<li><a href="https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/message.py"><code>hivemind_bus_client/message.py</code></a> — <code>HiveMessageType</code>, <code>HiveMessage.as_dict</code>, the <code>INTERCOM</code>-defaults-to-<code>11</code> encoding</li>
+<li><a href="https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/protocol.py"><code>hivemind_core/protocol.py</code></a> — <code>ProtocolVersion</code>, <code>max_protocol_version</code>, the server-side handshake state machine and capability defaults</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../client-library/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Client Library">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Client Library
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../writing-plugins/" class="md-footer__link md-footer__link--next" aria-label="Next: Writing Plugins">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Writing Plugins
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/JarbasHiveMind" target="_blank" rel="noopener" title="HiveMind on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://matrix.to/#/#jarbashivemind:matrix.org" target="_blank" rel="noopener" title="HiveMind Matrix chat" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.632.55v22.9H2.28V24H0V0h2.28v.55zm7.043 7.26v1.157h.033a3.3 3.3 0 0 1 1.117-1.024c.433-.245.936-.365 1.5-.365q.81.002 1.481.314c.448.208.785.582 1.02 1.108q.382-.562 1.034-.992.651-.43 1.546-.43.679 0 1.26.167c.388.11.716.286.993.53.276.245.489.559.646.951q.229.587.23 1.417v5.728h-2.349V11.52q0-.43-.032-.812a1.8 1.8 0 0 0-.18-.66 1.1 1.1 0 0 0-.438-.448q-.292-.165-.785-.166-.498 0-.803.189a1.4 1.4 0 0 0-.48.499 2 2 0 0 0-.231.696 5.6 5.6 0 0 0-.06.785v4.768h-2.35v-4.8q.002-.38-.018-.752a2.1 2.1 0 0 0-.143-.688 1.05 1.05 0 0 0-.415-.503c-.194-.125-.476-.19-.854-.19q-.168 0-.439.074c-.18.051-.36.143-.53.282a1.64 1.64 0 0 0-.439.595q-.18.39-.18 1.02v4.966H5.46V7.81zm15.693 15.64V.55H21.72V0H24v24h-2.28v-.55z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://www.youtube.com/channel/UCYoV5kxp2zrH6pnoqVZpKSA/" target="_blank" rel="noopener" title="HiveMind on YouTube" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M549.7 124.1c-6.2-23.7-24.8-42.3-48.3-48.6C458.9 64 288.1 64 288.1 64S117.3 64 74.7 75.5c-23.5 6.3-42 24.9-48.3 48.6C15 167 15 256.4 15 256.4s0 89.4 11.4 132.3c6.3 23.6 24.8 41.5 48.3 47.8C117.3 448 288.1 448 288.1 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zM232.2 337.6V175.2l142.7 81.2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/analytics.js"></script>
+      
+    
+  </body>
+</html>
