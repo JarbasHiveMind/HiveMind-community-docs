@@ -1,26 +1,20 @@
-# HiveMind - Matrix bridge
+# HiveMind - Matrix Bridge
 
-What is it?
+[Matrix](https://matrix.org/) is a chat protocol. It works a little like email, but instantaneous and secure:
 
-[Matrix](https://matrix.org/) is a chat protocol, it works a little like email, but instantaneous and secure:
-
-- You need to register an account at a provider
-
-- Whatever your provider is, you can talk to people using other providers
-
-- In the same way you can use Outlook or Thunderbird with the same email account, you can use different Matrix apps for the same Matrix account.
-
+- You register an account with a provider.
+- Whatever your provider is, you can talk to people using other providers.
+- Just as you can use Outlook or Thunderbird with the same email account, you can use different Matrix apps with the same Matrix account.
 
 ![img_16.png](img_16.png)
 
 ## Install
 
-Install from [Github](https://github.com/JarbasHiveMind/HiveMind-matrix-bridge)
+Install from [GitHub](https://github.com/JarbasHiveMind/HiveMind-matrix-bridge).
 
 ## Usage
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-matrix-bridge/assets/33701864/f70c7889-43eb-41b1-b295-d4d5040ab610)
-
 
 ```
 Usage: HiveMind-matrix run [OPTIONS]
@@ -39,3 +33,6 @@ Options:
   --help              Show this message and exit.
 
 ```
+
+---
+[← OVOS Pipeline](pipeline.md) · [Home](index.md) · [DeltaChat →](10_deltachat.md)

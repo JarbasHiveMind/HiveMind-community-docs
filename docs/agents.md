@@ -1,69 +1,56 @@
 # Agent Plugins for HiveMind
 
-HiveMind is **just a transport protocol**, it moves **BUS messages** between devices and services.
-On its own, HiveMind doesn’t decide what those messages *mean* or what to *do* with them.
+HiveMind is a transport protocol. It moves BUS messages between devices and services. On its own, HiveMind does not decide what those messages mean or what to do with them.
 
-That responsibility is delegated to **Agent Plugins**.
+That responsibility belongs to Agent Plugins.
 
-Agents are the abstraction layer that give purpose to a HiveMind node: they receive incoming messages and define how to handle them.
+Agents give a HiveMind node its purpose: they receive incoming messages and define how to handle them.
 
 ---
 
 ## What is an Agent Plugin?
 
-An **Agent Plugin** tells HiveMind what to do once a message arrives.
+An Agent Plugin tells HiveMind what to do once a message arrives.
 
-Most agents handle **text-based input/output** (e.g., utterances, chat-like responses), but the system is flexible enough that agents can perform completely different tasks.
+Most agents handle text-based input and output, such as utterances and chat-like responses, but the system is flexible enough that agents can perform other tasks entirely.
 
-Each node in a HiveMind network loads exactly one agent plugin, which defines that node’s behavior.
-
----
-
-## Available Agent Plugins
-
-### 🔹 OVOS Bus Client Agent
-
-* Provided by [`ovos-bus-client`](https://github.com/OpenVoiceOS/ovos-bus-client)
-* Connects `hivemind-core` to a local `ovos-core` instance (must run on the same device).
-* Effectively turns an existing OVOS installation into a **HiveMind Hub**.
-* Satellites can forward utterances to the hub, and the hub returns responses via HiveMind.
+Each node in a HiveMind network loads exactly one agent plugin, which defines that node's behavior.
 
 ---
 
-### 🔹 Persona Agent
+## Available agent plugins
 
-* Provided by [`ovos-persona`](https://github.com/OpenVoiceOS/ovos-persona)
-* Loads a **persona** (often backed by an LLM or chatbot) instead of a full OVOS core.
-* Allows lightweight HiveMind nodes to act as conversational agents without needing the full OVOS stack.
-* Useful for [multi-agent experimentation](https://openvoiceos.github.io/ovos-technical-manual/150-advanced_solvers/#collaborative-agents-via-mos-mixture-of-solvers), or when you want a node that speaks with a distinct "personality."
+### OVOS Bus Client Agent
 
-Learn more about [OVOS personas](https://openvoiceos.github.io/ovos-technical-manual/150-personas/)
+- Provided by [`ovos-bus-client`](https://github.com/OpenVoiceOS/ovos-bus-client).
+- Connects `hivemind-core` to a local `ovos-core` instance, which must run on the same device.
+- Turns an existing OVOS installation into a HiveMind hub.
+- Satellites forward utterances to the hub, and the hub returns responses over HiveMind.
+
+### Persona Agent
+
+- Provided by [`ovos-persona`](https://github.com/OpenVoiceOS/ovos-persona).
+- Loads a persona, often backed by an LLM or chatbot, instead of a full OVOS core.
+- Lets lightweight HiveMind nodes act as conversational agents without the full OVOS stack.
+- Useful for [multi-agent experimentation](https://openvoiceos.github.io/ovos-technical-manual/150-advanced_solvers/#collaborative-agents-via-mos-mixture-of-solvers), or when you want a node with a distinct personality.
+
+Learn more about [OVOS personas](https://openvoiceos.github.io/ovos-technical-manual/150-personas/).
+
+### Media Player Agent
+
+- A special-case agent focused on media playback control.
+- Does not handle natural language queries.
+- Reacts to OVOS bus messages related to media, such as play, pause, stop, and next.
+- Exposes HiveMind devices as media players to frameworks such as [Home Assistant](https://www.home-assistant.io/).
+- Implemented as an agent plugin for technical consistency, though it shows that not every agent needs to be conversational.
 
 ---
 
-### 🔹 Media Player Agent
+## Why agent plugins matter
 
-* Special-case agent focused on **media playback control**.
-* Does **not** handle natural language queries.
-* Instead, it reacts to OVOS bus messages related to media (play, pause, stop, next, etc.).
-* Exposes HiveMind devices as **media players** to frameworks such as [Home Assistant](https://www.home-assistant.io/)
-* Implemented as an agent plugin for technical consistency, but demonstrates HiveMind’s flexibility: not all agents need to be conversational.
+- They separate transport from behavior: HiveMind moves messages around, and agents decide what to do with them.
+- They make HiveMind extensible: use the Persona Agent for a chatbot, the OVOS Bus Client Agent for a full assistant hub, or the Media Player Agent for a network-controlled speaker.
+- They reflect the design: HiveMind does not care what your node is, only that it can communicate.
 
 ---
-
-## Why Agent Plugins Matter
-
-* They **separate transport from behavior**
-
-  * HiveMind moves messages around.
-  * Agents decide what to do with them.
-
-* They make HiveMind **extensible**
-
-  * Want a chatbot? Use the Persona Agent.
-  * Want a full assistant hub? Use the OVOS Bus Client Agent.
-  * Want a network-controlled speaker? Use the Media Player Agent.
-
-* They illustrate the design philosophy:
-  **HiveMind doesn’t care what your node *is*, only that it can communicate.**
-
+[← Configuration](config.md) · [Home](index.md) · [Binary →](binary_plugins.md)

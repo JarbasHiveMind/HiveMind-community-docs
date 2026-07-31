@@ -1,38 +1,30 @@
 # HiveMind Sound Server
 
-`hivemind-listener` extends `hivemind-core` and integrates with [ovos-simple-listener](https://github.com/TigreGotico/ovos-simple-listener), enabling audio-based communication with advanced features for **secure, distributed voice assistant functionality**.
+`hivemind-listener` extends `hivemind-core` and integrates with [ovos-simple-listener](https://github.com/TigreGotico/ovos-simple-listener), enabling audio-based communication for a secure, distributed voice assistant setup.
 
-> 💡 If you are running a home server this is the best option, you only need to install `hivemind-listener`, `ovos-core` and `ovos-messagebus`.
+> If you are running a home server, this is the best option. You only need to install `hivemind-listener`, `ovos-core`, and `ovos-messagebus`.
 
-> ⚠️ If running on a device that is also a full OVOS assistant by itself you should use `hivemind-core` instead
+> If you run on a device that is also a full OVOS assistant by itself, use `hivemind-core` instead.
 
-#### Key Features of HiveMind Listener
+#### Key features of HiveMind Listener
 
-- **Audio Stream Handling**:  
-  Accepts encrypted binary audio streams, performing **WakeWord detection**, **Voice Activity Detection (VAD)**, **Speech-to-Text (STT)**, and **Text-to-Speech (TTS)** directly on the `hivemind-listener` instance.  
-  *(Lightweight clients like [hivemind-mic-satellite](https://github.com/JarbasHiveMind/hivemind-mic-satellite) only run a microphone and VAD plugin.)*
-
-- **STT Service**:  
-  Provides **STT** via the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind-websocket-client), accepting Base64-encoded audio inputs.
-
-- **TTS Service**:  
-  Provides **TTS** via the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind-websocket-client), returning Base64-encoded audio outputs.
-
-- **Secure Plugin Access**:  
-  Running **TTS/STT via HiveMind Listener** requires an access key, offering fine-grained **access control** compared to non-authenticated server plugins.
+- **Audio stream handling**: accepts encrypted binary audio streams, and performs wake word detection, Voice Activity Detection (VAD), Speech-to-Text (STT), and Text-to-Speech (TTS) directly on the `hivemind-listener` instance. Lightweight clients like [hivemind-mic-satellite](https://github.com/JarbasHiveMind/hivemind-mic-satellite) run only a microphone and VAD plugin.
+- **STT service**: provides STT through the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind-websocket-client), accepting Base64-encoded audio input.
+- **TTS service**: provides TTS through the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind-websocket-client), returning Base64-encoded audio output.
+- **Secure plugin access**: running TTS/STT through HiveMind Listener requires an access key, giving finer-grained access control than a non-authenticated server plugin.
 
 #### Usage
 
-1. **Install HiveMind Listener**:
+1. Install HiveMind Listener:
 
 ```bash
 pip install hivemind-listener
 ```
 
-2. **Start the HiveMind Listener**:
+2. Start the HiveMind Listener:
 
 ```bash
-$ hivemind-listener --help
+hivemind-listener --help
 Usage: hivemind-listener [OPTIONS]
 
   Run the HiveMind Listener with configurable plugins.
@@ -73,14 +65,15 @@ Options:
   --help                          Show this message and exit.
 ```
 
-This command will run the HiveMind Listener, with configurable plugins for wakeword detection, STT, TTS, and VAD, as well as access control via SSL.
+This command runs the HiveMind Listener, with configurable plugins for wake word detection, STT, TTS, and VAD, plus access control over SSL.
 
 ---
 
-#### Example Use Cases
+#### Example use cases
 
-1. **Microphone Satellite**:  
-   Use [hivemind-mic-satellite](https://github.com/JarbasHiveMind/hivemind-mic-satellite) to stream raw audio to the `hivemind-listener`. Microphones handle audio capture and VAD, while the Listener manages WakeWord, STT, and TTS processing.
+1. **Microphone Satellite**: use [hivemind-mic-satellite](https://github.com/JarbasHiveMind/hivemind-mic-satellite) to stream raw audio to `hivemind-listener`. The microphone satellite handles audio capture and VAD, while the Listener manages wake word detection, STT, and TTS.
 
-2. **Authenticated STT/TTS Services**:  
-   Connect clients securely using access keys for transcribing or synthesizing audio via the HiveMind Listener, ensuring robust access control.
+2. **Authenticated STT/TTS services**: connect clients securely with access keys to transcribe or synthesize audio through the HiveMind Listener, with access control enforced.
+
+---
+[Home](index.md)

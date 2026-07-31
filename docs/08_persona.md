@@ -1,13 +1,12 @@
 # Persona
 
-this is a hivemind Master node, but it is running [ovos-persona](https://github.com/OpenVoiceOS/ovos-persona) instead of connecting to ovos-core
+This is a HiveMind master node that runs [ovos-persona](https://github.com/OpenVoiceOS/ovos-persona) instead of connecting to ovos-core.
 
-you can use this to expose chatbots and LLMs via hivemind, satellites made for `hivemind-core` should be compatible
+Use it to expose chatbots and LLMs over HiveMind. Satellites made for `hivemind-core` should be compatible.
 
-> ⚠️ Satellites made specifically for `hivemind-listener` (Sound server) will not work with `hivemind-persona`!
+> Satellites made specifically for `hivemind-listener` (the sound server) do not work with `hivemind-persona`.
 
 ![img_13.png](img_13.png)
-
 
 ## Install
 
@@ -17,9 +16,9 @@ pip install hivemind-persona
 
 ## ChatGPT
 
-Install the [OpenAI solver](https://github.com/OpenVoiceOS/ovos-solver-plugin-openai-persona/)
+Install the [OpenAI solver](https://github.com/OpenVoiceOS/ovos-solver-plugin-openai-persona/).
 
-create a chatgpt.json
+Create a `chatgpt.json`:
 ```json
 {
 "name": "ChatGPT",
@@ -34,6 +33,9 @@ create a chatgpt.json
 }
 ```
 
-launch hivemind-persona with the created file
+Launch hivemind-persona with the file:
 
 `hivemind-persona --persona chatgpt.json`
+
+---
+[Home](index.md)

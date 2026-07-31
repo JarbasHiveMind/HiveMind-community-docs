@@ -1,14 +1,14 @@
 # OpenVoiceOS Messages
 
-The OpenVoiceOS messagebus is considered an internal and private websocket for [minds](https://github.com/JarbasHiveMind/HiveMind-core/wiki/Terminology), clients do not connect directly to it.
+The OpenVoiceOS messagebus is an internal, private websocket for [minds](02_terminology.md). Clients do not connect to it directly.
 
-A mind will inject its own context about the originating clients,  only responses to the client message will be forwarded, this provides client isolation. 
+A mind injects its own context about the originating client, and forwards only responses to that client's message. This gives client isolation.
 
-A mind will filter incoming and outgoing messages per client, the permissions model of the hivemind is extensive e.g. it might refuse utterances based on the intent
+A mind filters incoming and outgoing messages per client. The HiveMind permissions model is extensive; for example, it can refuse an utterance based on the intent it maps to.
 
-This info applies to `ovos-core`, Hivemind depends on this functionality but it is not part of the hivemind itself. HiveMind responsibility is only to deliver the BUS messages
+This applies to `ovos-core`. HiveMind depends on this behavior, but it is not part of HiveMind itself. HiveMind is only responsible for delivering BUS messages.
 
-From the POV of the Hivemind you can [replace ovos-core with anything](https://github.com/JarbasHiveMind/Fakecroft-DDG) as long as you respect the mechanisms below
+From HiveMind's point of view, you can [replace ovos-core with anything](https://github.com/JarbasHiveMind/Fakecroft-DDG), as long as it respects the mechanisms below.
 
   * [Message](#message)
   * [Targeting Theory](#targeting-theory)
@@ -18,24 +18,20 @@ From the POV of the Hivemind you can [replace ovos-core with anything](https://g
 
 ## Message
 
-A OpenVoiceOS message consists of a json payload, it contains a `type` , some `data` and a `context`.
+An OpenVoiceOS message is a JSON payload. It contains a `type`, some `data`, and a `context`.
 
-The `context` is considered to be metadata and might be changed at any time in transit, the `context` can contain anything depending on where the message came from, and often is completely empty. 
+The `context` is metadata and can change at any point in transit. It can contain anything, depending on where the message came from, and is often empty. Think of the message `context` as session data for an individual interaction: messages down the chain generally keep the `context` from the original message, and most listeners, such as skills, only care about `type` and `data`.
 
-You can think of the message `context` as a sort of session data for a individual interaction, in general messages down the chain keep the `context` from the original message, most listeners (eg, skills) will only care about `type` and `data`. 
+## Targeting theory
 
-## Targeting Theory
+ovos-core uses the message `context` to add metadata about the messages themselves, including where they come from and what they are meant for.
 
-ovos-core uses the message `context` to add metadata about the messages themselves, where do they come from and what are they intended for.
+The `Message` object provides these methods:
 
-the `Message` object provides the following methods:
+- `message.forward` keeps the previous context; the message continues to the same `destination`.
+- `message.reply` swaps `"source"` with `"destination"`; the message goes back to `source`.
 
-- `message.forward` method, keeps previous context.
-	- message continues going to same `destination`
-- `message.reply` method swaps `"source"` with `"destination"`
-	- message goes back to `source`
-
-The context `destination` parameter in the original message can be set to a list with any number of intended targets:
+You can set the `destination` parameter in the original message's context to a list with any number of intended targets:
 
 ```python
 bus.emit(Message('recognizer_loop:utterance', data, 
@@ -45,46 +41,45 @@ bus.emit(Message('recognizer_loop:utterance', data,
 
 ## Sources
 
-ovos-core injects the context when it emits an utterance, this can be either typed or spoken via OVOS STT service
+ovos-core injects the context when it emits an utterance, whether typed or spoken through the OVOS STT service.
 
-STT will identify itself as `audio`
+STT identifies itself as `audio`.
 
-mycroft.conf defines a list of `"native_sources"`, by default only `audio` is a native source
+`mycroft.conf` defines a list of `"native_sources"`. By default, only `audio` is a native source.
 
 ## Destinations
 
-Output capable services are ovos-audio (TTS, music...)
+Output-capable services include ovos-audio (TTS, music, and so on).
 
-TTS checks the message context if it's the intended target for the message and will only speak in the following conditions:
+TTS checks the message context to see if it is the intended target, and speaks only when:
 
-- Explicitly targeted i.e. the `destination` is native_source (default: `"audio")`
+- the `destination` is explicitly a native source, by default `"audio"`.
+- the `destination` is set to `None`.
+- the `destination` is missing.
 
-- `destination` is set to `None`
+For example, when the Android app accesses OpenVoiceOS, the device at home should not start speaking.
 
-- `destination` is missing completely
+TTS runs when a native source, such as `audio`, is the `destination`.
 
-The idea is that for example when the android app is used to access OpenVoiceOS the device at home shouldn't start to speak.
-
-TTS will be executed when a native_source (eg, `audio`) is the `destination`
-
-A missing `destination` or if the `destination` is set to `None` is interpreted as a multicast and should trigger all output capable processes (be it the ovos-audio process, a web-interface, the KDE plasmoid or maybe the android app)
+A missing `destination`, or a `destination` set to `None`, is treated as a multicast and should trigger all output-capable processes: the ovos-audio process, a web interface, the KDE plasmoid, or the Android app.
 
 ## OVOS-Core
 
-ovos-core is responsible for managing the routing context, skills do not usually need to worry about any of this
+ovos-core manages the routing context. Skills usually do not need to worry about this.
 
-- intent service will `.reply` to the original utterance message
+- The intent service `.reply`s to the original utterance message.
+- All skill and intent service messages `.forward` from the previous intent service `.reply`.
 
-- all skill/intent service messages are `.forward` (from previous intent service `.reply`)
+### Skills
 
-### Skills 
+OpenVoiceOS skills can do anything. If you develop or install a mission-critical skill, check carefully what it does and whether it works well with HiveMind.
 
-OpenVoiceOS skills can do anything, if you are developing/installing a mission critical skill carefully evaluate what it does and evaluate if it is hivemind friendly
+If a skill emits its own bus messages, it needs to keep `message.context` intact.
 
-If a skill emits it's own bus messages it needs to keep `message.context` around
+Common issues:
 
-**Common issues**:
+- A skill sending its own messages might drop `message.context`, or `.reply` to it incorrectly.
+- In a HiveMind context, a skill might not be [Session](https://github.com/OpenVoiceOS/ovos-bus-client/blob/dev/ovos_bus_client/session.py)-aware, and might keep shared state between clients. For example, a client could enable a voice game for everyone.
 
-- skills sending their own messages might not keep message.context or wrongly `.reply` to it 
-
-- in the context of the Hivemind skills might not be [Session](https://github.com/OpenVoiceOS/ovos-bus-client/blob/dev/ovos_bus_client/session.py) aware and keep a shared state between clients, eg. a client may enable a voice game for everyone 
+---
+[Home](index.md)

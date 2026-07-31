@@ -1,17 +1,16 @@
 # HiveMind-Core Configuration
 
-HiveMind-Core uses a **JSON-based configuration file** to manage its core behavior and plugins.
-By default, this file is located at:
+HiveMind-Core uses a JSON-based configuration file to manage its core behavior and plugins. By default, this file is at:
 
 ```
 ~/.config/hivemind-core/server.json
 ```
 
-It defines **protocols, plugins, and security options** for the HiveMind node.
+It defines the protocols, plugins, and security options for the HiveMind node.
 
 ---
 
-## Example Configuration
+## Example configuration
 
 The configuration includes agent, network, database, and binary protocol settings:
 
@@ -87,9 +86,9 @@ The configuration includes agent, network, database, and binary protocol setting
 
 ---
 
-## Loading the Configuration
+## Loading the configuration
 
-HiveMind-Core loads the configuration using the `get_server_config()` function:
+HiveMind-Core loads the configuration with the `get_server_config()` function:
 
 ```python
 from hivemind_core.config import get_server_config
@@ -97,15 +96,19 @@ from hivemind_core.config import get_server_config
 config = get_server_config()
 ```
 
-* Creates the configuration file if it doesn’t exist.
-* Merges default values for missing keys.
-* Returns a `JsonStorageXDG` object with all HiveMind settings.
+This function:
+
+- creates the configuration file if it does not exist.
+- merges default values for missing keys.
+- returns a `JsonStorageXDG` object with all HiveMind settings.
 
 ---
 
 ## Notes
 
-* Default file path: `~/.config/hivemind-core/server.json`
-* HiveMind merges defaults if keys are missing.
-* Binary protocol plugins allow HiveMind nodes to **stream audio for STT/TTS and handle wakeword detection**, separating heavy tasks from lightweight satellites.
+- Default file path: `~/.config/hivemind-core/server.json`.
+- HiveMind merges defaults if keys are missing.
+- Binary protocol plugins let HiveMind nodes stream audio for STT and TTS, and handle wake word detection, separating heavy tasks from lightweight satellites.
 
+---
+[← Plugins](04_plugins.md) · [Home](index.md) · [Agents →](agents.md)

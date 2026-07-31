@@ -1,28 +1,28 @@
 # Quick Start Guide
 
-This guide will help you get started quickly with the HiveMind platform, allowing you to extend your OpenVoiceOS (OVOS) ecosystem across multiple devices, even with low-resource hardware. HiveMind lets you connect lightweight devices as satellites to a central OVOS hub, offering centralized control and fine-grained permissions.
+This guide gets you started with HiveMind. HiveMind extends your OpenVoiceOS (OVOS) setup across multiple devices, even low-resource hardware. It connects lightweight devices as satellites to a central OVOS hub, with centralized control and fine-grained permissions.
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/fb241c4d-ca84-4b47-b917-b398b16f93bd)
 
-## 🚀 Installation
+## Installation
 
-To begin using HiveMind Core, you need to install the `hivemind-core` package in your OVOS device. This can be done via pip:
+Install the `hivemind-core` package on your OVOS device:
 
 ```bash
 pip install hivemind-core
 ```
 
-## 🛰️ Adding a Satellite Device
+## Adding a satellite device
 
-Once the server is running, you'll need to add client credentials for each satellite device you want to connect.
+Once the server runs, add client credentials for each satellite device you want to connect.
 
-Run the following command to add a satellite device:
+Run this command to add a satellite device:
 
 ```bash
 hivemind-core add-client
 ```
-   
-The output wi*ll show you important details like:
+
+The output shows these details:
 
 - Node ID
 - Friendly Name
@@ -30,55 +30,57 @@ The output wi*ll show you important details like:
 - Password
 - Encryption Key (deprecated, only used for legacy clients)
 
-Provide these credentials on the client devices to enable the connection.
+Enter these credentials on the client device to connect it.
 
-## 🖥️ Running the HiveMind Server
+## Running the HiveMind server
 
-Start the HiveMind server to accept client connections on a specified port:
+Start the HiveMind server to accept client connections on a chosen port:
 
 ```bash
 hivemind-core listen --port 5678
 ```
 
-The server will now listen for incoming satellite connections.
+The server now listens for incoming satellite connections.
 
-> 💡 `hivemind-core` needs to be running in the same device as OVOS
+> `hivemind-core` must run on the same device as OVOS.
 
-## 🔑 Permissions
+## Permissions
 
-HiveMind Core uses a flexible permissions system, where each client's permissions are customizable. By default:
- 
+HiveMind Core uses a flexible permissions system. Each client's permissions are configurable. By default:
+
 - Only essential bus messages are allowed.
+- Skills and intents are accessible, but you can blacklist or restrict them.
 
-- Skills and intents are accessible but can be blacklisted or restricted.
+Manage permissions for a client with commands like `allow-msg`, `blacklist-msg`, `allow-skill`, and `blacklist-skill`.
 
-You can manage permissions for clients by using commands like `allow-msg`, `blacklist-msg`, `allow-skill`, and `blacklist-skill`.
+Example use cases:
 
-### Example Use Cases:
+- Basic AI integration: let a simple client send natural language instructions.
+- Custom permissions: restrict an IoT device so it only sends specific message types, such as `temperature.set`.
 
-- **Basic AI Integration**: Enable a simple client to send natural language instructions.
-- **Custom Permissions**: Restrict an IoT device to only communicate with specific message types, such as `temperature.set`.
+## HiveMind Core commands overview
 
-## HiveMind Core Commands Overview
+These are the basic commands for managing clients and their permissions:
 
-Here are the basic commands for managing clients and their permissions:
-
-- **Add a new client**:  
+Add a new client:
 
 ```bash
 hivemind-core add-client --name "satellite_1" --access-key "mykey123" --password "mypass"
 ```
 
-- **List all registered clients**:  
+List all registered clients:
 
 ```bash
 hivemind-core list-clients
 ```
 
-- **Start listening for client connections**:  
+Start listening for client connections:
 
 ```bash
 hivemind-core listen --port 5678
 ```
 
-For detailed help on each command, use `--help` (e.g., `hivemind-core add-client --help`).
+For detailed help on a command, use `--help` (for example, `hivemind-core add-client --help`).
+
+---
+[Home](index.md) · [Terminology →](02_terminology.md)

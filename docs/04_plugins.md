@@ -1,65 +1,59 @@
 # HiveMind Plugin Manager
 
-The **HiveMind Plugin Manager (HPM)** is a system for discovering, managing, and loading plugins within the HiveMind ecosystem. It supports various plugin types, including databases, network protocols, agent protocols, and binary data handlers. HPM allows for dynamic integration of these plugins to enhance the functionality of HiveMind agents, offering a flexible and extensible architecture.
+The HiveMind Plugin Manager (HPM) discovers, manages, and loads plugins within the HiveMind ecosystem. It supports several plugin types: databases, network protocols, agent protocols, and binary data handlers. HPM loads these plugins dynamically, so HiveMind agents can extend their functionality.
 
 ## Features
 
-- **Plugin Discovery**: Easily find and load plugins of different types, including:
-  - **Database Plugins**: Supports various database types such as JSON, SQLite, and Redis.
-  - **Agent Protocol Plugins**: Integrates agent protocols like OVOS and Persona, enabling seamless communication between HiveMind agents.
-  - **Network Protocol Plugins**: Enables network protocols such as WebSockets for distributed communication.
-  - **Binary Data Handler Plugins**: Handle binary data communication, like audio data over HiveMind.
+- **Plugin discovery**: find and load plugins of different types, including:
+  - **Database plugins**: support various database types, such as JSON, SQLite, and Redis.
+  - **Agent protocol plugins**: integrate agent protocols like OVOS and Persona, so HiveMind agents can communicate with each other.
+  - **Network protocol plugins**: enable network protocols such as WebSockets for distributed communication.
+  - **Binary data handler plugins**: handle binary data communication, such as audio data over HiveMind.
+- **Plugin loading**: load a specific plugin by name, type, or available entry point.
+- **Factories for plugin instantiation**: each plugin type (database, agent protocol, network protocol, binary protocol) has a factory that creates instances based on your configuration.
 
-- **Plugin Loading**: Dynamically load specific plugins by name, type, or from available entry points.
-
-- **Factories for Plugin Instantiation**: Factories for creating instances of each plugin type (database, agent protocol, network protocol, binary protocol) based on user configurations.
-
-
-## Plugin Types
+## Plugin types
 
 ![hpm.png](hpm.png)
 
-### 1. **Database Plugins**
+### 1. Database plugins
 
-Supports multiple database systems, such as:
+Supports several database systems:
 
-- **JSON Database**: Stores data in a JSON format.
-- **SQLite Database**: Uses SQLite for local database storage.
-- **Redis Database**: Uses Redis for distributed caching and storage.
+- **JSON database**: stores data as JSON files.
+- **SQLite database**: uses SQLite for local database storage.
+- **Redis database**: uses Redis for distributed caching and storage.
 
-### 2. **Agent Protocol Plugins**
+### 2. Agent protocol plugins
 
-Supports communication protocols for agents, such as:
+Supports communication protocols for agents:
 
-- **OVOS Protocol**: For interaction with OVOS-based agents.
-- **Persona Protocol**: For interaction with the Persona framework.
+- **OVOS protocol**: for interaction with OVOS-based agents.
+- **Persona protocol**: for interaction with the Persona framework.
 
-### 3. **Network Protocol Plugins**
+### 3. Network protocol plugins
 
-Enables network communication protocols, such as:
+Enables network communication protocols:
 
-- **WebSocket Protocol**: For real-time, bidirectional communication over WebSockets.
+- **WebSocket protocol**: for real-time, bidirectional communication over WebSockets.
 
-### 4. **Binary Data Handler Protocol Plugins**
+### 4. Binary data handler protocol plugins
 
-Handles communication of binary data types, like audio, using specialized protocols.
-
+Handles communication of binary data types, such as audio, using specialized protocols.
 
 ## Developers
 
-The following example demonstrates how to discover and load plugins, along with creating instances using the provided factories.
-
+This example shows how to discover and load plugins, and how to create instances with the provided factories.
 
 ### Installation
 
-`hivemind-plugin-manager` is a dependency of `hivemind-core`, you typically do not need to install it
+`hivemind-plugin-manager` is a dependency of `hivemind-core`. You typically do not need to install it directly.
 
 ```bash
 pip install hivemind-plugin-manager
 ```
 
-
-### Discovering Plugins
+### Discovering plugins
 
 Use the `find_plugins` function to discover all available plugins for a specific type:
 
@@ -75,11 +69,11 @@ agent_protocol_plugins = find_plugins(HiveMindPluginTypes.AGENT_PROTOCOL)
 print(agent_protocol_plugins)
 ```
 
-### Creating Plugin Instances
+### Creating plugin instances
 
-Each plugin type has a corresponding factory class that allows for creating plugin instances with the required configuration.
+Each plugin type has a factory class that creates plugin instances with the configuration you provide.
 
-#### Database Plugin Factory
+#### Database plugin factory
 
 ```python
 from hivemind_plugin_manager import DatabaseFactory
@@ -88,7 +82,7 @@ from hivemind_plugin_manager import DatabaseFactory
 db_instance = DatabaseFactory.create("hivemind-redis-db-plugin", password="Password1!", host="192.168.1.11", port=6789)
 ```
 
-#### Agent Protocol Factory
+#### Agent protocol factory
 
 ```python
 from hivemind_plugin_manager import AgentProtocolFactory
@@ -97,7 +91,7 @@ from hivemind_plugin_manager import AgentProtocolFactory
 agent_protocol_instance = AgentProtocolFactory.create("hivemind-ovos-agent-plugin")
 ```
 
-#### Network Protocol Factory
+#### Network protocol factory
 
 ```python
 from hivemind_plugin_manager import NetworkProtocolFactory
@@ -106,7 +100,7 @@ from hivemind_plugin_manager import NetworkProtocolFactory
 network_protocol_instance = NetworkProtocolFactory.create("hivemind-websocket-plugin")
 ```
 
-#### Binary Data Handler Protocol Factory
+#### Binary data handler protocol factory
 
 ```python
 from hivemind_plugin_manager import BinaryDataHandlerProtocolFactory
@@ -114,3 +108,6 @@ from hivemind_plugin_manager import BinaryDataHandlerProtocolFactory
 # Create a binary data handler protocol instance
 binary_data_handler_instance = BinaryDataHandlerProtocolFactory.create("hivemind-audio-binary-protocol-plugin")
 ```
+
+---
+[← Nested Hives](15_nested.md) · [Home](index.md) · [Configuration →](config.md)
