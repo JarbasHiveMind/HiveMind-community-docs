@@ -1,71 +1,65 @@
 # Binary Plugins for HiveMind
 
-While **Agent Plugins** handle text-based messages, HiveMind also supports **Binary Plugins** for transmitting and processing **binary payloads** such as audio streams.
+Agent Plugins handle text-based messages. HiveMind also supports Binary Plugins for transmitting and processing binary payloads such as audio streams.
 
-These plugins make it possible to provide **secure services** like **Speech-to-Text (STT)** and **Text-to-Speech (TTS)** across HiveMind without exposing them directly.
-
-Importantly, **transport always happens securely over HiveMind**, binary data uses the same encrypted HiveMind transport as all other messages.
+These plugins provide secure services like Speech-to-Text (STT) and Text-to-Speech (TTS) across HiveMind without exposing them directly. Binary data always travels over the same encrypted HiveMind transport as other messages.
 
 ---
 
 ## What is a Binary Plugin?
 
-A **Binary Plugin** defines how HiveMind nodes exchange and process **non-text payloads**.
-They allow nodes to forward microphone input, receive synthesized audio, or otherwise handle binary data within the Hive.
+A Binary Plugin defines how HiveMind nodes exchange and process non-text payloads. It lets nodes forward microphone input, receive synthesized audio, or otherwise handle binary data within the hive.
 
-Unlike agent plugins, which process BUS messages, binary plugins work directly with **binary streams**.
-
----
-
-## Current Implementation
-
-The reference plugin is the [hivemind-audio-binary-protocol](https://github.com/JarbasHiveMind/hivemind-audio-binary-protocol), built on top of OpenVoiceOS plugins
-
-Right now, the binary plugin system is focused on **STT and TTS**, but the design allows for more use cases in the future.
-
-* The first binary plugin implementation loads existing **OpenVoiceOS TTS and STT plugins**.
-* This makes HiveMind immediately compatible with **hundreds of plugins in the OVOS ecosystem**, without requiring special adaptations.
-* Support also exists for **microphone plugins**:
-  * Audio streams can be sent to the HiveMind server when **VAD (Voice Activity Detection)** triggers.
-  * In this mode, the **wake word detection** also runs centrally on the HiveMind server.
-
-This architecture keeps HiveMind satellites lightweight while delegating heavy-lifting tasks to a hub or powerful node.
+Unlike agent plugins, which process BUS messages, binary plugins work directly with binary streams.
 
 ---
 
-## Example Use Cases
+## Current implementation
 
-### 🔹 Speech-to-Text (STT)
+The reference plugin is [hivemind-audio-binary-protocol](https://github.com/JarbasHiveMind/hivemind-audio-binary-protocol), built on OpenVoiceOS plugins.
 
-1. Satellite streams microphone audio as a binary payload.
+The binary plugin system currently focuses on STT and TTS, but the design allows more use cases in the future.
+
+- The first binary plugin implementation loads existing OpenVoiceOS TTS and STT plugins.
+- This makes HiveMind compatible with hundreds of plugins in the OVOS ecosystem, without special adaptations.
+- It also supports microphone plugins:
+  - Audio streams go to the HiveMind server when Voice Activity Detection (VAD) triggers.
+  - In this mode, wake word detection also runs centrally on the HiveMind server.
+
+This design keeps HiveMind satellites lightweight and delegates heavy tasks to a hub or a stronger node.
+
+---
+
+## Example use cases
+
+### Speech-to-Text (STT)
+
+1. The satellite streams microphone audio as a binary payload.
 2. A HiveMind server running an STT plugin transcribes the audio.
-3. Transcription is returned as a standard text BUS message to the satellite.
+3. The transcription returns as a standard text BUS message to the satellite.
 
-### 🔹 Text-to-Speech (TTS)
+### Text-to-Speech (TTS)
 
-1. Node sends a text string to a HiveMind TTS-capable server.
+1. The node sends a text string to a HiveMind TTS-capable server.
 2. The TTS service generates speech audio.
-3. Audio is returned as a binary payload, ready for playback on the requesting node.
+3. The audio returns as a binary payload, ready for playback on the requesting node.
 
-### 🔹 Microphone Plugins
+### Microphone plugins
 
-* HiveMind nodes can act as remote microphones.
-* Audio is streamed upstream only when **speech is detected** (via VAD).
-* Wake word detection is centralized on the HiveMind server.
-
----
-
-## Why Binary Plugins Matter
-
-* ✅ **Secure transport** — all binary data flows over HiveMind’s encrypted transport.
-* ✅ **Ecosystem compatibility** — directly supports existing OVOS STT/TTS plugins.
-* ✅ **Lightweight satellites** — offload heavy STT/TTS to a hub.
-* ✅ **Flexibility** — microphone streaming, wake word offloading, and future binary tasks (images, embeddings, etc.).
+- HiveMind nodes can act as remote microphones.
+- Audio streams upstream only when VAD detects speech.
+- Wake word detection stays centralized on the HiveMind server.
 
 ---
 
-👉 In short:
+## Why binary plugins matter
 
-* **Agent Plugins** → handle text input/output.
-* **Binary Plugins** → securely handle binary payloads (audio streams) over HiveMind, enabling distributed STT/TTS and microphone offloading.
+- **Secure transport**: all binary data flows over HiveMind's encrypted transport.
+- **Ecosystem compatibility**: directly supports existing OVOS STT/TTS plugins.
+- **Lightweight satellites**: offload heavy STT/TTS work to a hub.
+- **Flexibility**: supports microphone streaming, wake word offloading, and future binary tasks such as images or embeddings.
 
+In short: Agent Plugins handle text input and output. Binary Plugins securely handle binary payloads, such as audio streams, over HiveMind, and enable distributed STT/TTS and microphone offloading.
+
+---
+[← Agents](agents.md) · [Home](index.md) · [Network →](network_plugins.md)

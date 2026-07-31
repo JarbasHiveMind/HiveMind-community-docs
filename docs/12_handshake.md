@@ -1,177 +1,167 @@
 # Handshake Protocol
 
-This document provides an overview of the handshake protocol used in the HiveMind system, detailing how handshakes are initiated and processed from both the client (slave) and server (master) perspectives.
+This page describes the handshake protocol used in the HiveMind system, and how handshakes are initiated and processed from both the client (slave) and server (master) side.
 
-The handshake process establishes a secure connection between a HiveMind master and its slaves. It ensures authentication, optionally using passwords or public/private key pairs, and sets up cryptographic keys for secure communication.
+The handshake process establishes a secure connection between a HiveMind master and its slaves. It authenticates each side, optionally with passwords or public/private key pairs, and sets up cryptographic keys for secure communication.
 
-For detailed code and various usage examples, you can refer to the [Poorman Handshake GitHub Repository](https://github.com/JarbasHiveMind/poorman_handshake).
-
----
-
-## Handshake Types
-
-**Password-Based Handshake**:
-
-   - Utilizes a shared password for authentication.
-
-   - Requires both client and server to know the password beforehand.
-
-**RSA (Public Key) Handshake**:
-
-   - Based on public/private key pairs.
-
-   - The server provides a public key to the client, and the client verifies the server's authenticity.
-
-   - Supports implicit trust for first-time connections (when no previous public key is available).
-
-   - Uses asymmetric encryption to ensure that communication is secure and cannot be intercepted or modified.
-
-   - The symmetric session key (AES) for further communication is transmitted encrypted with RSA public keys.
-
-
-> ⚠️ RSA Handshake is a work in progress! 🚧
+For code and usage examples, see the [Poorman Handshake GitHub repository](https://github.com/JarbasHiveMind/poorman_handshake).
 
 ---
 
-## Workflow: Server Perspective
+## Handshake types
 
-#### **Send Server Info** `HELLO` ✉️ ➡️  
+**Password-based handshake**:
 
-- **Trigger**: Sent immediately upon connection establishment.  
-- **Content**:
-      - **`pubkey`**: Public key for key-based handshake and `INTERCOM` messages.  
-      - **`node_id`**: A user-friendly identifier for the server.  
-- **Security**: This message is **NOT ENCRYPTED** 🔓.  
+- Uses a shared password for authentication.
+- Requires both client and server to know the password beforehand.
 
+**RSA (public key) handshake**:
 
-#### **Establish connection parameters** `HANDSHAKE`✉️ ➡️  
+- Based on public/private key pairs.
+- The server provides a public key to the client, and the client verifies the server's authenticity.
+- Supports implicit trust on first connection, when no previous public key is available.
+- Uses asymmetric encryption, so communication cannot be intercepted or modified.
+- Transmits the symmetric session key (AES) for further communication, encrypted with RSA public keys.
 
-- **Trigger**: Initiates the handshake process immediately after `HELLO` message.  
-- **Content**:
-    - **`handshake`**: Indicates if the connection will be dropped if the client does not finalize the handshake.  
-    - **`binarize`**: Specifies if the server supports the binarization protocol.  
-    - **`preshared_key`**: Indicates the availability of a pre-shared key.  
-    - **`password`**: Indicates the availability of password-based handshake.  
-    - **`crypto_required`**: Specifies if unencrypted messages will be dropped.  
-    - **`min_protocol_version`**: The minimum supported HiveMind protocol version.  
-    - **`max_protocol_version`**: The maximum supported HiveMind protocol version.  
-- **Security**: This message is **NOT ENCRYPTED** 🔓.  
-
-#### **Initiate Key Exchange**  ⬅️ ✉️  `HANDSHAKE`
-
-- **Trigger**: Client initiated handshake in response to previously sent connection parameters.  
-- **Content**:
-     - **`binarize`**: Specifies if the client supports the binarization protocol.  
-     - **`envelope`**: The handshake envelope to be validated by the server.  
-- **Behavior**:  
-     - If the client does not respond, the server will skip the handshake step and use the pre-shared cryptographic key directly.  
-     - Validate the client's `envelope` using the pre-shared password.  
-- **Security**: This message is **NOT ENCRYPTED** 🔓.  
-
-#### **Complete Key Exchange** `HANDSHAKE` ✉️ ➡️  
-
-- **Trigger**: Validated client's `envelope` and updated the cryptographic key for secure communication.
-- **Content**:
-     - **`envelope`**: The handshake envelope to be validated by the client.  
-- **Security**: This message is **NOT ENCRYPTED** 🔓.  
-
-
-#### **Receive Client Info** ⬅️ ✉️ `HELLO`
-
-- **Trigger**: Sent after the handshake is complete and encryption is established.  
-- **Content**:
-    - **`session`**: The client session data.  
-    - **`site_id`**: The client site identifier.  
-    - **`pubkey`**: Public key for `INTERCOM` messages.  
-- **Security**: This message is **ENCRYPTED** 🔐.  
+> RSA Handshake is a work in progress.
 
 ---
 
-## Workflow: Client Perspective
+## Workflow: server perspective
 
-#### **Receive Server Info** ⬅️ ✉️  `HELLO`
+#### Send server info: `HELLO`
 
-- **Trigger**: Received upon connection establishment.  
+- **Trigger**: sent immediately after the connection is established.
 - **Content**:
-     - **`pubkey`**: The server's public RSA key.  
-    - **`node_id`**: A user-friendly identifier for the server.  
-- **Security**: This message is **NOT ENCRYPTED** 🔓.  
+      - `pubkey`: public key for key-based handshake and `INTERCOM` messages.
+      - `node_id`: a user-friendly identifier for the server.
+- **Security**: this message is not encrypted.
 
+#### Establish connection parameters: `HANDSHAKE`
 
-#### **Establish connection parameters** ⬅️ ✉️  `HANDSHAKE`
-
-- **Trigger**: Received immediately after `HELLO` message.  
+- **Trigger**: starts the handshake process immediately after the `HELLO` message.
 - **Content**:
-     - **`handshake`**: Indicates if the connection will be dropped if the client does not finalize the handshake.  
-    - **`binarize`**: Specifies if the server supports the binarization protocol.  
-    - **`preshared_key`**: Indicates the availability of a pre-shared key.  
-    - **`password`**: Indicates the availability of password-based handshake.  
-    - **`crypto_required`**: Specifies if unencrypted messages will be dropped.  
-    - **`min_protocol_version`**: The minimum supported HiveMind protocol version.  
-    - **`max_protocol_version`**: The maximum supported HiveMind protocol version.  
-- **Security**: This message is **NOT ENCRYPTED** 🔓.  
+    - `handshake`: indicates whether the connection drops if the client does not finalize the handshake.
+    - `binarize`: specifies if the server supports the binarization protocol.
+    - `preshared_key`: indicates whether a pre-shared key is available.
+    - `password`: indicates whether password-based handshake is available.
+    - `crypto_required`: specifies if unencrypted messages get dropped.
+    - `min_protocol_version`: the minimum supported HiveMind protocol version.
+    - `max_protocol_version`: the maximum supported HiveMind protocol version.
+- **Security**: this message is not encrypted.
 
+#### Initiate key exchange: `HANDSHAKE`
 
-#### **Initiate Key Exchange** `HANDSHAKE` ✉️ ➡️  
-
-- **Trigger**: Respond to the server's handshake request.  
+- **Trigger**: the client initiates the handshake in response to the connection parameters.
 - **Content**:
-     - **`binarize`**: Specifies if the client supports the binarization protocol.  
-    - **`envelope`**: The handshake envelope to be validated by the server.  
-- **Security**: This message is **NOT ENCRYPTED** 🔓.  
-
-#### **Complete Key Exchange** ⬅️ ✉️  `HANDSHAKE`
-
-- **Trigger**: On reception of the server's final `HANDSHAKE` message.  
-- **Content**:
-    - **`envelope`**: The handshake envelope to be validated by the client.  
+     - `binarize`: specifies if the client supports the binarization protocol.
+     - `envelope`: the handshake envelope for the server to validate.
 - **Behavior**:
-    - Verify the server's authenticity using the shared password.  
-    - Update the cryptographic key for secure communication.  
-- **Security**: This message is **NOT ENCRYPTED** 🔓.  
+     - If the client does not respond, the server skips the handshake step and uses the pre-shared cryptographic key directly.
+     - The server validates the client's `envelope` with the pre-shared password.
+- **Security**: this message is not encrypted.
 
+#### Complete key exchange: `HANDSHAKE`
 
-#### **Send Session Data** `HELLO` ✉️ ➡️  
-
-- **Trigger**: Send session data after encryption is established.  
+- **Trigger**: the server validates the client's `envelope` and updates the cryptographic key for secure communication.
 - **Content**:
-     - **`session`**: The client session data.  
-    - **`site_id`**: The client site identifier.  
-    - **`pubkey`**: Public key for `INTERCOM` messages.  
-- **Security**: This message is **ENCRYPTED** 🔐.  
+     - `envelope`: the handshake envelope for the client to validate.
+- **Security**: this message is not encrypted.
+
+#### Receive client info: `HELLO`
+
+- **Trigger**: sent after the handshake completes and encryption is established.
+- **Content**:
+    - `session`: the client session data.
+    - `site_id`: the client site identifier.
+    - `pubkey`: public key for `INTERCOM` messages.
+- **Security**: this message is encrypted.
 
 ---
 
-## Secure Communication After Handshake
+## Workflow: client perspective
 
-Upon successful handshake:
+#### Receive server info: `HELLO`
 
-1. A shared cryptographic key is established between the server and the client.
+- **Trigger**: received when the connection is established.
+- **Content**:
+     - `pubkey`: the server's public RSA key.
+     - `node_id`: a user-friendly identifier for the server.
+- **Security**: this message is not encrypted.
 
-2. All further communication between the server and client is encrypted using this symmetric key (AES-256).
+#### Establish connection parameters: `HANDSHAKE`
 
-3. The session ID ensures continuity and identification in multi-session environments.
+- **Trigger**: received immediately after the `HELLO` message.
+- **Content**:
+     - `handshake`: indicates whether the connection drops if the client does not finalize the handshake.
+     - `binarize`: specifies if the server supports the binarization protocol.
+     - `preshared_key`: indicates whether a pre-shared key is available.
+     - `password`: indicates whether password-based handshake is available.
+     - `crypto_required`: specifies if unencrypted messages get dropped.
+     - `min_protocol_version`: the minimum supported HiveMind protocol version.
+     - `max_protocol_version`: the maximum supported HiveMind protocol version.
+- **Security**: this message is not encrypted.
 
-This guarantees that all data exchanged between the server and the client is protected, even if intercepted by a third party.
+#### Initiate key exchange: `HANDSHAKE`
+
+- **Trigger**: responds to the server's handshake request.
+- **Content**:
+     - `binarize`: specifies if the client supports the binarization protocol.
+     - `envelope`: the handshake envelope for the server to validate.
+- **Security**: this message is not encrypted.
+
+#### Complete key exchange: `HANDSHAKE`
+
+- **Trigger**: received on the server's final `HANDSHAKE` message.
+- **Content**:
+    - `envelope`: the handshake envelope for the client to validate.
+- **Behavior**:
+    - The client verifies the server's authenticity with the shared password.
+    - The client updates the cryptographic key for secure communication.
+- **Security**: this message is not encrypted.
+
+#### Send session data: `HELLO`
+
+- **Trigger**: sent after encryption is established.
+- **Content**:
+     - `session`: the client session data.
+     - `site_id`: the client site identifier.
+     - `pubkey`: public key for `INTERCOM` messages.
+- **Security**: this message is encrypted.
 
 ---
 
-## Error Handling
+## Secure communication after handshake
 
-**Illegal Messages**:
+Once the handshake completes:
 
-  - Messages not adhering to the protocol are logged, and the connection may be terminated.
+1. The server and client share a cryptographic key.
+2. All further communication between them uses this symmetric key (AES-256).
+3. The session ID keeps continuity and identification in multi-session environments.
 
-**Authentication Failures**:
+This protects all data exchanged between the server and client, even if a third party intercepts it.
 
-  - Authentication failures result in handshake termination and rejection of the connection.
+---
 
-**Skipping Handshake**:
+## Error handling
 
-  - Handshake can be skipped if a secret key has been previously exchanged out of band
+**Illegal messages**:
+
+  - HiveMind logs messages that do not follow the protocol, and may terminate the connection.
+
+**Authentication failures**:
+
+  - Authentication failures end the handshake and reject the connection.
+
+**Skipping handshake**:
+
+  - HiveMind can skip the handshake if the two sides already exchanged a secret key out of band.
 
 ![img_21.png](img_21.png)
 
 ---
 
-For detailed code and various usage examples, please refer to the [Poorman Handshake GitHub Repository](https://github.com/JarbasHiveMind/poorman_handshake).
+For code and usage examples, see the [Poorman Handshake GitHub repository](https://github.com/JarbasHiveMind/poorman_handshake).
+
+---
+[← Permissions](16_permissions.md) · [Home](index.md) · [Encryption →](19_crypto.md)

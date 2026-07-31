@@ -1,27 +1,26 @@
 # DeltaChat Bridge
 
-[Delta Chat](https://delta.chat/en/) is a messaging app that works over e-mail
+[Delta Chat](https://delta.chat/en/) is a messaging app that works over e-mail.
 
-End-to-End Encryption using [Autocrypt](https://autocrypt.org/) and [CounterMITM](https://countermitm.readthedocs.io/en/latest/new.html) protocols, with multiple security audits.
+It uses end-to-end encryption with the [Autocrypt](https://autocrypt.org/) and [CounterMITM](https://countermitm.readthedocs.io/en/latest/new.html) protocols, and has passed multiple security audits.
 
 ![img_12.png](img_12.png)
 
 ## Install
 
 ```bash
-$ pip install HiveMind-deltachat-bridge
+pip install HiveMind-deltachat-bridge
 ```
+
 ## Usage
 
 ![img.png](https://github.com/JarbasHiveMind/HiveMind-deltachat-bridge/raw/master/img.png)
 
 ```bash
-$ hm-deltachat-bridge --help
-
+hm-deltachat-bridge --help
 usage: __main__.py [-h] --access_key ACCESS_KEY --email EMAIL --password
                    PASSWORD [--crypto_key CRYPTO_KEY] [--name NAME]
                    [--host HOST] [--port PORT]
-
 optional arguments:
   -h, --help            show this help message and exit
   --access_key ACCESS_KEY
@@ -34,3 +33,6 @@ optional arguments:
   --host HOST           HiveMind host
   --port PORT           HiveMind port number
 ```
+
+---
+[← Matrix](09_matrix.md) · [Home](index.md) · [Home Assistant →](07_homeassistant.md)

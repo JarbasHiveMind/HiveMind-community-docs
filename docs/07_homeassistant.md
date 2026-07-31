@@ -1,21 +1,21 @@
 # HiveMind Integration for Home Assistant
 
-This is a **manual install** Home Assistant integration for connecting to an OpenVoiceOS instance via HiveMind
+This is a manual-install Home Assistant integration for connecting to an OpenVoiceOS instance through HiveMind.
 
-It allows Home Assistant to directly control and interact with a HiveMind device at a system level, not just sending voice commands, but also manipulating services like audio playback, volume, and system power.
+It lets Home Assistant control and interact with a HiveMind device at a system level: not just voice commands, but also audio playback, volume, and system power.
 
 ---
 
-## Related Projects:
+## Related projects
 
-- [hivemind-homeassistant](https://github.com/JarbasHiveMind/hivemind-homeassistant) (this integration) allows HiveMind to show up as a device in Home Assistant
-- [hivemind-player-protocol](https://github.com/HiveMindInsiders/hivemind-player-protocol) turn any device into a standalone HiveMind OCP player
-- [ovos-skill-music-assistant](https://github.com/HiveMindInsiders/ovos-skill-music-assistant) allows OVOS to search media in MA sources
-- [ovos-media-plugin-mass](https://github.com/HiveMindInsiders/ovos-media-plugin-mass) allows OVOS to control MA players
-  
+- [hivemind-homeassistant](https://github.com/JarbasHiveMind/hivemind-homeassistant) (this integration) shows HiveMind as a device in Home Assistant.
+- [hivemind-player-protocol](https://github.com/HiveMindInsiders/hivemind-player-protocol) turns any device into a standalone HiveMind OCP player.
+- [ovos-skill-music-assistant](https://github.com/HiveMindInsiders/ovos-skill-music-assistant) lets OVOS search media in Music Assistant sources.
+- [ovos-media-plugin-mass](https://github.com/HiveMindInsiders/ovos-media-plugin-mass) lets OVOS control Music Assistant players.
+
 ---
 
-## Manual Installation
+## Manual installation
 
 1. Copy the `hivemind` folder into your Home Assistant `custom_components` directory:
 
@@ -26,16 +26,15 @@ cp -r custom_components/hivemind /config/custom_components/
 
 2. Restart Home Assistant.
 
-3. Add the HiveMind integration via the Home Assistant UI:  
-   **Settings → Devices & Services → Add Integration → HiveMind**
+3. Add the HiveMind integration through the Home Assistant UI: **Settings → Devices & Services → Add Integration → HiveMind**.
 
 ---
 
-## Home Assistant Setup
+## Home Assistant setup
 
 ![setup](https://github.com/user-attachments/assets/5b34c714-3faa-4c8b-8c84-e438c20085fb)
 
-Once a HiveMind device is added to HomeAssistant you will have several entities available
+Once you add a HiveMind device to Home Assistant, several entities become available.
 
 ![image](https://github.com/user-attachments/assets/f4a56e28-96e1-470e-99cc-0f9e8707b37f)
 
@@ -55,19 +54,17 @@ status sensors
 
 ![image](https://github.com/user-attachments/assets/5f98232b-1243-445f-98ed-bb03e23a50b5)
 
-
 ## Music Assistant
 
 ![image](https://github.com/user-attachments/assets/1b0adcb0-bb92-4125-82ee-36367ce2bf60)
 
-
 ---
 
-## Permissions Required
+## Permissions required
 
-Since this integration does **more than just voice queries**, it requires **low-level permissions** to inject and control bus messages directly.  
+This integration does more than voice queries, so it needs low-level permissions to inject and control bus messages directly.
 
-The client connecting to HiveMind must have **admin privileges** and permission to access the following message types:
+The client connecting to HiveMind must have admin privileges and access to these message types:
 
 ### ovos-core
 - `mycroft.stop`
@@ -145,7 +142,7 @@ The client connecting to HiveMind must have **admin privileges** and permission 
 
 #### ovos-phal-plugin-camera
 
-(*work in progress*)
+*(work in progress)*
 
 - `ovos.phal.camera.ping`
 - `ovos.phal.camera.get`
@@ -153,3 +150,4 @@ The client connecting to HiveMind must have **admin privileges** and permission 
 - `ovos.phal.camera.close`
 
 ---
+[← DeltaChat](10_deltachat.md) · [Home](index.md) · [Transport →](04_protocol.md)

@@ -1,51 +1,50 @@
 ### Nested Hives
 
-Now that you have a basic hive setup, you can add more Minds to it and connect them to each other.
+Once you have a basic hive set up, you can add more Minds to it and connect them to each other.
 
-To better understand how minds can interact with each read [the protocol](./04_protocol.md)
+Read [the protocol page](04_protocol.md) to learn how minds interact.
 
-## Nested Hiveminds in Action
+## Nested Hiveminds in action
 
-To illustrate the power of nested Hiveminds, let's consider a scenario where two housemates, let's call them Mom and Dad, each have their own AI assistant running on OpenVoiceOS, named John and Jane, respectively.
+Consider two housemates, Mom and Dad, who each have an AI assistant running on OpenVoiceOS, named John and Jane.
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/486d97a1-484c-42e0-a556-193cf70fe6c6)
 
-While sharing a house and most of their IoT devices, Mom and Dad want to ensure that their AI assistants can control the smart home individually without interfering with each other's commands. To achieve this, they create a Hive for their house, naming it George, with at least one instance of OpenVoiceOS acting as the brain.
+Mom and Dad share a house and most of their IoT devices. They want their assistants to control the smart home individually, without interfering with each other's commands. To do this, they create a hive for their house, named George, with at least one OpenVoiceOS instance acting as the brain.
 
-Mom and Dad then connect their AI assistants, John and Jane, as clients to the George Hive. This setup allows John and Jane to communicate with George individually but not directly with each other. Instead, their messages pass through George, which acts as an intermediary, ensuring proper communication flow. John is connected to Dad's phone and calendar, it knows Dad's favorite songs. This ensures George is not bothered with personal data, and that Dad has a personalized experience. The same holds true for Jane and Mom, Alarms and Music Playlists don't get mixed together
+Mom and Dad connect John and Jane as clients to the George hive. This setup lets John and Jane talk to George individually, not directly with each other. Their messages pass through George, which acts as an intermediary and keeps communication in order. John is connected to Dad's phone and calendar, and knows Dad's favorite songs. This keeps George free of personal data and gives Dad a personalized experience. The same holds for Jane and Mom: alarms and music playlists stay separate.
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/1da8c4f5-243b-4b58-9465-e59612d5d74e)
 
-It is important to note that as soon as a Hive is decoupled, such as when  Mom and Dad split their Hives, they become their own independent Masters again. 
+As soon as a hive is decoupled, such as when Mom and Dad split their hives, each side becomes an independent master again.
 
-Now, when Dad instructs his AI assistant to adjust the lights, the message goes through George. Similarly, when Mom asks her AI assistant to set the temperature, the command is routed through George. George becomes the central point of control for the shared devices, enabling independent control for John and Jane.
+When Dad tells his assistant to adjust the lights, the message goes through George. When Mom tells her assistant to set the temperature, the command routes through George too. George becomes the central point of control for shared devices, while John and Jane still work independently.
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/e0634651-ab97-475a-bf7e-5cef68235c40)
 
-Moreover, if guests visit their house, Mom and Dad can grant them access to George directly, for example by using the voice satellites around the house, or they can create a guest Hive under George temporarily. 
+If guests visit, Mom and Dad can grant them access to George directly, for example through the voice satellites around the house, or create a temporary guest hive under George.
 
-This flexibility allows for easy integration and disconnection of Hives as required.
+This setup lets Mom and Dad connect and disconnect hives as needed.
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/4b3e04ed-cc06-4405-a7e8-4e8b22dfb0cf)
 
-Nested Hiveminds offer a dynamic and adaptable environment for managing AI systems and devices. 
-
-This hierarchical organization, with clusters nested within a Master Hive, provides a scalable and efficient framework
+Nested hiveminds give you a flexible way to manage AI systems and devices. Clusters nested within a master hive form a scalable, hierarchical structure.
 
 ## Permissions
 
-Let's further explore the practical applications of nested Hiveminds by introducing another scenario. Imagine that Mom and Dad have a guest staying with them, and this guest, Bob, also has his own AI assistant. To provide Bob with access to the shared smart home functionalities, they allow Bob's AI assistant to connect to the George Hive as a client.
+Consider another scenario to explore nested hiveminds further. Suppose Mom and Dad have a guest, Bob, who also has his own AI assistant. To give Bob access to the shared smart home functions, they let Bob's assistant connect to the George hive as a client.
 
-However, Mom and Dad want to ensure that Bob's AI assistant has limited permissions within their ecosystem. They configure hivemind-core, acting as a firewall, to restrict Bob's assistant from placing orders or accessing sensitive information from Mom and Dad. This fine-grained control ensures that the guest AI operates within defined boundaries, maintaining privacy and security for all parties involved.
+Mom and Dad still want to limit Bob's assistant's permissions within their ecosystem. They configure hivemind-core, acting as a firewall, to stop Bob's assistant from placing orders or reading sensitive information belonging to Mom and Dad. This fine-grained control keeps the guest AI within defined boundaries, so privacy and security hold for everyone involved.
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/ae8530d6-a465-4ae6-b556-b3f50562d810)
 
-Furthermore, consider a scenario where Mom and Dad have children. They can create a separate nested assistant for their kids, granting them access to specific functionalities suitable for their age and requirements. This nested assistant for the kids would have limited permissions and tailored interactions, providing a safe and engaging AI experience while keeping their privacy intact.
+Mom and Dad can also create a separate nested assistant for their children, with access limited to functions suitable for their age. This nested assistant has restricted permissions and tailored interactions, so kids get a safe AI experience while their privacy stays intact.
 
 ![imagem](https://github.com/JarbasHiveMind/HiveMind-community-docs/assets/33701864/217b4185-7e1b-46f0-af83-b3c097ff2b5f)
 
-Nested Hiveminds offer a versatile framework for managing multiple AI assistants and customizing their capabilities based on individual needs and preferences. 
-
-By configuring access permissions and setting up appropriate firewalls, users can create an ecosystem that ensures privacy, security, and personalized experiences for each participant.
+Nested hiveminds give you a versatile way to manage multiple AI assistants and tailor their capabilities to each person's needs. By configuring access permissions and firewalls, you can build an ecosystem that keeps privacy, security, and a personalized experience for each participant.
 
 ![img_15.png](img_15.png)
+
+---
+[← Terminology](02_terminology.md) · [Home](index.md) · [Plugins →](04_plugins.md)
