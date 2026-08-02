@@ -73,12 +73,12 @@ This section is the authoritative connection-setup sequence for the **legacy v1/
 
 - **`HELLO` and `HANDSHAKE` messages always travel in PLAINTEXT JSON**, even after the session key has been established. This includes the client's *second* `HELLO` (the one carrying session data), which is emitted **after** `crypto_key` is set but is still sent unencrypted. Only the post-handshake `BUS`/`QUERY`/etc. traffic is encrypted. A client must therefore be able to send/receive `HELLO` and `HANDSHAKE` as plain `HiveMessage` JSON regardless of crypto state.
 - The transport-layer JSON for any `HiveMessage` is the object returned by `HiveMessage.as_dict`: `{"msg_type", "payload", "metadata", "route", "node", "target_site_id", "target_pubkey", "source_peer"}`. For `HELLO`/`HANDSHAKE` only `msg_type` and `payload` matter.
-- `msg_type` values are the **string** enum values, not the binary integers: `HELLO = "hello"`, `HANDSHAKE = "shake"`.
+- `msg_type` values are the **string** enum values, not the binary integers: `HELLO = "hello"`, `HANDSHAKE = "shake"`. Four of the strings are not the lowercased enum name (`HANDSHAKE = "shake"`, `THIRDPRTY = "3rdparty"`, `BINARY = "bin"`, `SHARED_BUS = "shared_bus"`), so copy them from the [Quick reference](../reference/message-types.md#quick-reference) table instead of deriving them.
 - **A `HANDSHAKE` is a REQUEST vs a RESPONSE distinguished ONLY by the presence of the `envelope` field.** There is no separate type or flag. The client decides which branch of its `HANDSHAKE` handler to run purely by `if "envelope" in payload`. A server→client `HANDSHAKE` *without* `envelope` is the "please start the handshake" request advertising capabilities; a message *with* `envelope` is the response that completes the exchange.
 
 ### Connection setup sequence
 
-Authentication to the WebSocket itself happens first via HTTP headers (`authorization: <access_key>`, `x-hm-site-id`), before any HiveMessage — that is outside this state machine. Once the socket is open:
+Authentication to the WebSocket itself happens first, before any HiveMessage — that is outside this state machine. The client puts the access key in the connect URL as an `authorization` query parameter, base64 of `useragent:access_key`, so the URL reads `ws://host:port?authorization=<b64>`. The client sends its `site_id` later, in the second `HELLO`. Once the socket is open:
 
 1. **Server → Client `HELLO`** (plaintext). Announces the server identity.
 2. **Server → Client `HANDSHAKE`** (plaintext, **no `envelope`**). Advertises server capabilities and asks the client to start the handshake.
@@ -125,7 +125,7 @@ second window while you code. Taking them in order:
 | Field | Type | Meaning |
 |---|---|---|
 | `handshake` | bool | `True` ⇒ client MUST complete a handshake or the connection is dropped. (`needs_handshake = not client.crypto_key and self.handshake_enabled`.) |
-| `min_protocol_version` | int | Minimum acceptable `ProtocolVersion` (`1` if crypto required and no preshared key, else `0`). |
+| `min_protocol_version` | int | Minimum acceptable `ProtocolVersion`: `max(the server.json min_protocol_version floor, the crypto-derived minimum)`. The shipped floor is `2`, so a default server advertises `2`. |
 | `max_protocol_version` | int | Maximum acceptable `ProtocolVersion` the server can offer: `THREE` when Noise + password are available, else `TWO` when `binarize` is on, else `ONE`. |
 | `noise` | object | Present only when the server offers **v3**: `{"patterns": [...], "suites": [...]}` in preference order (`XXpsk2`/`KKpsk0`, `25519_ChaChaPoly_SHA256`/`25519_AESGCM_SHA256`). Absent ⇒ take the legacy branch below. |
 | `binarize` | bool | Server supports the binary framing scheme. From `cfg["binarize"]`, default `False`. |
@@ -133,7 +133,7 @@ second window while you code. Taking them in order:
 | `password` | bool | Server has a password configured for this client ⇒ password handshake is available (V1). If `True` and the client also has a password, the client takes the **password branch**. |
 | `crypto_required` | bool | Server rejects unencrypted payloads. |
 | `encodings` | list[str] | Server-allowed `SupportedEncodings`, server preference order. Defaults to **all** encodings. |
-| `ciphers` | list[str] | Server-allowed `SupportedCiphers`, server preference order. Defaults to `["AES-GCM"]`. |
+| `ciphers` | list[str] | Server-allowed `SupportedCiphers`, server preference order. The shipped default is `["CHACHA20-POLY1305", "AES-GCM"]`. The server falls back to `["AES-GCM"]` only when `allowed_ciphers` is empty. |
 
 #### (3) Client → Server `HANDSHAKE` (with `envelope`) — `payload` fields
 
@@ -151,6 +151,9 @@ Plus exactly one of:
 |---|---|---|
 | `envelope` | str (hex) | **Password branch.** Present when the client uses a `PasswordHandShake`. This is the field that marks the message as carrying handshake material. |
 | `pubkey` | str (PEM) | **RSA branch.** Present when no password is used; the client sends its RSA public key instead and there is **no** `envelope` in *this* client message. |
+
+!!! warning "The RSA branch negotiates v1 and a default server refuses it"
+    A `pubkey` payload is classified as `ProtocolVersion.ONE`. The server checks the configured floor again at handshake time and disconnects the client when the attempted version is below it. The shipped floor is `2`, so the RSA branch fails against a default server with no error frame and only a `rejecting <peer>: legacy handshake at protocol v1 is below the configured minimum` log line. Use the password branch (v2) or the Noise handshake (v3).
 
 > Selection ownership: the client *proposes* `encodings`/`ciphers` in preference order. The **server** intersects them with its own allowed sets and then selects the client's element `[0]` of each filtered list (`client.cipher = ciphers[0]`, `client.encoding = encodings[0]`). If the intersection is empty for either, the server disconnects the client. **This negotiation runs ONLY on the password branch.** On the RSA-pubkey branch the server never reads the client's `encodings`/`ciphers`, so the encoding/cipher silently stay at the server defaults (see [Negotiation & defaults](#negotiation-defaults)).
 
@@ -275,6 +278,8 @@ followed by the payload, and the header is bit-packed, so read the widths carefu
 
 Followed by: metadata bytes, then payload bytes. To pad to a byte boundary, zero bits are **prepended** to the left of the start marker; the decoder skips these leading zeros until it reads the first `1`. The metadata length is a `uint:8` (max 255 bytes).
 
+The metadata block must always hold a valid JSON object. The encoder writes `{}` when there is no metadata, and the decoder always parses the block, so the minimum uncompressed length is 2 bytes. A frame with a metadata length of 0 makes the reference decoder raise a JSON error.
+
 ### Message type encoding
 
 | Value | Type |
@@ -318,7 +323,7 @@ The `versioned` bit is **0** by default in the reference encoder (`get_bitstring
 ### Example: BUS message (uncompressed, versioned)
 
 ```
-1 | 1 | 00000001 | 00001 | 0 | 00000000 | <metadata> | <payload>
+1 | 1 | 00000001 | 00001 | 0 | 00000010 | <metadata> | <payload>
 ```
 
 - `1` — start marker
@@ -326,16 +331,18 @@ The `versioned` bit is **0** by default in the reference encoder (`get_bitstring
 - `00000001` — protocol version 1
 - `00001` — BUS (type 1)
 - `0` — not compressed
-- `00000000` — no metadata
+- `00000010` — metadata length 2
+- `<metadata>` — `{}`, the empty JSON object
 - `<payload>` — UTF-8 JSON string
 
 ### Example: BINARY message (raw audio)
 
 ```
-1 | 1 | 00000001 | 01100 | 0 | 00000000 | <metadata> | 0001 | <audio_bytes>
+1 | 1 | 00000001 | 01100 | 0 | 00000010 | <metadata> | 0001 | <audio_bytes>
 ```
 
 - `01100` — BINARY (type 12)
+- `00000010` — metadata length 2, followed by `{}`
 - `0001` — RAW_AUDIO binary payload type
 - `<audio_bytes>` — PCM audio data
 
@@ -343,7 +350,9 @@ The `versioned` bit is **0** by default in the reference encoder (`get_bitstring
 
 ## Compression
 
-When the compression flag is set, both the metadata and payload are compressed independently with zlib (each typically ~49–50% smaller). Compression is most effective on large payloads; it adds overhead for small messages.
+When the compression flag is set, zlib compresses the metadata block, and also the payload of every type except `BINARY` (each typically ~49–50% smaller). Compression is most effective on large payloads; it adds overhead for small messages.
+
+`BINARY` payload bytes are an exception. The encoder appends them raw and the decoder returns them raw, whatever the compression flag says. If you zlib-compress raw audio yourself and set the flag, the receiver passes the compressed blob to the audio plugin as PCM. The satellite then plays noise.
 
 ---
 

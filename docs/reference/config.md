@@ -7,7 +7,7 @@ out, plus the satellite identity file and the ports everything listens on.
 
 !!! abstract "In a nutshell"
     - `hivemind-core` reads `~/.config/hivemind-core/server.json` at startup; `hivemind-core listen` takes no flags, so all settings live in this file.
-    - Configurable blocks: `binarize`, `allowed_encodings`/`allowed_ciphers`, `agent_protocol`, `binary_protocol`, `network_protocol`, `policy.chain`, and `database`.
+    - Configurable blocks: `binarize`, `allowed_encodings`/`allowed_ciphers`, `min_protocol_version`, the password-strength keys, `agent_protocol`, `binary_protocol`, `presence`, `network_protocol`, `policy.chain`, `last_seen_update_interval`, and `database`.
     - The database backend and TLS certificates are auto-selected on first run.
     - Satellites store credentials in `~/.config/hivemind/_identity.json`, written by `hivemind-client set-identity`.
 
@@ -34,6 +34,9 @@ here:
     "JSON-B32", "JSON-HEX"
   ],
   "allowed_ciphers": ["CHACHA20-POLY1305", "AES-GCM"],
+  "min_protocol_version": 2,
+  "min_password_bits": 40,
+  "runtime_password_strength_check": true,
   "agent_protocol": {
     "module": "hivemind-ovos-agent-plugin",
     "hivemind-ovos-agent-plugin": {
@@ -43,6 +46,12 @@ here:
   },
   "binary_protocol": {
     "module": null
+  },
+  "presence": {
+    "enabled": true,
+    "name": "HiveMind-Node",
+    "zeroconf": true,
+    "upnp": false
   },
   "network_protocol": {
     "hivemind-websocket-plugin": {
@@ -65,6 +74,7 @@ here:
       {"module": "hivemind-ovos-agent-policy"}
     ]
   },
+  "last_seen_update_interval": 0,
   "database": {
     "module": "hivemind-sqlite-db-plugin",
     "hivemind-sqlite-db-plugin": {
@@ -92,6 +102,23 @@ The `database` block above is selected automatically on first run: a fresh insta
 
 The supported encodings are: `JSON-B64`, `JSON-URLSAFE-B64`, `JSON-B91`, `JSON-Z85B`, `JSON-Z85P`, `JSON-B32`, `JSON-HEX`. Trim either list to restrict what the server will negotiate.
 
+### min_protocol_version
+
+| Key | Default | Description |
+|---|---|---|
+| `min_protocol_version` | `2` | Lowest `ProtocolVersion` a client may negotiate. At `2` the server refuses the oldest JSON-only and no-binary clients. Raise it to `3` to require the Noise handshake from every client. |
+
+The server enforces this floor twice: once at connect time, and again when the handshake completes, against the version the client actually performed. Read [Refusing old clients](../concepts/security.md#refusing-old-clients-min_protocol_version) before you raise it, because clients that used to downgrade in silence are disconnected instead.
+
+### min_password_bits / runtime_password_strength_check
+
+| Key | Default | Description |
+|---|---|---|
+| `min_password_bits` | `40` | Guess-resistance floor, in bits, for a client password. `add-client` rejects anything weaker. |
+| `runtime_password_strength_check` | `true` | Re-check the password at handshake time, as a backstop against a hand-edited client database. The env var `HIVEMIND_DISABLE_PASSWORD_STRENGTH_CHECK=1` also turns it off. |
+
+The password is the only secret in the hive, so these two keys carry most of its security. See [Weak-password refusal](../concepts/security.md#weak-password-refusal).
+
 ### agent_protocol
 
 | Key | Default | Description |
@@ -109,6 +136,19 @@ Set `module` to `"hivemind-persona-agent-plugin"` and configure accordingly for 
 | `module` | `null` | Binary data handler plugin. Set to `"hivemind-audio-binary-protocol-plugin"` to enable server-side audio |
 
 When set to the audio binary protocol plugin, configure STT, TTS, VAD, and wakeword sub-keys. See [Audio Binary Protocol](../server/audio-binary-protocol.md).
+
+### presence
+
+Local-network discovery. `hivemind-core listen` starts the announcer itself whenever the optional `hivemind-presence` package is installed, so this block is the control surface, not a separate command.
+
+| Key | Default | Description |
+|---|---|---|
+| `enabled` | `true` | Announce this node on the local network. Set to `false` to stay silent. |
+| `name` | `"HiveMind-Node"` | Name shown to clients that scan the network. |
+| `zeroconf` | `true` | Advertise over mDNS. |
+| `upnp` | `false` | Advertise over UPnP/SSDP. |
+
+The announced port and TLS flag come from the first entry in `network_protocol`, not from this block. See [Auto Discovery](../concepts/discovery.md).
 
 ### network_protocol
 
@@ -142,6 +182,12 @@ List of policy plugin modules applied in order to each incoming message. The def
 
 !!! note "Removed / ignored key: `policy.fail_open`"
     The policy chain is **unconditionally fail-closed** — any error in a policy denies the message, and there is no knob to change this. If an old `server.json` still carries a `policy.fail_open` key, `hivemind-core` **strips it on load and logs a warning**; the key has no effect. Operators upgrading a server should delete it.
+
+### last_seen_update_interval
+
+| Key | Default | Description |
+|---|---|---|
+| `last_seen_update_interval` | `0` | Seconds to debounce the `last_seen` write to the client database. `0` keeps the per-message write. Raise it only when the database cannot absorb one write per admitted message. |
 
 ### database
 
