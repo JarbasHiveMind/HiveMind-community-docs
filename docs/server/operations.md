@@ -55,11 +55,6 @@ certificate on `443` and forwards to `hivemind-core` on `127.0.0.1:5678`, upgrad
 WebSocket connection. When you do this, do **not** also expose `5678`/`5679` directly to
 the internet — only the proxy should be reachable.
 
-**Stop the proxy logging query strings.** Clients pass their access key as an
-`authorization` URL query parameter, so default nginx and Caddy access logs record every
-key verbatim. Strip the query string from the log format, or turn access logging off for
-the HiveMind virtual host.
-
 The Docker deployment guide covers a concrete proxy setup; see
 [Docker Deployment](docker.md#with-ssl-via-reverse-proxy).
 
