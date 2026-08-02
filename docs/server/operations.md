@@ -55,6 +55,11 @@ certificate on `443` and forwards to `hivemind-core` on `127.0.0.1:5678`, upgrad
 WebSocket connection. When you do this, do **not** also expose `5678`/`5679` directly to
 the internet — only the proxy should be reachable.
 
+**Stop the proxy logging query strings.** Clients pass their access key as an
+`authorization` URL query parameter, so default nginx and Caddy access logs record every
+key verbatim. Strip the query string from the log format, or turn access logging off for
+the HiveMind virtual host.
+
 The Docker deployment guide covers a concrete proxy setup; see
 [Docker Deployment](docker.md#with-ssl-via-reverse-proxy).
 
@@ -107,30 +112,38 @@ mode this is `ovos-messagebus`). Rejected connections raise an error event:
 |--------------------------------|------------------------------------------------------------------------------|
 | `hive.client.connect`          | A client connects (payload carries `key`, `session_id`).                     |
 | `hive.client.disconnect`       | A client disconnects (payload carries `key`).                                |
-| `hive.client.connection.error` | A connection is rejected — invalid access key **or** protocol-version mismatch. |
+| `hive.client.connection.error` | A connection is rejected for an invalid access key. |
 
-Both rejection paths emit the same `hive.client.connection.error` event but with
-distinct `error` payload values, so you can tell them apart:
+Only the access-key path reaches the bus. `handle_invalid_key_connected` (a client
+presented an unknown or disallowed API key) emits
+`{"error": "invalid access key", "peer": <peer>}` and logs
+`Client provided an invalid api key` at `ERROR` level.
 
-- `handle_invalid_key_connected` (a client presented an unknown / disallowed API key)
-  emits `{"error": "invalid access key", "peer": <peer>}` and logs
-  `Client provided an invalid api key`.
-- `handle_invalid_protocol_version` (a client failed the protocol-version requirements)
-  emits `{"error": "protocol error", "peer": <peer>}` and logs
-  `Client does not satisfy protocol requirements`.
+**Protocol-version rejections emit no bus event.** Both floor checks disconnect the client
+after a `WARNING` log line and nothing else, so alerting on
+`hive.client.connection.error` will never page you for one. Grep the logs instead:
 
-An operator can observe invalid-key and bad-protocol-version attempts in two ways:
+- Connect time: `rejecting <peer>: server requires protocol version >= …`
+- Handshake completion: `rejecting <peer>: legacy handshake at protocol v… is below the
+  configured minimum …`
+
+The second line is the newer of the two. It appears when a client completes a legacy v1 or
+v2 handshake under a higher `min_protocol_version` floor, which earlier releases allowed.
+Expect it after you upgrade, and expect satellites to drop off if your floor is above what
+they can negotiate. See
+[Refusing old clients](../concepts/security.md#refusing-old-clients-min_protocol_version).
+
+An operator can observe rejected connections in two ways:
 
 1. **Watch the messagebus.** Listen for `hive.client.connection.error` on the OVOS
    messagebus `hivemind-core` publishes to (for an OVOS skills server, the `ovos-messagebus` the agent
    protocol connects to) and inspect the `error`/`peer` fields. This is the structured,
-   real-time signal — wire it into your monitoring to alert on repeated rejected
-   connections from a single peer (a sign of a misconfigured satellite or a brute-force
-   attempt).
-2. **Read the logs.** The same two handlers log at `ERROR` level
-   (`Client provided an invalid api key` / `Client does not satisfy protocol
-   requirements`), so the rejections are visible in `journalctl -u hivemind-core` even
-   without a bus listener.
+   real-time signal — wire it into your monitoring to alert on repeated invalid-key
+   attempts from a single peer (a sign of a misconfigured satellite or a brute-force
+   attempt). It does not cover protocol-floor rejections.
+2. **Read the logs.** Invalid keys log at `ERROR`, protocol-floor rejections at `WARNING`,
+   so both are visible in `journalctl -u hivemind-core` even without a bus listener. The
+   logs are the only place the second kind appears.
 
 Normal `hive.client.connect` / `hive.client.disconnect` events on the same bus give you a
 running picture of which satellites are attached.

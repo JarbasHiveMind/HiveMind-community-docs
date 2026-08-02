@@ -20,25 +20,29 @@ All message types are defined in `HiveMessageType` in `hivemind_bus_client.messa
 
 If you only need to jog your memory, this table is the whole page — every type, its
 category, which way it flows, and what it's for, on one screen. Skim the Category column
-first: it groups the thirteen types into the four jobs they do, and the per-type sections
-below expand whichever one you landed on.
+first: it groups the fourteen types into the four jobs they do, and the per-type sections
+below expand whichever one you landed on. The Wire value column is the exact string to put
+in the JSON `msg_type` field. Four of them are not the lowercased enum name, so copy them
+rather than derive them.
 
-| Type | Category | Direction | Purpose |
-|---|---|---|---|
-| `BUS` | Payload | Bidirectional | Single-hop message to/from AI back-end |
-| `SHARED_BUS` | Payload | Satellite → hivemind-core | Passive monitoring of satellite's local OVOS bus |
-| `THIRDPRTY` | Payload | Application-defined | User-defined payload, relayed opaquely |
-| `BINARY` | Payload | Bidirectional | Raw binary data (audio, images, files) |
-| `ESCALATE` | Transport | Satellite → hivemind-core (up) | Multi-hop upward routing |
-| `BROADCAST` | Transport | hivemind-core → All (down) | Multi-hop downward routing |
-| `PROPAGATE` | Transport | Bidirectional | All-directions flood |
-| `QUERY` | Transport | Bidirectional | Routed request with a single expected response |
-| `CASCADE` | Transport | Bidirectional | Scatter/gather — all nodes may respond |
-| `INTERCOM` | Transport | Point-to-point | End-to-end encrypted tunnel |
-| `PING` | Discovery | Bidirectional (via PROPAGATE) | Topology probe |
-| `RENDEZVOUS` | Transport | Bidirectional | Reserved for rendezvous-nodes |
-| `HELLO` | Connection | Bidirectional | Node announcement on connect |
-| `HANDSHAKE` | Connection | Bidirectional | Cryptographic key exchange |
+| Type | Wire value | Category | Direction | Purpose |
+|---|---|---|---|---|
+| `BUS` | `bus` | Payload | Bidirectional | Single-hop message to/from AI back-end |
+| `SHARED_BUS` | `shared_bus` | Payload | Satellite → hivemind-core | Passive monitoring of satellite's local OVOS bus |
+| `THIRDPRTY` | `3rdparty` | Payload | Application-defined | User-defined payload, relayed opaquely |
+| `BINARY` | `bin` | Payload | Bidirectional | Raw binary data (audio, images, files) |
+| `ESCALATE` | `escalate` | Transport | Satellite → hivemind-core (up) | Multi-hop upward routing |
+| `BROADCAST` | `broadcast` | Transport | hivemind-core → All (down) | Multi-hop downward routing |
+| `PROPAGATE` | `propagate` | Transport | Bidirectional | All-directions flood |
+| `QUERY` | `query` | Transport | Bidirectional | Routed request with a single expected response |
+| `CASCADE` | `cascade` | Transport | Bidirectional | Scatter/gather — all nodes may respond |
+| `INTERCOM` | `intercom` | Transport | Point-to-point | End-to-end encrypted tunnel |
+| `PING` | `ping` | Discovery | Bidirectional (via PROPAGATE) | Topology probe |
+| `RENDEZVOUS` | `rendezvous` | Transport | Bidirectional | Reserved for rendezvous-nodes |
+| `HELLO` | `hello` | Connection | Bidirectional | Node announcement on connect |
+| `HANDSHAKE` | `shake` | Connection | Bidirectional | Cryptographic key exchange |
+
+Only thirteen of the fourteen have a 5-bit code for [binary framing](../developers/protocol-spec.md#message-type-encoding). `INTERCOM` has none, so send it as JSON.
 
 The sections that follow take the types one at a time, roughly in order of how often
 you'll touch them — the everyday `BUS` first, the mesh-routing verbs next, and the
@@ -71,7 +75,8 @@ Passive monitoring of the satellite's local OVOS bus.
 Raw binary payload.
 
 - **Payload**: bytes + a 4-bit binary type indicator (see binary payload types below)
-- **Processed by**: the configured binary data handler plugin (e.g. `hivemind-audio-binary-protocol`)
+- **Permission**: the client `allowed_types` whitelist must not be empty. Binary payloads cross the same ACL gate as bus messages, and an empty whitelist denies every one of them with `acl_disallowed_type`. See [How the policy chain works](../concepts/security.md#how-the-policy-chain-works).
+- **Processed by**: the configured binary data handler plugin (e.g. `hivemind-audio-binary-protocol`), and only after the policy chain allows the payload
 
 ### Binary payload types
 
@@ -92,7 +97,7 @@ Raw binary payload.
 Wraps another `HiveMessage` and routes it upward through the hivemind-core chain.
 
 - **Payload**: a nested `HiveMessage`
-- **Hop limit**: finite; loops are prevented
+- **Loop control**: there is no hop counter and no TTL. Every relaying node appends a `route` hop whose `source` is its own public key, and a node drops any message whose `route` already lists that key. A client that does not append this hop makes its relayed frames impossible for peers to suppress.
 - **Use**: satellite cannot handle a request locally; asks the parent hivemind-core
 
 ---
@@ -156,12 +161,13 @@ A scatter/gather request: like `PROPAGATE`, but every reachable node may answer.
 End-to-end encrypted point-to-point message.
 
 - **Payload**: a hybrid envelope — a random AES-256-GCM session key wrapped with the target node's RSA public key (PKCS#1 OAEP), with the body encrypted under AES-256-GCM. Base64 fields: `encrypted_key`, `ciphertext`, `tag`, `nonce`, `signature`. Only the target node (holding the RSA private key) can unwrap the session key and decrypt.
-- **Signature**: sender's RSA private key signs (PSS over SHA-256)
+- **What hivemind-core accepts is narrower**: it reads only `ciphertext` and `signature`, and RSA-decrypts the whole `ciphertext` with its own private key. It never looks at `encrypted_key`, `tag` or `nonce`. A hybrid envelope addressed to a hivemind-core node therefore fails to decrypt and is dropped. The HTTP client writes the RSA-only shape, the WebSocket client writes the hybrid shape, and the client library reads both. Treat this as a known divergence.
+- **Signature**: REQUIRED. The sender signs the raw ciphertext bytes, meaning the base64-decoded `ciphertext`, with PSS over SHA-256. The receiver checks it *before* decryption.
 - **Routing**: typically wrapped in ESCALATE or PROPAGATE to reach the target
-- **Intermediate nodes**: cannot read the content or determine the recipient
+- **Intermediate nodes**: cannot read the content, but they do see the recipient. The outer `target_pubkey` field is cleartext, and a relay reads it to decide whether to consume the frame or forward it.
 - **Origin check**: the target verifies the signature against the sender's pinned public key. A bad signature, a missing signature, or an unknown originator means the message is dropped
 - **A dropped message is not relayed**: it goes no further to peers and is not escalated upstream
-- **Plaintext payloads**: a node with `require_crypto` (the default) drops an `INTERCOM` that is not a signed envelope. Set `require_crypto=False` to keep plaintext `INTERCOM` working
+- **Plaintext payloads**: a node with `require_crypto` (the default) drops an `INTERCOM` that is not a signed envelope, and logs `dropping unauthenticated message`. `require_crypto` is a listener attribute set in code, not a `server.json` key, and clearing it gives up all proof of who sent the message
 - **Binary framing**: `INTERCOM` has no 5-bit type code, so a binary frame carries it as `THIRDPRTY` (`11`)
 
 ---
@@ -171,7 +177,8 @@ End-to-end encrypted point-to-point message.
 Topology discovery.
 
 - `PING` is always wrapped inside `PROPAGATE`
-- There is no `PONG` reply type. Every node that receives a `PING` re-emits its own `PING` with the same `flood_id`, flooded onward via `PROPAGATE`; receivers deduplicate by `flood_id`
+- There is no `PONG` reply type. Every node that receives a `PING` re-emits its own `PING` with the same `flood_id`, flooded onward via `PROPAGATE`, and receivers deduplicate by `flood_id`
+- `flood_id` dedup is specific to PING. It sits on top of the [route-hop loop suppression](#escalate) that covers PROPAGATE, ESCALATE, CASCADE and PING alike
 - **Payload**: `{flood_id, peer, site_id, timestamp}`
 - `HiveMapper` in `hivemind_core.hive_map` observes the re-emitted PINGs to build a live topology map
 

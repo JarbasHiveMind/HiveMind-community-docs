@@ -57,10 +57,19 @@ See [Audio Binary Protocol](../server/audio-binary-protocol.md).
 
 ```bash
 hivemind-core add-client --name my-mic-sat
-# note the access_key and password printed
+# note the Node ID, access_key and password printed
 ```
 
-**2. On the satellite** — write the identity file:
+**2. On hivemind-core** — grant the client a message type:
+
+```bash
+hivemind-core allow-msg "recognizer_loop:utterance" <node_id>
+```
+
+A client whose whitelist is empty is denied everything, including the binary audio this
+satellite sends. Grant at least one message type or the audio never reaches the server.
+
+**3. On the satellite** — write the identity file:
 
 ```bash
 hivemind-client set-identity \
@@ -69,7 +78,7 @@ hivemind-client set-identity \
   --host <server_host_or_ip>
 ```
 
-**3. Run:**
+**4. Run:**
 
 ```bash
 hivemind-mic-sat

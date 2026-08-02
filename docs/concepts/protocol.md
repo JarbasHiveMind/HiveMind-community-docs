@@ -141,13 +141,16 @@ it. `INTERCOM` is for when two nodes want to say something that even the servers
 it can't overhear — a sealed letter passed hand to hand, where every courier can carry it
 but only the addressee can open it.
 
-The sealing is a **hybrid envelope**: a random AES-256-GCM session key is wrapped with the **recipient node's RSA public key** (PKCS#1 OAEP) and the payload is encrypted with AES-256-GCM. The envelope carries base64 fields `encrypted_key`, `ciphertext`, `tag`, `nonce`, and `signature`. Intermediate nodes — including hivemind-core — cannot read the payload. Only the target node, which holds the corresponding RSA private key, can unwrap the session key and decrypt it. After decryption, the node verifies the sender's RSA signature (PSS over SHA-256) using the sender's public key (stored in the trust store).
+The sealing is a **hybrid envelope**: a random AES-256-GCM session key is wrapped with the **recipient node's RSA public key** (PKCS#1 OAEP) and the payload is encrypted with AES-256-GCM. The envelope carries base64 fields `encrypted_key`, `ciphertext`, `tag`, `nonce`, and `signature`. Intermediate nodes — including hivemind-core — cannot read the payload. Only the target node, which holds the corresponding RSA private key, can unwrap the session key and decrypt it. The exact envelope hivemind-core itself accepts is narrower than this, and the [message-types reference](../reference/message-types.md#intercom) spells out both shapes.
 
-`INTERCOM` is usually the payload of a transport message (`ESCALATE` or `PROPAGATE`) so it reaches its destination through the mesh. Intermediate nodes forward it without being able to read it.
+`INTERCOM` is usually the payload of a transport message (`ESCALATE` or `PROPAGATE`) so it reaches its destination through the mesh. Intermediate nodes forward it without being able to read it. The recipient is not hidden from them. The outer `target_pubkey` field is cleartext, and a relay reads it to decide whether to consume the frame or pass it on.
 
-The target checks the origin before it acts on the content. It drops the message when the signature does not verify, when there is no signature, and when it holds no public key for the originator. A dropped message stops there: the node does not pass it to its peers and does not escalate it upstream.
+!!! warning "Origin verification is fail-closed"
+    The receiving node verifies the sender's RSA signature (PSS over SHA-256) over the raw ciphertext bytes, **before** it decrypts, against the public key pinned from the sender's `HELLO`. A missing signature, a signature that fails to verify, or no pinned key for the sender each drop the frame. A dropped frame stops there: the node does not relay it to peers and does not escalate it upstream, and the sender receives no error.
 
-A plaintext `INTERCOM` payload proves nothing about who sent it, so a node that requires crypto drops that too. That is the default. See [Bootstrapping satellite-to-satellite trust](security.md#bootstrapping-satellite-to-satellite-trust) for the key-pinning rules and the `require_crypto=False` escape hatch.
+    A listener with `require_crypto` set (the default) also drops any INTERCOM that carries no signed envelope, and logs `dropping unauthenticated message`. If INTERCOM traffic stopped after an upgrade, this is why. The remedy is to sign the envelope. Clearing `require_crypto` is a listener-level choice made in code, and it gives up all proof of who sent the message.
+
+See [Bootstrapping satellite-to-satellite trust](security.md#bootstrapping-satellite-to-satellite-trust) for the key-pinning rules and the `require_crypto=False` escape hatch.
 
 ---
 
@@ -226,6 +229,13 @@ probe is only ever processed once, and the payload each one carries is small —
 watches those echoes come back, and from the pattern it draws a live map of the whole
 hive.
 
+`flood_id` dedup is specific to `PING`. Underneath it sits a generic rule that covers
+`PROPAGATE`, `ESCALATE`, `CASCADE` and `PING` alike: every relaying node appends a `route`
+hop naming its own public key, and a node drops any message whose `route` already lists
+that key. There is no hop counter and no TTL. A client that relays without appending its
+own hop gives its peers nothing to suppress, so write that hop. See
+[ESCALATE](../reference/message-types.md#escalate) for the field detail.
+
 ---
 
 ## Session and context keys
@@ -281,6 +291,15 @@ client quietly gets the strong, always-encrypted v3 session, and an ancient one 
 refused rather than silently downgraded. (One footnote to avoid confusion: this
 `ProtocolVersion` enum is a different thing from the binary-serialization
 `PROTOCOL_VERSION` constant in `serialization.py`.)
+
+The floor is checked twice, not once. The connect-time check refuses a client that cannot
+reach the floor at all. A second check runs when the handshake completes, and it judges
+the version the client actually performed: an RSA envelope is v1, a password envelope is
+v2, and a `noise` payload is v3. A client below the floor is disconnected there. This
+second check matters because a client that *could* do v3 was previously free to complete a
+v2 password handshake instead, so a hive set to `min_protocol_version: 3` was weaker than
+it looked. Those clients are now disconnected. See
+[Refusing old clients](security.md#refusing-old-clients-min_protocol_version).
 
 !!! note "You don't negotiate v2 to send binary"
     Whether a v1/v2 connection uses binary framing is gated by the `binarize` boolean exchanged in the handshake, **not** by negotiating `ProtocolVersion.TWO` on its own. Under v3 the session is always encrypted and binary-capable. See [Protocol Spec](../developers/protocol-spec.md) for the framing and Noise details.

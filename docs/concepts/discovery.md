@@ -36,13 +36,30 @@ covers almost everyone; the others are fallbacks for when it doesn't.
 
 ## Integration with hivemind-core
 
-When `hivemind-presence` is installed, start the announcer alongside hivemind-core. The `hivemind-presence announce` command is independent of `hivemind-core listen` — run them together, or configure `hivemind-presence` as a separate service on the same machine. No changes to `~/.config/hivemind-core/server.json` are required.
+You do not have to start anything. Once `hivemind-presence` is installed, `hivemind-core listen` starts the announcer itself and stops it on shutdown.
+
+The `presence` block in `~/.config/hivemind-core/server.json` controls it:
+
+```json
+{
+  "presence": {
+    "enabled": true,
+    "name": "HiveMind-Node",
+    "zeroconf": true,
+    "upnp": false
+  }
+}
+```
+
+Set `enabled` to `false` to stop announcing. Set `name` to rename the node. The announced port and TLS flag are not in this block: hivemind-core takes them from the first entry in `network_protocol`. See [presence](../reference/config.md#presence) in the config reference.
 
 ---
 
-## Running the announcer
+## Running the announcer by hand
 
-On the hivemind-core machine, start advertising:
+Run `hivemind-presence announce` only when you want an announcer that hivemind-core does not manage, for example on a different machine or for a node whose `presence` block is disabled. Running it next to a `hivemind-core listen` that already announces gives you duplicate records.
+
+On the announcing machine, start advertising:
 
 ```bash
 hivemind-presence announce --port 5678 --name "living-room-server"
