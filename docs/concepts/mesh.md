@@ -81,6 +81,10 @@ a direction of travel. Watch them move:
 
 ![PROPAGATE floods the whole mesh](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/propagate.gif)
 
+A flood in a mesh with a cycle would circle forever, so every forwarding node leaves a mark. Before it forwards a `PROPAGATE`, `ESCALATE`, `CASCADE`, or `PING`, the node appends a hop naming itself to the message `route`, keyed on the node's public key. If a message arrives whose route already names the node, the node does not forward it again and the flood dies there.
+
+This stops the forwarding only. A node named in the route still handles the message locally, so callbacks, local bus delivery, and PING mapping all still run. It withholds the onward fan-out and the upstream forward.
+
 ### QUERY — routed request with response
 
 `QUERY` travels upward like `ESCALATE`, but expects a response back. Each node in the chain attempts to answer from its local agent; the first node that can answer returns a response routed back downstream to the originator. If no node can answer, the root returns a `hive.query.timeout` error response.

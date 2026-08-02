@@ -110,6 +110,8 @@ An alternative v0 path skips the handshake and uses a pre-shared `crypto_key` di
 
 The server will only admit a client that can negotiate at least `min_protocol_version` (config key in `~/.config/hivemind-core/server.json`, **default `2`**). At the default, the oldest JSON-only / no-binary **v0 and v1** clients are refused outright; a v2 client still connects with the legacy binary+handshake path, and a v3 client gets the Noise session. Raise the floor to `3` to require Noise from every client. The `ProtocolVersion` enum is `ZERO`/`ONE` (handshake) / `TWO` (binary) / `THREE` (Noise).
 
+The floor is enforced twice. The server advertises it at connect time. It checks again when the handshake completes, and it judges the version the client actually performed, not the version the client said it supports. A client that can speak v3 but sends a v2 password handshake against a floor of `3` is refused. Earlier releases let that client in and ignored the raised floor. At the default floor of `2` the same rule refuses a legacy v1 pubkey handshake.
+
 ### Weak-password refusal
 
 Because the password is the only secret and its verifier is offline-crackable, `poorman_handshake` **refuses guessable passwords** (`WeakPasswordError`). It estimates guess-resistance with [zxcvbn](https://github.com/dropbox/zxcvbn) and rejects anything below `min_password_bits` (default **40 bits** — enough to reject `Password123!`, `correct_password`, or the xkcd `Tr0ub4dour&3`, while real passphrases pass).
@@ -142,7 +144,17 @@ Reset the RSA key at any time with `hivemind-client reset-pgp` (the command name
 
 #### Bootstrapping satellite-to-satellite trust
 
-For INTERCOM (and the signed trust checks on PROPAGATE / CASCADE), a node only accepts messages from peers whose public key it has been told to trust. That trust is configured out of band: each node maintains a `trusted_keys` mapping (alias → public-key string) in its identity file. Add a peer's key with `NodeIdentity.add_trusted_key(alias, pubkey)` (and `trusted_keys` / `remove_trusted_key` to read or revoke). After PING discovery has mapped the network, `HiveMapper.mark_trusted_nodes(trusted_keys)` flips each discovered node's `trusted` flag based on that mapping, so subsequent source-trust checks resolve quickly. Keys must be exchanged through a channel you already trust — there is no automatic key acceptance.
+For INTERCOM (and the signed trust checks on PROPAGATE / CASCADE), a node only accepts messages from peers whose public key it holds. There are two ways a key gets there.
+
+**Out of band, on the client.** Each node keeps a `trusted_keys` mapping (alias → public-key string) in its identity file. Add a peer's key with `NodeIdentity.add_trusted_key(alias, pubkey)` (and `trusted_keys` / `remove_trusted_key` to read or revoke). After PING discovery has mapped the network, `HiveMapper.mark_trusted_nodes(trusted_keys)` flips each discovered node's `trusted` flag based on that mapping, so later source-trust checks resolve quickly. Exchange these keys through a channel you already trust.
+
+**Trust on first use, on the server.** hivemind-core reads the public key a client sends in its `HELLO`. It pins that key against the client's access key, in `trusted_pubkeys` (`hivemind_core/protocol.py`). INTERCOM signature checks use the pin. A later `HELLO` presenting a different key does not move an existing pin, and the server logs the mismatch.
+
+A `HELLO` only asserts a public key. It does not prove the sender holds the matching private key. So the first party to connect with an access credential owns its pin. Treat the credential as the thing that must stay secret, and pin keys out of band when you cannot control who connects first.
+
+**Verification is fail-closed.** The target node checks the origin signature on an INTERCOM before it does anything with the content. It rejects the message when the signature does not verify, when the payload carries no signature, and when no pinned key exists for the originator. It no longer processes an unverifiable INTERCOM for the sake of confidentiality alone. A rejected message stops at the node that rejected it. That node does not fan it out to peers and does not escalate it upstream.
+
+**Plaintext INTERCOM needs `require_crypto=False`.** An INTERCOM payload that is not a signed, encrypted envelope carries no origin proof at all. A node with `require_crypto` set drops it. `require_crypto` is an attribute of `HiveMindListenerProtocol` and it is `True` by default, so a stock server drops plaintext INTERCOM. If you rely on that feature, construct the listener protocol with `require_crypto=False`.
 
 ---
 
@@ -359,7 +371,8 @@ internet call for very different care.
 
 - Security is proportional to password entropy. Weak passwords are the primary attack surface — which is why `poorman_handshake` refuses guessable ones (see [Weak-password refusal](#weak-password-refusal)).
 - Without TLS, a network observer can see the encrypted ciphertext and connection metadata but not payload content. TLS adds metadata-hiding defence-in-depth; it is not required for confidentiality.
-- INTERCOM authentication requires both nodes to have pre-exchanged public keys through a trusted channel.
+- INTERCOM authentication needs the receiver to hold the sender's public key, either exchanged through a trusted channel or pinned from the sender's first `HELLO`. A message it cannot verify is dropped, not delivered.
+- A pin taken from a `HELLO` is only as good as the access credential that carried it. The first party to connect with that credential owns the pin.
 
 ---
 

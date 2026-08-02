@@ -159,6 +159,10 @@ End-to-end encrypted point-to-point message.
 - **Signature**: sender's RSA private key signs (PSS over SHA-256)
 - **Routing**: typically wrapped in ESCALATE or PROPAGATE to reach the target
 - **Intermediate nodes**: cannot read the content or determine the recipient
+- **Origin check**: the target verifies the signature against the sender's pinned public key. A bad signature, a missing signature, or an unknown originator means the message is dropped
+- **A dropped message is not relayed**: it goes no further to peers and is not escalated upstream
+- **Plaintext payloads**: a node with `require_crypto` (the default) drops an `INTERCOM` that is not a signed envelope. Set `require_crypto=False` to keep plaintext `INTERCOM` working
+- **Binary framing**: `INTERCOM` has no 5-bit type code, so a binary frame carries it as `THIRDPRTY` (`11`)
 
 ---
 

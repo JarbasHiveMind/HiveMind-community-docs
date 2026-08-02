@@ -145,6 +145,10 @@ The sealing is a **hybrid envelope**: a random AES-256-GCM session key is wrappe
 
 `INTERCOM` is usually the payload of a transport message (`ESCALATE` or `PROPAGATE`) so it reaches its destination through the mesh. Intermediate nodes forward it without being able to read it.
 
+The target checks the origin before it acts on the content. It drops the message when the signature does not verify, when there is no signature, and when it holds no public key for the originator. A dropped message stops there: the node does not pass it to its peers and does not escalate it upstream.
+
+A plaintext `INTERCOM` payload proves nothing about who sent it, so a node that requires crypto drops that too. That is the default. See [Bootstrapping satellite-to-satellite trust](security.md#bootstrapping-satellite-to-satellite-trust) for the key-pinning rules and the `require_crypto=False` escape hatch.
+
 ---
 
 ## Request/response — QUERY

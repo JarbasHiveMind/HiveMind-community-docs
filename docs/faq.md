@@ -125,6 +125,15 @@
     4. Make sure the client is **allowed** — a brand-new client is denied every message type
        until you run `hivemind-core allow-msg ...` (see [Security](concepts/security.md#permissions)).
 
+??? question "INTERCOM messages stopped arriving after an upgrade"
+    A node now drops an `INTERCOM` it cannot attribute to a sender. Check three things.
+    First, the payload must be a signed, encrypted envelope. A stock server requires crypto
+    and drops a plaintext `INTERCOM`. Second, the receiver must hold the sender's public key,
+    either added out of band or pinned from the sender's first `HELLO`. Third, the signature
+    must verify against that key. To keep sending plaintext `INTERCOM`, construct the listener
+    protocol with `require_crypto=False`. See
+    [Bootstrapping satellite-to-satellite trust](concepts/security.md#bootstrapping-satellite-to-satellite-trust).
+
 ??? question "How do I find the server's address automatically?"
     Run `hivemind-presence scan` on the same network (hivemind-core announces itself when auto
     discovery is enabled). Most satellites also auto-scan when you start them without a
