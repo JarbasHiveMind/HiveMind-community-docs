@@ -105,12 +105,21 @@ Output:
 Credentials added to database!
 
 Node ID: 2
+Admin Privileges: False
 Friendly Name: my-satellite
 Access Key: 5a9e580a2773a262cbb23fe9759881ff
 Password: 9b247ca66c7cd2b6388ad49ca504279d
 Encryption Key: 4185240103de0770
 WARNING: Encryption Key is deprecated, only use if your client does not support password
+
+NOTE: Allowed message types is empty — this client will be DENIED on every message.
+      Grant access explicitly, e.g.:
+      hivemind-core allow-msg recognizer_loop:utterance 2
+      (admin clients bypass the whitelist; use 'make-admin' if appropriate)
 ```
+
+Read that last note. A new client starts with an empty whitelist and is denied every
+message until you grant it one. Step 5 does that.
 
 Note the **Access Key** and **Password** — you'll hand them to the satellite next. In the
 steps below, replace `<ACCESS_KEY>` and `<PASSWORD>` with these values, and `<SERVER_IP>`
@@ -120,7 +129,22 @@ with the server's LAN IP from `hostname -I` (or `127.0.0.1` on a single machine)
 
 ---
 
-## Step 5 — Install and configure the satellite (ON THE SATELLITE)
+## Step 5 — Grant the satellite a message type (ON THE SERVER)
+
+The server denies every message type it has not been told to allow. Grant the satellite
+the utterance type, using the Node ID from Step 4:
+
+```bash
+hivemind-core allow-msg "recognizer_loop:utterance" 2
+```
+
+Without this the satellite still connects and the connection test in Step 7 still passes,
+but every utterance is denied and you get silence. Grant one type per command. To see what
+a client may send, run `hivemind-core list-clients`.
+
+---
+
+## Step 6 — Install and configure the satellite (ON THE SATELLITE)
 
 Now move to the device that will do the listening. Pick a satellite package — for a full
 voice satellite:
@@ -149,7 +173,7 @@ This writes `~/.config/hivemind/_identity.json`. Every satellite command reads i
 
 ---
 
-## Step 6 — Test the connection (ON THE SATELLITE)
+## Step 7 — Test the connection (ON THE SATELLITE)
 
 Before starting the microphone, confirm the satellite can actually reach the server:
 
@@ -167,7 +191,7 @@ If that fails, fix it here — it's the cheapest place to catch a wrong IP, key,
 
 ---
 
-## Step 7 — Start the satellite (ON THE SATELLITE)
+## Step 8 — Start the satellite (ON THE SATELLITE)
 
 ```bash
 hivemind-voice-sat
@@ -183,7 +207,7 @@ hivemind-voice-sat --host <SERVER_IP> --key <ACCESS_KEY> --password <PASSWORD>
 
 ---
 
-## Step 8 — Talk to it (ON THE SATELLITE)
+## Step 9 — Talk to it (ON THE SATELLITE)
 
 Everything is running: hivemind-core on the server, the satellite listening. Speak to the
 satellite:
@@ -192,11 +216,15 @@ satellite:
 
 **Success looks like:** the satellite plays a spoken reply — the current time. That round
 trip — wakeword → your speech → the server's skill → a spoken answer — means the whole
-path works. From here, adding a second device is just Step 4 (register) plus Steps 5–7
-(connect) again.
+path works. From here, adding a second device is just Steps 4 and 5 (register and grant)
+plus Steps 6 to 8 (connect) again.
 
 **No reply?**
 
+- Confirm the satellite may send utterances: `hivemind-core list-clients` shows its allowed
+  message types. An empty list denies everything. Grant one with
+  `hivemind-core allow-msg "recognizer_loop:utterance" <NODE_ID>` (Step 5). This is the most
+  common cause of a satellite that connects but stays silent.
 - Check the satellite's terminal logs for connection or audio errors.
 - Re-run `hivemind-client test-identity` on the satellite to confirm it still reaches the server.
 - `hivemind-voice-sat`'s **default STT and TTS are remote services** at `*.openvoiceos.org`, so the satellite needs internet access on first run. To go fully local, install local STT/TTS plugins on the satellite — see [Voice Satellite](satellites/voice-sat.md).

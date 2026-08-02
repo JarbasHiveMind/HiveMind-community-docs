@@ -32,7 +32,7 @@ When you run `add-client`, the device walks away with two things — and the dif
 between them is the whole game. One is a name it can shout across the room; the other is a
 secret it must never say out loud:
 
-- **`access_key`** — a **non-secret identifier**, like a username. It is sent in the clear in the WebSocket `authorization` header so hivemind-core knows *which* client is connecting. Leaking it does not compromise the hive.
+- **`access_key`** — a **non-secret identifier**, like a username. It is sent in the clear as an `authorization` **URL query parameter** (base64 of `useragent:access_key`) so hivemind-core knows *which* client is connecting. Leaking it does not compromise the hive, but query strings are written to proxy and server access logs. If you put a reverse proxy in front of hivemind-core, stop it logging query strings.
 - **`password`** — the **only secret**, and it is **never transmitted**. Both sides derive the session key from it; a connecting peer that does not know the password simply fails the handshake and is disconnected. There is no password-recovery path over the wire — knowledge of the password is proven, never revealed.
 
 Because the password is the sole secret, its strength is the security of the whole hive (see [Weak-password refusal](#weak-password-refusal)).
@@ -217,7 +217,7 @@ Admission control beyond the `allowed_types` ACL is an extension point. A custom
 **The contract.** Override any of three hooks:
 
 - `review(message, client)` — inspect a Mycroft `Message` before it is emitted onto the agent bus. Return a `Verdict`.
-- `review_binary(payload, client)` — same, for binary payloads (e.g. raw audio). The default allows everything, so override it only if you care about binaries.
+- `review_binary(payload, client)` — same, for binary payloads (e.g. raw audio). The built-in ACL policy implements this too: a client whose `allowed_types` whitelist is empty is denied binary payloads, exactly as it is denied bus messages. Your policy adds to that gate rather than replacing it.
 - `observe(message, client)` — fire-and-forget hook called *after* a message was successfully emitted. Use for counters, audit logs, telemetry. Must not raise.
 
 A `Verdict` is either an allow or a deny:

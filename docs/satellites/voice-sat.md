@@ -60,9 +60,19 @@ pip install HiveMind-voice-sat[mac]
 
 ```bash
 hivemind-core add-client --name my-voice-sat
+# note the Node ID, access_key and password printed
 ```
 
-**2. On the satellite** — run it:
+**2. On hivemind-core** — grant the client the utterance type:
+
+```bash
+hivemind-core allow-msg "recognizer_loop:utterance" <node_id>
+```
+
+A new client starts with an empty whitelist and is denied every message until you grant
+one. Without this the satellite connects and then stays silent.
+
+**3. On the satellite** — run it:
 
 ```bash
 hivemind-voice-sat --host <server_host> --key <access_key> --password <password>
