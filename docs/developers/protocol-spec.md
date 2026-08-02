@@ -41,7 +41,7 @@ everything downstream — the handshake, the encryption, whether frames are JSON
 The `ProtocolVersion` enum (`ZERO`/`ONE`/`TWO`/`THREE`, in `hivemind_core/protocol.py`) is
 that dial, negotiated the moment a connection opens:
 
-- The server advertises `max_protocol_version` = **`THREE`** when the Noise primitive is available *and* the client has a password configured (`v3_capable`); otherwise `TWO` when `binarize` is enabled, else `ONE`. It advertises `min_protocol_version` = `max(config floor, crypto-derived minimum)`, where the config floor defaults to **`2`** (`min_protocol_version` in `server.json`). A client that cannot reach the advertised minimum is disconnected.
+- The server advertises `max_protocol_version` = **`THREE`** when the Noise primitive is available *and* the client has a password configured (`v3_capable`); otherwise `TWO` when `binarize` is enabled, else `ONE`. It advertises `min_protocol_version` = `max(config floor, crypto-derived minimum)`, where the config floor defaults to **`2`** (`min_protocol_version` in `server.json`). A client that cannot reach the advertised minimum is disconnected. The server also checks the floor a second time, when the handshake completes, against the version the client actually performed. A client that declares v3 capability but sends a v1 or v2 handshake envelope below the floor is disconnected before the legacy path runs.
 - The legacy serialization-layer `PROTOCOL_VERSION` constant in `serialization.py` is `1`; that binary-framing version is distinct from this session `ProtocolVersion` and is not bumped for v3.
 
 One subtlety trips up every first implementation, so read it before the table: within the
@@ -293,7 +293,9 @@ Followed by: metadata bytes, then payload bytes. To pad to a byte boundary, zero
 | 11 | THIRDPRTY |
 | 12 | BINARY |
 
-`INTERCOM` has no dedicated binary integer slot — it defaults to `11` when encoded. The type field is a 5-bit unsigned integer.
+The type field is a 5-bit unsigned integer. Codes `0`-`12` are assigned with no gaps and no reserved values. Codes `13`-`31` are unassigned: a sender must not emit them, and a receiver rejects such a frame as malformed instead of mapping it to a type.
+
+`INTERCOM` has no code of its own. The encoder falls back to `11` for any type it cannot map, so a binary-framed `INTERCOM` arrives at the far end as `THIRDPRTY`. Send `INTERCOM` as a text frame to keep its type.
 
 ### Binary payload type
 
@@ -397,5 +399,5 @@ high-latency covert/fallback control-plane, not a real-time transport.
 Validated against the HiveMind source:
 
 - [`hivemind_bus_client/serialization.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/serialization.py) — `PROTOCOL_VERSION`, the binary framing encoder/decoder, the `_INT2TYPE` message-type table
-- [`hivemind_bus_client/message.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/message.py) — `HiveMessageType`, `HiveMessage.as_dict`, the `INTERCOM`-defaults-to-`11` encoding
+- [`hivemind_bus_client/message.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/message.py) — `HiveMessageType`, `HiveMessage.as_dict`
 - [`hivemind_core/protocol.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/protocol.py) — `ProtocolVersion`, `max_protocol_version`, the server-side handshake state machine and capability defaults
