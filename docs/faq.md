@@ -134,6 +134,25 @@
     protocol with `require_crypto=False`. See
     [Bootstrapping satellite-to-satellite trust](concepts/security.md#bootstrapping-satellite-to-satellite-trust).
 
+??? question "A satellite stopped seeing answers to other satellites' queries"
+    That was never intended and a node no longer does it. When a relay could not work out
+    which downstream node a `QUERY` or `CASCADE` answer belonged to, it used to send that
+    answer to every downstream node as a last resort. One satellite could therefore see
+    another satellite's reply. A node now logs the unroutable answer and drops it.
+
+    Nothing legitimate is lost. A node still delivers to the originator when it is directly
+    connected, and still walks the recorded route back when it is not, so an answer that has
+    a return path still arrives. Only the fan-out is gone. If answers stop arriving after an
+    upgrade, the return path is genuinely broken, and the node log names the query id and the
+    originator it could not reach.
+
+??? question "Cascade answers arrive split into several entries"
+    Fixed. A gatherer used to append a fresh entry for every chunk that arrived, so one
+    responder's answer became several unrelated entries and two responders answering at once
+    interleaved. Chunks now accumulate into one entry per responder, and the entries stay in
+    order of first arrival. Code that reads `responses` sees the same list, with one item per
+    responder instead of one per chunk.
+
 ??? question "How do I find the server's address automatically?"
     Run `hivemind-presence scan` on the same network (hivemind-core announces itself when auto
     discovery is enabled). Most satellites also auto-scan when you start them without a
