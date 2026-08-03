@@ -16,7 +16,7 @@ every other page clicks into place.
 
 | Page | What it answers | For |
 |---|---|---|
-| [Mesh Topology](mesh.md) | What are hivemind-core instances, satellites, and relays? How do messages travel up and down the mesh? | Everyone |
+| [Mesh Topology](mesh.md) | What are hivemind-core instances and satellites? How do messages travel up and down the mesh? | Everyone |
 | [Protocol & Message Types](protocol.md) | What does HiveMind actually send over the wire, and in which direction? | Curious users · developers |
 | [Security & Permissions](security.md) | How are connections encrypted, and how do you control what each device may do? | Everyone running hivemind-core |
 | [Database Backends](databases.md) | Where are client credentials stored? SQLite, JSON, or Redis? | Operators |

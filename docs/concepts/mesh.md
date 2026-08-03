@@ -97,29 +97,30 @@ This stops the forwarding only. A node named in the route still handles the mess
 
 ---
 
-## Relay nodes
+## Forwarding between tiers
 
 A child in the tree usually answers for itself. But sometimes you want a middle node that
 *doesn't* — one that just passes traffic through in both directions, like a repeater
-extending the hive one hop further. That's a **relay node**: a hivemind-core instance
-wired to a parent upstream and satellites downstream, forwarding between them.
+extending the hive one hop further. There is nothing extra to install for that: it is the
+same hivemind-core with an upstream, wired to a parent above and satellites below.
 
-You create one by calling `HiveMindListenerProtocol.bind_upstream(slave_protocol)` after
-the slave is bound to a bus. From then on it fans traffic both ways:
+You give a hivemind-core an upstream by calling
+`HiveMindListenerProtocol.bind_upstream(slave_protocol)` after the slave is bound to a
+bus. From then on it fans traffic both ways:
 
 - `BROADCAST` and `PROPAGATE` from the upstream master are fanned out to all downstream clients.
 - `QUERY` and `CASCADE` from the upstream master are also fanned out downstream.
 - Downstream `PROPAGATE`, `ESCALATE`, `QUERY`, and `CASCADE` are forwarded upstream.
 
-This bidirectional relay is transparent to both the satellites below and the master above. The chain can be arbitrarily deep:
+This is transparent to both the satellites below and the master above. The chain can be arbitrarily deep:
 
 ```
 [Root hivemind-core]
-    └──→ [Relay node]  ──→ [Satellite A]
-                       └──→ [Satellite B]
+    └──→ [Middle hivemind-core]  ──→ [Satellite A]
+                                 └──→ [Satellite B]
 ```
 
-A QUERY sent by Satellite A travels up through the relay node. If the relay node's local agent answers, the response returns directly. If not, the QUERY continues to the root. The response retraces the path back to Satellite A.
+A QUERY sent by Satellite A travels up through the middle node. If that node's local agent answers, the response returns directly. If not, the QUERY continues to the root. The response retraces the path back to Satellite A.
 
 A CASCADE sent by Satellite A is forwarded to both Satellite B and up to the root (and its satellites). Responses flow back from all of them.
 
@@ -178,6 +179,6 @@ intents off to a second OVOS instance next door, all without a wire.
 
 Validated against the HiveMind source:
 
-- [`hivemind_core/protocol.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/protocol.py) — `bind_upstream`, relay fan-out, and ESCALATE/BROADCAST/PROPAGATE/QUERY/CASCADE routing
+- [`hivemind_core/protocol.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/protocol.py) — `bind_upstream`, upstream and downstream fan-out, and ESCALATE/BROADCAST/PROPAGATE/QUERY/CASCADE routing
 - [`hivemind_core/policy.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/policy.py) — per-hop `allowed_types` re-check that enforces the permission boundary
 - [hivemind-test-harness `docs/`](https://github.com/JarbasHiveMind/hivemind-test-harness/blob/HEAD/docs/index.md) — multi-hop routing tables and topology examples

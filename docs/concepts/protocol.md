@@ -143,7 +143,7 @@ but only the addressee can open it.
 
 The sealing is a **hybrid envelope**: a random AES-256-GCM session key is wrapped with the **recipient node's RSA public key** (PKCS#1 OAEP) and the payload is encrypted with AES-256-GCM. The envelope carries base64 fields `encrypted_key`, `ciphertext`, `tag`, `nonce`, and `signature`. Intermediate nodes — including hivemind-core — cannot read the payload. Only the target node, which holds the corresponding RSA private key, can unwrap the session key and decrypt it. The exact envelope hivemind-core itself accepts is narrower than this, and the [message-types reference](../reference/message-types.md#intercom) spells out both shapes.
 
-`INTERCOM` is usually the payload of a transport message (`ESCALATE` or `PROPAGATE`) so it reaches its destination through the mesh. Intermediate nodes forward it without being able to read it. The recipient is not hidden from them. The outer `target_pubkey` field is cleartext, and a relay reads it to decide whether to consume the frame or pass it on.
+`INTERCOM` is usually the payload of a transport message (`ESCALATE` or `PROPAGATE`) so it reaches its destination through the mesh. Intermediate nodes forward it without being able to read it. The recipient is not hidden from them. The outer `target_pubkey` field is cleartext, and each node reads it to decide whether to consume the frame or pass it on.
 
 !!! warning "Origin verification is fail-closed"
     The receiving node verifies the sender's RSA signature (PSS over SHA-256) over the raw ciphertext bytes, **before** it decrypts, against the public key pinned from the sender's `HELLO`. A missing signature, a signature that fails to verify, or no pinned key for the sender each drop the frame. A dropped frame stops there: the node does not relay it to peers and does not escalate it upstream, and the sender receives no error.
@@ -184,7 +184,7 @@ carries a little bookkeeping. A QUERY response is itself a `HiveMessage(HiveMess
 | `originator_peer` | Peer that issued the original request |
 | `responder_peer` | Peer that produced the answer |
 
-**Relay nodes** receiving a QUERY response with `is_response = True` route it toward `originator_peer` without re-processing it as a new request.
+A node that receives a QUERY response with `is_response = True` routes it toward `originator_peer` without re-processing it as a new request.
 
 ---
 

@@ -135,7 +135,7 @@
     [Bootstrapping satellite-to-satellite trust](concepts/security.md#bootstrapping-satellite-to-satellite-trust).
 
 ??? question "A satellite stopped seeing answers to other satellites' queries"
-    That was never intended and a node no longer does it. When a relay could not work out
+    That was never intended and a node no longer does it. When a node could not work out
     which downstream node a `QUERY` or `CASCADE` answer belonged to, it used to send that
     answer to every downstream node as a last resort. One satellite could therefore see
     another satellite's reply. A node now logs the unroutable answer and drops it.
