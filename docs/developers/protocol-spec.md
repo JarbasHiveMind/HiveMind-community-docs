@@ -396,7 +396,7 @@ The protocol runs over any transport that can carry byte streams:
 | Usenet wormhole | `hivemind-usenet-wormhole` | — |
 
 WebSocket and HTTP are the stable defaults. MQTT (package `hivemind-mqtt-protocol`)
-is a published alpha providing a complete hivemind-core listener without a satellite client.
+is a published alpha providing a complete hivemind-core transport without a satellite client.
 The Usenet wormhole (package `hivemind-usenet`) is experimental and unpublished — a
 high-latency covert/fallback control-plane, not a real-time transport.
 

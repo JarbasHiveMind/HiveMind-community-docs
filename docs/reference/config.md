@@ -162,7 +162,7 @@ Multiple network protocol plugins can be active simultaneously. Each key is the 
 An MQTT transport is available as an alpha: package `hivemind-mqtt-protocol`,
 plugin name `hivemind-mqtt-plugin`, broker port 1883 (config keys `broker_host`,
 `broker_port`, `broker_username`, `broker_password`, `tls`, `topic_prefix`, `qos`,
-`idle_timeout`). It provides the server-side listener only. An experimental
+`idle_timeout`). It provides the server-side transport only. An experimental
 Usenet wormhole transport (`hivemind-usenet`, plugin `hivemind-usenet-wormhole`)
 also exists but is unpublished.
 

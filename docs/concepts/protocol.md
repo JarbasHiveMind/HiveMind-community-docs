@@ -76,7 +76,7 @@ A message type isn't a free-for-all: not every node may *send* every type, and n
 node will *accept* one. hivemind-core and a satellite play different parts, so they
 subscribe to different halves of the list. Here's who does what:
 
-### hivemind-core (listener protocol)
+### hivemind-core (server side)
 
 - **Accepts**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`, `QUERY`, `CASCADE`, `INTERCOM`
 - **Emits**: `BUS`, `PROPAGATE`, `BROADCAST`, `QUERY`, `CASCADE`, `INTERCOM`
@@ -147,7 +147,7 @@ The sealing is a **hybrid envelope**: a random AES-256-GCM session key is wrappe
 !!! warning "Origin verification is fail-closed"
     The receiving node verifies the sender's RSA signature (PSS over SHA-256) over the raw ciphertext bytes, **before** it decrypts, against the public key pinned from the sender's `HELLO`. A missing signature, a signature that fails to verify, or no pinned key for the sender each drop the frame. A dropped frame stops there: the node does not relay it to peers and does not escalate it upstream, and the sender receives no error.
 
-    A listener with `require_crypto` set (the default) also drops any INTERCOM that carries no signed envelope, and logs `dropping unauthenticated message`. If INTERCOM traffic stopped after an upgrade, this is why. The remedy is to sign the envelope. Clearing `require_crypto` is a listener-level choice made in code, and it gives up all proof of who sent the message.
+    A hivemind-core node with `require_crypto` set (the default) also drops any INTERCOM that carries no signed envelope, and logs `dropping unauthenticated message`. If INTERCOM traffic stopped after an upgrade, this is why. The remedy is to sign the envelope. Clearing `require_crypto` is a choice made in code, and it gives up all proof of who sent the message.
 
 See [Bootstrapping satellite-to-satellite trust](security.md#bootstrapping-satellite-to-satellite-trust) for the key-pinning rules and the `require_crypto=False` escape hatch.
 
@@ -311,4 +311,4 @@ Validated against the HiveMind source:
 
 - [`hivemind_bus_client/message.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/message.py) — `HiveMessage` and the `HiveMessageType` enum
 - [`hivemind_bus_client/serialization.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/serialization.py) — JSON/binary serialization and the `PROTOCOL_VERSION` constant
-- [`hivemind_core/protocol.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/protocol.py) — listener/client roles, `binarize` gating, routing, and the `ProtocolVersion` enum
+- [`hivemind_core/protocol.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/protocol.py) — server/client roles, `binarize` gating, routing, and the `ProtocolVersion` enum
