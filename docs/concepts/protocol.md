@@ -10,7 +10,7 @@ the envelope is always the same shape, so a satellite and hivemind-core never ha
 guess.
 
 !!! abstract "In a nutshell"
-    - Every message is a `HiveMessage` tagged with a `msg_type`. There are only three flavours: **payloads** that carry content (`BUS`, `SHARED_BUS`, `THIRDPRTY`, `BINARY`), **routing verbs** that steer a message up, down, or across the mesh (`ESCALATE`, `BROADCAST`, `PROPAGATE`, `QUERY`, `CASCADE`, `INTERCOM`, `PING`), and **connection** frames for setup (`HELLO`, `HANDSHAKE`).
+    - Every message is a `HiveMessage` tagged with a `msg_type`. There are only three flavours: **payloads** that carry content (`BUS`, `SHARED_BUS`, `BINARY`), **routing verbs** that steer a message up, down, or across the mesh (`ESCALATE`, `BROADCAST`, `PROPAGATE`, `QUERY`, `CASCADE`, `INTERCOM`, `PING`), and **connection** frames for setup (`HELLO`, `HANDSHAKE`).
     - `BUS` is the one you'll meet most: a single hop from a satellite to the brain and back.
     - hivemind-core tags each message with who asked and which session it belongs to, then uses `Message.reply()` to make sure the answer finds its way home to the right satellite.
 
@@ -30,7 +30,6 @@ data. If a message is doing actual work, it's almost certainly one of these:
 |---|---|---|
 | **`BUS`** | Single-hop message to/from the AI back-end | Bidirectional |
 | **`SHARED_BUS`** | Passive monitoring of a satellite's local OVOS bus | Satellite → hivemind-core |
-| **`THIRDPRTY`** | User-defined payload, relayed opaquely | Application-defined |
 | **`BINARY`** | Raw binary data (audio, images, files) | Bidirectional |
 
 Ninety-nine percent of the time you'll be sending `BUS`. The other three are for

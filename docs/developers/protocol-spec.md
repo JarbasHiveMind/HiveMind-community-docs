@@ -73,7 +73,7 @@ This section is the authoritative connection-setup sequence for the **legacy v1/
 
 - **`HELLO` and `HANDSHAKE` messages always travel in PLAINTEXT JSON**, even after the session key has been established. This includes the client's *second* `HELLO` (the one carrying session data), which is emitted **after** `crypto_key` is set but is still sent unencrypted. Only the post-handshake `BUS`/`QUERY`/etc. traffic is encrypted. A client must therefore be able to send/receive `HELLO` and `HANDSHAKE` as plain `HiveMessage` JSON regardless of crypto state.
 - The transport-layer JSON for any `HiveMessage` is the object returned by `HiveMessage.as_dict`: `{"msg_type", "payload", "metadata", "route", "node", "target_site_id", "target_pubkey", "source_peer"}`. For `HELLO`/`HANDSHAKE` only `msg_type` and `payload` matter.
-- `msg_type` values are the **string** enum values, not the binary integers: `HELLO = "hello"`, `HANDSHAKE = "shake"`. Four of the strings are not the lowercased enum name (`HANDSHAKE = "shake"`, `THIRDPRTY = "3rdparty"`, `BINARY = "bin"`, `SHARED_BUS = "shared_bus"`), so copy them from the [Quick reference](../reference/message-types.md#quick-reference) table instead of deriving them.
+- `msg_type` values are the **string** enum values, not the binary integers: `HELLO = "hello"`, `HANDSHAKE = "shake"`. Three of the strings are not the lowercased enum name (`HANDSHAKE = "shake"`, `BINARY = "bin"`, `SHARED_BUS = "shared_bus"`), so copy them from the [Quick reference](../reference/message-types.md#quick-reference) table instead of deriving them.
 - **A `HANDSHAKE` is a REQUEST vs a RESPONSE distinguished ONLY by the presence of the `envelope` field.** There is no separate type or flag. The client decides which branch of its `HANDSHAKE` handler to run purely by `if "envelope" in payload`. A server→client `HANDSHAKE` *without* `envelope` is the "please start the handshake" request advertising capabilities; a message *with* `envelope` is the response that completes the exchange.
 
 ### Connection setup sequence
@@ -295,12 +295,11 @@ The metadata block must always hold a valid JSON object. The encoder writes `{}`
 | 8 | CASCADE |
 | 9 | PING |
 | 10 | RENDEZVOUS |
-| 11 | THIRDPRTY |
 | 12 | BINARY |
 
-The type field is a 5-bit unsigned integer. Codes `0`-`12` are assigned with no gaps and no reserved values. Codes `13`-`31` are unassigned: a sender must not emit them, and a receiver rejects such a frame as malformed instead of mapping it to a type.
+The type field is a 5-bit unsigned integer. Codes `0`-`10` and `12` are assigned. Code `11` was `THIRDPRTY`, a type that has been removed; the code stays reserved and must not be given to another type. Code `11` and codes `13`-`31` are unassigned: a sender must not emit them, and a receiver rejects such a frame as malformed instead of mapping it to a type.
 
-`INTERCOM` has no code of its own. The encoder falls back to `11` for any type it cannot map, so a binary-framed `INTERCOM` arrives at the far end as `THIRDPRTY`. Send `INTERCOM` as a text frame to keep its type.
+`INTERCOM` has no code of its own, so it cannot be binary-framed. The encoder raises rather than relabelling it. Send `INTERCOM` as a text frame.
 
 ### Binary payload type
 

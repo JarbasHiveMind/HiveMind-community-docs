@@ -7,7 +7,7 @@ When you're reading a packet capture or wiring up routing and need to know preci
 a `CASCADE` does, look it up here.
 
 !!! abstract "In a nutshell"
-    - Message types fall into **payload** (`BUS`, `SHARED_BUS`, `THIRDPRTY`, `BINARY`), **transport** (`ESCALATE`, `BROADCAST`, `PROPAGATE`, `QUERY`, `CASCADE`, `INTERCOM`, `RENDEZVOUS`), **discovery** (`PING`), and **connection** (`HELLO`, `HANDSHAKE`) categories.
+    - Message types fall into **payload** (`BUS`, `SHARED_BUS`, `BINARY`), **transport** (`ESCALATE`, `BROADCAST`, `PROPAGATE`, `QUERY`, `CASCADE`, `INTERCOM`, `RENDEZVOUS`), **discovery** (`PING`), and **connection** (`HELLO`, `HANDSHAKE`) categories.
     - Transport verbs wrap another `HiveMessage` to route it up (`ESCALATE`), down (`BROADCAST`), or everywhere (`PROPAGATE`).
     - `QUERY` expects one correlated response; `CASCADE` is scatter/gather with a select callback.
     - Skim the [Quick reference](#quick-reference) table first; reach for the per-type sections for details.
@@ -29,7 +29,6 @@ rather than derive them.
 |---|---|---|---|---|
 | `BUS` | `bus` | Payload | Bidirectional | Single-hop message to/from AI back-end |
 | `SHARED_BUS` | `shared_bus` | Payload | Satellite → hivemind-core | Passive monitoring of satellite's local OVOS bus |
-| `THIRDPRTY` | `3rdparty` | Payload | Application-defined | User-defined payload, relayed opaquely |
 | `BINARY` | `bin` | Payload | Bidirectional | Raw binary data (audio, images, files) |
 | `ESCALATE` | `escalate` | Transport | Satellite → hivemind-core (up) | Multi-hop upward routing |
 | `BROADCAST` | `broadcast` | Transport | hivemind-core → All (down) | Multi-hop downward routing |
@@ -168,7 +167,7 @@ End-to-end encrypted point-to-point message.
 - **Origin check**: the target verifies the signature against the sender's pinned public key. A bad signature, a missing signature, or an unknown originator means the message is dropped
 - **A dropped message is not relayed**: it goes no further to peers and is not escalated upstream
 - **Plaintext payloads**: a node with `require_crypto` (the default) drops an `INTERCOM` that is not a signed envelope, and logs `dropping unauthenticated message`. `require_crypto` is a listener attribute set in code, not a `server.json` key, and clearing it gives up all proof of who sent the message
-- **Binary framing**: `INTERCOM` has no 5-bit type code, so a binary frame carries it as `THIRDPRTY` (`11`)
+- **Binary framing**: `INTERCOM` has no 5-bit type code, so it cannot be binary-framed at all. Send it as a text frame.
 
 ---
 
@@ -205,12 +204,6 @@ Connection management. Handled automatically by `HiveMessageBusClient` and `hive
 ## RENDEZVOUS
 
 Reserved for rendezvous-nodes. Defined in the `HiveMessageType` enum but not wired into general routing.
-
----
-
-## THIRDPRTY
-
-User-defined payload. Relayed opaquely by hivemind-core without any special processing. Use it for application-level protocols layered on top of HiveMind.
 
 ---
 

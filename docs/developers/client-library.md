@@ -292,7 +292,7 @@ thread until the matching reply lands (or a timeout gives up). All take a `timeo
 ```python
 def wait_for_message(self, message_type, timeout=3.0)
 def wait_for_payload(self, payload_type,
-                     message_type=HiveMessageType.THIRDPRTY, timeout=3.0)
+                     message_type=HiveMessageType.BUS, timeout=3.0)
 def wait_for_mycroft(self, mycroft_msg_type, timeout=3.0)
 def wait_for_response(self, message, reply_type=None, timeout=3.0)
 def wait_for_payload_response(self, message, payload_type,
@@ -301,7 +301,7 @@ def wait_for_payload_response(self, message, payload_type,
 
 - `wait_for_message` — wait for the next `HiveMessage` of a given `HiveMessageType`.
 - `wait_for_payload` — wait for a `HiveMessage` of `message_type` whose **inner**
-  payload type matches `payload_type` (defaults the envelope to `THIRDPRTY`).
+  payload type matches `payload_type` (defaults the envelope to `BUS`).
 - `wait_for_mycroft` — convenience wrapper: `wait_for_payload(mycroft_msg_type,
   message_type=HiveMessageType.BUS)`. Use it to wait for an inner OVOS message
   type (e.g. `"speak"`).
