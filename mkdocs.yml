@@ -2,32 +2,42 @@ site_name: Documentation
 site_url: https://jarbashivemind.github.io/HiveMind-community-docs/
 nav:
     - Home: index.md
-    - About:
+    - Getting Started:
       - Quick start: 01_quickstart.md
+      - OVOS Skills Server: 06_skills_server.md
+      - Pairing devices: 03_pairing.md
       - Terminology: 02_terminology.md
-      - Nested Hives: 15_nested.md
-      - Plugins: 04_plugins.md
-      - Configuration: config.md
-    - Plugins:
-      - Agents: agents.md
-      - Binary: binary_plugins.md
-      - Network: network_plugins.md
-      - Database: db_plugins.md
+    - Configuration:
+      - Server config: config.md
+      - Database backends: 17_database.md
+      - Auto discovery: 05_presence.md
     - Satellites:
       - Overview: satellites.md
       - Voice Satellite: 07_voicesat.md
       - Voice Relay: 07_voice_relay.md
       - Mic Satellite: 07_micsat.md
+      - Sound Server: 06_sound_server.md
+    - Plugins:
+      - Plugin Manager: 04_plugins.md
+      - Agents: agents.md
+      - Binary: binary_plugins.md
+      - Network: network_plugins.md
+      - Database: db_plugins.md
     - Integrations:
       - OpenVoiceOS Pipeline: pipeline.md
+      - Persona / LLM hub: 08_persona.md
+      - Bridges overview: gpt_bridges.md
       - Matrix: 09_matrix.md
       - DeltaChat: 10_deltachat.md
       - Home Assistant: 07_homeassistant.md
+    - Topologies:
+      - Nested Hives: 15_nested.md
+      - LocalHive: 14_localhive.md
+      - Mycroft compatibility: 13_mycroft.md
     - Protocol:
       - Transport: 04_protocol.md
       - Binarization: 18_binarization.md
     - Security:
-      - Pairing: 03_pairing.md
       - Permissions: 16_permissions.md
       - Handshake: 12_handshake.md
       - Encryption: 19_crypto.md

@@ -4,10 +4,7 @@
 
 | Backend            | Use Case                                       | Default Location                            | Command Line options                               |
 |--------------------|------------------------------------------------|---------------------------------------------|------------------------------------------------------|
-| **JSON** (default) | Simple, file-based setup for local use         | `~/.local/share/hivemind-core/clients.json` | Configurable via `--db-name` and `--db-folder`     |
-| **SQLite**         | Lightweight relational DB for single instances | `~/.local/share/hivemind-core/clients.db`   | Configurable via `--db-name` and `--db-folder`     |
-| **Redis**          | Distributed, high-performance environments     | `localhost:6379`                            | Configurable via `--redis-host` and `--redis-port` |
-
+| **JSON** | Simple, file-based setup for local use         | `~/.local/share/hivemind-core/clients.json` | Configurable via | **SQLite**         | Lightweight relational DB for single instances | `~/.local/share/hivemind-core/clients.db`   | Configurable via | **Redis**          | Distributed, high-performance environments     | `localhost:6379`                            | Configurable via 
 > Use the same database parameters when launching `hivemind-core` and registering clients.
 
 **How to choose**:

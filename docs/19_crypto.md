@@ -2,9 +2,9 @@
 
 HiveMind secures communication between devices with modern cryptographic techniques. This page describes how messages are encrypted in transit, the structure of encrypted messages, and how HiveMind generates encryption keys.
 
-- **End-to-end encryption**: HiveMind encrypts messages on the sender's device and decrypts them only on the receiver's device, so contents stay confidential.
+- **Hop-by-hop session encryption**: HiveMind encrypts each connection between the two nodes on it. A relay decrypts and re-encrypts, so an intermediate node reads the plaintext. For end-to-end confidentiality between two peers, use [INTERCOM](04_protocol.md), which encrypts to the target peer's key and stays opaque to every node in between.
 - **Mutual authentication**: the identity verification step confirms both devices share the same credentials and trust each other.
-- **Resistance to replay attacks**: a unique IV for each message stops an attacker from reusing a captured message.
+- **No replay protection at this layer**: a fresh IV and a valid AEAD tag prove that a message came from a key holder. They do not bind it to a position in the stream, so an active attacker can re-inject a captured ciphertext and it authenticates and decrypts like the original. Replay resistance arrives with protocol v3, whose Noise transport uses sequential counter nonces. See [Handshake](12_handshake.md).
 - **Strong key derivation**: PBKDF2 and a shared salt protect against brute-force and dictionary attacks.
 
 ---

@@ -1,5 +1,12 @@
 # Persona
 
+
+The standalone `hivemind-persona` package is superseded. Its last release, 0.0.2 from
+December 2024, pins `hivemind-core<2.0.0`, and the current core is 4.x. Persona is now
+an agent plugin that `hivemind-core` loads. Point `agent_protocol` at
+`hivemind-persona-agent-plugin` in `~/.config/hivemind-core/server.json`.
+
+
 This is a HiveMind master node that runs [ovos-persona](https://github.com/OpenVoiceOS/ovos-persona) instead of connecting to ovos-core.
 
 Use it to expose chatbots and LLMs over HiveMind. Satellites made for `hivemind-core` should be compatible.
@@ -11,7 +18,7 @@ Use it to expose chatbots and LLMs over HiveMind. Satellites made for `hivemind-
 ## Install
 
 ```bash
-pip install hivemind-persona
+pip install hivemind-core hivemind-persona-agent-plugin
 ```
 
 ## ChatGPT
