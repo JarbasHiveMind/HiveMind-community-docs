@@ -55,7 +55,8 @@ HiveMind will continue to expand its transport options over time to support even
 
 ## MQTT Plugin
 
-Entry point: `hivemind-mqtt-plugin` (package `hivemind-mqtt-protocol`).
+Entry point: `hivemind-mqtt-plugin` (package `hivemind-mqtt-protocol`). Not yet on
+PyPI — install from git.
 
 Transports HiveMind messages over an MQTT broker, for deployments that already run
 one. Configure it as a key under `network_protocol` in `server.json`, the same way as

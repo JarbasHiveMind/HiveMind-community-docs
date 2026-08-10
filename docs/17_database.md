@@ -5,8 +5,8 @@
 | Backend            | Use Case                                       | Default Location                            | Command Line options                               |
 |--------------------|------------------------------------------------|---------------------------------------------|----------------------------------------------------|
 | **JSON** | Simple, file-based setup for local use         | `~/.local/share/hivemind-core/clients.json` | Select the backend with the `database.module` key in `server.json`. Move an existing store with `hivemind-core migrate-db --from hivemind-json-db-plugin --to hivemind-sqlite-db-plugin`.
-| **SQLite** (default)         | Lightweight relational DB for single instances | `~/.local/share/hivemind-core/clients.db`   | Select the backend with the `database.module` key in `server.json`. Move an existing store with `hivemind-core migrate-db --from hivemind-json-db-plugin --to hivemind-sqlite-db-plugin`.
-| **Redis**          | Distributed, high-performance environments     | `localhost:6379`                            | Configurable via `--redis-host` and `--redis-port` |
+| **SQLite** (default on fresh installs; an existing `clients.json` with no `clients.db` keeps JSON — migrate with `hivemind-core migrate-db`)         | Lightweight relational DB for single instances | `~/.local/share/hivemind-core/clients.db`   | Select the backend with the `database.module` key in `server.json`. Move an existing store with `hivemind-core migrate-db --from hivemind-json-db-plugin --to hivemind-sqlite-db-plugin`.
+| **Redis**          | Distributed, high-performance environments     | `localhost:6379`                            | Select it with the `database.module` key in `server.json`.
 
 
 **How to Choose?**

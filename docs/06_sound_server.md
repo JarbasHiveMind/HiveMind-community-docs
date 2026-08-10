@@ -1,9 +1,8 @@
 # HiveMind Sound Server
 
 > ℹ️ The standalone `hivemind-listener` package is **superseded**. Its last release
-> (2.0.0, December 2024) pins `hivemind-bus-client<1.0.0`, while the current client is
-> 1.x — installing it alongside a current hub drags the stack backwards or fails to
-> resolve. Do not use it for new deployments.
+> (2.0.0, December 2024) pins `hivemind-core<3.0.0`, while the current core is 4.x, so it cannot be
+> installed alongside a current hub. Do not use it for new deployments.
 
 Audio offloading — streamed microphone audio, STT and TTS — is now `hivemind-core`
 with a **binary protocol plugin** loaded.
@@ -23,7 +22,7 @@ Point `binary_protocol` at the plugin in `~/.config/hivemind-core/server.json`:
   "binary_protocol": {
     "module": "hivemind-audio-binary-protocol-plugin",
     "hivemind-audio-binary-protocol-plugin": {
-      "wake_word": "hey_mycroft"
+      "wakeword": "hey_mycroft"
     }
   }
 }

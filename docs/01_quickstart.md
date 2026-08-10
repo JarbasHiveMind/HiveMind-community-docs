@@ -83,7 +83,7 @@ Run `hivemind-core print-config` to see the effective configuration.
 On the satellite device:
 
 ```bash
-pip install hivemind-websocket-client
+pip install hivemind-bus-client   # repo is HiveMind-websocket-client; the distribution is hivemind-bus-client
 
 hivemind-client set-identity \
   --key <ACCESS_KEY> --password <PASSWORD> \

@@ -40,7 +40,7 @@ Each node loads a single database plugin, which acts as the **persistent backend
 
 ---
 
-### 🔹 SQLite Plugin (Default)
+### 🔹 SQLite Plugin (default on fresh installs)
 
 * Provided by the [`hivemind-sqlite-database`](https://github.com/JarbasHiveMind/hivemind-sqlite-database) package.
 * Stores data in a **local SQLite database** instead of JSON files.
