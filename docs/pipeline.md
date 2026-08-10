@@ -108,4 +108,4 @@ emit `"hive.send.upstream"` with message.data, `{"msg_type": "bus", "payload": m
 emit `"hive.send.downstream"` with message.data, `{"msg_type": "bus", "payload": message.serialize()}`
 
 
-> 💡 this is what enables [nested hives](https://jarbashivemind.github.io/HiveMind-community-docs/15_nested/), OpenVoiceOS can be both a **master** (by running `hivemind-core`) and a **slave** (by running this plugin)
+> 💡 this is what enables [nested hives](./15_nested.md), OpenVoiceOS can be both a **master** (by running `hivemind-core`) and a **slave** (by running this plugin)

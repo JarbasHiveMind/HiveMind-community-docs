@@ -8,8 +8,15 @@ HiveMind's permission system provides fine-grained control over access to resour
     - Permissions in HiveMind are assigned to **individual clients**, such as users, devices, or applications. This means that each client can have a unique set of permissions based on its specific needs or restrictions.
     - Permissions control access to bus messages, skills, and intents, enabling **dynamic configuration** that is more granular and flexible compared to traditional RBAC systems.
 
-2. **No Predefined Roles**:
-    - HiveMind does not rely on **predefined roles** like “admin” or “user.” Instead, each client is configured independently with a tailored set of permissions.
+2. **One predefined role: admin**
+    - A client may be marked admin (`hivemind-core add-client --admin true`, or
+      `make-admin` / `revoke-admin` later).
+    - Admin grants two things: the right to originate `BROADCAST` (and only while
+      `can_broadcast` is not revoked) and the right to use the reserved `default`
+      session.
+    - Admin does **not** exempt a client from `allowed_types`. The whitelist is
+      enforced for every message regardless.
+    - Everything else is per-client configuration; there are no other roles.
     - For instance, a “basic client” might have access to general voice commands, while a “restricted client” could have specific skills or intents blocked.
 
 3. **Fine-Grained Access Control**:

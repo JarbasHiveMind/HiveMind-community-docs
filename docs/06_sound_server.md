@@ -1,86 +1,43 @@
 # HiveMind Sound Server
 
-`hivemind-listener` extends `hivemind-core` and integrates with [ovos-simple-listener](https://github.com/TigreGotico/ovos-simple-listener), enabling audio-based communication with advanced features for **secure, distributed voice assistant functionality**.
+> ℹ️ The standalone `hivemind-listener` package is **superseded**. Its last release
+> (2.0.0, December 2024) pins `hivemind-bus-client<1.0.0`, while the current client is
+> 1.x — installing it alongside a current hub drags the stack backwards or fails to
+> resolve. Do not use it for new deployments.
 
-> 💡 If you are running a home server this is the best option, you only need to install `hivemind-listener`, `ovos-core` and `ovos-messagebus`.
+Audio offloading — streamed microphone audio, STT and TTS — is now `hivemind-core`
+with a **binary protocol plugin** loaded.
 
-> ⚠️ If running on a device that is also a full OVOS assistant by itself you should use `hivemind-core` instead
-
-#### Key Features of HiveMind Listener
-
-- **Audio Stream Handling**:  
-  Accepts encrypted binary audio streams, performing **WakeWord detection**, **Voice Activity Detection (VAD)**, **Speech-to-Text (STT)**, and **Text-to-Speech (TTS)** directly on the `hivemind-listener` instance.  
-  *(Lightweight clients like [hivemind-mic-satellite](https://github.com/JarbasHiveMind/hivemind-mic-satellite) only run a microphone and VAD plugin.)*
-
-- **STT Service**:  
-  Provides **STT** via the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind-websocket-client), accepting Base64-encoded audio inputs.
-
-- **TTS Service**:  
-  Provides **TTS** via the [hivemind-websocket-client](https://github.com/JarbasHiveMind/hivemind-websocket-client), returning Base64-encoded audio outputs.
-
-- **Secure Plugin Access**:  
-  Running **TTS/STT via HiveMind Listener** requires an access key, offering fine-grained **access control** compared to non-authenticated server plugins.
-
-#### Usage
-
-1. **Install HiveMind Listener**:
+## Install
 
 ```bash
-pip install hivemind-listener
+pip install hivemind-core hivemind-audio-binary-protocol
 ```
 
-2. **Start the HiveMind Listener**:
+## Configure
+
+Point `binary_protocol` at the plugin in `~/.config/hivemind-core/server.json`:
+
+```json
+{
+  "binary_protocol": {
+    "module": "hivemind-audio-binary-protocol-plugin",
+    "hivemind-audio-binary-protocol-plugin": {
+      "wake_word": "hey_mycroft"
+    }
+  }
+}
+```
+
+Then start the hub as usual:
 
 ```bash
-$ hivemind-listener --help
-Usage: hivemind-listener [OPTIONS]
-
-  Run the HiveMind Listener with configurable plugins.
-
-  If a plugin is not specified, the defaults from mycroft.conf will be used.
-  mycroft.conf will be loaded as usual for plugin settings.
-
-Options:
-  --wakeword TEXT                 Specify the wake word for the listener.
-                                  Default is 'hey_mycroft'.
-  --stt-plugin TEXT               Specify the STT plugin to use.
-  --tts-plugin TEXT               Specify the TTS plugin to use.
-  --vad-plugin TEXT               Specify the VAD plugin to use.
-  --dialog-transformers TEXT      dialog transformer plugins to load.
-                                  Installed plugins: None
-  --utterance-transformers TEXT   utterance transformer plugins to load. 
-                                  Installed plugins: ['ovos-utterance-plugin-cancel']
-  --metadata-transformers TEXT    metadata transformer plugins to
-                                  load. Installed plugins: None
-  --ovos_bus_address TEXT         Open Voice OS bus address
-  --ovos_bus_port INTEGER         Open Voice OS bus port number
-  --host TEXT                     HiveMind host
-  --port INTEGER                  HiveMind port number
-  --ssl BOOLEAN                   use wss://
-  --cert_dir TEXT                 HiveMind SSL certificate directory
-  --cert_name TEXT                HiveMind SSL certificate file name
-  --db-backend [redis|json|sqlite]
-                                  Select the database backend to use. Options:
-                                  redis, sqlite, json.
-  --db-name TEXT                  [json/sqlite] The name for the database
-                                  file. ~/.cache/hivemind-core/{name}
-  --db-folder TEXT                [json/sqlite] The subfolder where database
-                                  files are stored. ~/.cache/{db_folder}}
-  --redis-host TEXT               [redis] Host for Redis. Default is
-                                  localhost.
-  --redis-port INTEGER            [redis] Port for Redis. Default is 6379.
-  --redis-password TEXT           [redis] Password for Redis. Default None
-  --help                          Show this message and exit.
+hivemind-core listen
 ```
 
-This command will run the HiveMind Listener, with configurable plugins for wakeword detection, STT, TTS, and VAD, as well as access control via SSL.
+Satellites that stream audio — [Mic Satellite](./07_micsat.md) and
+[Voice Relay](./07_voice_relay.md) — need this plugin on the hub. A satellite that
+does its own STT, such as [Voice Satellite](./07_voicesat.md), does not.
 
----
-
-#### Example Use Cases
-
-1. **Microphone Satellite**:  
-   Use [hivemind-mic-satellite](https://github.com/JarbasHiveMind/hivemind-mic-satellite) to stream raw audio to the `hivemind-listener`. Microphones handle audio capture and VAD, while the Listener manages WakeWord, STT, and TTS processing.
-
-2. **Authenticated STT/TTS Services**:  
-   Connect clients securely using access keys for transcribing or synthesizing audio via the HiveMind Listener, ensuring robust access control.
+See [Binary Plugins](./binary_plugins.md) for the plugin reference and
+[Binarization](./18_binarization.md) for the wire format.

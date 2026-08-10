@@ -20,7 +20,7 @@ Each node loads a single database plugin, which acts as the **persistent backend
 
 ## Available Database Plugins
 
-### 🔹 JSON Plugin (Default)
+### 🔹 JSON Plugin
 
 * Provided natively by the [`json-database`](https://github.com/TigreGotico/json_database) package.
 * Stores all data as local **JSON files**.
@@ -40,7 +40,7 @@ Each node loads a single database plugin, which acts as the **persistent backend
 
 ---
 
-### 🔹 SQLite Plugin (Experimental)
+### 🔹 SQLite Plugin (Default)
 
 * Provided by the [`hivemind-sqlite-database`](https://github.com/JarbasHiveMind/hivemind-sqlite-database) package.
 * Stores data in a **local SQLite database** instead of JSON files.

@@ -52,3 +52,11 @@ Each HiveMind node loads one network plugin, which defines how it connects to th
 
 
 HiveMind will continue to expand its transport options over time to support even more diverse networking environments.
+
+## MQTT Plugin
+
+Entry point: `hivemind-mqtt-plugin` (package `hivemind-mqtt-protocol`).
+
+Transports HiveMind messages over an MQTT broker, for deployments that already run
+one. Configure it as a key under `network_protocol` in `server.json`, the same way as
+the websocket and HTTP plugins.

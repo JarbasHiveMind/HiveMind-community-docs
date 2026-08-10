@@ -106,7 +106,7 @@ Options:
 
 ### INTERCOM Message
 
-messages may also be encrypted with a node [public_key](https://jarbashivemind.github.io/HiveMind-community-docs/03_pairing/#the-identity-file), this ensures intermediate nodes are unable to read the message contents
+messages may also be encrypted with a node [public_key](./03_pairing.md#the-identity-file), this ensures intermediate nodes are unable to read the message contents
 
 A encrypted message is a regular hive message, but has the type `"INTERCOM"` and payload `{"ciphertext": "XXXXXXX"}`
 
@@ -129,7 +129,7 @@ the target node public key needs to be known beforehand if you want to send secr
 ## Transport Messages
 
 Transport messages encapsulate another `HiveMessage` object as their payload. These types are particularly relevant
-for [Nested Hives](https://jarbashivemind.github.io/HiveMind-community-docs/15_nested/).
+for [Nested Hives](./15_nested.md).
 
 ### BROADCAST Message
 

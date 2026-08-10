@@ -12,3 +12,14 @@ HiveMind's developers have successfully connected to OpenVoiceOS from a PinePhon
 OpenVoiceOS itself usually runs on our desktop computers or our home servers, but you can use any Mycroft-branded device, or [OpenVoiceOS](https://github.com/OpenVoiceOS/), as your central unit.
 
 Join [Hivemind Matrix chat](https://matrix.to/#/#jarbashivemind:matrix.org) for general news, support and chit chat
+
+## Where to start
+
+- **New here?** [Quick start](./01_quickstart.md) — install the hub and connect your
+  first satellite.
+- **Choosing hardware for a room?** [Satellite Overview](./satellites.md)
+- **Already running a hub?** [Configuration](./config.md) ·
+  [Permissions](./16_permissions.md) · [Database backends](./17_database.md)
+- **Writing a client or plugin?** [Protocol](./04_protocol.md) ·
+  [Handshake](./12_handshake.md) · [Libraries](./11_devs.md)
+- **Connecting Minds to each other?** [Nested Hives](./15_nested.md)

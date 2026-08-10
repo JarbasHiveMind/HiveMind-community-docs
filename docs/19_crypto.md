@@ -1,11 +1,25 @@
 # Encryption
 
-HiveMind ensures secure communication between devices by using modern cryptographic techniques. This page provides an overview of how messages are encrypted in transit, the structure of encrypted messages, and the process of encryption key generation.
+HiveMind ensures secure communication between devices by using modern cryptographic techniques. This page describes the **protocol v1/v2 password handshake and AES-GCM session**,
+which is retained for interoperability. Protocol v3 replaces it with a Noise handshake
+and an always-encrypted session — see [Handshake](./12_handshake.md).
 
-- **End-to-End Encryption**: Messages are encrypted on the sender's device and decrypted only on the receiver's device, ensuring complete confidentiality.
-- **Mutual Authentication**: The identity verification step ensures that both devices share the same credentials and trust each other.
-- **Resistance to Replay Attacks**: The use of unique IVs for each message prevents attackers from reusing captured messages.
-- **Strong Key Derivation**: By leveraging PBKDF2 and a shared salt, HiveMind protects against brute-force and dictionary attacks.
+- **Hop-by-hop session encryption**: each connection is encrypted between the two
+  nodes on it. A relay decrypts and re-encrypts, so an intermediate node reads the
+  plaintext. For genuine end-to-end confidentiality between two satellites, use
+  [INTERCOM](./04_protocol.md#intercom-message), which encrypts to the target peer's
+  key and stays opaque to every node in between.
+- **Mutual Authentication**: the identity verification step ensures that both devices
+  share the same credentials and trust each other.
+- **Strong Key Derivation**: PBKDF2 with a shared salt protects against brute-force
+  and dictionary attacks.
+
+> ⚠️ **The session layer provides no replay protection of its own.** A fresh IV and a
+> valid AEAD tag prove a message came from a key holder; they do not bind it to a
+> position in the stream, so an active attacker can re-inject a captured ciphertext
+> and it will authenticate and decrypt like the original. Replay resistance arrives
+> with **protocol v3**, whose Noise transport uses sequential counter nonces. See
+> [Handshake](./12_handshake.md).
 
 ---
 
