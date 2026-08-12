@@ -50,7 +50,7 @@ the Direction column as the shape of the journey:
 | **`CASCADE`** | Scatter/gather — every node may answer; originator picks best | Bidirectional |
 | **`INTERCOM`** | End-to-end encrypted point-to-point tunnel | Between any two nodes |
 | **`PING`** | Topology probe — always wrapped inside PROPAGATE | Bidirectional (via PROPAGATE) |
-| **`RENDEZVOUS`** | Reserved for rendezvous-nodes | Bidirectional |
+| **`RENDEZVOUS`** | Store-and-forward mail for a peer that is offline | Bidirectional |
 
 These only earn their keep once you have more than one hivemind-core — a plain
 one-server hive never needs them. The [Mesh Topology](mesh.md) page shows them in

@@ -93,7 +93,7 @@ This stops the forwarding only. A node named in the route still handles the mess
 
 `CASCADE` floods in all directions like `PROPAGATE`, and every node that can answer sends a response back. The originator collects responses via `CascadeAggregator` and applies a select callback to pick the best answer. See [Protocol — CASCADE](protocol.md).
 
-> **Note:** `RENDEZVOUS` (rendezvous / wormhole relay) is a **reserved** message type. It is defined in the protocol but not wired into core: there is no routing handler for it, so it falls through to the unknown-message stub. Don't design around it.
+> **Note:** `RENDEZVOUS` carries store-and-forward mail between nodes that are never online together. Core routes it to a mailbox when the optional [hivemind-rendezvous](https://github.com/JarbasHiveMind/hivemind-rendezvous) package is installed and enabled; every other node answers `not_a_rendezvous_node`. See [Message types — RENDEZVOUS](../reference/message-types.md#rendezvous).
 
 ---
 

@@ -37,7 +37,7 @@ rather than derive them.
 | `CASCADE` | `cascade` | Transport | Bidirectional | Scatter/gather — all nodes may respond |
 | `INTERCOM` | `intercom` | Transport | Point-to-point | End-to-end encrypted tunnel |
 | `PING` | `ping` | Discovery | Bidirectional (via PROPAGATE) | Topology probe |
-| `RENDEZVOUS` | `rendezvous` | Transport | Bidirectional | Reserved for rendezvous-nodes |
+| `RENDEZVOUS` | `rendezvous` | Transport | Bidirectional | Deposit and collect mail for an offline peer |
 | `HELLO` | `hello` | Connection | Bidirectional | Node announcement on connect |
 | `HANDSHAKE` | `shake` | Connection | Bidirectional | Cryptographic key exchange |
 
@@ -203,7 +203,25 @@ Connection management. Handled automatically by `HiveMessageBusClient` and `hive
 
 ## RENDEZVOUS
 
-Reserved for rendezvous-nodes. Defined in the `HiveMessageType` enum but not wired into general routing.
+A store-and-forward dead drop, for two nodes that are never online at the same time. One deposits a message addressed to the other's public key; the recipient collects it whenever it next connects.
+
+A rendezvous node is an ordinary hivemind-core node with the optional [hivemind-rendezvous](https://github.com/JarbasHiveMind/hivemind-rendezvous) package installed and `rendezvous.enabled` set in its config. It serves this type on the listener that already accepts clients, so being a rendezvous point costs no extra port or credentials.
+
+Three commands, carried in the payload as `cmd`:
+
+| `cmd` | Fields | Reply |
+|---|---|---|
+| `deposit` | `target_pubkey`, `payload` (a serialised `INTERCOM` message), optional `ttl` | `deposit_id` |
+| `collect` | none | `messages`: a list of `{deposit_id, payload}` |
+| `ack` | `deposit_ids` | `removed` |
+
+Only `INTERCOM` may be deposited. It is already end-to-end encrypted to a named public key, so the relay holds a blob it cannot read.
+
+**You never name a mailbox.** `collect` and `ack` act on the public key your connection was pinned to during the handshake, so asking for another node's mail is not something the protocol can express.
+
+**Delivery is at-least-once.** `collect` leaves messages in place; they are deleted only when you `ack` their deposit ids. Expect an occasional duplicate, and ack only once the messages are safely in hand — anything unacked is handed out again next time.
+
+A node that is not a rendezvous point replies `{"status": "error", "reason": "not_a_rendezvous_node"}`, which is deliberately distinct from a successful collect that returns nothing.
 
 ---
 
