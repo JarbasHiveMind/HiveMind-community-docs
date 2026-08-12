@@ -138,9 +138,9 @@ After a successful GGWave pairing the satellite has a populated identity file an
 !!! note "Optional"
     [hivemind-rendezvous](https://github.com/JarbasHiveMind/hivemind-rendezvous) is an optional package. It is not part of normal discovery and is not required to run a hive.
 
-Discovery above assumes nodes are online at the same time. **hivemind-rendezvous** solves the opposite case: a **store-and-forward dead drop** that lets two hives which are *never* online simultaneously still exchange [`INTERCOM`](protocol.md#intercom-end-to-end-encrypted-peer-to-peer) messages. A sender deposits a message encrypted to the **recipient's public key**; the recipient collects it the next time it connects, and acknowledges it so the relay can drop it.
+Discovery above assumes nodes are online at the same time. **hivemind-rendezvous** solves the opposite case: a **store-and-forward dead drop** that lets two hives which are *never* online simultaneously still exchange [`INTERCOM`](protocol.md#intercom-end-to-end-encrypted-peer-to-peer) messages. A sender deposits a message encrypted to the **recipient's public key**, addressed to that node's **access key** on the relay; the recipient collects it the next time it connects, and acknowledges it so the relay can drop it.
 
-Install it on the node that should hold mail and set `rendezvous.enabled` in its config, the way [hivemind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) is enabled. That node then serves [`RENDEZVOUS`](../reference/message-types.md#rendezvous) over the listener it already runs — no second service, no second port, and no credentials of its own. A caller cannot name a mailbox: it gets the one belonging to the public key its connection was pinned to.
+Install it on the node that should hold mail and set `rendezvous.enabled` in its config, the way [hivemind-presence](https://github.com/JarbasHiveMind/HiveMind-presence) is enabled. That node then serves [`RENDEZVOUS`](../reference/message-types.md#rendezvous) over the listener it already runs — no second service, no second port, and no credentials of its own. A caller cannot name a mailbox: it gets the one belonging to the access key its connection authenticated with.
 
 ---
 
@@ -154,4 +154,4 @@ Validated against the HiveMind source:
 
 - [`hivemind_presence/scripts.py`](https://github.com/JarbasHiveMind/HiveMind-presence/blob/HEAD/hivemind_presence/scripts.py) — `announce` / `scan` commands and their mDNS/UPnP defaults
 - [`hivemind_ggwave/__init__.py`](https://github.com/JarbasHiveMind/hivemind-ggwave/blob/HEAD/hivemind_ggwave/__init__.py) — `HMPSWD` / `HMKEY` / `HMHOST` opcodes and the `ggwave-cli` / `ggwave-rx` binaries
-- [`hivemind_rendezvous/mailbox.py`](https://github.com/JarbasHiveMind/hivemind-rendezvous/blob/HEAD/hivemind_rendezvous/mailbox.py) — the `RENDEZVOUS` handler: deposit, collect and ack against a mailbox keyed by recipient public key
+- [`hivemind_rendezvous/mailbox.py`](https://github.com/JarbasHiveMind/hivemind-rendezvous/blob/HEAD/hivemind_rendezvous/mailbox.py) — the `RENDEZVOUS` handler: deposit, collect and ack against a mailbox keyed by the recipient's access key
