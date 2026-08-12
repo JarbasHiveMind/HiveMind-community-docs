@@ -37,7 +37,7 @@ rather than derive them.
 | `CASCADE` | `cascade` | Transport | Bidirectional | Scatter/gather — all nodes may respond |
 | `INTERCOM` | `intercom` | Transport | Point-to-point | End-to-end encrypted tunnel |
 | `PING` | `ping` | Discovery | Bidirectional (via PROPAGATE) | Topology probe |
-| `RENDEZVOUS` | `rendezvous` | Transport | Bidirectional | Reserved for rendezvous-nodes |
+| `RENDEZVOUS` | `rendezvous` | Transport | Bidirectional | Deposit and collect mail for an offline peer |
 | `HELLO` | `hello` | Connection | Bidirectional | Node announcement on connect |
 | `HANDSHAKE` | `shake` | Connection | Bidirectional | Cryptographic key exchange |
 
@@ -203,7 +203,29 @@ Connection management. Handled automatically by `HiveMessageBusClient` and `hive
 
 ## RENDEZVOUS
 
-Reserved for rendezvous-nodes. Defined in the `HiveMessageType` enum but not wired into general routing.
+A store-and-forward dead drop, for two nodes that are never online at the same time. One deposits a message addressed to the other's **access key** on the rendezvous node; the recipient collects it whenever it next connects.
+
+A rendezvous node is an ordinary hivemind-core node with the optional [hivemind-rendezvous](https://github.com/JarbasHiveMind/hivemind-rendezvous) package installed and `rendezvous.enabled` set in its config. It serves this type on the listener that already accepts clients, so being a rendezvous point costs no extra port or credentials.
+
+Three commands, carried in the payload as `cmd`:
+
+| `cmd` | Fields | Reply |
+|---|---|---|
+| `deposit` | `target_key`, `payload` (a serialised `INTERCOM` message), optional `ttl` | `deposit_id` |
+| `collect` | none | `messages`: a list of `{deposit_id, payload}` |
+| `ack` | `deposit_ids` | `removed` |
+
+Only `INTERCOM` may be deposited: it is the one type the relay has no reason to look inside. That is a routing rule, not a confidentiality guarantee — nothing about the message *type* makes a payload encrypted, and the relay does not inspect one to check. Encrypt to the recipient's public key before depositing, which is what `hivemind_rendezvous.client.make_deposit_envelope` does.
+
+**You never name a mailbox.** `collect` and `ack` act on the access key your connection authenticated with, so asking for another node's mail is not something the protocol can express.
+
+The address is deliberately an access key and **not** a public key. A public key is announced in `HELLO` with no proof of possession, and it is public by design — it is the `INTERCOM` addressing key. Owning a mailbox by naming one would let any admitted client claim any other's mail, which is exactly the hole fixed in hivemind-core 4.13.2a1.
+
+**Delivery is at-least-once.** `collect` leaves messages in place; they are deleted only when you `ack` their deposit ids. Expect an occasional duplicate, and ack only once the messages are safely in hand — anything unacked is handed out again next time.
+
+**Limits.** A deposit is refused with `invalid_ttl` for a non-integer or non-positive `ttl`, `payload_too_large` above 256 KiB, `mailbox_full` at the per-mailbox cap, and `too_many_mailboxes` at the store cap. Messages expire after seven days.
+
+A node that is not a rendezvous point replies `{"status": "error", "reason": "not_a_rendezvous_node"}`, which is deliberately distinct from a successful collect that returns nothing.
 
 ---
 
