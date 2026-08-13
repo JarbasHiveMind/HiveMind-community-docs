@@ -149,6 +149,10 @@ This protects all data exchanged between the server and client, even if a third 
 
   - HiveMind logs messages that do not follow the protocol, and may terminate the connection.
 
+**Malformed frames**:
+
+  - Every inbound frame has its route stamped with the receiving node's hop before the message type is dispatched and before any authentication. A route entry is only trusted when it is a dict carrying a `source`; anything else is treated as absent rather than raising, so a malformed first frame from an unauthenticated peer cannot crash the connection.
+
 **Authentication failures**:
 
   - Authentication failures end the handshake and reject the connection.

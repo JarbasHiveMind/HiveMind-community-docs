@@ -8,13 +8,13 @@ The protocol has two main roles: the Listener Protocol and the Client Protocol.
 
 ### Listener Protocol
 
-- **Accepts**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`, `INTERCOM`
-- **Emits**: `BUS`, `PROPAGATE`, `BROADCAST`, `INTERCOM`
+- **Accepts**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`, `INTERCOM`, `QUERY`, `CASCADE`, `RENDEZVOUS`
+- **Emits**: `BUS`, `PROPAGATE`, `BROADCAST`, `INTERCOM`, `QUERY`, `CASCADE`, `RENDEZVOUS`
 
 ### Client Protocol
 
-- **Accepts**: `BUS`, `PROPAGATE`, `BROADCAST`, `INTERCOM`
-- **Emits**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`, `INTERCOM`
+- **Accepts**: `BUS`, `PROPAGATE`, `BROADCAST`, `INTERCOM`, `QUERY`, `CASCADE`, `RENDEZVOUS`
+- **Emits**: `BUS`, `SHARED_BUS`, `PROPAGATE`, `ESCALATE`, `INTERCOM`, `QUERY`, `CASCADE`, `RENDEZVOUS`
 
 ### Permissions
 
@@ -97,7 +97,7 @@ Options:
 
 ### INTERCOM message
 
-Messages can also be encrypted with a node's [public key](03_pairing.md#the-identity-file). This stops intermediate nodes from reading the message contents.
+INTERCOM is the end-to-end encrypted peer-to-peer channel. Messages are encrypted with a node's [public key](03_pairing.md#the-identity-file), so intermediate nodes cannot read the contents, and only the intended recipient can decrypt them.
 
 An encrypted message is a regular hive message, but has the type `"INTERCOM"` and payload `{"ciphertext": "XXXXXXX"}`.
 
@@ -109,9 +109,13 @@ These messages usually appear as the payload of transport messages such as `ESCA
 
 To send a message securely, HiveMind encrypts it with the recipient node's public PGP key. Only the intended recipient, holding the matching private PGP key, can decrypt it.
 
-After encryption, HiveMind signs the message with the sender's private PGP key. This authenticates the sender and confirms the message was not tampered with.
+After encryption, HiveMind signs the message with the sender's private PGP key.
 
-When a node receives an encrypted message, it tries to decrypt it with its private PGP key. If decryption succeeds, the node processes and emits the payload internally.
+#### Origin authentication
+
+A receiving node verifies that signature against a key in its own [trusted keys](03_pairing.md#contents-of-the-identity-file), with its master's public key acting as a trust anchor. A frame with no pinned or trusted key for the sender, no signature, or a signature that fails verification is dropped: it is never decrypted, dispatched, relayed to peers, or escalated upstream.
+
+This stops an outsider from injecting a message onto a node's bus by knowing its public key — the key is public by design, published in every `PING` answer, so knowing it was never meant to be enough on its own. The guarantee has a limit worth stating plainly: it stops an outsider, but it does not stop one trusted peer claiming to be another trusted peer.
 
 You must know the target node's public key beforehand to send it a secret message.
 
@@ -196,6 +200,28 @@ Options:
   --payload TEXT   ovos message.data json
   --help           Show this message and exit.
 ```
+
+### QUERY message
+
+- **Purpose**: ask a specific peer a question and get a response routed back, without flooding the whole mesh.
+- **Permission**: sending a `QUERY` requires `can_escalate`.
+- **Behavior**:
+    - The response is a frame carrying `{"is_response": true, "originator_peer": <peer>}` in its metadata, so a relaying node can route it straight back instead of flooding it.
+    - The permission check runs before a frame claiming to be a response is routed, so a client without `can_escalate` cannot forge `is_response`/`originator_peer` to deliver arbitrary content to another peer.
+    - Routing trusts the sender's own `originator_peer`. A sender that does have `can_escalate` can still address a response to a peer for a query it never took part in — the check stops an unprivileged client from forging a response, it does not verify the response actually answers the query it claims to.
+
+### CASCADE message
+
+- **Purpose**: like `QUERY`, but collects responses from multiple peers down a fan-out instead of a single target.
+- **Permission**: sending a `CASCADE` requires `can_propagate`.
+- **Behavior**: same routing and permission-ordering guarantees, and the same limit, as `QUERY` above.
+
+### RENDEZVOUS message
+
+- **Purpose**: store-and-forward mailbox for peers that are not connected to the same node at the same time.
+- **Behavior**:
+    - The node serving the mailbox answers with `mailbox_node`, naming itself, on every path — including refusals.
+    - Mail is held per node: two peers attached to different nodes still exchange nothing through `RENDEZVOUS`. With `mailbox_node` in the answer, a client can at least tell that is what happened, instead of a silent empty mailbox.
 
 ---
 

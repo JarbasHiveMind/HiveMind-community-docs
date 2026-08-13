@@ -82,7 +82,11 @@ Workflow:
 
 ## The Identity File
 
-The identity file stores the credentials and settings a node needs to connect and communicate within the HiveMind network. It lets the node authenticate and keep secure connections with other nodes.
+A node has one identity: one PGP keypair, one Noise static key, and one set of pinned peer keys, used in both directions — serving its own clients and dialing its master. The identity file stores that identity plus the settings a node needs to connect and communicate within the HiveMind network.
+
+Credentials (access key, password), the `useragent` and `site_id` are not part of that identity. They say how to reach one particular master, so a node that both serves clients and connects upstream holds its own credentials as well as its master's. A client reads credentials from the identity file only as a fallback, when none were passed explicitly, and never writes them back to it — connecting to a master never overwrites the node's own name or credentials.
+
+If a node has no keypair yet, one is generated and persisted automatically the first time it is needed. An unwritable config directory does not stop the node from starting; it just cannot generate or keep a keypair, so it answers PING anonymously and cannot be mapped (see [node identity below](#public-key)).
 
 Connection parameters can be set at launch time, but this file lets you reuse them across the whole OS.
 
@@ -90,16 +94,19 @@ Connection parameters can be set at launch time, but this file lets you reuse th
 
 The identity file is usually at `~/.config/hivemind/_identity.json` and contains:
 
-| Field           | Description                                                                                  |
-|-----------------|----------------------------------------------------------------------------------------------|
-| `name`          | A human-readable label for the node, not guaranteed to be unique.                            |
-| `password`      | The password used to generate a session AES key for secure communication within the HiveMind network. |
-| `access_key`    | A unique access key assigned to the node for identification and authentication.              |
-| `site_id`       | An identifier for the physical location or context where the node operates.                  |
-| `default_port`  | The default port number used to connect to the HiveMind core.                                |
-| `default_master`| The default host (address) of the HiveMind core the node connects to.                        |
-| `public_key`    | The ASCII-encoded public PGP key used to authenticate the node within the HiveMind network.  |
-| `secret_key`    | The path to the private PGP key file, which uniquely identifies the node and proves its identity. |
+| Field                | Description                                                                                  |
+|----------------------|------------------------------------------------------------------------------------------------|
+| `name`               | A human-readable label for the node, not guaranteed to be unique.                            |
+| `password`           | The password used to generate a session AES key for secure communication within the HiveMind network. |
+| `access_key`         | A unique access key assigned to the node for identification and authentication.              |
+| `site_id`            | An identifier for the physical location or context where the node operates.                  |
+| `default_port`       | The default port number used to connect to the HiveMind core.                                |
+| `default_master`     | The default host (address) of the HiveMind core the node connects to.                        |
+| `public_key`         | The ASCII-encoded public PGP key used to authenticate the node within the HiveMind network.  |
+| `secret_key`         | The path to the private PGP key file, which uniquely identifies the node and proves its identity. |
+| `noise_key`          | The path to the static X25519 private key used by the protocol-v3 Noise handshake. Generated and persisted on first use so key pinning survives a restart. |
+| `pinned_noise_keys`  | Trust-on-first-use store of peer node id → Noise static public key. A later handshake whose key contradicts the pin is a fatal authentication failure. |
+| `trusted_keys`       | Alias → public key mapping of peers this node trusts for `INTERCOM`, `PROPAGATE` and `CASCADE` origin verification. |
 
 By keeping these details in the identity file, nodes can join the HiveMind network securely and efficiently.
 
@@ -114,6 +121,7 @@ The public key in the identity file is part of a PGP key pair that uniquely iden
 1. **Unique node identification**: the PGP key uniquely identifies this node within the HiveMind network.
 2. **Inter-node authentication**: nodes use the PGP key to authenticate each other, so only authorized nodes can communicate within the network.
 3. **Network independence**: the PGP key lets nodes identify each other regardless of the specific HiveMind core (mind) they connect to. Even if a node switches minds, it still recognizes and authenticates other nodes by their PGP keys.
+4. **Addressing and mapping**: the public key is the node's address for `INTERCOM` messages, its entry on a hive map, and its hop for loop suppression when a message is relayed across the mesh. A node with no public key answers `PING` anonymously and cannot be mapped.
 
 #### Private key
 
