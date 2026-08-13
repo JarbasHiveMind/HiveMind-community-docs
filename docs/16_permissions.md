@@ -8,9 +8,13 @@ HiveMind's permission system gives fine-grained control over access to resources
 
 2. One predefined role: admin. A client may be marked admin with `--admin true`, or with `make-admin` and `revoke-admin` later. Admin grants the reserved `default` session and the right to originate `BROADCAST`, and only while `can_broadcast` is not revoked. It does not exempt a client from `allowed_types`.
 
-3. **Fine-grained access control**: Permissions are not just "allowed" or "denied." You can configure access at a fine-grained level, down to individual bus messages, skills, and intents.
+3. **Routing permissions**: `can_broadcast`, `can_escalate` and `can_propagate` gate a client's right to originate `BROADCAST`, [`QUERY`](04_protocol.md#query-message)/`ESCALATE`, and [`CASCADE`](04_protocol.md#cascade-message)/`PROPAGATE` respectively. They are set with the `allow-broadcast`, `allow-escalate` and `allow-propagate` commands (and their `blacklist-` counterparts). For `QUERY` and `CASCADE`, this check runs before a frame claiming to be a response is routed, so a client without the matching permission cannot forge a response and deliver arbitrary content to another peer. See [Response routing](04_protocol.md#query-message) for the limit of that guarantee.
 
-4. **Emergent roles**: HiveMind has no formal roles, but roles can emerge from client-specific configuration. A client with broad access can function like an "admin," while another client with limited access can serve as a "guest." These roles are not predefined; they follow from each client's permission settings.
+4. **HTTP and WebSocket parity**: `can_broadcast`, `intent_blacklist` and `skill_blacklist` from a client's record apply the same way over the HTTP transport as over WebSocket. See [Network Plugins](network_plugins.md).
+
+5. **Fine-grained access control**: Permissions are not just "allowed" or "denied." You can configure access at a fine-grained level, down to individual bus messages, skills, and intents.
+
+6. **Emergent roles**: HiveMind has no formal roles, but roles can emerge from client-specific configuration. A client with broad access can function like an "admin," while another client with limited access can serve as a "guest." These roles are not predefined; they follow from each client's permission settings.
 
 ### Comparison to traditional RBAC
 

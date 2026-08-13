@@ -33,6 +33,7 @@ Each HiveMind node loads one network plugin, which defines how it connects to th
   - WebSockets are blocked or unavailable.
   - a simpler one-off communication model is enough.
 - Less efficient for real-time streaming, but useful for constrained networks or integrations.
+- Applies the same per-client restrictions as the WebSocket plugin: `can_broadcast`, `intent_blacklist` and `skill_blacklist` from the client record are enforced identically over both transports. See [Permissions](16_permissions.md).
 
 ---
 
