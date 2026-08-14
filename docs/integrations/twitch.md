@@ -21,8 +21,12 @@ satellite relaying [utterances](../reference/glossary.md#utterance) to hivemind-
 
 ## Install
 
+This package is not on PyPI. Install from a checkout:
+
 ```bash
-pip install HiveMind-twitch-bridge
+git clone https://github.com/JarbasHiveMind/HiveMind-twitch-bridge
+cd HiveMind-twitch-bridge
+pip install .
 ```
 
 This installs the `hivemind-twitch-bridge` console command.
@@ -104,11 +108,22 @@ to `hivemind-core`; the `speak` response is sent back to the channel as
 
 ## Permissions
 
-The bridge client needs at minimum:
+Register the bridge as a HiveMind client first:
 
 ```bash
+hivemind-core add-client --name twitch-bridge
+```
+
+This prints an access key, password, and a client/Node ID. A freshly added client is
+denied every message type by default — grant what the bridge needs before running it:
+
+```bash
+hivemind-core allow-msg "recognizer_loop:utterance" <id>
 hivemind-core allow-msg "speak" <id>
 ```
+
+Skipping this is the most common reason the bridge joins chat fine but never posts a
+reply.
 
 ---
 
