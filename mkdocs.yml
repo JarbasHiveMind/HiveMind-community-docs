@@ -28,7 +28,9 @@ nav:
       - Persona / LLM hub: 08_persona.md
       - Bridges overview: gpt_bridges.md
       - Matrix: 09_matrix.md
+      - Mattermost: 11_mattermost.md
       - DeltaChat: 10_deltachat.md
+      - HackChat: 12_hackchat.md
       - Home Assistant: 07_homeassistant.md
     - Topologies:
       - Nested Hives: 15_nested.md
