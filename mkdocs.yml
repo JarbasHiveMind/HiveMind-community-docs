@@ -122,6 +122,8 @@ nav:
     - DeltaChat: integrations/deltachat.md
     - Mattermost: integrations/mattermost.md
     - Twitch: integrations/twitch.md
+    - Telegram: integrations/telegram.md
+    - SIP / baresip: integrations/sip.md
     - HackChat: integrations/hackchat.md
 
   - Developer Guide:

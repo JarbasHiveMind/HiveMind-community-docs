@@ -23,6 +23,8 @@ it holds an access key and relays messages to `hivemind-core`.
 | [DeltaChat](deltachat.md) | Email-based encrypted messaging | Email account |
 | [Mattermost](mattermost.md) | A Mattermost team channel | Mattermost bot login |
 | [Twitch](twitch.md) | Twitch stream chat | Twitch chat OAuth token |
+| [Telegram](telegram.md) | A Telegram bot chat | Telegram bot token (@BotFather) |
+| [SIP / baresip](sip.md) | Ordinary phone calls | A SIP account (self-hosted or a provider) |
 | [HackChat](hackchat.md) | An anonymous hack.chat channel | HiveMind only |
 
 !!! tip "Start with the simplest"

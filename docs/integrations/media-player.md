@@ -82,7 +82,16 @@ hivemind-core allow-msg "ovos.common_play.previous" <id>
 ```
 
 The repository's permissions reference lists the full OCP, audio, and (optional) PHAL
-volume message sets.
+volume message sets. A freshly added client is denied every message type until you
+grant it — this is the step people skip, and the failure is silent: commands are
+accepted by the hub but nothing plays.
+
+!!! warning "Headless devices need a null audio sink"
+    If the device has no physical speakers — a server, a container — point the OCP
+    backends (mpv, vlc) at a null sink instead of real hardware, for example
+    `mpv --ao=null` or `vlc --aout=dummy`. Without a working sink, real or null,
+    playback commands are accepted but nothing plays, and mpv/vlc can error out
+    trying to open a device that doesn't exist.
 
 ---
 
