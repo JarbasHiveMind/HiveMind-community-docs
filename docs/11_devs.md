@@ -9,4 +9,4 @@ If you are implementing a client from scratch, these libraries might interest yo
 - [ovos-solver-hivemind-plugin](https://github.com/JarbasHiveMind/ovos-solver-hivemind-plugin), a Python client for chatting with HiveMind
 
 ---
-[← Encryption](19_crypto.md) · [Home](index.md) · [ELI5 →](gpt_eli5.md)
+[← Encryption](19_crypto.md) · [Home](index.md) · [Testing Mesh →](testing_mesh.md)

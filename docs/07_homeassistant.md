@@ -150,4 +150,4 @@ The client connecting to HiveMind must have admin privileges and access to these
 - `ovos.phal.camera.close`
 
 ---
-[← DeltaChat](10_deltachat.md) · [Home](index.md) · [Transport →](04_protocol.md)
+[← DeltaChat](10_deltachat.md) · [Home](index.md) · [Chatroom →](chatroom.md)

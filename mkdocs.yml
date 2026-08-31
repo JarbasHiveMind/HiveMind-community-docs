@@ -23,6 +23,7 @@ nav:
       - Matrix: 09_matrix.md
       - DeltaChat: 10_deltachat.md
       - Home Assistant: 07_homeassistant.md
+      - Chatroom & Translator: chatroom.md
     - Protocol:
       - Transport: 04_protocol.md
       - Binarization: 18_binarization.md
@@ -33,6 +34,7 @@ nav:
       - Encryption: 19_crypto.md
     - Developers:
       - Libraries: 11_devs.md
+      - Testing Mesh: testing_mesh.md
     - ChatGPT was here:
       - ELI5: gpt_eli5.md
 

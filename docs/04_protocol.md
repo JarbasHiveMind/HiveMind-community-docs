@@ -213,4 +213,4 @@ Options:
 > Protocol v0 is deprecated. Some clients, such as HiveMind-Js, may not yet support Protocol Version 1.
 
 ---
-[← Home Assistant](07_homeassistant.md) · [Home](index.md) · [Binarization →](18_binarization.md)
+[← Chatroom](chatroom.md) · [Home](index.md) · [Binarization →](18_binarization.md)
