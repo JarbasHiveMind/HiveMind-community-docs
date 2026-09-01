@@ -9,10 +9,16 @@ Noise handshake as a native client, deriving its key from the password in-page, 
 password alone is all it takes.
 
 !!! abstract "In a nutshell"
-    - **On the device (the browser):** microphone capture and VAD (JavaScript — Silero via onnxruntime-web).
-    - **On hivemind-core:** STT, TTS, skills, and intents.
-    - It ships audio as base64 over the bus (`recognizer_loop:b64_audio`), *not* the binary `RAW_AUDIO` protocol — so the server needs `ovos-dinkum-listener >= 0.0.3a19` and a one-time `hivemind-core allow-msg "recognizer_loop:b64_audio"`.
+    - **On the device (the browser):** microphone capture and VAD (JavaScript — Silero via onnxruntime-web), with three independently configurable options: wake word, audio transport, and text-to-speech.
+    - **On hivemind-core:** STT, TTS, skills, and intents (unless in-browser TTS is enabled).
+    - By default it ships audio as base64 over the bus (`recognizer_loop:b64_audio`) — the server needs `ovos-dinkum-listener >= 0.0.3a19` and a one-time `hivemind-core allow-msg "recognizer_loop:b64_audio"`. Switching the audio transport to `binary` instead sends a WIRE-1 `STT_AUDIO_HANDLE` frame, admitted through hivemind-core's binary policy rather than the bus allow-list.
     - Encryption defaults to the Noise v3 handshake with full parity to hivemind-core, deriving the key from the password in-browser. A password is enough — nothing to provision.
+
+    | Setting | Options | Default |
+    |---|---|---|
+    | Wake word | `off`, `precise-onnx-js` | `off` — every VAD-segmented utterance streams; `precise-onnx-js` loads a Precise `.onnx` model in-browser and gates capture until the wake word fires |
+    | Audio transport | `base64`, `binary` | `base64` |
+    | Text to speech | `server-text`, `phoonnx-js` | `server-text` — the reply is only rendered as text; `phoonnx-js` also synthesizes and plays it in-browser |
 
 ---
 
@@ -26,9 +32,8 @@ password alone is all it takes.
 
 ## Requirements
 
-This browser client ships its captured audio as **base64 over the bus** (the
-`recognizer_loop:b64_audio` message), not as the binary `RAW_AUDIO` protocol. So
-hivemind-core does **not** need `hivemind-audio-binary-protocol`. Instead hivemind-core must:
+By default this browser client ships its captured audio as **base64 over the bus** (the
+`recognizer_loop:b64_audio` message). hivemind-core must:
 
 1. Run a listener new enough to decode that message — `ovos-dinkum-listener >= 0.0.3a19`.
 2. Be told to accept the message:
@@ -39,6 +44,11 @@ hivemind-core does **not** need `hivemind-audio-binary-protocol`. Instead hivemi
 
 Without both, the WebSocket connects but the audio is silently dropped and you get no
 reply.
+
+Switching the page's **Audio transport** setting to `binary` instead sends each utterance
+as a WIRE-1 `STT_AUDIO_HANDLE` raw-PCM binary frame, smaller on the wire with no base64
+inflation. That path needs `hivemind-audio-binary-protocol` on hivemind-core and is
+admitted through its binary policy, not the `allow-msg` whitelist.
 
 !!! warning "The TLS / mixed-content rule (read this first)"
     Browsers refuse to open an insecure WebSocket from a secure page. In practice:
@@ -65,10 +75,12 @@ reply.
       configuration and no provisioned key. It falls back to the legacy V1 handshake
       (PBKDF2-HMAC-SHA256 + AES-GCM) against older hivemind-core versions, or when a minimal bundle
       ships without `@noble`.
-    - **No wakeword.** Capture is push-to-talk, gated by a **Start VAD** / **Stop VAD**
-      toggle. Voice activity detection uses the **Silero VAD** model run in the browser
-      via **onnxruntime-web** (`@ricky0123/vad-web`), loaded from a CDN — so the page
-      needs network access on first load.
+    - **Wake word is off by default,** so capture is push-to-talk, gated by a **Start
+      VAD** / **Stop VAD** toggle. Setting **Wake word** to `precise-onnx-js` loads a
+      Precise `.onnx` model in-browser and gates capture on it instead — nothing streams
+      until the wake word fires. Voice activity detection uses the **Silero VAD** model
+      run in the browser via **onnxruntime-web** (`@ricky0123/vad-web`), loaded from a
+      CDN — so the page needs network access on first load.
 
 ---
 
@@ -91,7 +103,7 @@ No installation required on the client side. Include the [HiveMind.js](https://g
 - Browser VAD capabilities vary by browser and platform
 - Requires JavaScript support
 - Microphone access requires user permission (browser security model)
-- No wakeword — capture is VAD-gated push-to-talk via a VAD toggle button
+- Wake word off by default — capture is VAD-gated push-to-talk via a VAD toggle button, unless `precise-onnx-js` wake word is enabled in the page's settings
 
 ---
 
