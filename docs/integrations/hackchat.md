@@ -10,7 +10,7 @@ to hivemind-core like every other bridge.
 
 !!! abstract "In a nutshell"
     - Runs as the `hivemind-hackchat-bridge` console command; pick any channel name and a bot nickname.
-    - Needs no platform credentials — only your HiveMind identity (stored, or passed via `--access-key` / `--password` / `--host`).
+    - Needs no platform credentials — only your HiveMind identity (stored, or passed via `--access-key` / `--password`). `--host` always needs passing explicitly for a remote hub.
     - The bridge client needs at minimum `allow-msg "recognizer_loop:utterance"` and `allow-msg "speak"`.
 
 hack.chat is a minimal, **anonymous** public chat — you join a channel just by naming
@@ -44,7 +44,10 @@ the bridge:
 hivemind-client set-identity
 ```
 
-You can also pass `--access-key`, `--password`, and `--host` directly instead.
+You can also pass `--access-key` and `--password` directly instead, and both fall back
+to the stored identity when omitted. `--host` does not: it defaults to
+`ws://127.0.0.1` regardless of the stored identity, so a remote hub needs `--host`
+passed explicitly every time.
 
 ---
 

@@ -98,8 +98,8 @@ accepted by the hub but nothing plays.
 ## Related projects
 
 - [hivemind-homeassistant](home-assistant.md) — exposes HiveMind player devices as Home Assistant media players
-- `ovos-skill-music-assistant` (private repo, collaborator access only) — OVOS skill for Music Assistant media search
-- `ovos-media-plugin-mass` (private repo, collaborator access only) — OVOS plugin to control Music Assistant players
+- [`ovos-skill-music-assistant`](https://github.com/OpenVoiceOS/ovos-skill-music-assistant) — OVOS skill for Music Assistant media search
+- [`ovos-media-plugin-mass`](https://github.com/OpenVoiceOS/ovos-media-plugin-mass) — OVOS plugin to control Music Assistant players
 
 ---
 
