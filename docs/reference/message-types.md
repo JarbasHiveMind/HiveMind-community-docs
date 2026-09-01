@@ -20,7 +20,7 @@ All message types are defined in `HiveMessageType` in `hivemind_bus_client.messa
 
 If you only need to jog your memory, this table is the whole page — every type, its
 category, which way it flows, and what it's for, on one screen. Skim the Category column
-first: it groups the fourteen types into the four jobs they do, and the per-type sections
+first: it groups the thirteen types into the four jobs they do, and the per-type sections
 below expand whichever one you landed on. The Wire value column is the exact string to put
 in the JSON `msg_type` field. Four of them are not the lowercased enum name, so copy them
 rather than derive them.
@@ -41,7 +41,7 @@ rather than derive them.
 | `HELLO` | `hello` | Connection | Bidirectional | Node announcement on connect |
 | `HANDSHAKE` | `shake` | Connection | Bidirectional | Cryptographic key exchange |
 
-Only thirteen of the fourteen have a 5-bit code for [binary framing](../developers/protocol-spec.md#message-type-encoding). `INTERCOM` has none, so send it as JSON.
+Only twelve of the thirteen have a 5-bit code for [binary framing](../developers/protocol-spec.md#message-type-encoding). `INTERCOM` has none, so send it as JSON.
 
 The sections that follow take the types one at a time, roughly in order of how often
 you'll touch them — the everyday `BUS` first, the mesh-routing verbs next, and the

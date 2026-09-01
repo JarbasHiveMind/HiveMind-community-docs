@@ -230,7 +230,7 @@ Usage: hivemind-core policy list
 Usage: hivemind-core policy test API_KEY MSG_TYPE
 ```
 
-`policy list` prints the active policy chain (`MessageTypeACLPolicy` first, then plugins from `policy.chain`). `policy test` looks up the client by `API_KEY` and runs a fake message of `MSG_TYPE` through the full chain, printing the verdict.
+`policy list` prints the two built-in policies (`MessageTypeACLPolicy`, then `DefaultSessionPolicy`), always first and non-removable, followed by the plugins configured in `policy.chain`. `policy test` looks up the client by `API_KEY` and runs a fake message of `MSG_TYPE` through the full chain, printing the verdict.
 
 ### derive-psk
 

@@ -77,7 +77,6 @@ listener's `5678` default. Enabling both with no `port` set works out of the box
     | `broker_username` / `broker_password` | — | broker credentials, if required |
     | `tls` / `cert` | — | TLS to the broker |
     | `topic_prefix` | `hivemind` | prefix for the topics used |
-    | `hash_topics` | — | hash topic names so the broker can't infer routing from them |
 
     This is **alpha** — pin and test before relying on it.
 

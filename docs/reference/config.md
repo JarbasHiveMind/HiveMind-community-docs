@@ -214,7 +214,7 @@ List of policy plugin modules applied in order to each incoming message. The def
 
 Per-plugin settings are nested under the plugin name key. See [Database Backends](../concepts/databases.md).
 
-**Auto-selection:** when `server.json` does not already define a `database` block, the backend is chosen automatically on first run. If a legacy `clients.json` exists (in `<xdg_data_home>/hivemind-core/`) and no SQLite `clients.db` is present, the JSON backend (`hivemind-json-db-plugin`) is kept so an upgrade never strands an existing credential store. Otherwise SQLite (`hivemind-sqlite-db-plugin`) is the default. Move an existing JSON store to SQLite with `hivemind-core migrate-db --to sqlite`.
+**Auto-selection:** when `server.json` does not already define a `database` block, the backend is chosen automatically on first run. If a legacy `clients.json` exists (in `<xdg_data_home>/hivemind-core/`) and no SQLite `clients.db` is present, the JSON backend (`hivemind-json-db-plugin`) is kept so an upgrade never strands an existing credential store. Otherwise SQLite (`hivemind-sqlite-db-plugin`) is the default. Move an existing JSON store to SQLite with `hivemind-core migrate-db --to hivemind-sqlite-db-plugin` (the default, so `--to` can be omitted).
 
 ### rendezvous
 
