@@ -15,7 +15,7 @@ it?"; the library does the cryptography.
 !!! note "Building your own client in Python?"
     This page is for writing a program that talks to a hivemind-core server. To simply *use* a satellite, see [Choosing a Satellite](../satellites/index.md) instead.
 
-`hivemind-bus-client` is available on [PyPI](https://pypi.org/project/hivemind-bus-client) and [GitHub](https://github.com/JarbasHiveMind/hivemind_websocket_client).
+`hivemind-bus-client` is available on [PyPI](https://pypi.org/project/hivemind-bus-client) and [GitHub](https://github.com/JarbasHiveMind/hivemind-websocket-client).
 
 ---
 
@@ -31,7 +31,7 @@ pip install hivemind-bus-client
 
 | Library | Language | Notes |
 |---|---|---|
-| [hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind_websocket_client) | Python | Primary client; WebSocket + HTTP + async + MQTT |
+| [hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind-websocket-client) | Python | Primary client; WebSocket + HTTP + async + MQTT |
 | [HiveMind-js](https://github.com/JarbasHiveMind/HiveMind-js) | JavaScript | Browser and Node.js |
 | [ovos-solver-hivemind-plugin](https://github.com/JarbasHiveMind/ovos-solver-hivemind-plugin) | Python | OVOS solver plugin — chat with a hivemind-core server |
 

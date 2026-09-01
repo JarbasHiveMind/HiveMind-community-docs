@@ -185,8 +185,8 @@ hivemind-core make-admin <id>
 ## Related projects
 
 - [Media Player](media-player.md) — turn any device into a standalone HiveMind OCP player
-- [ovos-skill-music-assistant](https://github.com/HiveMindInsiders/ovos-skill-music-assistant) — OVOS skill for Music Assistant media search
-- [ovos-media-plugin-mass](https://github.com/HiveMindInsiders/ovos-media-plugin-mass) — OVOS plugin to control Music Assistant players
+- `ovos-skill-music-assistant` (private repo, collaborator access only) — OVOS skill for Music Assistant media search
+- `ovos-media-plugin-mass` (private repo, collaborator access only) — OVOS plugin to control Music Assistant players
 
 ---
 
