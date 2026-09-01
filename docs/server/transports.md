@@ -75,7 +75,8 @@ listener's `5678` default. Enabling both with no `port` set works out of the box
     | `broker_host` | `localhost` | MQTT broker address |
     | `broker_port` | `1883` | MQTT broker port |
     | `broker_username` / `broker_password` | — | broker credentials, if required |
-    | `tls` / `cert` | — | TLS to the broker |
+    | `tls` | `false` | Enable TLS to the broker |
+    | `tls_ca_certs` / `tls_certfile` / `tls_keyfile` | — | CA bundle path / client cert path / client key path (mTLS) |
     | `topic_prefix` | `hivemind` | prefix for the topics used |
 
     This is **alpha** — pin and test before relying on it.

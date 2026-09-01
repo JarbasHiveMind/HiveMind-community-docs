@@ -45,7 +45,7 @@ The **microcontroller** clients (ESP32 in C, or MicroPython) are the thinnest *h
 | hivemind-mic-satellite | `hivemind-audio-binary-protocol` for STT/TTS/wakeword |
 | HiveMind-voice-relay | `hivemind-audio-binary-protocol` for STT/TTS |
 | HiveMind-voice-sat | Any hivemind-core instance (sends text utterances) |
-| WebSpeech Browser | `ovos-dinkum-listener >= 0.3.0a1` + `hivemind-core allow-msg "recognizer_loop:b64_audio"` |
+| WebSpeech Browser | `ovos-dinkum-listener >= 0.0.3a19` + `hivemind-core allow-msg "recognizer_loop:b64_audio"` |
 
 See [Audio Binary Protocol](../server/audio-binary-protocol.md) for server-side setup.
 
@@ -61,7 +61,7 @@ See [Audio Binary Protocol](../server/audio-binary-protocol.md) for server-side 
       (`recognizer_loop:b64_transcribe`; TTS comes back as `speak:b64_audio`) — also
       provided by `hivemind-audio-binary-protocol`.
     - **WebSpeech** sends **base64 audio over the bus** as `recognizer_loop:b64_audio`,
-      which is decoded directly by `ovos-dinkum-listener >= 0.3.0a1` once hivemind-core
+      which is decoded directly by `ovos-dinkum-listener >= 0.0.3a19` once hivemind-core
       allows that message — it does **not** use the binary `RAW_AUDIO` protocol.
 
 ---
