@@ -196,17 +196,18 @@ sudo systemctl start hivemind-core
 
 Beyond the OVOS, [persona](persona-server.md), and [A2A](a2a-server.md) agent plugins, two
 more agent-plugin flavors exist for advanced or experimental setups. Both are
-**alpha / unpublished — install from the repo and read its README**.
+**alpha / unpublished, and both repos are private, collaborator access only** — the
+links below resolve only for collaborators.
 
 ??? note "Advanced: other agent flavors"
-    **localhive** ([`hivemind-localhive-agent-plugin`](https://github.com/JarbasHiveMind/hivemind-localhive-agent-plugin))
+    **localhive** ([`hivemind-localhive-agent-plugin`](https://github.com/JarbasHiveMind/hivemind-localhive-agent-plugin), private repo, collaborator access only)
     — an "isolated-skills" agent. It runs OVOS skills *in-process* (no separate
     `ovos-core` / `ovos-messagebus`), but each skill only ever sees its own messages.
     Here `skill_id` is purely a routing label, not a credential — one skill cannot
     eavesdrop on another's traffic. Useful when you want OVOS skills without a full
     messagebus and with strict per-skill isolation.
 
-    **multimind** ([`hivemind-multimind-agent-plugin`](https://github.com/JarbasHiveMind/hivemind-multimind-agent-plugin))
+    **multimind** ([`hivemind-multimind-agent-plugin`](https://github.com/JarbasHiveMind/hivemind-multimind-agent-plugin), private repo, collaborator access only)
     — a per-access-key agent *multiplexer*. Every access key gets its own isolated
     agent instance (by default a bundled MiniCroft brain), and each key's
     `{module, config}` is stored in that client's DB metadata. This is the
