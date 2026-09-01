@@ -187,8 +187,8 @@ Topology discovery.
 - `PING` is always wrapped inside `PROPAGATE`
 - There is no `PONG` reply type. Every node that receives a `PING` re-emits its own `PING` with the same `flood_id`, flooded onward via `PROPAGATE`, and receivers deduplicate by `flood_id`
 - `flood_id` dedup is specific to PING. It sits on top of the [route-hop loop suppression](#escalate) that covers PROPAGATE, ESCALATE, CASCADE and PING alike
-- **Payload**: `{flood_id, peer, site_id, timestamp}`
-- `HiveMapper` in `hivemind_core.hive_map` observes the re-emitted PINGs to build a live topology map
+- **Payload**: `{flood_id, peer, site_id, timestamp, public_key}`. A satellite/client-originated PING also carries `lang`; hivemind-core's own self-originated PING omits it
+- `HiveMapper` in `hivemind_bus_client.hive_map` observes the re-emitted PINGs to build a live topology map
 
 ---
 
