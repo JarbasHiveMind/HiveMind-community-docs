@@ -59,7 +59,7 @@ v3-capable client (Noise primitive available, password configured) actually nego
 - **Default suite:** `Noise_XXpsk2_25519_ChaChaPoly_SHA256` — mutual static-key authentication over X25519, per-handshake ephemeral Diffie-Hellman (forward secrecy), ChaCha20-Poly1305 AEAD, SHA-256. This is the suite browser and JavaScript clients ([HiveMind-js](https://github.com/JarbasHiveMind/HiveMind-js)) negotiate too: they pair the native Web Crypto API with the pure-JS [`@noble/ciphers`](https://github.com/paulmillr/noble-ciphers) + [`@noble/hashes`](https://github.com/paulmillr/noble-hashes) for the two primitives Web Crypto lacks (ChaCha20-Poly1305 and argon2id), giving **full cipher parity with hivemind-core** — no server-side configuration required. A `Noise_XXpsk2_25519_AESGCM_SHA256` suite is also registered as an AES-GCM alternative for minimal Web-Crypto-only peers (see the browser caveat below).
 - **PSK derivation:** the shared secret mixed into the handshake is `PSK = argon2id(password, salt = SHA-256(node_id))`. Salting with the server's `node_id` makes the PSK server-specific, so the same password on two servers yields two different PSKs. A full browser client derives this **in-browser** with `@noble/hashes` argon2id (same parameters as the server), so a password alone is enough — no provisioning and no server-side KDF change. A pre-provisioned 32-byte `psk` remains an option, and PBKDF2 remains an explicit fallback when a server advertises it.
 - **Pinned-key case:** once a client's static key has been pinned by a prior `XXpsk2` handshake, both ends may use `Noise_KKpsk0_25519_ChaChaPoly_SHA256` (both static keys known in advance).
-- **The client pins the server too.** On the first completed `XXpsk2` handshake the client stores the server's Noise static key. It goes in the client identity file, under `pinned_noise_keys`, keyed by `host:port`. Every later handshake compares against that pin, and a changed key aborts the session with a man-in-the-middle warning. If you regenerate a server identity or restore a node from backup, delete that entry from `~/.config/hivemind/_identity.json` on each satellite. Until you do, every satellite refuses to connect.
+- **The client pins the server too.** On the first completed `XXpsk2` handshake the client stores the server's Noise static key. It goes in the client identity file, under `pinned_noise_keys`, keyed by the server's node_id. Every later handshake compares against that pin, and a changed key aborts the session with a man-in-the-middle warning. If you regenerate a server identity or restore a node from backup, delete that entry from `~/.config/hivemind/_identity.json` on each satellite. Until you do, every satellite refuses to connect.
 - Only `HELLO` and `HANDSHAKE` frames travel unencrypted (they precede session-key establishment). On a `crypto_required` server, any other cleartext frame is rejected and the client disconnected.
 
 !!! info "Constrained devices use a provisioned PSK"
@@ -176,7 +176,7 @@ and rejoin the hive on its own. Here's what lives in it:
 | `public_key` | RSA public key string |
 | `secret_key` | Path to the RSA private key (PEM) file |
 | `noise_key` | Path to the protocol v3 Noise handshake's X25519 static private key |
-| `pinned_noise_keys` | TOFU-pinned Noise static keys for known peers, keyed `host:port` |
+| `pinned_noise_keys` | TOFU-pinned Noise static keys for known peers, keyed by node_id |
 | `trusted_keys` | Alias → public-key mapping for INTERCOM origin verification |
 
 Write the identity file:
