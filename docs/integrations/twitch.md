@@ -10,7 +10,7 @@ satellite relaying [utterances](../reference/glossary.md#utterance) to hivemind-
 !!! abstract "In a nutshell"
     - Runs as the `hivemind-twitch-bridge` console command, joining chat over IRC with a channel name and a Twitch chat OAuth token.
     - Only messages containing a trigger tag are relayed; the tag is stripped before forwarding.
-    - HiveMind credentials are passed as flags; the bridge client needs at minimum `allow-msg "speak"`.
+    - HiveMind credentials are passed as flags; the bridge client needs at minimum `allow-msg "recognizer_loop:utterance"` and `allow-msg "speak"`.
 
 !!! tip "Beginner's mental model"
     The bridge joins your Twitch chat as a bot (using a chat OAuth token) and connects
