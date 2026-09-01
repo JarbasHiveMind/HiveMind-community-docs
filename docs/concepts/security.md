@@ -175,6 +175,9 @@ and rejoin the hive on its own. Here's what lives in it:
 | `site_id` | Physical location identifier injected into OVOS context |
 | `public_key` | RSA public key string |
 | `secret_key` | Path to the RSA private key (PEM) file |
+| `noise_key` | Path to the protocol v3 Noise handshake's X25519 static private key |
+| `pinned_noise_keys` | TOFU-pinned Noise static keys for known peers, keyed `host:port` |
+| `trusted_keys` | Alias → public-key mapping for INTERCOM origin verification |
 
 Write the identity file:
 

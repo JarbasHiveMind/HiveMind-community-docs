@@ -263,6 +263,7 @@ Per-plugin settings are nested under the plugin name key. See [Database Backends
 | `secret_key` | Path to the RSA private key (PEM) file |
 | `noise_key` | Path to the protocol v3 Noise handshake's X25519 static private key, generated on first use |
 | `pinned_noise_keys` | TOFU-pinned Noise static keys for known peers, keyed `host:port` |
+| `trusted_keys` | Alias → public-key mapping for INTERCOM origin verification |
 
 ---
 
