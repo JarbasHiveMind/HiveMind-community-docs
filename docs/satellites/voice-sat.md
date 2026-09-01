@@ -124,7 +124,9 @@ Example:
     "VAD": {
       "module": "ovos-vad-plugin-silero"
     },
-    "wake_word": "hey_mycroft",
+    "wake_word": "hey_mycroft"
+  },
+  "hotwords": {
     "hey_mycroft": {
       "module": "ovos-ww-plugin-vosk"
     }
