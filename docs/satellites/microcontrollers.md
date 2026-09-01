@@ -60,7 +60,7 @@ implements the HiveMind handshake, AEAD encryption, bus messaging, and binary au
 transport — sized to run on the chip.
 
 **Targets:** ESP32, ESP32-S3 (including the Home Assistant **Voice PE** board), and
-ESP32-C3. Requires **ESP-IDF 5.0+** on the build host.
+ESP32-C3. Requires **ESP-IDF 5.1+** on the build host.
 
 **What runs on the device:**
 
@@ -167,6 +167,6 @@ Validated against the HiveMind source. `hivemind-esp32-client` and
 collaborators.
 
 - [`README.md`](https://github.com/JarbasHiveMind/hivemind-esp32-client/blob/HEAD/README.md) — ESP-IDF component, targets, ciphers, `HM_BIN_RAW_AUDIO` transport, no-TLS V1 design
-- [`docs/getting-started.md`](https://github.com/JarbasHiveMind/hivemind-esp32-client/blob/HEAD/docs/getting-started.md) — ESP-IDF 5.0+, INMP441 mic, build/flash steps
+- [`docs/getting-started.md`](https://github.com/JarbasHiveMind/hivemind-esp32-client/blob/HEAD/docs/getting-started.md) — ESP-IDF 5.1+, INMP441 mic, build/flash steps
 - [`README.md`](https://github.com/JarbasHiveMind/hivemind-micropython-client/blob/HEAD/README.md) — dual MicroPython/CPython runtime, `mip` install, binary transport, PBKDF2 first-handshake caveat
 - [`docs/getting-started.md`](https://github.com/JarbasHiveMind/hivemind-micropython-client/blob/HEAD/docs/getting-started.md) — prerequisites and first satellite
