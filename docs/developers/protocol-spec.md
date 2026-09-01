@@ -178,7 +178,11 @@ On receipt the client derives `crypto_key`:
 | `session` | str (JSON) | Serialized OVOS `Session` for `session_id`. The server deserializes this as the client's session. |
 | `site_id` | str | The client's site id (used for `BROADCAST`/`PROPAGATE` `target_site_id` filtering). |
 
-> Note: a client requesting `session_id == "default"` is disconnected unless it is an administrator.
+> Note: a non-admin client's declared `session_id == "default"` is silently reassigned to a
+> fresh per-connection session id at connect time, not disconnected. If a non-admin BUS
+> message still somehow declares `"default"`, `DefaultSessionPolicy` denies that message
+> (`session_id_default_forbidden`, notified via `hive.policy.denied`) rather than closing
+> the connection. Admins keep the literal `"default"` session id.
 
 ---
 
