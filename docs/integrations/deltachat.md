@@ -11,7 +11,7 @@ hivemind-core.
 !!! abstract "In a nutshell"
     - Runs as the `hm-deltachat-bridge` console command, relaying between an email account and `hivemind-core`.
     - Needs two credential sets: an email account for DeltaChat and the stored HiveMind node identity.
-    - The bridge client needs at minimum `allow-msg "speak"`.
+    - The bridge client needs at minimum `allow-msg "recognizer_loop:utterance"` and `allow-msg "speak"`.
 
 DeltaChat is an end-to-end encrypted messenger that rides on ordinary **email** — any
 mailbox works as its transport, so there is no separate chat server to run. To people
@@ -94,9 +94,10 @@ conversation.
 
 ## Permissions
 
-The bridge client needs at minimum permission to receive spoken replies:
+The bridge client needs at minimum:
 
 ```bash
+hivemind-core allow-msg "recognizer_loop:utterance" <id>
 hivemind-core allow-msg "speak" <id>
 ```
 

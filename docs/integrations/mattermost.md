@@ -10,7 +10,7 @@ hivemind-core.
 !!! abstract "In a nutshell"
     - Runs as the `hivemind-mattermost-bridge` console command, logging into Mattermost as a bot user account (email/login and password).
     - HiveMind connection details default to the stored node identity; pass the Mattermost flags each run.
-    - The bridge client needs at minimum `allow-msg "speak"`.
+    - The bridge client needs at minimum `allow-msg "recognizer_loop:utterance"` and `allow-msg "speak"`.
 
 !!! tip "Beginner's mental model"
     The bridge logs into Mattermost as a normal **bot user account** (an email/login
@@ -116,6 +116,7 @@ channel, addressed to the sender as `@user , <answer>`.
 The bridge client needs at minimum:
 
 ```bash
+hivemind-core allow-msg "recognizer_loop:utterance" <id>
 hivemind-core allow-msg "speak" <id>
 ```
 
