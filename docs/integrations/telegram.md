@@ -53,8 +53,9 @@ hivemind-core allow-msg "speak" <id>
 ```
 
 A freshly added client is denied every message type by default. Skipping this step is
-the classic silent failure: the bot receives your message fine, but nothing ever comes
-back, because the hub drops the forwarded utterance instead of erroring.
+the classic failure mode: the bot receives your message fine, but nothing ever comes
+back. The hub does send an explicit `hive.policy.denied` error over the connection, but
+the bridge doesn't currently surface that error to the chat, so it looks silent.
 
 ---
 

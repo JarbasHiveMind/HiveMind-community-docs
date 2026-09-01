@@ -42,8 +42,9 @@ By default this browser client ships its captured audio as **base64 over the bus
    hivemind-core allow-msg "recognizer_loop:b64_audio"
    ```
 
-Without both, the WebSocket connects but the audio is silently dropped and you get no
-reply.
+Without both, the WebSocket connects but no audio ever reaches hivemind-core. The hub
+does send an explicit `hive.policy.denied` error over the connection, but the page
+doesn't currently surface that error, so it looks silent.
 
 Switching the page's **Audio transport** setting to `binary` instead sends each utterance
 as a WIRE-1 `STT_AUDIO_HANDLE` raw-PCM binary frame, smaller on the wire with no base64

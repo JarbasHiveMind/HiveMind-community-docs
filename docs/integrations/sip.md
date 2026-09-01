@@ -84,8 +84,9 @@ hivemind-core allow-msg "baresip.dtmf" <id>
 ```
 
 Skipping `speak:b64_audio` is the classic failure mode: calls connect and get
-transcribed fine, but the bridge never speaks back, because the hub silently drops the
-reply-audio message instead of erroring.
+transcribed fine, but the bridge never speaks back. The hub does send an explicit
+`hive.policy.denied` error over the connection, but the bridge doesn't currently surface
+that error to the call, so it looks silent.
 
 ---
 
