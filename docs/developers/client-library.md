@@ -367,11 +367,9 @@ sender's key must be in the receiver's `trusted_keys` (see *Identity & trusted
 keys* below); a message whose `target_public_key` matches the receiver is always
 accepted.
 
-> **HTTP wire format differs.** `HiveMindHTTPClient.emit_intercom` does **not**
-> use the hybrid envelope. It RSA-encrypts the whole serialized message with
-> `encrypt_RSA(pubkey, ...)`, signs it, and sends a payload of just
-> `{"ciphertext": ..., "signature": ...}` (both base64). Don't mix the two
-> formats across transports.
+All three clients — sync, async, and HTTP — build the same hybrid envelope for
+`emit_intercom`: a random AES-256-GCM key encrypts the payload, RSA encrypts only that
+key, and the result carries `encrypted_key`, `ciphertext`, `tag`, `nonce`, and `signature`.
 
 ---
 
