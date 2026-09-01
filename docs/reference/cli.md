@@ -46,6 +46,10 @@ Commands:
   set-metadata         Set arbitrary metadata on a client
   migrate-db           Migrate the database to a different backend
   policy               Inspect the policy admission chain
+  derive-psk           Derive a Noise pre-shared key for a constrained client
+  reset-noise-pin      Clear a client's pinned Noise static key
+  allow-broadcast      Grant broadcast capability to a client
+  blacklist-broadcast  Revoke broadcast capability from a client
 ```
 
 > `NODE_ID` (and `MSG_TYPE` / `SKILL_ID` / `INTENT_ID`) are **positional** arguments, not options. If you omit `NODE_ID`, the command prompts interactively with a list of clients.
@@ -78,6 +82,7 @@ Options:
   --crypto-key TEXT  Optional pre-shared encryption key
   --admin BOOLEAN    Grant admin powers to the client (default: false)
   --metadata TEXT    Client metadata as a JSON object
+  --allow-weak-password  Skip the password-strength check (not recommended)
 ```
 
 The node ID is auto-assigned; there is no `--node-id` option. Output includes the `Access Key`, `Password`, and deprecated `Encryption Key`.
@@ -89,7 +94,9 @@ The node ID is auto-assigned; there is no `--node-id` option. Output includes th
     hivemind-core allow-msg recognizer_loop:utterance <NODE_ID>
     ```
 
-    Admin clients (`--admin true` or `make-admin`) bypass the whitelist entirely.
+    Admin clients are still subject to the `allowed_types` whitelist. Admin status only
+    grants elevated capabilities like broadcast; grant the message types an admin client
+    needs the same way you would for any other client.
 
 ### list-clients
 
@@ -108,9 +115,14 @@ Options:
 
 ```
 Usage: hivemind-core delete-client [NODE_ID]
+
+Options:
+  --yes  Skip the confirmation prompt (for scripting)
 ```
 
-`NODE_ID` is a positional argument; omit it to pick from a prompt.
+`NODE_ID` is a positional argument; omit it to pick from a prompt. Deleting a client
+permanently revokes its credentials, so the command confirms interactively unless `--yes`
+is passed.
 
 ### allow-msg / blacklist-msg
 
@@ -220,6 +232,39 @@ Usage: hivemind-core policy test API_KEY MSG_TYPE
 
 `policy list` prints the active policy chain (`MessageTypeACLPolicy` first, then plugins from `policy.chain`). `policy test` looks up the client by `API_KEY` and runs a fake message of `MSG_TYPE` through the full chain, printing the verdict.
 
+### derive-psk
+
+```
+Usage: hivemind-core derive-psk [OPTIONS]
+
+Options:
+  --password TEXT  Password to derive the key from (required)
+  --node-id TEXT   Client node ID to salt the derivation with (required)
+```
+
+Derives the 32-byte v3 Noise pre-shared key for a constrained or microcontroller client
+that cannot run the full handshake, from the same password and node ID the client is
+configured with.
+
+### reset-noise-pin
+
+```
+Usage: hivemind-core reset-noise-pin [NODE_ID]
+```
+
+Clears the trust-on-first-use pinned Noise static key for one client, so it can re-pair
+after a reinstall or reflash. `NODE_ID` is positional; omit it to pick from a prompt.
+
+### allow-broadcast / blacklist-broadcast
+
+```
+Usage: hivemind-core allow-broadcast [NODE_ID]
+Usage: hivemind-core blacklist-broadcast [NODE_ID]
+```
+
+Grants or revokes the `can_broadcast` flag for a client. Broadcast still requires the
+client to also be an admin (`make-admin`) to take effect.
+
 ---
 
 ## hivemind-client
@@ -241,6 +286,7 @@ Commands:
   escalate           Send an OVOS message wrapped in ESCALATE
   propagate          Send an OVOS message wrapped in PROPAGATE
   ping               Flood-ping the mesh and print the responding topology
+  forget-server      Drop the pinned Noise key of a master server
 ```
 
 ### set-identity
@@ -257,6 +303,32 @@ Options:
 ```
 
 Writes `~/.config/hivemind/_identity.json`.
+
+### test-identity
+
+```
+Usage: hivemind-client test-identity [OPTIONS]
+
+Options:
+  --timeout FLOAT  Seconds to wait for a connection (default: 30.0)
+```
+
+Connects using the saved identity file and reports success or failure — the quickest way
+to confirm credentials still work after a server-side change.
+
+### forget-server
+
+```
+Usage: hivemind-client forget-server [OPTIONS]
+
+Options:
+  --host TEXT     Server host
+  --port INTEGER  Server port
+```
+
+Drops the pinned Noise static key for a master server. Reinstalling the master or
+restoring it from a backup gives it a new key, so the satellite stops connecting until its
+old pin is cleared with this command.
 
 ### terminal
 

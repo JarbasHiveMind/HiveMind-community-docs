@@ -7,7 +7,7 @@ out, plus the satellite identity file and the ports everything listens on.
 
 !!! abstract "In a nutshell"
     - `hivemind-core` reads `~/.config/hivemind-core/server.json` at startup; `hivemind-core listen` takes no flags, so all settings live in this file.
-    - Configurable blocks: `binarize`, `allowed_encodings`/`allowed_ciphers`, `min_protocol_version`, the password-strength keys, `agent_protocol`, `binary_protocol`, `presence`, `network_protocol`, `policy.chain`, `last_seen_update_interval`, and `database`.
+    - Configurable blocks: `binarize`, `allowed_encodings`/`allowed_ciphers`, `min_protocol_version`, the password-strength keys, `agent_protocol`, `binary_protocol`, `presence`, `network_protocol`, `policy.chain`, `last_seen_update_interval`, `database`, `rendezvous`, `upstream`, `utterance_transformers`, `metadata_transformers`, `dialog_transformers`, and `ping_flood_interval`.
     - The database backend and TLS certificates are auto-selected on first run.
     - Satellites store credentials in `~/.config/hivemind/_identity.json`, written by `hivemind-client set-identity`.
 
@@ -74,14 +74,31 @@ here:
       {"module": "hivemind-ovos-agent-policy"}
     ]
   },
-  "last_seen_update_interval": 0,
+  "last_seen_update_interval": 60,
   "database": {
     "module": "hivemind-sqlite-db-plugin",
     "hivemind-sqlite-db-plugin": {
       "name": "clients",
       "subfolder": "hivemind-core"
     }
-  }
+  },
+  "rendezvous": {
+    "enabled": false,
+    "max_pending_per_mailbox": 256
+  },
+  "upstream": {
+    "enabled": false,
+    "host": "127.0.0.1",
+    "port": 5678,
+    "key": "",
+    "password": "",
+    "ssl": false,
+    "self_signed": true
+  },
+  "utterance_transformers": {},
+  "metadata_transformers": {},
+  "dialog_transformers": {},
+  "ping_flood_interval": 30
 }
 ```
 
@@ -187,7 +204,7 @@ List of policy plugin modules applied in order to each incoming message. The def
 
 | Key | Default | Description |
 |---|---|---|
-| `last_seen_update_interval` | `0` | Seconds to debounce the `last_seen` write to the client database. `0` keeps the per-message write. Raise it only when the database cannot absorb one write per admitted message. |
+| `last_seen_update_interval` | `60` | Seconds to debounce the `last_seen` write to the client database. `0` disables the debounce and writes on every admitted message. |
 
 ### database
 
@@ -198,6 +215,36 @@ List of policy plugin modules applied in order to each incoming message. The def
 Per-plugin settings are nested under the plugin name key. See [Database Backends](../concepts/databases.md).
 
 **Auto-selection:** when `server.json` does not already define a `database` block, the backend is chosen automatically on first run. If a legacy `clients.json` exists (in `<xdg_data_home>/hivemind-core/`) and no SQLite `clients.db` is present, the JSON backend (`hivemind-json-db-plugin`) is kept so an upgrade never strands an existing credential store. Otherwise SQLite (`hivemind-sqlite-db-plugin`) is the default. Move an existing JSON store to SQLite with `hivemind-core migrate-db --to sqlite`.
+
+### rendezvous
+
+| Key | Default | Description |
+|---|---|---|
+| `enabled` | `false` | Enables the optional `hivemind-rendezvous` store-and-forward mailbox for offline peers. |
+| `max_pending_per_mailbox` | `256` | Cap on queued messages per mailbox before older ones are dropped. |
+
+### upstream
+
+| Key | Default | Description |
+|---|---|---|
+| `enabled` | `false` | Connects this node upstream to a parent HiveMind server, federating it into a mesh instead of running standalone. |
+| `host` / `port` | `127.0.0.1` / `5678` | Address of the upstream server. |
+| `key` / `password` | `""` / `""` | Credentials for the upstream connection. |
+| `ssl` / `self_signed` | `false` / `true` | TLS settings for the upstream connection. |
+
+### utterance_transformers / metadata_transformers / dialog_transformers
+
+| Key | Default | Description |
+|---|---|---|
+| `utterance_transformers` | `{}` | OPM utterance-transformer plugins to run on inbound text, keyed by plugin name. |
+| `metadata_transformers` | `{}` | OPM metadata-transformer plugins to run on inbound message context, keyed by plugin name. |
+| `dialog_transformers` | `{}` | OPM dialog-transformer plugins to run on outbound speech, keyed by plugin name. |
+
+### ping_flood_interval
+
+| Key | Default | Description |
+|---|---|---|
+| `ping_flood_interval` | `30` | Minimum seconds between accepted pings from the same client, to rate-limit ping floods. |
 
 ---
 
