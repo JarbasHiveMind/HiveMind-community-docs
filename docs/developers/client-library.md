@@ -31,7 +31,7 @@ pip install hivemind-bus-client
 
 | Library | Language | Notes |
 |---|---|---|
-| [hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind-websocket-client) | Python | Primary client; WebSocket + HTTP + async + MQTT |
+| [hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind-websocket-client) | Python | Primary client; WebSocket + HTTP + async. A satellite-side MQTT client is planned, not yet shipped |
 | [HiveMind-js](https://github.com/JarbasHiveMind/HiveMind-js) | JavaScript | Browser and Node.js |
 | [ovos-solver-hivemind-plugin](https://github.com/JarbasHiveMind/ovos-solver-hivemind-plugin) | Python | OVOS solver plugin — chat with a hivemind-core server |
 
