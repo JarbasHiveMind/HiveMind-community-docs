@@ -176,4 +176,4 @@ Validated against the HiveMind source:
 
 - [`hivemind_voice_satellite/__main__.py`](https://github.com/JarbasHiveMind/HiveMind-voice-sat/blob/HEAD/hivemind_voice_satellite/__main__.py) — CLI flags (`--host --key --password --port --selfsigned --siteid`) and the ggwave audio-password pairing path
 - [`hivemind_voice_satellite/service.py`](https://github.com/JarbasHiveMind/HiveMind-voice-sat/blob/HEAD/hivemind_voice_satellite/service.py) — the local STT/TTS voice client
-- [`requirements/requirements.txt`](https://github.com/JarbasHiveMind/HiveMind-voice-sat/blob/HEAD/requirements/requirements.txt) — shipped default plugins (`ovos-stt-plugin-server` / `ovos-tts-plugin-server`, remote HTTP) and `hivemind-ggwave`
+- [`pyproject.toml`](https://github.com/JarbasHiveMind/HiveMind-voice-sat/blob/HEAD/pyproject.toml) — shipped default plugins (`ovos-stt-plugin-server` / `ovos-tts-plugin-server`, remote HTTP) and `hivemind-ggwave`
