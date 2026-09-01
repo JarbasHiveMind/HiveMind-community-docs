@@ -218,12 +218,12 @@ last = m.agent_protocol.last_injected("speak")
 assert last.data["utterance"] == "hello world"
 
 # HiveMessages routed through any node (recorder; msg_type is the lowercase
-# HiveMessageType value, e.g. "bus", "propagate", "handshake")
+# HiveMessageType value, e.g. "bus", "propagate", "shake")
 node.recorder.assert_received("bus", count=1)
 node.recorder.assert_not_received("propagate")
 
 # Block until a message arrives (returns the RecordedMessage or None on timeout)
-rec = master_node.wait_for("handshake", timeout=5)
+rec = master_node.wait_for("shake", timeout=5)
 
 # Ready-made helpers from hivescope.assertions
 from hivescope.assertions import (
