@@ -10,7 +10,7 @@ key and forwarding utterances to hivemind-core.
 !!! abstract "In a nutshell"
     - Logs into Matrix as a bot with an access token and relays room messages to `hivemind-core`.
     - HiveMind credentials come from the stored node identity (`hivemind-client set-identity`); the `run` command takes no HiveMind flags.
-    - The bridge client needs at minimum `allow-msg "speak"`.
+    - The bridge client needs at minimum `allow-msg "recognizer_loop:utterance"` and `allow-msg "speak"`.
 
 Matrix is a federated, end-to-end-encrypted chat protocol. You register a bot account at any Matrix provider and the bridge logs in as that bot.
 
@@ -72,10 +72,13 @@ The bridge runs as a HiveMind client. Each Matrix message from a room member is 
 The bridge client needs at minimum:
 
 ```bash
+hivemind-core allow-msg "recognizer_loop:utterance" <id>
 hivemind-core allow-msg "speak" <id>
 ```
 
-Add further permissions if your use case requires access to specific skills or message types.
+Skipping the first grant is the most common reason the bridge joins the room fine but posts
+"Error" back on every message instead of a reply. Add further permissions if your use case
+requires access to specific skills or message types.
 
 ---
 

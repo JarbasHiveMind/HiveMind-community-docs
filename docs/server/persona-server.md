@@ -46,22 +46,19 @@ OpenAI-compatible backend; save it somewhere like `~/.config/ovos_persona/person
 ```json
 {
   "name": "MyAssistant",
-  "solvers": [
-    {
-      "module": "ovos-chat-openai-plugin",
-      "ovos-chat-openai-plugin": {
-        "api_url": "http://localhost:8000/v1",
-        "key": "your-api-key",
-        "model": "local-model",
-        "system_prompt": "You are a helpful, concise assistant."
-      }
-    }
-  ]
+  "solvers": ["ovos-chat-openai-plugin"],
+  "ovos-chat-openai-plugin": {
+    "api_url": "http://localhost:8000/v1",
+    "key": "your-api-key",
+    "model": "local-model",
+    "system_prompt": "You are a helpful, concise assistant."
+  }
 }
 ```
 
-The OpenAI solver keys are `api_url`, `key`, `model`, and `system_prompt` — there is no
-`persona` key inside the solver block; the persona is the surrounding document.
+`solvers` is a flat list of plugin module names, in load order. Each named plugin's own
+config is a sibling key at the top level of the document, not nested inside the list — a
+solver entry written as a nested object instead of a plain string crashes on load.
 
 ---
 
@@ -140,17 +137,13 @@ that spectrum:
 ```json
 {
   "name": "LocalAssistant",
-  "solvers": [
-    {
-      "module": "ovos-chat-openai-plugin",
-      "ovos-chat-openai-plugin": {
-        "api_url": "http://127.0.0.1:11434/v1",
-        "key": "ollama",
-        "model": "llama3",
-        "system_prompt": "You are a concise and accurate assistant."
-      }
-    }
-  ]
+  "solvers": ["ovos-chat-openai-plugin"],
+  "ovos-chat-openai-plugin": {
+    "api_url": "http://127.0.0.1:11434/v1",
+    "key": "ollama",
+    "model": "llama3",
+    "system_prompt": "You are a concise and accurate assistant."
+  }
 }
 ```
 
@@ -159,17 +152,13 @@ that spectrum:
 ```json
 {
   "name": "ChatGPT",
-  "solvers": [
-    {
-      "module": "ovos-chat-openai-plugin",
-      "ovos-chat-openai-plugin": {
-        "api_url": "https://api.openai.com/v1",
-        "key": "<your_openai_key>",
-        "model": "gpt-4o-mini",
-        "system_prompt": "You are helpful, creative, clever, and very friendly."
-      }
-    }
-  ]
+  "solvers": ["ovos-chat-openai-plugin"],
+  "ovos-chat-openai-plugin": {
+    "api_url": "https://api.openai.com/v1",
+    "key": "<your_openai_key>",
+    "model": "gpt-4o-mini",
+    "system_prompt": "You are helpful, creative, clever, and very friendly."
+  }
 }
 ```
 
