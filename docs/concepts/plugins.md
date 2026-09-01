@@ -90,7 +90,9 @@ The built-in `allowed_types` ACL (`MessageTypeACLPolicy`) is always force-prepen
 
 All five families meet in one place: `server.json`. Reading the default file is the
 fastest way to see how the parts name each other — every `module` key is one part snapping
-into its socket:
+into its socket, except `network_protocol`: since more than one transport can be active at
+once, it has no single `module` selector, and each enabled plugin instead appears directly
+as a key of the block:
 
 ```json
 {
