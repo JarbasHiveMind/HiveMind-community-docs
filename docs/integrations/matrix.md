@@ -37,8 +37,9 @@ Usage: HiveMind-matrix run [OPTIONS]
   Connect a Matrix chatroom to HiveMind
 
 Options:
-  --botname TEXT      Bot username (effectively required: omitting it currently crashes the
-                      message handler on every incoming message)
+  --botname TEXT      Bot username (default: none — respond-to-every-message mode; set it
+                      to switch to mention-only mode, requires `hivemind-matrix-bridge >=
+                      0.2.2a1`)
   --matrixtoken TEXT  Matrix access token
   --matrixhost TEXT   Matrix homeserver URL (default: https://matrix.org)
   --room TEXT         Matrix room ID (e.g. #hivemind-bots:matrix.org)
