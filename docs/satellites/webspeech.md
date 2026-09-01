@@ -10,7 +10,9 @@ password alone is all it takes.
 
 !!! abstract "In a nutshell"
     - **On the device (the browser):** microphone capture and VAD (JavaScript — Silero via onnxruntime-web), with three independently configurable options: wake word, audio transport, and text-to-speech.
-    - **On hivemind-core:** STT, TTS, skills, and intents (unless in-browser TTS is enabled).
+    - **On hivemind-core:** STT, skills, and intents. TTS synthesis never happens server-side for
+      this satellite: the default `server-text` setting renders the reply as text only, and
+      `phoonnx-js` synthesizes it in-browser instead.
     - By default it ships audio as base64 over the bus (`recognizer_loop:b64_audio`) — the server needs `ovos-dinkum-listener >= 0.0.3a19` and a one-time `hivemind-core allow-msg "recognizer_loop:b64_audio"`. Switching the audio transport to `binary` instead sends a WIRE-1 `STT_AUDIO_HANDLE` frame, admitted through hivemind-core's binary policy rather than the bus allow-list.
     - Encryption defaults to the Noise v3 handshake with full parity to hivemind-core, deriving the key from the password in-browser. A password is enough — nothing to provision.
 
