@@ -115,7 +115,7 @@ WARNING: Encryption Key is deprecated, only use if your client does not support 
 NOTE: Allowed message types is empty — this client will be DENIED on every message.
       Grant access explicitly, e.g.:
       hivemind-core allow-msg recognizer_loop:utterance 2
-      (admin clients bypass the whitelist; use 'make-admin' if appropriate)
+      (admin status does not exempt a client from the message type whitelist)
 ```
 
 Read that last note. A new client starts with an empty whitelist and is denied every
@@ -227,7 +227,7 @@ plus Steps 6 to 8 (connect) again.
   common cause of a satellite that connects but stays silent.
 - Check the satellite's terminal logs for connection or audio errors.
 - Re-run `hivemind-client test-identity` on the satellite to confirm it still reaches the server.
-- `hivemind-voice-sat`'s **default STT and TTS are remote services** at `*.openvoiceos.org`, so the satellite needs internet access on first run. To go fully local, install local STT/TTS plugins on the satellite — see [Voice Satellite](satellites/voice-sat.md).
+- `hivemind-voice-sat`'s **default STT and TTS are remote services** at `*.openvoiceos.pt` (with a `tts.smartgic.io/piper` TTS fallback), so the satellite needs internet access on first run. To go fully local, install local STT/TTS plugins on the satellite — see [Voice Satellite](satellites/voice-sat.md).
 - Confirm `ovos-core` and `ovos-messagebus` are still running on the server (Step 1).
 
 ---
