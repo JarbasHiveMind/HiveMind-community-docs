@@ -20,7 +20,7 @@ All message types are defined in `HiveMessageType` in `hivemind_bus_client.messa
 
 If you only need to jog your memory, this table is the whole page — every type, its
 category, which way it flows, and what it's for, on one screen. Skim the Category column
-first: it groups the fourteen types into the four jobs they do, and the per-type sections
+first: it groups the thirteen types into the four jobs they do, and the per-type sections
 below expand whichever one you landed on. The Wire value column is the exact string to put
 in the JSON `msg_type` field. Four of them are not the lowercased enum name, so copy them
 rather than derive them.
@@ -40,9 +40,8 @@ rather than derive them.
 | `RENDEZVOUS` | `rendezvous` | Transport | Bidirectional | Deposit and collect mail for an offline peer |
 | `HELLO` | `hello` | Connection | Bidirectional | Node announcement on connect |
 | `HANDSHAKE` | `shake` | Connection | Bidirectional | Cryptographic key exchange |
-| `THIRDPRTY` | `3rdparty` | Payload | Bidirectional | User-defined message, no built-in handling |
 
-Only twelve of the fourteen have a 5-bit code for [binary framing](../developers/protocol-spec.md#message-type-encoding). `INTERCOM` never had one. `THIRDPRTY` had code `11`, which was later removed and stays permanently reserved — both types send as JSON only.
+Twelve of the thirteen have a 5-bit code for [binary framing](../developers/protocol-spec.md#message-type-encoding). `INTERCOM` never had one; it sends as JSON only. Code `11` belonged to a fourteenth type, `THIRDPRTY`, which has since been removed from the protocol; the code stays permanently reserved and unassigned rather than reused.
 
 The sections that follow take the types one at a time, roughly in order of how often
 you'll touch them — the everyday `BUS` first, the mesh-routing verbs next, and the
@@ -92,11 +91,12 @@ Raw binary payload.
 
 ---
 
-## THIRDPRTY
+## THIRDPRTY (removed)
 
-A user-defined message with no built-in HiveMind handling — an escape hatch for custom,
-application-specific payloads that don't fit any of the other types. Always sent as JSON;
-its old binary framing code was removed and stays reserved, never reused.
+`THIRDPRTY` was a user-defined message type with no built-in HiveMind handling, meant as
+an escape hatch for custom, application-specific payloads. It has been removed from the
+protocol; `HiveMessageType` no longer has a `THIRDPRTY` member. Its old binary framing
+code, `11`, stays permanently reserved and is never reused for a new type.
 
 ---
 
