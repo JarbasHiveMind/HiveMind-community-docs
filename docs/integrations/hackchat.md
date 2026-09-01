@@ -11,7 +11,7 @@ to hivemind-core like every other bridge.
 !!! abstract "In a nutshell"
     - Runs as the `hivemind-hackchat-bridge` console command; pick any channel name and a bot nickname.
     - Needs no platform credentials — only your HiveMind identity (stored, or passed via `--access-key` / `--password` / `--host`).
-    - The bridge client needs at minimum `allow-msg "speak"`.
+    - The bridge client needs at minimum `allow-msg "recognizer_loop:utterance"` and `allow-msg "speak"`.
 
 hack.chat is a minimal, **anonymous** public chat — you join a channel just by naming
 it, with no sign-up. That makes this the simplest bridge to try: there are **no
@@ -98,8 +98,12 @@ to `hivemind-core`; the `speak` response is posted back into the channel.
 The bridge client needs at minimum:
 
 ```bash
+hivemind-core allow-msg "recognizer_loop:utterance" <id>
 hivemind-core allow-msg "speak" <id>
 ```
+
+Skipping the first grant is the most common reason the bridge joins the channel fine but
+never posts a reply.
 
 ---
 

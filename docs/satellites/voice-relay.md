@@ -60,7 +60,15 @@ See [Audio Binary Protocol](../server/audio-binary-protocol.md).
 hivemind-core add-client --name my-voice-relay
 ```
 
-**2. On the satellite** — write the identity file:
+**2. On hivemind-core** — grant the client the message types it needs. A new client
+starts with an empty whitelist and is denied every message until you grant one:
+
+```bash
+hivemind-core allow-msg "recognizer_loop:utterance" <node_id>
+hivemind-core allow-msg "recognizer_loop:b64_transcribe" <node_id>
+```
+
+**3. On the satellite** — write the identity file:
 
 ```bash
 hivemind-client set-identity \
@@ -69,13 +77,13 @@ hivemind-client set-identity \
   --host <server_host>
 ```
 
-**3. Run:**
+**4. Run:**
 
 ```bash
 hivemind-voice-relay
 ```
 
-**4. Say your wake word.** Default is `hey mycroft` (configured in `~/.config/mycroft/mycroft.conf`).
+**5. Say your wake word.** Default is `hey mycroft` (configured in `~/.config/mycroft/mycroft.conf`).
 
 ---
 
