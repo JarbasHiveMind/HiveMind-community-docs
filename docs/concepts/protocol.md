@@ -243,7 +243,9 @@ Back down at the level of a single `BUS` message: how does hivemind-core keep tw
 satellites' conversations from bleeding into each other, and enforce that a guest device
 can't invoke the skills you blacklisted for it? The answer is a bundle of metadata it
 quietly staples onto every message before handing it to OVOS. You rarely set these
-yourself, but knowing they're there explains a lot of "how did it know that?" moments:
+yourself, but knowing they're there explains a lot of "how did it know that?" moments.
+For the `Session` object and `IntentService` themselves, see the
+[OVOS technical manual](https://tigregotico.github.io/ovos-technical-manual/session/):
 
 | Key | Value | Purpose |
 |---|---|---|
