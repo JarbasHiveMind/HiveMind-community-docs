@@ -18,7 +18,7 @@ mini PC).
 
 > **Note**: STT and TTS are chosen on the satellite, but the *shipped defaults*
 > (`ovos-stt-plugin-server` / `ovos-tts-plugin-server`) are remote HTTP services
-> pointed at `*.openvoiceos.org`. Audio stays off hivemind-core, but with the defaults it
+> pointed at `*.openvoiceos.pt`. Audio stays off hivemind-core, but with the defaults it
 > still leaves the device for transcription. For true on-device/offline operation,
 > swap in local STT/TTS plugins (see [Configuration](#configuration)).
 
@@ -33,7 +33,7 @@ mini PC).
 - Devices with sufficient CPU/GPU (laptop, desktop, Raspberry Pi 4B or better)
 - Maximum audio privacy — **only if** you swap in local STT/TTS plugins. The shipped
   defaults (`ovos-stt-plugin-server` / `ovos-tts-plugin-server`) send audio to a
-  remote speech server (configured against `*.openvoiceos.org`).
+  remote speech server (configured against `*.openvoiceos.pt`).
 - Low-latency interaction (no round-trip for audio)
 - Fully offline operation after initial model downloads — again, only with local
   STT/TTS plugins in place of the remote-server defaults
@@ -131,11 +131,11 @@ Example:
   },
   "stt": {
     "module": "ovos-stt-plugin-server",
-    "ovos-stt-plugin-server": { "url": "https://stt.openvoiceos.org/stt" }
+    "ovos-stt-plugin-server": { "url": "https://stt.openvoiceos.pt/stt" }
   },
   "tts": {
     "module": "ovos-tts-plugin-server",
-    "ovos-tts-plugin-server": { "host": "https://tts.openvoiceos.org" }
+    "ovos-tts-plugin-server": { "host": "https://tts.openvoiceos.pt" }
   }
 }
 ```

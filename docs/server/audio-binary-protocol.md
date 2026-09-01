@@ -38,13 +38,13 @@ jobs:
       "stt": {
         "module": "ovos-stt-plugin-server",
         "ovos-stt-plugin-server": {
-          "url": "https://stt.openvoiceos.org/stt"
+          "url": "https://stt.openvoiceos.pt/stt"
         }
       },
       "tts": {
         "module": "ovos-tts-plugin-server",
         "ovos-tts-plugin-server": {
-          "host": "https://tts.openvoiceos.org"
+          "host": "https://tts.openvoiceos.pt"
         }
       },
       "vad": {
