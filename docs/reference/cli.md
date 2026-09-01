@@ -239,7 +239,7 @@ Usage: hivemind-core derive-psk [OPTIONS]
 
 Options:
   --password TEXT  Password to derive the key from (required)
-  --node-id TEXT   Client node ID to salt the derivation with (required)
+  --node-id TEXT   This server's node ID, used to salt the derivation (required)
 ```
 
 Derives the 32-byte v3 Noise pre-shared key for a constrained or microcontroller client
