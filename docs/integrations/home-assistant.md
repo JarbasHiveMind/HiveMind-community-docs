@@ -132,8 +132,8 @@ mycroft.audio.service.set_track_position
 ### PHAL
 
 ```
-mycroft.phal.is_alive
-mycroft.phal.is_ready
+mycroft.PHAL.is_alive
+mycroft.PHAL.is_ready
 ```
 
 #### ovos-phal-plugin-alsa

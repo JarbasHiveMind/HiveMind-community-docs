@@ -29,14 +29,14 @@ about." All four register under the same `hivemind.network.protocol`
 | Transport | Package | Entry point (`hivemind.network.protocol`) | PyPI status | Notes |
 |---|---|---|---|---|
 | WebSocket | `hivemind-websocket-protocol` | `hivemind-websocket-plugin` | published | Reference / default. Port **5678**. TLS via `ssl` / `cert_dir` / `cert_name`. |
-| HTTP | `hivemind-http-protocol` | `hivemind-http-plugin` | published (early) | Request/response. Source default port **5678** — the manual's `5679` is an explicit override to avoid colliding with WebSocket. |
+| HTTP | `hivemind-http-protocol` | `hivemind-http-plugin` | published (early) | Request/response. Defaults to port **5679**, distinct from WebSocket's `5678`. |
 | MQTT | `hivemind-mqtt-protocol` | `hivemind-mqtt-plugin` | alpha only | Broker-mediated (good for IoT). The broker only ever sees ciphertext. |
-| Usenet | `hivemind-usenet` | `hivemind-usenet-wormhole` (class `UsenetWormhole`) | **not on PyPI — git install only** | Experimental, store-and-forward, censorship-resistant. |
+| Usenet | `hivemind-usenet` | `hivemind-usenet-wormhole` (class `UsenetWormhole`) | **private repo, invite-only** | Experimental, store-and-forward, censorship-resistant. |
 
 !!! warning "Maturity matters"
-    **MQTT is alpha** and **Usenet is experimental and git-only.** Don't assume
-    `pip install hivemind-usenet` works — it is not on PyPI, and it depends on
-    git-only carrier libraries. Treat both as for-the-curious until they ship to PyPI.
+    **MQTT is alpha** and **Usenet is experimental, private, and invite-only.** There is no
+    public install path for Usenet yet — the repo itself is not publicly readable. Treat
+    both as for-the-curious.
 
 ---
 
@@ -55,11 +55,8 @@ A request/response transport for environments where a long-lived socket is awkwa
 (some proxies, serverless front-ends). Each utterance is a request; the answer comes
 back in the response.
 
-!!! warning "Set an explicit port"
-    The HTTP plugin's **source default port is `5678`** — the same as WebSocket. The
-    default `server.json` ships it on `5679` as a deliberate override. If you enable
-    the HTTP plugin and forget to set `port`, it will collide with the WebSocket
-    listener. Always give the HTTP block its own port.
+The HTTP plugin defaults to port `5679` on its own, distinct from the WebSocket
+listener's `5678` default. Enabling both with no `port` set works out of the box.
 
 ---
 
@@ -121,6 +118,6 @@ is why swapping the carrier doesn't touch the encryption or the message format. 
 Validated against the HiveMind source:
 
 - [`hivemind_websocket_protocol/__init__.py`](https://github.com/JarbasHiveMind/hivemind-websocket-protocol/blob/HEAD/hivemind_websocket_protocol/__init__.py) — the default WebSocket transport, port `5678`, and TLS keys
-- [`hivemind_http_protocol/__init__.py`](https://github.com/JarbasHiveMind/hivemind-http-protocol/blob/HEAD/hivemind_http_protocol/__init__.py) — the HTTP transport and its source-default port `5678`
+- [`hivemind_http_protocol/__init__.py`](https://github.com/JarbasHiveMind/hivemind-http-protocol/blob/HEAD/hivemind_http_protocol/__init__.py) — the HTTP transport and its default port `5679`
 - [`hivemind-mqtt-protocol`](https://github.com/JarbasHiveMind/hivemind-mqtt-protocol) — the alpha MQTT transport and its broker config keys
 - [`hivemind-usenet`](https://github.com/JarbasHiveMind/hivemind-usenet) — the experimental, git-only Usenet transport

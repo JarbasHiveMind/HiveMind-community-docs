@@ -21,12 +21,8 @@ satellite relaying [utterances](../reference/glossary.md#utterance) to hivemind-
 
 ## Install
 
-This package is not on PyPI. Install from a checkout:
-
 ```bash
-git clone https://github.com/JarbasHiveMind/HiveMind-twitch-bridge
-cd HiveMind-twitch-bridge
-pip install .
+pip install HiveMind-twitch-bridge
 ```
 
 This installs the `hivemind-twitch-bridge` console command.

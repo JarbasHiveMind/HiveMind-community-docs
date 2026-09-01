@@ -93,13 +93,8 @@ does the right thing:
 }
 ```
 
-!!! warning "The HTTP port `5679` is a deliberate override"
-    The WebSocket plugin's source default port is **5678** (correct above). The HTTP
-    plugin's *source* default port is **also 5678** — the `5679` you see in this
-    `server.json` is an explicit override so the two listeners don't collide. If you
-    copy the `hivemind-http-plugin` block but drop the `port` key, HTTP falls back to
-    its `5678` default and clashes with the WebSocket listener. Always keep `port: 5679`
-    (or any free port) on the HTTP block.
+The WebSocket plugin defaults to port `5678` and the HTTP plugin defaults to `5679` — the
+`port` keys above are the defaults spelled out explicitly, not an override.
 
 The `agent_protocol` block points at the OVOS agent plugin. Its keys are `host`
 (`127.0.0.1`, the OVOS messagebus host), `port` (`8181`, the messagebus port), and

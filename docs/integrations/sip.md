@@ -102,7 +102,8 @@ back into the call.
 
 ## Source
 
-Validated against the HiveMind source:
+Validated against the HiveMind source. `HiveMind-baresip-bridge` is a private repository —
+the links below resolve only for collaborators; ask a maintainer for access.
 
 - [`README.md`](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/blob/HEAD/README.md) — architecture, install, configuration
 - [`docs/setup.md`](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/blob/HEAD/docs/setup.md) — full Asterisk walkthrough and troubleshooting

@@ -125,5 +125,5 @@ Running STT/TTS through the audio binary protocol requires the satellite to have
 
 Validated against the HiveMind source:
 
-- [`setup.py`](https://github.com/JarbasHiveMind/hivemind-audio-binary-protocol/blob/HEAD/setup.py) — the `hivemind-audio-binary-protocol-plugin` entry point in the `hivemind.binary.protocol` group
+- [`pyproject.toml`](https://github.com/JarbasHiveMind/hivemind-audio-binary-protocol/blob/HEAD/pyproject.toml) — the `hivemind-audio-binary-protocol-plugin` entry point in the `hivemind.binary.protocol` group
 - [`hivemind_audio_binary_protocol/protocol.py`](https://github.com/JarbasHiveMind/hivemind-audio-binary-protocol/blob/HEAD/hivemind_audio_binary_protocol/protocol.py) — the binary payload types and the wakeword/STT/TTS/VAD audio flow

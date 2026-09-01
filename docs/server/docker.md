@@ -217,7 +217,9 @@ and most config are read at startup only.
 
 ## Source
 
-Validated against the HiveMind source:
+Validated against the HiveMind source. `hivemind-skills-server-docker` is a private
+repository — the three links below resolve only for collaborators; ask a maintainer for
+access.
 
 - [`docker-compose.yml`](https://github.com/JarbasHiveMind/hivemind-skills-server-docker/blob/HEAD/docker-compose.yml) — the compose stack, mounts, `network_mode: host`, and Redis service
 - [`Dockerfile.hivemind`](https://github.com/JarbasHiveMind/hivemind-skills-server-docker/blob/HEAD/Dockerfile.hivemind) — `FROM debian:trixie-slim`, non-root `hivemind` user, `ovos/hivemind-server` image

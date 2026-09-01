@@ -10,7 +10,7 @@ speaking before the model has finished thinking.
 
 !!! abstract "In a nutshell"
     - Swaps the `agent_protocol` for `hivemind-persona-agent-plugin`, so `hivemind-core` answers from an LLM / solver chain instead of skills.
-    - A persona is just a JSON document naming the solver plugins (e.g. `ovos-solver-openai-plugin`) and their config.
+    - A persona is just a JSON document naming the solver plugins (e.g. `ovos-chat-openai-plugin`) and their config.
     - Text satellites and bridges work against it; audio-binary-protocol satellites don't apply — a persona serves words, not server-side audio.
 
 Satellites built for `hivemind-core` (text-based ones like HiveMind-cli, voice-sat, or
@@ -33,7 +33,7 @@ OpenAI-compatible backend (OpenAI, LocalAI, Ollama, vLLM, …):
 pip install ovos-openai-plugin
 ```
 
-This provides the `ovos-solver-openai-plugin` solver.
+This provides the `ovos-chat-openai-plugin` solver.
 
 ---
 
@@ -48,8 +48,8 @@ OpenAI-compatible backend; save it somewhere like `~/.config/ovos_persona/person
   "name": "MyAssistant",
   "solvers": [
     {
-      "module": "ovos-solver-openai-plugin",
-      "ovos-solver-openai-plugin": {
+      "module": "ovos-chat-openai-plugin",
+      "ovos-chat-openai-plugin": {
         "api_url": "http://localhost:8000/v1",
         "key": "your-api-key",
         "model": "local-model",
@@ -122,7 +122,7 @@ See [OVOS Skills Server](ovos-server.md#managing-clients) for the full client wo
 
 Any `ovos-solver-*` plugin can back the persona. Common ones:
 
-- `ovos-solver-openai-plugin` — OpenAI or any OpenAI-compatible API (LocalAI, Ollama,
+- `ovos-chat-openai-plugin` — OpenAI or any OpenAI-compatible API (LocalAI, Ollama,
   vLLM, …), installed via `pip install ovos-openai-plugin`.
 - `ovos-solver-failure-plugin` — always returns a fallback response (useful for
   testing).
@@ -142,8 +142,8 @@ that spectrum:
   "name": "LocalAssistant",
   "solvers": [
     {
-      "module": "ovos-solver-openai-plugin",
-      "ovos-solver-openai-plugin": {
+      "module": "ovos-chat-openai-plugin",
+      "ovos-chat-openai-plugin": {
         "api_url": "http://127.0.0.1:11434/v1",
         "key": "ollama",
         "model": "llama3",
@@ -161,8 +161,8 @@ that spectrum:
   "name": "ChatGPT",
   "solvers": [
     {
-      "module": "ovos-solver-openai-plugin",
-      "ovos-solver-openai-plugin": {
+      "module": "ovos-chat-openai-plugin",
+      "ovos-chat-openai-plugin": {
         "api_url": "https://api.openai.com/v1",
         "key": "<your_openai_key>",
         "model": "gpt-4o-mini",
