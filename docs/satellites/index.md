@@ -125,4 +125,6 @@ Validated against the HiveMind source:
 - [`docs/configuration.md`](https://github.com/JarbasHiveMind/hivemind-webspeech/blob/HEAD/docs/configuration.md) — WebSpeech server requirement (`ovos-dinkum-listener` + `allow-msg "recognizer_loop:b64_audio"`)
 - [`hivemind_voice_relay/service.py`](https://github.com/JarbasHiveMind/HiveMind-voice-relay/blob/HEAD/hivemind_voice_relay/service.py) — voice-relay base64-over-bus transport (`recognizer_loop:b64_transcribe` / `speak:b64_audio`)
 - [`hivemind_mic_sat/__init__.py`](https://github.com/JarbasHiveMind/hivemind-mic-satellite/blob/HEAD/hivemind_mic_sat/__init__.py) — mic-satellite binary `RAW_AUDIO` transport
+- [`README.md`](https://github.com/JarbasHiveMind/hivemind-esp32-client/blob/HEAD/README.md) — ESP32 satellite tier (private repo, collaborator access only)
+- [`README.md`](https://github.com/JarbasHiveMind/hivemind-micropython-client/blob/HEAD/README.md) — MicroPython satellite tier (private repo, collaborator access only)
 - [`README.md`](https://github.com/JarbasHiveMind/hivemind-flask-chatroom/blob/HEAD/README.md) — text-only chatroom web app
