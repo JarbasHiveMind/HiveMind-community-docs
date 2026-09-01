@@ -53,7 +53,8 @@ X25519 key to enable the lighter `Noise_KKpsk0` pattern.
 
 ## ESP32 (C / ESP-IDF)
 
-[hivemind-esp32-client](https://github.com/JarbasHiveMind/hivemind-esp32-client) is an
+[hivemind-esp32-client](https://github.com/JarbasHiveMind/hivemind-esp32-client) (private
+repo, collaborator access only) is an
 ESP-IDF **component** (written in C) that makes an ESP32 a HiveMind satellite. It
 implements the HiveMind handshake, AEAD encryption, bus messaging, and binary audio
 transport — sized to run on the chip.
@@ -119,6 +120,7 @@ hivemind-core add-client --name esp32 \
 ## MicroPython
 
 [hivemind-micropython-client](https://github.com/JarbasHiveMind/hivemind-micropython-client)
+(private repo, collaborator access only)
 is a pure-Python satellite from a single shared codebase that runs on **MicroPython
 1.20+** (ESP32, Raspberry Pi Pico W, …) **and** on **CPython 3.10+** for desktop
 development — the runtime is auto-detected at import. It is for makers who would rather
@@ -160,7 +162,9 @@ encodings (all optional; the code falls back to pure Python).
 
 ## Source
 
-Validated against the HiveMind source:
+Validated against the HiveMind source. `hivemind-esp32-client` and
+`hivemind-micropython-client` are private repositories — the links below resolve only for
+collaborators.
 
 - [`README.md`](https://github.com/JarbasHiveMind/hivemind-esp32-client/blob/HEAD/README.md) — ESP-IDF component, targets, ciphers, `HM_BIN_RAW_AUDIO` transport, no-TLS V1 design
 - [`docs/getting-started.md`](https://github.com/JarbasHiveMind/hivemind-esp32-client/blob/HEAD/docs/getting-started.md) — ESP-IDF 5.0+, INMP441 mic, build/flash steps
