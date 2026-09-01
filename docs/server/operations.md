@@ -38,9 +38,10 @@ Set `ssl` to `true` and point `cert_dir`/`cert_name` at the certificate to serve
 (`<cert_dir>/<cert_name>.crt` and `.key`). TLS is off by default.
 
 **Self-signed vs real certificates.** On a trusted local network a self-signed
-certificate is sufficient; satellites must then be told to accept it by passing
-`--selfsigned` on their connect commands (`hivemind-voice-sat`, `hivemind-voice-relay`,
-HiveMind-cli, …). For anything exposed beyond the LAN, serve a CA-issued certificate so
+certificate is sufficient; satellites must then be told to accept it by passing the
+self-signed-cert flag on their connect commands: `--selfsigned` for
+`hivemind-voice-sat`/`hivemind-voice-relay`, `--self-signed` for HiveMind-cli. For
+anything exposed beyond the LAN, serve a CA-issued certificate so
 satellites validate it normally — or terminate TLS at a reverse proxy (below) and leave
 `hivemind-core` itself plaintext on the loopback interface. See
 [Security](../concepts/security.md) for the certificate guidance.
@@ -179,11 +180,12 @@ practical rather than built-in:
 - **Service liveness.** Under systemd, `systemctl is-active hivemind-core` and the
   `Restart=on-failure` policy cover process-level health; pair that with the socket probe
   above for the network path.
-- **Presence announce/scan.** If [HiveMind-presence](../concepts/discovery.md) is running
-  alongside `hivemind-core`, a `hivemind-presence scan` should find its announcement on the
-  local network — a coarse confirmation that the node is reachable and advertising. Note
-  presence is an optional, separate process from `hivemind-core listen`, so its absence
-  does not by itself mean `hivemind-core` is down.
+- **Presence announce/scan.** When the optional `hivemind-presence` package is installed
+  and enabled, `hivemind-core listen` starts the announcer itself as a background thread
+  in the same process; a `hivemind-presence scan` should then find its announcement on the
+  local network — a coarse confirmation that the node is reachable and advertising. The
+  package not being installed, or presence being disabled in config, does not by itself
+  mean `hivemind-core` is down.
 
 ---
 
