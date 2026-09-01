@@ -224,7 +224,7 @@ A `PING` is always wrapped inside a `PROPAGATE`, so it floods to every reachable
 There's no `PONG`: each node that hears a `PING` simply re-emits *its own* `PING` carrying
 the same `flood_id`, which floods onward in turn. Receivers dedupe on `flood_id` so a
 probe is only ever processed once, and the payload each one carries is small —
-`{flood_id, peer, site_id, timestamp}`. `HiveMapper` in `hivemind_core.hive_map` sits and
+`{flood_id, peer, site_id, timestamp}`. `HiveMapper` in `hivemind_bus_client.hive_map` sits and
 watches those echoes come back, and from the pattern it draws a live map of the whole
 hive.
 
