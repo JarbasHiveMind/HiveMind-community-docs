@@ -62,7 +62,7 @@ ovos-messagebus
 ovos-core
 ```
 
-See the [OVOS documentation](https://openvoiceos.github.io/community-docs) for a full OVOS setup.
+See the [OVOS documentation](https://tigregotico.github.io/ovos-technical-manual) for a full OVOS setup.
 
 ---
 
@@ -158,7 +158,8 @@ pip install HiveMind-voice-sat
 
 Not sure which satellite fits your hardware? See [Choosing a Satellite](satellites/index.md).
 
-Then hand it the credentials from Step 4 by writing its identity file:
+`HiveMind-voice-sat` also installs the `hivemind-client` CLI, used below to register the
+satellite's identity. Hand it the credentials from Step 4 by writing its identity file:
 
 ```bash
 hivemind-client set-identity \

@@ -2,7 +2,7 @@
 
 This is the setup that turns your hive into a real voice assistant — weather, timers,
 music, home control, hundreds of skills. Behind hivemind-core sits a full
-[OpenVoiceOS](https://openvoiceos.github.io/community-docs) install, and every satellite
+[OpenVoiceOS](https://tigregotico.github.io/ovos-technical-manual) install, and every satellite
 that connects gets the whole thing: ask any of them a question and an OVOS skill answers.
 It's the default flavour, and the one most people want when they picture "a private
 smart speaker I actually own." hivemind-core is the gateway; OVOS is the brain behind it.
@@ -22,7 +22,7 @@ smart speaker I actually own." hivemind-core is the gateway; OVOS is the brain b
 pip install ovos-core ovos-messagebus
 ```
 
-See the [OVOS documentation](https://openvoiceos.github.io/community-docs) for a complete OVOS setup guide.
+See the [OVOS documentation](https://tigregotico.github.io/ovos-technical-manual) for a complete OVOS setup guide.
 
 ---
 

@@ -83,6 +83,9 @@ hivemind-core allow-msg "speak:b64_audio" <id>
 hivemind-core allow-msg "baresip.dtmf" <id>
 ```
 
+`<id>` is the Node ID printed by `add-client` above. `baresip.dtmf` lets the bridge report
+phone keypad tones (DTMF) pressed during the call, for IVR-style menus.
+
 Skipping `speak:b64_audio` is the classic failure mode: calls connect and get
 transcribed fine, but the bridge never speaks back. The hub does send an explicit
 `hive.policy.denied` error over the connection, but the bridge doesn't currently surface

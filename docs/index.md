@@ -51,7 +51,7 @@ still works.
 
 hivemind-core is the mesh; the *intelligence* is a back end you choose and plug in:
 
-- an [OpenVoiceOS](https://openvoiceos.github.io/community-docs) skills server — a full,
+- an [OpenVoiceOS](https://tigregotico.github.io/ovos-technical-manual) skills server — a full,
   private voice assistant (weather, timers, music, home control, hundreds of skills);
 - a **persona** — an LLM with a personality, for open-ended conversation;
 - or your own back end, through the agent-protocol plugins.
