@@ -407,9 +407,10 @@ can allow, deny, or mutate it.
   `Verdict.deny("policy_error", ...)`; `observe` exceptions are logged and swallowed.
 
   Policies run in the order set by the operator's `policy.chain` config, but
-  `MessageTypeACLPolicy` is **always force-prepended** to the chain and cannot be
-  removed by configuration — it enforces each client's `allowed_types` whitelist
-  before any configured plugin runs.
+  `MessageTypeACLPolicy` and `DefaultSessionPolicy` are **always force-prepended**
+  to the chain and cannot be removed by configuration — they enforce each client's
+  `allowed_types` whitelist and session normalization before any configured plugin
+  runs.
 
 Real implementation: `hivemind-ovos-agent-plugin` ships a policy alongside its agent,
 registering `OVOSAgentPolicy` under `hivemind.policy` (see its `pyproject.toml`).
