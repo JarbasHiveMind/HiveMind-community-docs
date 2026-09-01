@@ -40,7 +40,7 @@
 | Term | Definition |
 |---|---|
 | **HiveMind protocol** | The encrypted message protocol satellites and hivemind-core instances speak. Transport-agnostic; WebSocket is the default. See [Protocol & Message Types](../concepts/protocol.md) and the [Protocol Specification](../developers/protocol-spec.md). |
-| **Handshake** | The connection setup that derives a shared session key (PBKDF2-HMAC-SHA256, 100 000 iterations) and establishes an encrypted channel using ChaCha20-Poly1305 or AES-GCM, backed by per-node RSA identities. See [Security & Permissions](../concepts/security.md). |
+| **Handshake** | The connection setup that proves both sides know the shared password and derives a session key without ever transmitting it. Protocol v3 (current default) runs a Noise handshake (X25519 identities, argon2id-derived PSK, ChaCha20-Poly1305); older clients fall back to a legacy PBKDF2-HMAC-SHA256 password handshake backed by RSA identities. See [Security & Permissions](../concepts/security.md). |
 | <span id="bus-message"></span>**BUS message** | An OVOS `messagebus` message carried over the hive, the primary payload type for utterances and responses. |
 | **Bus message types** | The transport verbs that route messages through the mesh: `ESCALATE`, `BROADCAST`, `PROPAGATE`, `QUERY`, `CASCADE`, `INTERCOM` (defined individually below). See [Message Types](message-types.md). |
 | **`ESCALATE`** | A message sent *upward* to a parent hivemind-core instance when a node cannot handle a request locally. |
