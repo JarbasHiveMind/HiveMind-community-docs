@@ -131,7 +131,7 @@ while True:
         break
 ```
 
-The synchronous `HiveMessageBusClient` runs its WebSocket on a background thread; there is no `close()` method — interrupting the loop is enough to stop sending. (An explicit `close()` exists only on the async client in `hivemind_bus_client.async_client`.)
+The synchronous `HiveMessageBusClient` runs its WebSocket on a background thread. Call `close()` to permanently stop reconnecting and close the connection; `close_connection()` is a lower-level method used internally to force a reconnect without giving up the reconnect loop.
 
 ---
 
@@ -236,9 +236,9 @@ def on_speak(message):
 ```
 
 Other decorators target specific `HiveMessageType` envelopes:
-`on_hive_message`, `on_payload`, `on_ping`, `on_broadcast`, `on_propagate`,
-`on_escalate`, `on_handshake`, `on_hello`, `on_query`, `on_cascade`,
-`on_rendezvous`, `on_third_party`, and `on_shared_bus`.
+`on_hive_message`, `on_mycroft_message`, `on_payload`, `on_ping`, `on_broadcast`,
+`on_propagate`, `on_escalate`, `on_handshake`, `on_hello`, `on_query`, `on_cascade`,
+`on_rendezvous`, and `on_shared_bus`.
 
 ---
 
