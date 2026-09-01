@@ -339,7 +339,7 @@ hive is fully private over plain WebSocket. Add TLS only as defence-in-depth —
 }
 ```
 
-**For local networks**: a self-signed certificate is sufficient. Pass `--selfsigned` on satellite commands to accept it.
+**For local networks**: a self-signed certificate is sufficient. Pass `--self-signed` on satellite commands to accept it.
 
 **For internet-facing deployments**: use a reverse proxy (nginx, Caddy, Traefik) with valid certificates from Let's Encrypt. Keep HiveMind on an internal port and expose only the proxy externally. Do not expose port 5678 directly to the internet.
 

@@ -82,6 +82,7 @@ below). The `hivemind-core` transports (WebSocket on `:5678`, etc.) are configur
 | `--no-core` | off | serve the panel only; don't start an in-process `hivemind-core` |
 | `--reload` | off | dev auto-reload (implies `--no-core`) |
 | `--log-level` | `INFO` | log level for the in-process `hivemind-core` |
+| `--i-know-what-im-doing` | off | override the refusal to start on a non-loopback `--host` while `admin`/`admin` credentials are still in effect |
 
 ### Docker
 
@@ -120,6 +121,9 @@ has TLS — and stays red until the critical items clear.
       exactly this reason; don't defeat it by pre-seeding a weak password.
     - `--host 0.0.0.0` and the Docker image bind all interfaces — only do that behind a
       proxy / firewall.
+    - The panel refuses to start (exit code 2) on a non-loopback `--host` while default
+      credentials are still in effect, unless you pass `--i-know-what-im-doing`. Change the
+      credentials instead of reaching for that flag.
 
 ---
 
