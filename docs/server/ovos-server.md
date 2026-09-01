@@ -38,10 +38,12 @@ pip install hivemind-core
 
 All server configuration lives at `~/.config/hivemind-core/server.json`. `hivemind-core listen` takes no command-line flags — edit the file to change any setting. Run `hivemind-core print-config` to dump the effective configuration.
 
-Don't be daunted by the block below — for a standard OVOS server you barely touch it. It's
-printed in full so you can see the defaults, but the one line that matters for this setup
-is the `agent_protocol` block pointing at your OVOS messagebus. Everything else already
-does the right thing:
+Don't be daunted by the block below — for a standard OVOS server you barely touch it. It
+shows the keys relevant to a standard setup (`hivemind-core print-config` shows the rest —
+protocol-version floor, password policy, presence, rendezvous, upstream, transformers,
+timing — all at their own defaults). The one line that matters for this setup is the
+`agent_protocol` block pointing at your OVOS messagebus. Everything else already does the
+right thing:
 
 ```json
 {
@@ -55,8 +57,7 @@ does the right thing:
     "module": "hivemind-ovos-agent-plugin",
     "hivemind-ovos-agent-plugin": {
       "host": "127.0.0.1",
-      "port": 8181,
-      "connection_timeout": 10
+      "port": 8181
     }
   },
   "binary_protocol": {
@@ -97,9 +98,11 @@ The WebSocket plugin defaults to port `5678` and the HTTP plugin defaults to `56
 `port` keys above are the defaults spelled out explicitly, not an override.
 
 The `agent_protocol` block points at the OVOS agent plugin. Its keys are `host`
-(`127.0.0.1`, the OVOS messagebus host), `port` (`8181`, the messagebus port), and
-`connection_timeout` (`10` seconds, how long to wait for the messagebus before giving
-up). The entry-point names above — `hivemind-ovos-agent-plugin`,
+(`127.0.0.1`, the OVOS messagebus host) and `port` (`8181`, the messagebus port).
+`connection_timeout` (default `10` seconds, how long to wait for the messagebus before
+giving up) is an optional override the plugin falls back to internally — it isn't part of
+hivemind-core's own shipped defaults, so add it explicitly if you need a different value.
+The entry-point names above — `hivemind-ovos-agent-plugin`,
 `hivemind-ovos-agent-policy`, `hivemind-websocket-plugin`, `hivemind-http-plugin`, and
 `hivemind-sqlite-db-plugin` — are the strings `hivemind-core` resolves at startup.
 

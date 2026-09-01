@@ -89,9 +89,11 @@ difference.
     | Look up a flag, config key, or message type | [Reference](reference/index.md) |
 
     Under the hood: every satellite authenticates with its own key and password,
-    the session is encrypted with a modern Noise handshake (no TLS required, though
-    you can add it), and hivemind-core instances chain into a mesh — messages
-    `ESCALATE` up to a bigger brain or `BROADCAST` down to a room full of devices.
+    the session is encrypted end to end (a modern Noise handshake on protocol v3,
+    a still-sound legacy password handshake on older clients — no TLS required,
+    though you can add it), and hivemind-core instances chain into a mesh —
+    messages `ESCALATE` up to a bigger brain or `BROADCAST` down to a room full
+    of devices.
     Start with the [Protocol Specification](developers/protocol-spec.md).
 
 !!! tip "Totally new to this?"
