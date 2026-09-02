@@ -159,8 +159,11 @@ encodings (all optional; the code falls back to pure Python).
     On the **legacy** (v1/v2) handshake, pure-Python PBKDF2 at 100k iterations makes the
     **first** handshake take roughly **10–30 s** on an ESP32. For production, freeze the
     `_hivemind_crypto` C module into the firmware — the handshake then drops to a couple
-    of seconds. Reconnects reuse the derived key. The **v3 Noise** path sidesteps this by
-    using a [provisioned PSK](#provisioned-psk) instead of on-device key stretching.
+    of seconds. Reconnects reuse the derived key. On MicroPython, the **v3 Noise** path
+    avoids that PBKDF2 key-stretching cost by using a
+    [provisioned PSK](#provisioned-psk), but pure-Python X25519 still takes several
+    seconds per Diffie-Hellman operation on **every** connection, not just the first —
+    it does not benefit from the legacy path's reconnect-reuse.
 
 ---
 
