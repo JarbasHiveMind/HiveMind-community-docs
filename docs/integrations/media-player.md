@@ -52,10 +52,17 @@ On the device that will become the player:
 pip install --pre hivemind-player-protocol
 ```
 
-For the VLC / MPV playback backends, install the extras:
+For the VLC playback backend, install the extras:
 
 ```bash
 pip install --pre "hivemind-player-protocol[extras]"
+```
+
+MPV playback needs `ovos-media-plugin-mpv` separately — it lives in `ovos-audio`'s own
+`[extras]` group, not this one:
+
+```bash
+pip install --pre "ovos-audio[extras]"
 ```
 
 Then enable the protocol in `hivemind-core` by setting it as the
