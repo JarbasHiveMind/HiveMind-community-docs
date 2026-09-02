@@ -27,7 +27,7 @@ platform credentials to obtain**, only your HiveMind identity.
 ## Install
 
 ```bash
-pip install HiveMind-HackChatBridge
+pip install --pre HiveMind-HackChatBridge
 ```
 
 This installs the `hivemind-hackchat-bridge` console command.

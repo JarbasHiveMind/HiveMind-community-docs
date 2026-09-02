@@ -49,13 +49,13 @@ available) and routes incoming playback messages to it.
 On the device that will become the player:
 
 ```bash
-pip install hivemind-player-protocol
+pip install --pre hivemind-player-protocol
 ```
 
 For the VLC / MPV playback backends, install the extras:
 
 ```bash
-pip install "hivemind-player-protocol[extras]"
+pip install --pre "hivemind-player-protocol[extras]"
 ```
 
 Then enable the protocol in `hivemind-core` by setting it as the

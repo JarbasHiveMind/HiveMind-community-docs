@@ -22,7 +22,7 @@ satellite relaying [utterances](../reference/glossary.md#utterance) to hivemind-
 ## Install
 
 ```bash
-pip install HiveMind-twitch-bridge
+pip install --pre HiveMind-twitch-bridge
 ```
 
 This installs the `hivemind-twitch-bridge` console command.

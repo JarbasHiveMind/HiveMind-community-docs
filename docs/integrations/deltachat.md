@@ -27,7 +27,7 @@ chatting with it, the bot looks like a normal DeltaChat contact.
 ## Install
 
 ```bash
-pip install HiveMind-deltachat-bridge
+pip install --pre HiveMind-deltachat-bridge
 ```
 
 This installs the `hm-deltachat-bridge` console command.

@@ -22,7 +22,7 @@ hivemind-core.
 ## Install
 
 ```bash
-pip install HiveMind-mattermost-bridge
+pip install --pre HiveMind-mattermost-bridge
 ```
 
 This installs the `hivemind-mattermost-bridge` console command.

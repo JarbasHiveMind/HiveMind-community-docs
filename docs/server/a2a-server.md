@@ -29,7 +29,7 @@ server exposes a text/query agent, not server-side audio processing.
 ## Install
 
 ```bash
-pip install hivemind-core hivemind-a2a-agent-plugin
+pip install hivemind-core "hivemind-a2a-agent-plugin>=0.1.0a7" --pre
 ```
 
 The plugin registers itself under the `hivemind.agent.protocol` entry-point group, so
