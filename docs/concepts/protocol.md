@@ -259,8 +259,9 @@ For the `Session` object and `IntentService` themselves, see the
 
 And this is where the reply trick from the BUS section pays off: once OVOS calls
 `Message.reply()`, `source` and `destination` swap, so `destination` now holds the
-satellite's peer ID. `HiveMindListenerProtocol.handle_internal_mycroft()` reads that one
-field and the answer knows its way home.
+satellite's peer ID. The per-client OVOS bus subscription wired up in
+`HiveMindListenerProtocol.handle_inject_agent_msg()` reads that one field and the answer
+knows its way home.
 
 ---
 
