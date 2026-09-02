@@ -195,7 +195,11 @@ See [Security & Permissions](../concepts/security.md) for the full TLS setup.
 
 ### policy.chain
 
-List of policy plugin modules applied in order to each incoming message. The default chain contains a single entry: `hivemind-ovos-agent-policy`, which enforces per-client skill and intent blacklists from `Client.metadata`.
+List of policy plugin modules applied in order to each incoming message, after two
+always-present built-ins (`MessageTypeACLPolicy`, then `DefaultSessionPolicy`) that are
+force-prepended and cannot be removed — see [Security & Permissions](../concepts/security.md#how-the-policy-chain-works).
+The default configured chain contains a single entry beyond those built-ins:
+`hivemind-ovos-agent-policy`, which enforces per-client skill and intent blacklists from `Client.metadata`.
 
 !!! note "Removed / ignored key: `policy.fail_open`"
     The policy chain is **unconditionally fail-closed** — any error in a policy denies the message, and there is no knob to change this. If an old `server.json` still carries a `policy.fail_open` key, `hivemind-core` **strips it on load and logs a warning**; the key has no effect. Operators upgrading a server should delete it.

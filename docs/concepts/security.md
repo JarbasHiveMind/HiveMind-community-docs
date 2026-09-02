@@ -205,12 +205,18 @@ otherwise.
 
 ### How the policy chain works
 
-Every message a satellite sends runs a little gauntlet before it reaches the agent. Two
+Every message a satellite sends runs a little gauntlet before it reaches the agent. Three
 gates, always in this order:
 
-1. **`allowed_types` check** — the client's per-client whitelist is checked first. If the OVOS message type is not in the allowed list, the message is dropped immediately. The same gate covers binary payloads: a client with an empty whitelist can send neither messages nor audio. This is fail-closed, so a new client can send nothing until you grant it a type.
+1. **`allowed_types` check** (`MessageTypeACLPolicy`) — the client's per-client whitelist is checked first. If the OVOS message type is not in the allowed list, the message is dropped immediately. The same gate covers binary payloads: a client with an empty whitelist can send neither messages nor audio. This is fail-closed, so a new client can send nothing until you grant it a type.
 
-2. **Policy plugins** — configured policies run in order. The default policy is `OVOSAgentPolicy`, which reads `Client.metadata` to build per-client session blacklists (skills and intents).
+2. **Reserved-session guard** (`DefaultSessionPolicy`) — denies with `SESSION_ID_DEFAULT_FORBIDDEN` if a non-admin client declares the reserved `"default"` session.
+
+3. **Policy plugins** — configured policies run in order. The default policy is `OVOSAgentPolicy`, which reads `Client.metadata` to build per-client session blacklists (skills and intents).
+
+`MessageTypeACLPolicy` and `DefaultSessionPolicy` are both always force-prepended to the
+chain and cannot be removed by configuration — see [CLI Reference](../reference/cli.md),
+whose `policy list` output shows both first, always.
 
 Admin flag (`make-admin`) does **not** bypass the `allowed_types` check. It signals to policy plugins that extra-privileged operations are permitted, but the hard ACL is always enforced first.
 
