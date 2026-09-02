@@ -55,7 +55,7 @@
 | **Binary protocol** | The framing used to carry raw audio (and other binary payloads) over the hive for server-side STT/TTS. See [Audio Binary Protocol](../server/audio-binary-protocol.md). |
 | **Permission / policy** | The deny-by-default rules that decide which message types and skills a given client may use, enforced as a policy chain. A new client is **fail-closed**: it can send nothing until a type is explicitly allowed. See [Security & Permissions](../concepts/security.md). |
 | **PBKDF2** | The password-stretching function (PBKDF2-HMAC-SHA256, 100 000 iterations) that turns a client's password into the shared session encryption key during the legacy (pre-v3) handshake. Protocol v3 uses argon2id instead — see [Handshake](#protocol). |
-| **AES-GCM** | A symmetric authenticated-encryption cipher used (alongside ChaCha20-Poly1305) to encrypt every message on the wire after the handshake. |
+| **AES-GCM** | A symmetric authenticated-encryption cipher offered as an alternative to ChaCha20-Poly1305 in the protocol v3 Noise handshake. Exactly one suite is negotiated per session — ChaCha20-Poly1305 is preferred, AES-GCM is a fallback for Web Crypto peers. |
 
 ---
 
