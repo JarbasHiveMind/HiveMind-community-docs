@@ -89,9 +89,38 @@ This stops the forwarding only. A node named in the route still handles the mess
 
 `QUERY` travels upward like `ESCALATE`, but expects a response back. Each node in the chain attempts to answer from its local agent; the first node that can answer returns a response routed back downstream to the originator. If no node can answer, the root returns a `hive.query.timeout` error response.
 
+```mermaid
+sequenceDiagram
+    participant S as Satellite
+    participant M as Middle hive
+    participant R as Root hive
+    S->>M: QUERY
+    M->>M: local agent can answer?
+    M-->>R: no match, forward QUERY
+    R->>R: local agent can answer?
+    R-->>M: response
+    M-->>S: response routed back downstream
+```
+
+*Diagram: a QUERY climbs the tree until a node can answer; the response then routes back down the same path to the originator. If no node answers, the root returns `hive.query.timeout`.*
+
 ### CASCADE — scatter/gather
 
 `CASCADE` floods in all directions like `PROPAGATE`, and every node that can answer sends a response back. The originator collects responses via `CascadeAggregator` and applies a select callback to pick the best answer. See [Protocol — CASCADE](protocol.md).
+
+```mermaid
+flowchart TD
+    O[Originator] -->|CASCADE| A[Node A]
+    O -->|CASCADE| B[Node B]
+    O -->|CASCADE| C[Node C]
+    A -.->|response| G[CascadeAggregator]
+    B -.->|response| G
+    C -.-> |no answer| X[dropped]
+    G --> P{select callback}
+    P --> W[best answer returned to originator]
+```
+
+*Diagram: CASCADE floods every direction at once; only nodes that can answer respond, the aggregator collects what comes back, and a select callback picks the best one.*
 
 > **Note:** `RENDEZVOUS` carries store-and-forward mail between nodes that are never online together. Core routes it to a mailbox when the optional [hivemind-rendezvous](https://github.com/JarbasHiveMind/hivemind-rendezvous) package is installed and enabled; every other node answers `not_a_rendezvous_node`. See [Message types — RENDEZVOUS](../reference/message-types.md#rendezvous).
 

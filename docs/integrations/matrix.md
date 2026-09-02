@@ -19,6 +19,11 @@ Matrix is a federated, end-to-end-encrypted chat protocol. You register a bot ac
     relays whatever is said there to `hivemind-core`. Its HiveMind credentials come from the
     [identity](../reference/glossary.md#node) you set once with `hivemind-client set-identity`.
 
+Before this page: register a client and set your identity —
+[`hivemind-core add-client`](../reference/cli.md) and `hivemind-client set-identity`
+(Quick Start Steps 4 and 6). The bridge reads that stored identity; it has no
+HiveMind flags of its own.
+
 ---
 
 ## Install

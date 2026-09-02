@@ -39,6 +39,10 @@ actually drives the device: it mutes the mic, reads whether a service is alive, 
 the volume, controls playback. Each of those is a distinct bus message, and HiveMind's
 deny-by-default posture means you have to allow every one you want to use.
 
+This is a client like any other — create it first with
+`hivemind-core add-client --name ha --admin true`, note the Node ID it prints, then grant
+the message types below against that ID.
+
 You don't have to grant them all — grant the ones behind the controls you care about. The
 lists below are grouped by the OVOS service each message belongs to, so you can pick whole
 capabilities at a time (skip the OCP block if you don't need media controls, skip the PHAL
