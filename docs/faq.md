@@ -155,8 +155,10 @@
 
 ??? question "How do I find the server's address automatically?"
     Run `hivemind-presence scan` on the same network (hivemind-core announces itself when auto
-    discovery is enabled). Most satellites also auto-scan when you start them without a
-    `--host`. See [Auto Discovery](concepts/discovery.md).
+    discovery is enabled). Most satellites fall back to `default_master` in the stored
+    identity file when `--host` is omitted, and error out if that's also unset —
+    `hivemind-cli` is the exception, offering to scan the network via UDP broadcast and
+    asking for confirmation before connecting. See [Auto Discovery](concepts/discovery.md).
 
 ??? question "Audio is choppy or delayed"
     Prefer wired Ethernet or 5 GHz Wi-Fi; move wakeword/VAD onto the satellite
