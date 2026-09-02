@@ -157,10 +157,11 @@ Usage: hivemind-core blacklist-propagate [NODE_ID]
 Usage: hivemind-core rename-client [OPTIONS] [NODE_ID]
 
 Options:
-  --name TEXT  The new friendly name for the client
+  --name TEXT  The new friendly name for the client  [required]
 ```
 
-`NODE_ID` is a positional argument; omit it to pick from a prompt. The new name is passed via `--name`.
+`NODE_ID` is a positional argument; omit it to pick from a prompt. `--name` is required —
+omitting it fails with "Missing option '--name'" rather than leaving the name unchanged.
 
 ### blacklist-skill / allow-skill
 
