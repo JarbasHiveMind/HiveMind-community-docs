@@ -60,7 +60,13 @@ v3-capable client (Noise primitive available, password configured) actually nego
 - **PSK derivation:** the shared secret mixed into the handshake is `PSK = argon2id(password, salt = SHA-256(node_id))`. Salting with the server's `node_id` makes the PSK server-specific, so the same password on two servers yields two different PSKs. A full browser client derives this **in-browser** with `@noble/hashes` argon2id (same parameters as the server), so a password alone is enough — no provisioning and no server-side KDF change. A pre-provisioned 32-byte `psk` remains an option, and PBKDF2 remains an explicit fallback when a server advertises it.
 - **Pinned-key case:** once a client's static key has been pinned by a prior `XXpsk2` handshake, both ends may use `Noise_KKpsk0_25519_ChaChaPoly_SHA256` (both static keys known in advance).
 - **The client pins the server too.** On the first completed `XXpsk2` handshake the client stores the server's Noise static key. It goes in the client identity file, under `pinned_noise_keys`, keyed by the server's node_id. Every later handshake compares against that pin, and a changed key aborts the session with a man-in-the-middle warning. If you regenerate a server identity or restore a node from backup, delete that entry from `~/.config/hivemind/_identity.json` on each satellite. Until you do, every satellite refuses to connect.
-- `HANDSHAKE` frames always travel unencrypted — they carry the crypto negotiation itself, before any key exists. A node's first `HELLO`, announcing itself, is unencrypted too. But the *second* `HELLO` — sent once the session key is established, carrying session data, site id, and the client's public key — is encrypted like any other post-handshake traffic. On a `crypto_required` server, any cleartext frame other than the handshake pair and that first `HELLO` is rejected and the client disconnected.
+- `HANDSHAKE` and `HELLO` frames always travel in plaintext JSON, on every protocol
+  version — including the *second* `HELLO`, sent once the session key is established and
+  carrying session data, site id, and the client's public key. The sender skips encryption
+  for these two message types unconditionally, even though a `crypto_key`/session key
+  already exists by the time the second `HELLO` goes out. On a `crypto_required` server,
+  any cleartext frame other than `HANDSHAKE`/`HELLO` is rejected and the client
+  disconnected.
 
 !!! info "Constrained devices use a provisioned PSK"
     Microcontrollers (ESP32, MicroPython) cannot run argon2id on-device. Instead you **pre-compute** the 32-byte PSK on the server and flash it onto the device:
@@ -88,7 +94,7 @@ Server → Client  HELLO        (node_id, server public key — plaintext)
 Server → Client  HANDSHAKE    (capabilities: binarize, crypto_required, etc. — plaintext)
 Client → Server  HANDSHAKE    (binarize flag + PBKDF2 envelope — plaintext)
 Server → Client  HANDSHAKE    (PBKDF2 envelope — plaintext)
-Client → Server  HELLO        (session data, site_id, client public key — ENCRYPTED)
+Client → Server  HELLO        (session data, site_id, client public key — plaintext)
 ```
 
 The handshake works as follows:
