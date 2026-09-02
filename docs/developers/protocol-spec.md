@@ -251,9 +251,25 @@ The session key math lives in the external **`poorman_handshake`** package, not 
 
 **RSA mode (`HandShake`):**
 
-- The party generating the handshake (the **server**, which calls `generate_handshake(peer_pubkey)`) picks a random 32-byte `secret`, RSA-encrypts it for the peer with **PKCS#1 OAEP**, and prepends a **PSS-over-SHA-256** signature of the ciphertext. The wire envelope is `hexlify(signature + ciphertext)`; the signature length equals the signer's RSA key size in bytes.
-- The receiver strips the signature (first `key_size_in_bytes` bytes), RSA-decrypts the remainder with its private key to recover the 32-byte `secret`, and (in `receive_and_verify`) first verifies the PSS signature against the known peer public key.
-- That 32-byte `secret` becomes `crypto_key`. No PBKDF2 is involved in RSA mode.
+- The mechanism is mutual: each side calls `generate_handshake(peer_pubkey)`, which picks
+  its own random 32-byte `secret`, RSA-encrypts it for the peer with **PKCS#1 OAEP**, and
+  prepends a **PSS-over-SHA-256** signature of the ciphertext. The wire envelope is
+  `hexlify(signature + ciphertext)`; the signature length equals the signer's RSA key size
+  in bytes.
+- The receiver strips the signature (first `key_size_in_bytes` bytes), RSA-decrypts the
+  remainder with its private key, and XORs the result against its own previously-generated
+  `secret` to produce the shared value. `receive_and_verify` first verifies the PSS
+  signature against the known peer public key.
+- The XORed result becomes `crypto_key`. No PBKDF2 is involved in RSA mode.
+
+!!! danger "Broken in the reference client"
+    `hivemind-websocket-client`'s RSA branch only calls `generate_handshake()` on the
+    **server** side; the client's `HandShake` object never generates its own secret before
+    calling `receive_handshake`/`receive_and_verify`, so the XOR step above raises
+    `TypeError: 'NoneType' object is not iterable` — reproduced live against current
+    `origin/dev`. RSA mode does not work end-to-end today; this is separate from (and
+    deeper than) the protocol-floor rejection already noted elsewhere on this page.
+    Tracked as [hivemind-websocket-client#209](https://github.com/JarbasHiveMind/hivemind-websocket-client/issues/209).
 
 ---
 
