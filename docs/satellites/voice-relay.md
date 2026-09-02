@@ -66,7 +66,12 @@ starts with an empty whitelist and is denied every message until you grant one:
 ```bash
 hivemind-core allow-msg "recognizer_loop:utterance" <node_id>
 hivemind-core allow-msg "recognizer_loop:b64_transcribe" <node_id>
+hivemind-core allow-msg "speak:b64_audio" <node_id>
 ```
+
+Skipping the third grant is the most common reason a relay hears fine but never speaks a
+reply — the server-side policy silently drops the `speak:b64_audio` response with no
+client-side error.
 
 **3. On the satellite** — write the identity file:
 

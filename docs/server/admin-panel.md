@@ -15,7 +15,7 @@ manage a HiveMind, full stop.
 
 !!! tip "New here? Start with the panel"
     If the CLI flow in the [Quick Start](../quickstart.md) feels like a lot, use this
-    instead. `pip install hivemind-admin-panel`, run one command, and pair satellites
+    instead. `pip install --pre "hivemind-admin-panel>=0.1.2a1"`, run one command, and pair satellites
     from a web page (complete with QR codes). You can always drop down to the CLI later.
 
 ## What it is
@@ -62,7 +62,7 @@ can:
 ## Install & run
 
 ```bash
-pip install hivemind-admin-panel
+pip install --pre "hivemind-admin-panel>=0.1.2a1"
 ```
 
 Installing the panel also pulls in `hivemind-core`. Then:
