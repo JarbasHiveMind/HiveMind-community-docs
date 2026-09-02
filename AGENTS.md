@@ -34,7 +34,6 @@ None configured. Keep `mkdocs.yml` `nav` entries in sync with files in `docs/`.
 - `docs/` — page content grouped by section folder (`concepts/`, `satellites/`, `server/`,
   `integrations/`, `developers/`, `reference/`).
 - `docs/assets/` — `logo.png` / `favicon.png` used by the theme.
-- `docs/javascripts/analytics.js` — injected via `extra_javascript`.
 - `requirements.txt` — pinned build deps (mkdocs, mkdocs-material, pymdown-extensions).
 - `.github/workflows/build.yml` — installs `requirements.txt`, runs `mkdocs build --strict`,
   then publishes via `mkdocs gh-deploy` on push.

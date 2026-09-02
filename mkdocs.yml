@@ -151,6 +151,3 @@ extra:
     - icon: fontawesome/brands/youtube
       link: https://www.youtube.com/channel/UCYoV5kxp2zrH6pnoqVZpKSA/
       name: HiveMind on YouTube
-
-extra_javascript:
-  - javascripts/analytics.js
