@@ -90,8 +90,9 @@ hivemind-core allow-msg "ovos.common_play.previous" <id>
 
 The repository's permissions reference lists the full OCP, audio, and (optional) PHAL
 volume message sets. A freshly added client is denied every message type until you
-grant it — this is the step people skip, and the failure is silent: commands are
-accepted by the hub but nothing plays.
+grant it — this is the step people skip. The hub denies the message and replies with
+`hive.policy.denied`, but the client isn't currently surfacing that error, so it looks
+like nothing happens — commands appear accepted but nothing plays.
 
 !!! warning "Headless devices need a null audio sink"
     If the device has no physical speakers — a server, a container — point the OCP
