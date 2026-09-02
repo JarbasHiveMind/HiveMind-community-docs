@@ -200,9 +200,13 @@ Connection management. Handled automatically by `HiveMessageBusClient` and `hive
 - `HANDSHAKE` performs the key exchange — sent unencrypted, establishes the session key. Two modes:
   - **Password mode** (`PasswordHandShake`): the session key is derived with PBKDF2-HMAC-SHA256, 100000 iterations
   - **RSA mode**: a random 32-byte secret is wrapped with the peer's RSA public key (no PBKDF2)
-- After the handshake, a second `HELLO` carries session data, site_id, and client public key
+- After the handshake, a second `HELLO` carries session data, site_id, and client public key — this one IS encrypted, since it's sent once the session key already exists
 
-> **Plaintext, even after crypto is established.** Both `HELLO` and `HANDSHAKE` always travel as plaintext JSON — including the client's *second* `HELLO`, which is sent after the session key exists but is still unencrypted. Only `BUS`/`QUERY`/other payload traffic is encrypted.
+> **`HANDSHAKE` and the first `HELLO` are the only plaintext frames.** `HANDSHAKE` always
+> travels as plaintext JSON, since it carries the crypto negotiation before any key
+> exists. A node's first `HELLO`, announcing itself, is plaintext too. Every frame after
+> that — including the client's second `HELLO` — is encrypted like any other
+> post-handshake traffic.
 >
 > **Request vs response disambiguation.** A `HANDSHAKE` is a *request* (capability advertisement, "please start") versus a *response* (carrying key material) **solely by the presence of the `envelope` field** — there is no type discriminator. No `envelope` ⇒ request; `envelope` present ⇒ response/material.
 >
