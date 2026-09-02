@@ -12,7 +12,7 @@ the hive just becomes a spread of microphones and screens in front of it.
     - Only `agent_url` is required; `auth_header`, `timeout`, and `streaming` are optional.
     - HiveMind's `session_id` maps one-to-one to the A2A `sessionId`, so the back-and-forth of a conversation is remembered on the agent's side, not here.
 
-[A2A](https://google.github.io/A2A/) is Google's open protocol for agent
+[A2A](https://a2a-protocol.org/latest/specification/) is Google's open protocol for agent
 interoperability. An A2A server publishes an **agent card** at
 `GET /.well-known/agent.json` describing its skills and task URL, and accepts **task**
 requests as JSON-RPC 2.0 — either a blocking `tasks/send` or a streaming
