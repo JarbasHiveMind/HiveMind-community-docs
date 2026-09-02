@@ -48,9 +48,10 @@ can:
 ## The key idea: one launcher
 
 !!! note "The panel *is* the `hivemind-core` launcher"
-    By default the panel starts `hivemind-core` **in-process** (in a daemon thread) and
-    serves the admin UI on top of it. So a single command gives you a running `hivemind-core`
-    **plus** a place to administer it — you do **not** run `hivemind-core` separately.
+    By default the panel starts `hivemind-core` **in-process on the main thread** (so it can
+    handle `SIGINT`/`SIGTERM`) and serves the admin UI itself in a background daemon thread on
+    top of it. So a single command gives you a running `hivemind-core` **plus** a place to
+    administer it — you do **not** run `hivemind-core` separately.
 
     Pass `--no-core` to serve the panel against on-disk config/database only (useful
     when a `hivemind-core` is managed elsewhere on the host, or to provision clients
