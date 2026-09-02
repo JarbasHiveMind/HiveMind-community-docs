@@ -45,7 +45,7 @@ The **microcontroller** clients (ESP32 in C, or MicroPython) are the thinnest *h
 | hivemind-mic-satellite | `hivemind-audio-binary-protocol` for STT/TTS/wakeword |
 | HiveMind-voice-relay | `hivemind-audio-binary-protocol` for STT/TTS |
 | HiveMind-voice-sat | Any hivemind-core instance (sends text utterances) |
-| WebSpeech Browser | `ovos-dinkum-listener >= 0.0.3a19` + `hivemind-core allow-msg "recognizer_loop:b64_audio"` |
+| WebSpeech Browser | `base64` mode (default): `ovos-dinkum-listener >= 0.0.3a19` + `hivemind-core allow-msg "recognizer_loop:b64_audio"`. `binary` mode: `hivemind-audio-binary-protocol` |
 
 See [Audio Binary Protocol](../server/audio-binary-protocol.md) for server-side setup.
 
@@ -60,9 +60,12 @@ See [Audio Binary Protocol](../server/audio-binary-protocol.md) for server-side 
     - **voice-relay** sends **base64 audio over the bus**
       (`recognizer_loop:b64_transcribe`; TTS comes back as `speak:b64_audio`) — also
       provided by `hivemind-audio-binary-protocol`.
-    - **WebSpeech** sends **base64 audio over the bus** as `recognizer_loop:b64_audio`,
-      which is decoded directly by `ovos-dinkum-listener >= 0.0.3a19` once hivemind-core
-      allows that message — it does **not** use the binary `RAW_AUDIO` protocol.
+    - **WebSpeech** has two audio-transport settings. Its default, `base64`, sends
+      **base64 audio over the bus** as `recognizer_loop:b64_audio`, decoded directly by
+      `ovos-dinkum-listener >= 0.0.3a19` once hivemind-core allows that message — this
+      mode never touches the binary protocol. Its optional `binary` mode instead uses
+      `hivemind-audio-binary-protocol`'s `STT_AUDIO_HANDLE` frame type — not the same
+      frame type as mic-satellite's `RAW_AUDIO`, but the same plugin.
 
 ---
 
