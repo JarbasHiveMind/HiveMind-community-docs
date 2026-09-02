@@ -60,14 +60,18 @@ hivemind-core add-client --name my-mic-sat
 # note the Node ID, access_key and password printed
 ```
 
-**2. On hivemind-core** — grant the client a message type:
+**2. On hivemind-core** — grant the client the message types it needs:
 
 ```bash
 hivemind-core allow-msg "recognizer_loop:utterance" <node_id>
+hivemind-core allow-msg "speak:synth" <node_id>
 ```
 
 A client whose whitelist is empty is denied everything, including the binary audio this
-satellite sends. Grant at least one message type or the audio never reaches the server.
+satellite sends. The first grant admits that audio; skipping the second is the most common
+reason the satellite transcribes fine but never speaks a reply — this client requests TTS
+by emitting `speak:synth` back into the bus, and the server-side policy silently drops it
+with no client-side error if it isn't granted.
 
 **3. On the satellite** — write the identity file:
 
