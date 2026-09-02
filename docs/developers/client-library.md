@@ -21,8 +21,11 @@ it?"; the library does the cryptography.
 
 ## Install
 
+The plain PyPI "stable" release (`0.4.4`) predates the current protocol; `--pre` is
+required.
+
 ```bash
-pip install hivemind-bus-client
+pip install --pre hivemind-bus-client
 ```
 
 ---
@@ -381,7 +384,7 @@ key, and the result carries `encrypted_key`, `ciphertext`, `tag`, `nonce`, and `
 client on `asyncio` + the `websockets` library. Install with the extra:
 
 ```bash
-pip install hivemind-bus-client[async]
+pip install --pre "hivemind-bus-client[async]"
 ```
 
 The connect lifecycle is explicit and all I/O is awaited:
