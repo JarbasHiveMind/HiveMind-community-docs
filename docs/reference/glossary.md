@@ -54,7 +54,7 @@
 | **Network protocol / transport** | The pluggable carrier that moves HiveMind messages between nodes — WebSocket (default), HTTP polling, or MQTT. Transport-agnostic: the same protocol runs over any of them. |
 | **Binary protocol** | The framing used to carry raw audio (and other binary payloads) over the hive for server-side STT/TTS. See [Audio Binary Protocol](../server/audio-binary-protocol.md). |
 | **Permission / policy** | The deny-by-default rules that decide which message types and skills a given client may use, enforced as a policy chain. A new client is **fail-closed**: it can send nothing until a type is explicitly allowed. See [Security & Permissions](../concepts/security.md). |
-| **PBKDF2** | The password-stretching function (PBKDF2-HMAC-SHA256, 100 000 iterations) that turns a client's password into the shared session encryption key during the handshake. |
+| **PBKDF2** | The password-stretching function (PBKDF2-HMAC-SHA256, 100 000 iterations) that turns a client's password into the shared session encryption key during the legacy (pre-v3) handshake. Protocol v3 uses argon2id instead — see [Handshake](#protocol). |
 | **AES-GCM** | A symmetric authenticated-encryption cipher used (alongside ChaCha20-Poly1305) to encrypt every message on the wire after the handshake. |
 
 ---
@@ -64,7 +64,7 @@
 | Term | Definition |
 |---|---|
 | **Access key** | The per-client identifier a satellite presents to hivemind-core when connecting — the "username" half of its credentials. Issued by `hivemind-core add-client`. |
-| **Password** | The per-client secret used during the handshake to derive the encryption key (via [PBKDF2](#protocol)). The "password" half of a client's credentials. |
+| **Password** | The per-client secret used during the handshake to derive the encryption key (via [PBKDF2](#protocol) on legacy clients, or argon2id on protocol v3). The "password" half of a client's credentials. |
 | **Identity file** | `~/.config/hivemind/_identity.json` on a satellite — stores its access key, password, hivemind-core address, `site_id`, and RSA keys so it can reconnect without re-entering credentials. Written by `hivemind-client set-identity`. |
 | **ACL / allowlist** | The list of OVOS message types a given client is permitted to send (`allowed_types`). Deny-by-default: anything not on the list is rejected. |
 | **`allow-msg`** | The `hivemind-core` command that adds a message type to a client's allowlist (its counterpart, `blacklist-msg`, removes one). A brand-new client must be granted at least one type before it can do anything. |
