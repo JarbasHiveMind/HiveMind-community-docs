@@ -251,8 +251,8 @@ class MyBinaryProtocol(BinaryDataHandlerProtocol):
         ...
 ```
 
-Note `hivemind-audio-binary-protocol` registers its entry point via `setup.py`
-rather than `pyproject.toml`; both forms work. The `setup.py` form:
+Both a legacy `setup.py` entry-points block and a `pyproject.toml`
+`[project.entry-points]` table work identically. The `setup.py` form:
 
 ```python
 # setup.py
@@ -265,7 +265,7 @@ setup(
 )
 ```
 
-The equivalent `pyproject.toml` form:
+The equivalent `pyproject.toml` form (used by `hivemind-audio-binary-protocol` itself):
 
 ```toml
 [project.entry-points."hivemind.binary.protocol"]
