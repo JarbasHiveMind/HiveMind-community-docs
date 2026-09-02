@@ -212,7 +212,9 @@ message:
 1. The `HiveMessage` is serialized (JSON or binary framing for protocol v1)
 2. The payload is compressed with zlib if enabled
 3. The result is encrypted with AES-256-GCM using the session key
-4. The encrypted payload is encoded (Z85 + Base91) for text transport
+4. The encrypted payload is text-encoded with the negotiated `SupportedEncodings` codec
+   (`JSON_HEX` by default; Base91/Z85/Base64/etc. are alternatives if you set
+   `client.json_encoding`)
 
 ---
 
