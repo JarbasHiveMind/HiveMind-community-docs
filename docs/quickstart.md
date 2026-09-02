@@ -125,7 +125,8 @@ Note the **Access Key** and **Password** — you'll hand them to the satellite n
 steps below, replace `<ACCESS_KEY>` and `<PASSWORD>` with these values, and `<SERVER_IP>`
 with the server's LAN IP from `hostname -I` (or `127.0.0.1` on a single machine).
 
-> Want to choose your own key and password instead of generated ones? `hivemind-core add-client --help` lists the options: `--name`, `--access-key`, `--password`, `--crypto-key`, `--admin`, `--metadata`.
+> Want to choose your own key and password instead of generated ones? See the full
+> `add-client` option list in [CLI Commands](reference/cli.md#add-client).
 
 ---
 
