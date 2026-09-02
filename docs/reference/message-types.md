@@ -22,8 +22,8 @@ If you only need to jog your memory, this table is the whole page — every type
 category, which way it flows, and what it's for, on one screen. Skim the Category column
 first: it groups the thirteen types into the four jobs they do, and the per-type sections
 below expand whichever one you landed on. The Wire value column is the exact string to put
-in the JSON `msg_type` field. Four of them are not the lowercased enum name, so copy them
-rather than derive them.
+in the JSON `msg_type` field. Two of them are not the lowercased enum name — `HANDSHAKE` is
+`shake` and `BINARY` is `bin` — so copy those two rather than derive them.
 
 | Type | Wire value | Category | Direction | Purpose |
 |---|---|---|---|---|
