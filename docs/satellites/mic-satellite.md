@@ -51,7 +51,9 @@ See [Audio Binary Protocol](../server/audio-binary-protocol.md).
 
 ## Quickstart
 
-> **Pre-flight:** this satellite sends audio to hivemind-core, so **hivemind-core MUST have the [Audio Binary Protocol](../server/audio-binary-protocol.md) configured** — it provides the VAD-gated STT, TTS, and wakeword. Without it the satellite connects but its audio is silently dropped, with no error.
+> **Pre-flight:** this satellite sends audio to hivemind-core, so **hivemind-core MUST have the [Audio Binary Protocol](../server/audio-binary-protocol.md) configured** — it provides the VAD-gated STT, TTS, and wakeword. Without it the satellite connects but its audio is dropped — hivemind-core does send a
+`hive.policy.denied` bus response, but this satellite does not currently surface that error
+to you, so it looks silent.
 
 **1. On hivemind-core** — register a client:
 
@@ -70,8 +72,9 @@ hivemind-core allow-msg "speak:synth" <node_id>
 A client whose whitelist is empty is denied everything, including the binary audio this
 satellite sends. The first grant admits that audio; skipping the second is the most common
 reason the satellite transcribes fine but never speaks a reply — this client requests TTS
-by emitting `speak:synth` back into the bus, and the server-side policy silently drops it
-with no client-side error if it isn't granted.
+by emitting `speak:synth` back into the bus, and the server-side policy drops it if it isn't
+granted — hivemind-core does send a `hive.policy.denied` response, but this satellite does
+not currently surface it, so it looks silent.
 
 **3. On the satellite** — write the identity file:
 

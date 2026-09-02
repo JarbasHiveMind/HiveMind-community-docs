@@ -52,7 +52,9 @@ See [Audio Binary Protocol](../server/audio-binary-protocol.md).
 
 ## Quickstart
 
-> **Pre-flight:** wakeword runs locally, but after activation this satellite sends audio to hivemind-core, so **hivemind-core MUST have the [Audio Binary Protocol](../server/audio-binary-protocol.md) configured** — it provides STT and TTS. Without it the satellite connects but its audio is silently dropped, with no error.
+> **Pre-flight:** wakeword runs locally, but after activation this satellite sends audio to hivemind-core, so **hivemind-core MUST have the [Audio Binary Protocol](../server/audio-binary-protocol.md) configured** — it provides STT and TTS. Without it the satellite connects but its audio is dropped — hivemind-core does send a
+`hive.policy.denied` bus response, but this satellite does not currently surface that error
+to you, so it looks silent.
 
 **1. On hivemind-core** — register a client:
 
@@ -70,8 +72,8 @@ hivemind-core allow-msg "speak:b64_audio" <node_id>
 ```
 
 Skipping the third grant is the most common reason a relay hears fine but never speaks a
-reply — the server-side policy silently drops the `speak:b64_audio` response with no
-client-side error.
+reply — hivemind-core does send a `hive.policy.denied` response, but this satellite does
+not currently surface it, so it looks silent.
 
 **3. On the satellite** — write the identity file:
 
