@@ -1,5 +1,11 @@
 # Microcontrollers (ESP32)
 
+!!! danger "Experimental — not yet tested on real hardware"
+    Both clients on this page were written without a device in the loop and have not
+    run on physical hardware yet. Treat them as a starting point, not a finished
+    product. Test on your own hardware before relying on either, and report what
+    breaks.
+
 A chip the size of a postage stamp, costing a few dollars, with kilobytes of memory —
 and yet it can be a full front-end to your assistant. That's the trick these clients
 pull off. An ESP32 (or a Raspberry Pi Pico W) can't run speech recognition or an LLM,
@@ -120,7 +126,6 @@ hivemind-core add-client --name esp32 \
 ## MicroPython
 
 [hivemind-micropython-client](https://github.com/JarbasHiveMind/hivemind-micropython-client)
-(private repo, collaborator access only)
 is a pure-Python satellite from a single shared codebase that runs on **MicroPython
 1.20+** (ESP32, Raspberry Pi Pico W, …) **and** on **CPython 3.10+** for desktop
 development — the runtime is auto-detected at import. It is for makers who would rather
@@ -162,9 +167,7 @@ encodings (all optional; the code falls back to pure Python).
 
 ## Source
 
-Validated against the HiveMind source. `hivemind-esp32-client` and
-`hivemind-micropython-client` are private repositories — the links below resolve only for
-collaborators.
+Validated against the HiveMind source.
 
 - [`README.md`](https://github.com/JarbasHiveMind/hivemind-esp32-client/blob/HEAD/README.md) — ESP-IDF component, targets, ciphers, `HM_BIN_RAW_AUDIO` transport, no-TLS V1 design
 - [`docs/getting-started.md`](https://github.com/JarbasHiveMind/hivemind-esp32-client/blob/HEAD/docs/getting-started.md) — ESP-IDF 5.1+, INMP441 mic, build/flash steps
