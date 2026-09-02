@@ -43,8 +43,7 @@ Usage: HiveMind-matrix run [OPTIONS]
 
 Options:
   --botname TEXT      Bot username (default: none — respond-to-every-message mode; set it
-                      to switch to mention-only mode, requires `hivemind-matrix-bridge >=
-                      0.2.2a1`)
+                      to switch to mention-only mode)
   --matrixtoken TEXT  Matrix access token
   --matrixhost TEXT   Matrix homeserver URL (default: https://matrix.org)
   --room TEXT         Matrix room ID (e.g. #hivemind-bots:matrix.org)
