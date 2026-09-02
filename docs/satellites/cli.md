@@ -27,11 +27,14 @@ into a cron job, or wiring up a headless box that has a network cable and nothin
 ## Install
 
 ```bash
-pip install HiveMind-cli
+pip install --pre "HiveMind-cli>=1.0.0a1"
 ```
 
-This provides the `hivemind-cli` console script — a terminal client with no
-subcommands, just flags.
+The stable PyPI release (`0.4.1`) is an unrelated pre-rewrite package — different
+distribution internals (`cli_satellite`), a different console script casing
+(`HiveMind-cli`, not `hivemind-cli`), and a different, incompatible flag set. The `--pre`
+install above gets the current tool this page documents, which provides the
+`hivemind-cli` console script — a terminal client with no subcommands, just flags.
 
 ---
 
