@@ -47,10 +47,10 @@ mini PC).
 pip install HiveMind-voice-sat
 
 # Linux (ALSA / SoundDevice microphone support)
-pip install HiveMind-voice-sat[linux]
+pip install --pre "HiveMind-voice-sat[linux]>=2.1.0a1"
 
 # macOS
-pip install HiveMind-voice-sat[mac]
+pip install --pre "HiveMind-voice-sat[mac]>=2.1.0a1"
 ```
 
 ---
