@@ -198,9 +198,11 @@ The handshake proved *who* a device is. Now comes the second question: what is i
 to *do*? This is the layer people underestimate, and it's the one that makes leaked
 credentials far less scary than they sound.
 
-HiveMind has no roles, no "admin can do everything" shortcut. Permissions are per client:
-each one carries its own `allowed_types` whitelist and its own skill/intent blacklists.
-And the default posture is refusal — a brand-new device can send *nothing* until you say
+HiveMind has no role hierarchy beyond a single `is_admin` flag. That flag is real: an
+admin client is exempt from the reserved-`"default"`-session guard, and `BROADCAST`
+requires it. Everything else — the `allowed_types` whitelist, skill/intent blacklists —
+is per client regardless of admin status; admin does not exempt a client from those. And
+the default posture is refusal — a brand-new device can send *nothing* until you say
 otherwise.
 
 ### How the policy chain works

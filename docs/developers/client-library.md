@@ -407,7 +407,8 @@ async def main():
 asyncio.run(main())
 ```
 
-Key coroutines: `connect(bus=None, protocol=None, site_id=None)`, `close()`,
+Key coroutines: `connect(bus=None, protocol=None, site_id=None, handshake_max_retries=None)`
+(`None` retries forever; pass a bound so a failed handshake fails fast), `close()`,
 `emit(...)`, `emit_mycroft(...)`, `emit_intercom(...)`, and the five `wait_for_*`
 waiters. Handler registration is **synchronous** (so existing protocol handlers
 work unchanged): `on(event, func)`, `once(event, func)` (fire-once), and
