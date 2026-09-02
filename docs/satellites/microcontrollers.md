@@ -59,8 +59,7 @@ X25519 key to enable the lighter `Noise_KKpsk0` pattern.
 
 ## ESP32 (C / ESP-IDF)
 
-[hivemind-esp32-client](https://github.com/JarbasHiveMind/hivemind-esp32-client) (private
-repo, collaborator access only) is an
+[hivemind-esp32-client](https://github.com/JarbasHiveMind/hivemind-esp32-client) is an
 ESP-IDF **component** (written in C) that makes an ESP32 a HiveMind satellite. It
 implements the HiveMind handshake, AEAD encryption, bus messaging, and binary audio
 transport — sized to run on the chip.
