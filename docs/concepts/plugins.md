@@ -82,7 +82,7 @@ message passes before it reaches the agent. Policy plugins are loaded as an orde
 |---|---|
 | `hivemind-ovos-agent-policy` | Per-client skill/intent blacklists for the OVOS agent (default) |
 
-The built-in `allowed_types` ACL (`MessageTypeACLPolicy`) is always force-prepended to the chain and cannot be removed. See [Security — How the policy chain works](security.md#how-the-policy-chain-works) and [Writing Plugins — Policy plugins](../developers/writing-plugins.md#5-policy).
+The built-in `allowed_types` ACL (`MessageTypeACLPolicy`) and `DefaultSessionPolicy` are always force-prepended to the chain and cannot be removed. See [Security — How the policy chain works](security.md#how-the-policy-chain-works) and [Writing Plugins — Policy plugins](../developers/writing-plugins.md#5-policy).
 
 ---
 
