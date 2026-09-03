@@ -120,7 +120,7 @@ flowchart TD
     P --> W[best answer returned to originator]
 ```
 
-*Diagram: CASCADE floods every direction at once; only nodes that can answer respond, the aggregator collects what comes back, and a select callback picks the best one.*
+*Diagram: CASCADE floods every direction at once; only nodes that can answer respond, the collector gathers what comes back, and a select callback picks the best one.*
 
 > **Note:** `RENDEZVOUS` carries store-and-forward mail between nodes that are never online together. Core routes it to a mailbox when the optional [hivemind-rendezvous](https://github.com/JarbasHiveMind/hivemind-rendezvous) package is installed and enabled; every other node answers `not_a_rendezvous_node`. See [Message types — RENDEZVOUS](../reference/message-types.md#rendezvous).
 
