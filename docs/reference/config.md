@@ -181,7 +181,7 @@ plugin name `hivemind-mqtt-plugin`, broker port 1883 (config keys `broker_host`,
 `broker_port`, `broker_username`, `broker_password`, `tls`, `topic_prefix`, `qos`,
 `idle_timeout`). It provides the server-side transport only. An experimental
 Usenet wormhole transport (`hivemind-usenet`, plugin `hivemind-usenet-wormhole`)
-also exists but is unpublished.
+also exists.
 
 Each network protocol plugin accepts the following TLS keys for serving over `wss://` / `https://`:
 

@@ -119,4 +119,4 @@ Validated against the HiveMind source:
 - [`hivemind_websocket_protocol/__init__.py`](https://github.com/JarbasHiveMind/hivemind-websocket-protocol/blob/HEAD/hivemind_websocket_protocol/__init__.py) — the default WebSocket transport, port `5678`, and TLS keys
 - [`hivemind_http_protocol/__init__.py`](https://github.com/JarbasHiveMind/hivemind-http-protocol/blob/HEAD/hivemind_http_protocol/__init__.py) — the HTTP transport and its default port `5679`
 - [`hivemind-mqtt-protocol`](https://github.com/JarbasHiveMind/hivemind-mqtt-protocol) — the alpha MQTT transport and its broker config keys
-- [`hivemind-usenet`](https://github.com/JarbasHiveMind/hivemind-usenet) — the experimental Usenet transport (public repo, not yet on PyPI)
+- [`hivemind-usenet`](https://github.com/JarbasHiveMind/hivemind-usenet) — the experimental Usenet transport

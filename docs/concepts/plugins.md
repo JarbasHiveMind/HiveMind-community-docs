@@ -31,13 +31,13 @@ listens for and connects to satellites.
 | `hivemind-websocket-plugin` | WebSocket (ws:// / wss://) | 5678 | stable, default |
 | `hivemind-http-plugin` | HTTP (polling) | 5679 | stable, default |
 | `hivemind-mqtt-plugin` | MQTT (broker) | 1883 | alpha (PyPI `hivemind-mqtt-protocol`) |
-| `hivemind-usenet-wormhole` | Usenet store-and-forward | — | experimental, unpublished |
+| `hivemind-usenet-wormhole` | Usenet store-and-forward | — | experimental |
 
 WebSocket and HTTP are enabled by default in `server.json`. The MQTT plugin
 (package `hivemind-mqtt-protocol`) is published as an alpha and ships the server-side
 transport only; a satellite-side MQTT client is planned. The Usenet wormhole
 (package `hivemind-usenet`) is an experimental covert/fallback transport — not a
-real-time channel, not on PyPI (it pulls git-only carrier libraries).
+real-time channel.
 
 ### Agent protocol plugins
 
