@@ -122,10 +122,10 @@ ovos.common_play.repeat.set
 ovos.common_play.repeat.unset
 ```
 
-No single stack answers both status topics: `ovos-media` answers `ovos.common_play.status`
+No single stack answers both status topics. `ovos-media` answers `ovos.common_play.status`
 only, and the legacy OCP audio service answers `ovos.common_play.player.status` only. The
 integration queries both until the legacy stack's flag day, so grant both regardless of
-which one your deployment actually runs. There is no `ovos.common_play.repeat.one`; repeat
+which one your deployment actually runs. There is no `ovos.common_play.repeat.one`. Repeat
 is toggled with `ovos.common_play.repeat.set` / `.unset` (or `.toggle`).
 
 !!! note "`get_track_position` / `set_track_position` are milliseconds"

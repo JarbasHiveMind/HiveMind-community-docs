@@ -123,14 +123,14 @@ moment and neither hears the other's reply. Here it is, one hop each way:
 
 A non-admin client can declare `session_id: "default"` on a `BUS` payload, but that must
 never let a remote client reach the OVOS bus's own local, device-owned `"default"`
-session — that would let one satellite read or mutate another's device state.
-hivemind-core prevents this with a NAT-like rewrite: on the way in, it stamps every
-inbound `BUS` message with a per-connection Layer-1 session id
-(`"<connection-nonce>:<declared-session-id>"`), so a declared `"default"` becomes a
+session. That would let one satellite read or mutate another's device state.
+hivemind-core prevents this with a NAT-like rewrite. On the way in, it stamps every
+inbound `BUS` message with a per-connection Layer-1 session id,
+`"<connection-nonce>:<declared-session-id>"`, so a declared `"default"` becomes a
 namespaced id private to that connection before the policy chain or the bus ever sees
 it. On the way out, `HiveMindClientConnection.send()` strips this connection's own
 namespace prefix back off, so the client only ever sees the plain session id it
-originally declared — the internal namespace never crosses the wire in either
+originally declared. The internal namespace never crosses the wire in either
 direction. This is symmetric and lives entirely in `hivemind-core`, so every agent and
 binary-protocol plugin built on it inherits the isolation automatically.
 

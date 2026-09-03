@@ -36,7 +36,7 @@ listens for and connects to satellites.
 WebSocket and HTTP are enabled by default in `server.json`. The MQTT plugin
 (package `hivemind-mqtt-protocol`) is published as an alpha and ships the server-side
 transport only; a satellite-side MQTT client is planned. The Usenet wormhole
-(package `hivemind-usenet`) is an experimental covert/fallback transport — not a
+(package `hivemind-usenet`) is an experimental covert/fallback transport, not a
 real-time channel.
 
 ### Agent protocol plugins

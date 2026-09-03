@@ -90,9 +90,9 @@ hivemind-core allow-msg "ovos.common_play.next" <id>
 hivemind-core allow-msg "ovos.common_play.previous" <id>
 ```
 
-The status topic is `ovos.common_play.status` — served by the embedded `ovos-media`
-daemon; `ovos.common_play.player.status` is the legacy OCP audio-service topic and does
-nothing here. Readiness is per-daemon too: `mycroft.audio.is_ready` covers TTS,
+The status topic is `ovos.common_play.status`, served by the embedded `ovos-media`
+daemon. `ovos.common_play.player.status` is the legacy OCP audio-service topic and does
+nothing here. Readiness is per-daemon too: `mycroft.audio.is_ready` covers TTS, and
 `mycroft.media.is_ready` covers the embedded `ovos-media` playback daemon.
 
 The `disable_media` config key (previously `disable_ocp`/`enable_old_audioservice`)
