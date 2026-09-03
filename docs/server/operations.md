@@ -108,16 +108,19 @@ mode this is `ovos-messagebus`). Rejected connections raise an error event:
 |--------------------------------|------------------------------------------------------------------------------|
 | `hive.client.connect`          | A client connects (payload carries `key`, `session_id`).                     |
 | `hive.client.disconnect`       | A client disconnects (payload carries `key`).                                |
-| `hive.client.connection.error` | A connection is rejected for an invalid access key. |
+| `hive.client.connection.error` | A connection is rejected for an invalid access key, or for missing crypto. |
 
-Only the access-key path reaches the bus. `handle_invalid_key_connected` (a client
-presented an unknown or disallowed API key) emits
+`handle_invalid_key_connected` (a client presented an unknown or disallowed API key) emits
 `{"error": "invalid access key", "peer": <peer>}` and logs
-`Client provided an invalid api key` at `ERROR` level.
+`Client provided an invalid api key` at `ERROR` level. A client with no pre-shared crypto
+key when the handshake is disabled but `require_crypto` is set is rejected the same way,
+via `handle_invalid_protocol_version`, which emits `{"error": "protocol error", "peer":
+<peer>}` on the same event.
 
-**Protocol-version rejections emit no bus event.** Both floor checks disconnect the client
-after a `WARNING` log line and nothing else, so alerting on
-`hive.client.connection.error` will never page you for one. Grep the logs instead:
+**The `min_protocol_version` floor checks emit no bus event.** Both floor checks disconnect
+the client after a `WARNING` log line and nothing else, so alerting on
+`hive.client.connection.error` will never page you for a client that's simply too old. Grep
+the logs instead:
 
 - Connect time: `rejecting <peer>: server requires protocol version >= …`
 - Handshake completion: `rejecting <peer>: legacy handshake at protocol v… is below the
