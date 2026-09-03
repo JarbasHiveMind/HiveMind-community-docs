@@ -106,6 +106,7 @@ ovos.common_play.player.status
 ovos.common_play.track_info
 ovos.common_play.get_track_length
 ovos.common_play.get_track_position
+ovos.common_play.play
 ovos.common_play.playlist.queue
 ovos.common_play.resume
 ovos.common_play.pause
@@ -205,3 +206,5 @@ Validated against the HiveMind source:
 - [`custom_components/hivemind/binary_sensor.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/binary_sensor.py) — connection / speaking / alive / ready sensors and their probes
 - [`custom_components/hivemind/switch.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/switch.py) — SSH, volume mute, mic mute, and sleep-mode switches
 - [`custom_components/hivemind/media_player.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/media_player.py) — OCP media-player entity
+- [`custom_components/hivemind/button.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/button.py) — reboot / shutdown / restart-assistant / listen / stop buttons
+- [`custom_components/hivemind/select.py`](https://github.com/JarbasHiveMind/hivemind-homeassistant/blob/HEAD/custom_components/hivemind/select.py) — recognizer-loop state selector
