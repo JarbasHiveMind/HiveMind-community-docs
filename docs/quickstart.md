@@ -102,6 +102,7 @@ hivemind-core add-client --name "my-satellite"
 Output:
 
 ```
+Database backend: SQLiteDB
 Credentials added to database!
 
 Node ID: 2
