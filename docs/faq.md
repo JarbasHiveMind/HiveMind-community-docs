@@ -66,8 +66,10 @@
 
 ??? question "Is HiveMind secure?"
     Yes. Connections use authenticated encryption (AES-256-GCM or ChaCha20-Poly1305,
-    negotiated), with a password-based handshake (PBKDF2-HMAC-SHA256, 100 000 iterations).
-    The encryption key is never sent over the wire. Permissions are **fail-closed**: a new
+    negotiated), established by the Noise handshake (`Noise_XXpsk2_25519_ChaChaPoly_SHA256`)
+    by default, which is forward-secret. Older clients still speaking protocol v1/v2 fall
+    back to a legacy password handshake (PBKDF2-HMAC-SHA256, 100 000 iterations). Either
+    way the encryption key is never sent over the wire. Permissions are **fail-closed**: a new
     client may do nothing until you grant it specific message types. Full detail in
     [Security & Permissions](concepts/security.md).
 
