@@ -113,7 +113,7 @@ eavesdropper who caught every packet still doesn't have the password, and withou
 compute the key. Once both sides hold that key, everything after the handshake is
 encrypted with the negotiated cipher. The cipher is **negotiated, not fixed**: the client offers an ordered list of ciphers it supports, the server filters that list against its own config `allowed_ciphers` (default `["CHACHA20-POLY1305", "AES-GCM"]`, with ChaCha20-Poly1305 listed first), and the server picks the client's most-preferred surviving choice. Both **ChaCha20-Poly1305** and **AES-GCM** are supported. Each message carries a unique nonce and an authentication tag. (AES-256-GCM is only the dataclass fallback used when a side offers no cipher list at all.)
 
-An alternative v0 path skips the handshake and uses a pre-shared `crypto_key` directly (the legacy `Encryption Key` printed by `add-client`). This path is kept for backward compatibility only.
+An alternative v0 path skips the handshake and uses a pre-shared `crypto_key` directly (the legacy `Encryption Key` printed by `add-client`). This path is kept for backward compatibility only, and only applies to a connection that is not v3-capable — the handshake decision keys on the connection's negotiated capability, not on whether the client's database row happens to carry a `crypto_key`. A client that presents a password is v3-capable and always runs the Noise handshake when handshakes are enabled, so a lingering `crypto_key` cannot suppress it; the stray key is unused and cleared once the handshake completes.
 
 ### Refusing old clients — `min_protocol_version`
 
