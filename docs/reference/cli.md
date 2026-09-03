@@ -79,10 +79,11 @@ Options:
   --name TEXT        Friendly name for the client
   --access-key TEXT  Custom access key (generated if omitted)
   --password TEXT    Custom password (generated if omitted)
-  --crypto-key TEXT  Optional pre-shared encryption key
+  --crypto-key TEXT  Optional legacy pre-shared encryption key
   --admin BOOLEAN    Grant admin powers to the client (default: false)
   --metadata TEXT    Client metadata as a JSON object
   --allow-weak-password  Skip the password-strength check (not recommended)
+  --allow-legacy-crypto-key  Allow setting --crypto-key on a node that requires the v3 Noise handshake
 ```
 
 The node ID is auto-assigned; there is no `--node-id` option. Output includes the `Access Key`, `Password`, and deprecated `Encryption Key`.
@@ -91,6 +92,11 @@ Passing `--access-key` with a key that already belongs to another client is a ha
 command refuses to overwrite the existing client's password/admin flag and names the conflicting
 Node ID and friendly name instead. Use `rename-client`, `allow-msg`, or `delete-client` on the
 existing client, or omit `--access-key` to generate a fresh one.
+
+`--crypto-key` sets the legacy v1/v2 pre-shared AES key. A v3 client authenticates instead with a
+password-derived Noise key (see `derive-psk`). On a node whose `min_protocol_version` requires the
+v3 handshake, `--crypto-key` is refused by default — pass `--allow-legacy-crypto-key` only for a
+client you genuinely intend to run on the legacy v1/v2 protocol.
 
 !!! warning "A new client is fail-closed until you allow a message type"
     A freshly added non-admin client has an **empty `allowed_types` whitelist**, which means it is **DENIED on every message** until you explicitly allow at least one type. `add-client` prints this same warning. Grant access before the client can do anything, e.g.:
