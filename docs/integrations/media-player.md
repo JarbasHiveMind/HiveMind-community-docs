@@ -31,8 +31,9 @@ browse and play music to them).
 This is a HiveMind **agent-protocol plugin**, not an OVOS skill. The installed package
 is `hivemind-player-protocol`, which registers a `hivemind.agent.protocol` entry point
 exposing the `HiveMindPlayerProtocol` class. When `hivemind-core` loads it, the
-protocol boots a local `ovos-audio` stack (TTS + OCP playback, plus `ovos-PHAL` if
-available) and routes incoming playback messages to it.
+protocol embeds `ovos-media` (the OCP-native media daemon) for all playback, plus
+`ovos-audio` for TTS only, plus optional `ovos-PHAL`, and routes incoming playback
+messages to them.
 
 ??? note "Advanced: why an agent protocol and not a skill"
     The player answers **no** natural-language questions — its
@@ -80,6 +81,7 @@ example:
 
 ```bash
 hivemind-core allow-msg "speak" <id>
+hivemind-core allow-msg "ovos.common_play.status" <id>
 hivemind-core allow-msg "ovos.common_play.play" <id>
 hivemind-core allow-msg "ovos.common_play.pause" <id>
 hivemind-core allow-msg "ovos.common_play.resume" <id>
@@ -87,6 +89,15 @@ hivemind-core allow-msg "ovos.common_play.stop" <id>
 hivemind-core allow-msg "ovos.common_play.next" <id>
 hivemind-core allow-msg "ovos.common_play.previous" <id>
 ```
+
+The status topic is `ovos.common_play.status` — served by the embedded `ovos-media`
+daemon; `ovos.common_play.player.status` is the legacy OCP audio-service topic and does
+nothing here. Readiness is per-daemon too: `mycroft.audio.is_ready` covers TTS,
+`mycroft.media.is_ready` covers the embedded `ovos-media` playback daemon.
+
+The `disable_media` config key (previously `disable_ocp`/`enable_old_audioservice`)
+disables the embedded `ovos-media` daemon entirely, useful when testing the protocol
+plugin without a real media backend.
 
 The repository's permissions reference lists the full OCP, audio, and (optional) PHAL
 volume message sets. A freshly added client is denied every message type until you
