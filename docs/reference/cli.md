@@ -99,7 +99,10 @@ v3 handshake, `--crypto-key` is refused by default — pass `--allow-legacy-cryp
 client you genuinely intend to run on the legacy v1/v2 protocol. On a v3-capable client (one that
 presents a password), a `crypto_key` left over in the database from before is simply unused: the
 handshake decision keys on the connection's negotiated capability, not on that column, so a
-lingering `crypto_key` can no longer suppress the Noise handshake.
+lingering `crypto_key` can no longer suppress the Noise handshake. This is a server-side
+guarantee only — on the client, do not pass a legacy `crypto_key` into `HiveMessageBusClient` for
+a v3 connection; the access key and password are enough, and a stray `crypto_key` there can still
+make the client encrypt or decrypt with the wrong key around the handshake.
 
 !!! warning "A new client is fail-closed until you allow a message type"
     A freshly added non-admin client has an **empty `allowed_types` whitelist**, which means it is **DENIED on every message** until you explicitly allow at least one type. `add-client` prints this same warning. Grant access before the client can do anything, e.g.:
