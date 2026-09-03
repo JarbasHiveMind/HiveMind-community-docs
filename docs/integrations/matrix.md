@@ -51,7 +51,7 @@ Options:
 
 The `run` command takes no HiveMind credential flags. HiveMind credentials are
 read from the stored node identity (set once with `hivemind-client set-identity`),
-which the bridge loads internally via `HiveMindSolver(autoconnect=True)`.
+which the bridge loads internally by constructing `HiveMindSolver` with `autoconnect: True` in its config.
 
 Example:
 
