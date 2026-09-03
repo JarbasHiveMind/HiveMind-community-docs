@@ -126,8 +126,8 @@ moment and neither hears the other's reply. Here it is, one hop each way:
 `BUS` is a satellite *asking* hivemind-core to do something. `SHARED_BUS` is the
 opposite posture: a satellite letting hivemind-core *watch* its own local OVOS bus,
 read-only. hivemind-core sees the traffic but never injects it into its own bus — think
-one-way mirror, not a shared room. The [ovos-skill-fallback-hivemind](https://github.com/JarbasHiveMind/ovos-skill-fallback-hivemind)
-skill is the usual reason you'd reach for it.
+one-way mirror, not a shared room. The [ovos-hivemind-pipeline-plugin](https://github.com/JarbasHiveMind/ovos-hivemind-pipeline-plugin),
+run with its `slave_mode` setting enabled, is the usual reason you'd reach for it.
 
 ![SHARED_BUS mirrors a satellite's local bus up to hivemind-core](https://raw.githubusercontent.com/JarbasHiveMind/HiveMind-core/dev/resources/shared_bus.gif)
 

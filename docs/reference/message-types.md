@@ -65,7 +65,7 @@ Passive monitoring of the satellite's local OVOS bus.
 
 - **Direction**: satellite → hivemind-core
 - **hivemind-core behaviour**: observes without injecting into the local bus
-- **Use**: typically via [ovos-skill-fallback-hivemind](https://github.com/JarbasHiveMind/ovos-skill-fallback-hivemind)
+- **Use**: typically via [ovos-hivemind-pipeline-plugin](https://github.com/JarbasHiveMind/ovos-hivemind-pipeline-plugin)'s `slave_mode` setting
 
 ---
 
