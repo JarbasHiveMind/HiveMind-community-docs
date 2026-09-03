@@ -102,6 +102,7 @@ mycroft.audio.speak.status
 ### OCP (OpenVoiceOS Common Play)
 
 ```
+ovos.common_play.status
 ovos.common_play.player.status
 ovos.common_play.track_info
 ovos.common_play.get_track_length
@@ -119,8 +120,17 @@ ovos.common_play.shuffle.set
 ovos.common_play.shuffle.unset
 ovos.common_play.repeat.set
 ovos.common_play.repeat.unset
-ovos.common_play.repeat.one
 ```
+
+No single stack answers both status topics: `ovos-media` answers `ovos.common_play.status`
+only, and the legacy OCP audio service answers `ovos.common_play.player.status` only. The
+integration queries both until the legacy stack's flag day, so grant both regardless of
+which one your deployment actually runs. There is no `ovos.common_play.repeat.one`; repeat
+is toggled with `ovos.common_play.repeat.set` / `.unset` (or `.toggle`).
+
+!!! note "`get_track_position` / `set_track_position` are milliseconds"
+    Both topics carry the track position in milliseconds, end to end. Convert at the Home
+    Assistant boundary if you're comparing against `media_player`'s second-based attributes.
 
 ### Audio Service
 
