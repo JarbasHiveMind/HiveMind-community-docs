@@ -165,17 +165,6 @@ system.ssh.enable
 system.ssh.disable
 ```
 
-#### ovos-phal-plugin-camera
-
-*(work in progress)*
-
-```
-ovos.phal.camera.ping
-ovos.phal.camera.get
-ovos.phal.camera.open
-ovos.phal.camera.close
-```
-
 However many of those you decided you need, you grant them the same way — one
 `allow-msg` per message type, then the admin flag once at the end (the node ID goes last,
 positionally):
