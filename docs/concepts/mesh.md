@@ -106,14 +106,14 @@ sequenceDiagram
 
 ### CASCADE — scatter/gather
 
-`CASCADE` floods in all directions like `PROPAGATE`, and every node that can answer sends a response back. The originator collects responses via `CascadeAggregator` and applies a select callback to pick the best answer. See [Protocol — CASCADE](protocol.md).
+`CASCADE` floods in all directions like `PROPAGATE`, and every node that can answer sends a response back. The originator collects responses via `CascadeCollector` and applies a `cascade_select_callback` to pick the best answer. See [Protocol — CASCADE](protocol.md).
 
 ```mermaid
 flowchart TD
     O[Originator] -->|CASCADE| A[Node A]
     O -->|CASCADE| B[Node B]
     O -->|CASCADE| C[Node C]
-    A -.->|response| G[CascadeAggregator]
+    A -.->|response| G[CascadeCollector]
     B -.->|response| G
     C -.-> |no answer| X[dropped]
     G --> P{select callback}
