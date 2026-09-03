@@ -23,7 +23,7 @@ exposes a text/query agent, not server-side audio processing.
 ## Install
 
 ```bash
-pip install hivemind-core hivemind-persona-agent-plugin ovos-persona
+pip install hivemind-core "hivemind-persona-agent-plugin>=0.0.4a1" --pre ovos-persona
 ```
 
 You also need at least one solver plugin for the persona to call. For an
