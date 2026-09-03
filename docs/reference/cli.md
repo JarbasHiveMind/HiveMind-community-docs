@@ -87,6 +87,11 @@ Options:
 
 The node ID is auto-assigned; there is no `--node-id` option. Output includes the `Access Key`, `Password`, and deprecated `Encryption Key`.
 
+Passing `--access-key` with a key that already belongs to another client is a hard error — the
+command refuses to overwrite the existing client's password/admin flag and names the conflicting
+Node ID and friendly name instead. Use `rename-client`, `allow-msg`, or `delete-client` on the
+existing client, or omit `--access-key` to generate a fresh one.
+
 !!! warning "A new client is fail-closed until you allow a message type"
     A freshly added non-admin client has an **empty `allowed_types` whitelist**, which means it is **DENIED on every message** until you explicitly allow at least one type. `add-client` prints this same warning. Grant access before the client can do anything, e.g.:
 
