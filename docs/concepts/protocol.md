@@ -125,14 +125,16 @@ A non-admin client can declare `session_id: "default"` on a `BUS` payload, but t
 never let a remote client reach the OVOS bus's own local, device-owned `"default"`
 session. That would let one satellite read or mutate another's device state.
 hivemind-core prevents this with a NAT-like rewrite. On the way in, it stamps every
-inbound `BUS` message with a per-connection Layer-1 session id,
-`"<connection-nonce>:<declared-session-id>"`, so a declared `"default"` becomes a
-namespaced id private to that connection before the policy chain or the bus ever sees
-it. On the way out, `HiveMindClientConnection.send()` strips this connection's own
-namespace prefix back off, so the client only ever sees the plain session id it
-originally declared. The internal namespace never crosses the wire in either
-direction. This is symmetric and lives entirely in `hivemind-core`, so every agent and
-binary-protocol plugin built on it inherits the isolation automatically.
+inbound `BUS` message with a Layer-1 session id, `"<session-namespace>:<declared-session-id>"`,
+so a declared `"default"` becomes a namespaced id private to that client before the policy
+chain or the bus ever sees it. The namespace is derived from the client's durable database
+identity, `sha256(hub_salt:client_id)[:16]`, not from the live connection, so it stays the
+same across a reconnect. It falls back to a per-connection nonce only when no durable
+identity can be resolved. On the way out, `HiveMindClientConnection.send()` strips this
+client's own namespace prefix back off, so the client only ever sees the plain session id
+it originally declared. The internal namespace never crosses the wire in either direction.
+This is symmetric and lives entirely in `hivemind-core`, so every agent and binary-protocol
+plugin built on it inherits the isolation automatically.
 
 ---
 
@@ -162,9 +164,12 @@ The sealing is a **hybrid envelope**: a random AES-256-GCM session key is wrappe
 !!! warning "Origin verification is fail-closed"
     The receiving node verifies the sender's RSA signature (PSS over SHA-256) over the raw ciphertext bytes, **before** it decrypts, against the public key pinned from the sender's `HELLO`. A missing signature, a signature that fails to verify, or no pinned key for the sender each drop the frame. A dropped frame stops there: the node does not relay it to peers and does not escalate it upstream, and the sender receives no error.
 
-    A hivemind-core node with `require_crypto` set (the default) also drops any INTERCOM that carries no signed envelope, and logs `dropping unauthenticated message`. If INTERCOM traffic stopped after an upgrade, this is why. The remedy is to sign the envelope. Clearing `require_crypto` is a choice made in code, and it gives up all proof of who sent the message.
+    Every session is encrypted, so a hivemind-core node also drops any INTERCOM that carries
+    no signed envelope, with no opt-out, and logs `dropping unauthenticated message`. If
+    INTERCOM traffic stopped after an upgrade, this is why. The remedy is to sign the
+    envelope.
 
-See [Bootstrapping satellite-to-satellite trust](security.md#bootstrapping-satellite-to-satellite-trust) for the key-pinning rules and the `require_crypto=False` escape hatch.
+See [Bootstrapping satellite-to-satellite trust](security.md#bootstrapping-satellite-to-satellite-trust) for the key-pinning rules.
 
 ---
 
@@ -280,46 +285,23 @@ knows its way home.
 
 ---
 
-## Protocol versions
+## Protocol version
 
-One last thing shapes every connection: not all clients are equally capable. A modern
-browser can run the newest encryption; a five-dollar chip cannot. So HiveMind doesn't
-force a single protocol on everyone — it negotiates, and the `ProtocolVersion` enum is
-the ladder it climbs, one rung of capability at a time:
+Every connection speaks protocol **v3**: the **Noise** handshake
+(`Noise_XXpsk2_25519_ChaChaPoly_SHA256` by default), giving an always-encrypted,
+forward-secret session from an access key and a password. There is no negotiable range of
+older versions to fall back to, and no legacy plaintext or pre-shared-key path. A client
+that cannot complete the v3 Noise handshake is refused: the server closes the connection
+with code `1008` and the reason `this node requires protocol v3 (the Noise handshake)`. See
+[Security → There is no legacy path](security.md#there-is-no-legacy-path).
 
-| Feature | ZERO (v0) | ONE (v1) | TWO (v2) | THREE (v3) |
-|---|:---:|:---:|:---:|:---:|
-| JSON serialization | ✅ | ✅ | ✅ | ✅ |
-| Handshake (password / RSA) | ❌ | ✅ | ✅ | — |
-| Binary serialization | ❌ | ❌ | ✅ | ✅ |
-| Noise handshake, always-encrypted | ❌ | ❌ | ❌ | ✅ |
-
-- **v0** — JSON only, no handshake, no binary framing; uses only a pre-shared encryption key (the legacy, deprecated `Encryption Key` in `add-client` output).
-- **v1** — adds the handshake (password salted-hash + PBKDF2, or RSA), the RSA identity, and zlib compression.
-- **v2** — additionally enables binary framing.
-- **v3** — replaces the v1/v2 handshake with a **Noise** handshake (`Noise_XXpsk2_25519_ChaChaPoly_SHA256` by default), giving an always-encrypted, forward-secret session. This is the current default for capable clients. See [Security → Handshake and encryption](security.md#handshake-and-encryption).
-
-Two sides don't argue about this — they meet in the middle. The server admits a
-connection only if it can negotiate at least `min_protocol_version` (config default **2**,
-so the oldest JSON-only / no-binary v0/v1 clients are turned away by default), then
-advertises the highest version both sides can manage (`THREE` whenever the Noise
-primitive is available and the client has a password). The practical takeaway: a capable
-client quietly gets the strong, always-encrypted v3 session, and an ancient one is
-refused rather than silently downgraded. (One footnote to avoid confusion: this
-`ProtocolVersion` enum is a different thing from the binary-serialization
-`PROTOCOL_VERSION` constant in `serialization.py`.)
-
-The floor is checked twice, not once. The connect-time check refuses a client that cannot
-reach the floor at all. A second check runs when the handshake completes, and it judges
-the version the client actually performed: an RSA envelope is v1, a password envelope is
-v2, and a `noise` payload is v3. A client below the floor is disconnected there. This
-second check matters because a client that *could* do v3 was previously free to complete a
-v2 password handshake instead, so a hive set to `min_protocol_version: 3` was weaker than
-it looked. Those clients are now disconnected. See
-[Refusing old clients](security.md#refusing-old-clients-min_protocol_version).
-
-!!! note "You don't negotiate v2 to send binary"
-    Whether a v1/v2 connection uses binary framing is gated by the `binarize` boolean exchanged in the handshake, **not** by negotiating `ProtocolVersion.TWO` on its own. Under v3 the session is always encrypted and binary-capable. See [Protocol Spec](../developers/protocol-spec.md) for the framing and Noise details.
+The `ProtocolVersion` enum still enumerates `ZERO`/`ONE`/`TWO`/`THREE` on the wire for
+historical reasons, and `max_protocol_version` still appears in the `HANDSHAKE` payload —
+it is exactly what a v3 client reads to select the Noise handshake. Only `THREE` is ever
+accepted; the earlier rungs of the ladder, and the `min_protocol_version` floor that used to
+gate them, no longer exist. (One footnote to avoid confusion: this `ProtocolVersion` enum is
+a different thing from the binary-serialization `PROTOCOL_VERSION` constant in
+`serialization.py`.)
 
 ---
 

@@ -79,31 +79,21 @@ Options:
   --name TEXT        Friendly name for the client
   --access-key TEXT  Custom access key (generated if omitted)
   --password TEXT    Custom password (generated if omitted)
-  --crypto-key TEXT  Optional legacy pre-shared encryption key
   --admin BOOLEAN    Grant admin powers to the client (default: false)
   --metadata TEXT    Client metadata as a JSON object
   --allow-weak-password  Skip the password-strength check (not recommended)
-  --allow-legacy-crypto-key  Allow setting --crypto-key on a node that requires the v3 Noise handshake
 ```
 
-The node ID is auto-assigned; there is no `--node-id` option. Output includes the `Access Key`, `Password`, and deprecated `Encryption Key`.
+The node ID is auto-assigned; there is no `--node-id` option.
 
 Passing `--access-key` with a key that already belongs to another client is a hard error — the
 command refuses to overwrite the existing client's password/admin flag and names the conflicting
 Node ID and friendly name instead. Use `rename-client`, `allow-msg`, or `delete-client` on the
 existing client, or omit `--access-key` to generate a fresh one.
 
-`--crypto-key` sets the legacy v1/v2 pre-shared AES key. A v3 client authenticates instead with a
-password-derived Noise key (see `derive-psk`). On a node whose `min_protocol_version` requires the
-v3 handshake, `--crypto-key` is refused by default. Pass `--allow-legacy-crypto-key` only for a
-client you genuinely intend to run on the legacy v1/v2 protocol.
-
-On a v3-capable client, one that presents a password, a `crypto_key` left over in the database is
-simply unused. The handshake decision keys on the connection's negotiated capability, not on that
-column, so a lingering `crypto_key` cannot suppress the Noise handshake. This is a server-side
-guarantee only. On the client, do not pass a legacy `crypto_key` into `HiveMessageBusClient` for a
-v3 connection. The access key and password are enough, and a stray `crypto_key` there can still
-make the client encrypt or decrypt with the wrong key around the handshake.
+There is no crypto-key. The access key admits the client, and the password derives the v3 Noise
+PSK (see `derive-psk`) — the Noise handshake is the sole key exchange. A weak, guessable
+`--password` is refused unless you pass `--allow-weak-password`.
 
 !!! warning "A new client is fail-closed until you allow a message type"
     A freshly added non-admin client has an **empty `allowed_types` whitelist**, which means it is **DENIED on every message** until you explicitly allow at least one type. `add-client` prints this same warning. Grant access before the client can do anything, e.g.:

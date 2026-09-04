@@ -108,29 +108,16 @@ mode this is `ovos-messagebus`). Rejected connections raise an error event:
 |--------------------------------|------------------------------------------------------------------------------|
 | `hive.client.connect`          | A client connects (payload carries `key`, `session_id`).                     |
 | `hive.client.disconnect`       | A client disconnects (payload carries `key`).                                |
-| `hive.client.connection.error` | A connection is rejected for an invalid access key, or for missing crypto. |
+| `hive.client.connection.error` | A connection is rejected for an invalid access key, or for failing to offer the v3 Noise handshake. |
 
 `handle_invalid_key_connected` (a client presented an unknown or disallowed API key) emits
 `{"error": "invalid access key", "peer": <peer>}` and logs
-`Client provided an invalid api key` at `ERROR` level. A client with no pre-shared crypto
-key when the handshake is disabled but `require_crypto` is set is rejected the same way,
-via `handle_invalid_protocol_version`, which emits `{"error": "protocol error", "peer":
-<peer>}` on the same event.
-
-**The `min_protocol_version` floor checks emit no bus event.** Both floor checks disconnect
-the client after a `WARNING` log line and nothing else, so alerting on
-`hive.client.connection.error` will never page you for a client that's simply too old. Grep
-the logs instead:
-
-- Connect time: `rejecting <peer>: server requires protocol version >= …`
-- Handshake completion: `rejecting <peer>: legacy handshake at protocol v… is below the
-  configured minimum …`
-
-The second line is the newer of the two. It appears when a client completes a legacy v1 or
-v2 handshake under a higher `min_protocol_version` floor, which earlier releases allowed.
-Expect it after you upgrade, and expect satellites to drop off if your floor is above what
-they can negotiate. See
-[Refusing old clients](../concepts/security.md#refusing-old-clients-min_protocol_version).
+`Client provided an invalid api key` at `ERROR` level. A connection that cannot offer the
+v3 Noise handshake — no Noise primitive available, or no password presented — is rejected
+the same way, via `handle_invalid_protocol_version`, which emits `{"error": "protocol
+error", "peer": <peer>}` on the same event. It also logs
+`rejecting <peer>: this node requires protocol v3 (the Noise handshake) and this connection
+cannot offer it` at `WARNING`, and the connection is closed with code `1008`.
 
 An operator can observe rejected connections in two ways:
 
@@ -139,10 +126,10 @@ An operator can observe rejected connections in two ways:
    protocol connects to) and inspect the `error`/`peer` fields. This is the structured,
    real-time signal — wire it into your monitoring to alert on repeated invalid-key
    attempts from a single peer (a sign of a misconfigured satellite or a brute-force
-   attempt). It does not cover protocol-floor rejections.
-2. **Read the logs.** Invalid keys log at `ERROR`, protocol-floor rejections at `WARNING`,
-   so both are visible in `journalctl -u hivemind-core` even without a bus listener. The
-   logs are the only place the second kind appears.
+   attempt).
+2. **Read the logs.** Invalid keys log at `ERROR`, the protocol-v3 refusal at `WARNING`,
+   so both are visible in `journalctl -u hivemind-core` even without a bus listener. Both
+   also emit on the bus, so either signal works.
 
 Normal `hive.client.connect` / `hive.client.disconnect` events on the same bus give you a
 running picture of which satellites are attached.

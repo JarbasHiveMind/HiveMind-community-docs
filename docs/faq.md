@@ -129,11 +129,10 @@
 
 ??? question "INTERCOM messages stopped arriving after an upgrade"
     A node now drops an `INTERCOM` it cannot attribute to a sender. Check three things.
-    First, the payload must be a signed, encrypted envelope. A stock server requires crypto
-    and drops a plaintext `INTERCOM`. Second, the receiver must hold the sender's public key,
-    either added out of band or pinned from the sender's first `HELLO`. Third, the signature
-    must verify against that key. To keep sending plaintext `INTERCOM`, construct the listener
-    protocol with `require_crypto=False`. See
+    First, the payload must be a signed, encrypted envelope — every session is encrypted, so
+    a plaintext `INTERCOM` is always dropped, with no opt-out. Second, the receiver must hold
+    the sender's public key, either added out of band or pinned from the sender's first
+    `HELLO`. Third, the signature must verify against that key. See
     [Bootstrapping satellite-to-satellite trust](concepts/security.md#bootstrapping-satellite-to-satellite-trust).
 
 ??? question "A satellite stopped seeing answers to other satellites' queries"

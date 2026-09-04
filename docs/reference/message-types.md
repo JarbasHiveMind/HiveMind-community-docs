@@ -175,7 +175,7 @@ End-to-end encrypted point-to-point message.
 - **Intermediate nodes**: cannot read the content, but they do see the recipient. The outer `target_pubkey` field is cleartext, and a relay reads it to decide whether to consume the frame or forward it.
 - **Origin check**: the target verifies the signature against the sender's pinned public key. A bad signature, a missing signature, or an unknown originator means the message is dropped
 - **A dropped message is not relayed**: it goes no further to peers and is not escalated upstream
-- **Plaintext payloads**: a node with `require_crypto` (the default) drops an `INTERCOM` that is not a signed envelope, and logs `dropping unauthenticated message`. `require_crypto` is a listener attribute set in code, not a `server.json` key, and clearing it gives up all proof of who sent the message
+- **Plaintext payloads**: every session is encrypted, so a node always drops an `INTERCOM` that is not a signed envelope, with no opt-out
 - **Binary framing**: `INTERCOM` has no 5-bit type code, so it cannot be binary-framed at all. Send it as a text frame.
 
 ---
@@ -196,11 +196,16 @@ Topology discovery.
 
 Connection management. Handled automatically by `HiveMessageBusClient` and `hivemind-core`.
 
-- `HELLO` announces the node (node_id, RSA public key in PEM) — sent unencrypted
-- `HANDSHAKE` performs the key exchange — sent unencrypted, establishes the session key. Two modes:
-  - **Password mode** (`PasswordHandShake`): the session key is derived with PBKDF2-HMAC-SHA256, 100000 iterations
-  - **RSA mode**: a random 32-byte secret is wrapped with the peer's RSA public key (no PBKDF2)
-- After the handshake, a second `HELLO` carries session data, site_id, and client public key — this one IS encrypted, since it's sent once the session key already exists
+- `HELLO` announces the node (`pubkey`, `peer`, `node_id`) — sent unencrypted, and bound into
+  the Noise handshake prologue
+- `HANDSHAKE` advertises what the server supports — sent unencrypted: `max_protocol_version`
+  (always `THREE`), `binarize`, the permitted `encodings`/`ciphers`, and the Noise `patterns`/
+  `suites` on offer (`KKpsk0` only once this client's static key has been pinned by a prior
+  `XXpsk2` handshake). The client answers with its own Noise handshake message; there is no
+  PBKDF2 or RSA key-exchange mode anymore, the Noise handshake is the sole key exchange
+- After the Noise handshake completes, a second `HELLO` carries session data, site_id, and
+  client public key — this one IS encrypted, since it's sent once the Noise session already
+  exists
 
 > **`HANDSHAKE` and the first `HELLO` are the only plaintext frames.** `HANDSHAKE` always
 > travels as plaintext JSON, since it carries the crypto negotiation before any key

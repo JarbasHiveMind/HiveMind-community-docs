@@ -7,7 +7,7 @@ out, plus the satellite identity file and the ports everything listens on.
 
 !!! abstract "In a nutshell"
     - `hivemind-core` reads `~/.config/hivemind-core/server.json` at startup; `hivemind-core listen` takes no flags, so all settings live in this file.
-    - Configurable blocks: `binarize`, `allowed_encodings`/`allowed_ciphers`, `min_protocol_version`, the password-strength keys, `agent_protocol`, `binary_protocol`, `presence`, `network_protocol`, `policy.chain`, `last_seen_update_interval`, `database`, `rendezvous`, `upstream`, `utterance_transformers`, `metadata_transformers`, `dialog_transformers`, and `ping_flood_interval`.
+    - Configurable blocks: `binarize`, `allowed_encodings`/`allowed_ciphers`, the password-strength keys, `agent_protocol`, `binary_protocol`, `presence`, `network_protocol`, `policy.chain`, `last_seen_update_interval`, `database`, `rendezvous`, `upstream`, `utterance_transformers`, `metadata_transformers`, `dialog_transformers`, and `ping_flood_interval`.
     - The database backend and TLS certificates are auto-selected on first run.
     - Satellites store credentials in `~/.config/hivemind/_identity.json`, written by `hivemind-client set-identity`.
 
@@ -34,7 +34,6 @@ here:
     "JSON-B32", "JSON-HEX"
   ],
   "allowed_ciphers": ["CHACHA20-POLY1305", "AES-GCM"],
-  "min_protocol_version": 2,
   "min_password_bits": 40,
   "runtime_password_strength_check": true,
   "agent_protocol": {
@@ -118,14 +117,6 @@ The `database` block above is selected automatically on first run: a fresh insta
 | `allowed_ciphers` | `["CHACHA20-POLY1305", "AES-GCM"]` | Permitted symmetric ciphers for payload encryption, ordered by preference. |
 
 The supported encodings are: `JSON-B64`, `JSON-URLSAFE-B64`, `JSON-B91`, `JSON-Z85B`, `JSON-Z85P`, `JSON-B32`, `JSON-HEX`. Trim either list to restrict what the server will negotiate.
-
-### min_protocol_version
-
-| Key | Default | Description |
-|---|---|---|
-| `min_protocol_version` | `2` | Lowest `ProtocolVersion` a client may negotiate. At `2` the server refuses the oldest JSON-only and no-binary clients. Raise it to `3` to require the Noise handshake from every client. |
-
-The server enforces this floor twice: once at connect time, and again when the handshake completes, against the version the client actually performed. Read [Refusing old clients](../concepts/security.md#refusing-old-clients-min_protocol_version) before you raise it, because clients that used to downgrade in silence are disconnected instead.
 
 ### min_password_bits / runtime_password_strength_check
 

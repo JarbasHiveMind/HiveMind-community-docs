@@ -61,14 +61,11 @@ v3-capable client (Noise primitive available, password configured) actually nego
 - **Pinned-key case:** once a client's static key has been pinned by a prior `XXpsk2` handshake, both ends may use `Noise_KKpsk0_25519_ChaChaPoly_SHA256` (both static keys known in advance).
 - **The client pins the server too.** On the first completed `XXpsk2` handshake the client stores the server's Noise static key. It goes in the client identity file, under `pinned_noise_keys`, keyed by the server's node_id. Every later handshake compares against that pin, and a changed key aborts the session with a man-in-the-middle warning. If you regenerate a server identity or restore a node from backup, delete that entry from `~/.config/hivemind/_identity.json` on each satellite. Until you do, every satellite refuses to connect.
 - **There is no cleartext v3 session.** Only the initial `HANDSHAKE`/`HELLO` exchange, sent
-  before the Noise session is established, travels as plaintext JSON — that's inherent to
-  Noise's own handshake messages, not a permanent exemption. Once `noise_transport` is set,
-  every later message, including any subsequent `HELLO`, is Noise-encrypted like everything
-  else. (The always-plaintext `HANDSHAKE`/`HELLO` exemption described below is a property of
-  the legacy v1/v2 handshake, which has no session key to encrypt with until the exchange
-  completes — see [Legacy handshake](#legacy-handshake-protocol-v1--v2).) On a
-  `crypto_required` server, any cleartext frame outside that pre-handshake window is rejected
-  and the client disconnected.
+  before the Noise session is established, travels as plaintext JSON — inherent to Noise's own
+  handshake messages, not a permanent exemption. Once `noise_transport` is set, every later
+  message, including any subsequent `HELLO`, is Noise-encrypted like everything else. Any
+  cleartext frame outside that pre-handshake window is rejected and the connection closed with
+  code `1008`.
 
 !!! info "Constrained devices use a provisioned PSK"
     Microcontrollers (ESP32, MicroPython) cannot run argon2id on-device. Instead you **pre-compute** the 32-byte PSK on the server and flash it onto the device:
@@ -82,44 +79,24 @@ v3-capable client (Noise primitive available, password configured) actually nego
 !!! note "Browser caveat"
     Browsers are **not** constrained: with `@noble` loaded (a five-line ESM shim exposing `chacha20poly1305` + `argon2id` on `globalThis.HiveMindNoble`) a HiveMind-js client negotiates the default ChaChaPoly suite and derives the argon2id PSK on-device, exactly like a Python client. Only a **minimal** browser bundle shipped *without* `@noble` degrades to the AES-GCM + PBKDF2 subset, and then needs either a provisioned `psk` or a PBKDF2-advertising server.
 
-### Legacy handshake (protocol v1 / v2)
+### There is no legacy path
 
-Not everything can run Noise, and HiveMind doesn't abandon those clients — it drops to an
-older but still sound handshake. It reaches the same destination (a shared key neither
-side transmitted); it just gets there by different math. The steps below are worth reading
-once even if you never implement them, because they show *why* watching the wire doesn't
-help an attacker. The password handshake proves the password with a salted hash and
-derives the key with PBKDF2-SHA256:
+There is no crypto-key, and there is no plaintext or legacy v1/v2 handshake to fall back to.
+A client either completes the v3 Noise handshake with an access key and a password, or it is
+refused. The server closes the connection with code `1008` and the reason `this node requires
+protocol v3 (the Noise handshake)`. The `ProtocolVersion` enum on the wire still enumerates
+`ZERO`/`ONE`/`TWO`/`THREE` for historical reasons, but only `THREE` (Noise) is ever accepted.
+The earlier rungs of that ladder, and the `min_protocol_version` floor that used to gate them,
+no longer exist. `max_protocol_version` still appears in the `HANDSHAKE` payload; it is exactly
+what a v3 client reads to select the Noise handshake, but it no longer advertises a negotiable
+range down to older versions.
 
-```
-Server → Client  HELLO        (node_id, server public key — plaintext)
-Server → Client  HANDSHAKE    (capabilities: binarize, crypto_required, etc. — plaintext)
-Client → Server  HANDSHAKE    (binarize flag + PBKDF2 envelope — plaintext)
-Server → Client  HANDSHAKE    (PBKDF2 envelope — plaintext)
-Client → Server  HELLO        (session data, site_id, client public key — plaintext)
-```
-
-The handshake works as follows:
-
-1. Each side generates a random IV and computes a salted-hash subject `HSUB = IV ‖ SHA256(IV + password)` (the IV concatenated with the hash, not a PBKDF2 value)
-2. Both sides exchange their `HSUB` and `IV`
-3. Each side verifies the other's `HSUB` by recomputing it locally
-4. A common salt is derived: `salt = IV_client XOR IV_server`
-5. The session key is derived with PBKDF2: `key = PBKDF2-HMAC-SHA256(password, salt, 100_000 iterations)` — 256 bits
-
-Read step 5 again and the point clicks: the key is derived from the password on *both*
-ends, but the password itself never crossed the wire — only the harmless IVs did. An
-eavesdropper who caught every packet still doesn't have the password, and without it can't
-compute the key. Once both sides hold that key, everything after the handshake is
-encrypted with the negotiated cipher. The cipher is **negotiated, not fixed**: the client offers an ordered list of ciphers it supports, the server filters that list against its own config `allowed_ciphers` (default `["CHACHA20-POLY1305", "AES-GCM"]`, with ChaCha20-Poly1305 listed first), and the server picks the client's most-preferred surviving choice. Both **ChaCha20-Poly1305** and **AES-GCM** are supported. Each message carries a unique nonce and an authentication tag. (AES-256-GCM is only the dataclass fallback used when a side offers no cipher list at all.)
-
-An alternative v0 path skips the handshake and uses a pre-shared `crypto_key` directly (the legacy `Encryption Key` printed by `add-client`). This path is kept for backward compatibility only, and only applies to a connection that is not v3-capable — the handshake decision keys on the connection's negotiated capability, not on whether the client's database row happens to carry a `crypto_key`. A client that presents a password is v3-capable and always runs the Noise handshake when handshakes are enabled, so a lingering `crypto_key` cannot suppress it; the stray key is unused and cleared once the handshake completes.
-
-### Refusing old clients — `min_protocol_version`
-
-The server will only admit a client that can negotiate at least `min_protocol_version` (config key in `~/.config/hivemind-core/server.json`, **default `2`**). At the default, the oldest JSON-only / no-binary **v0 and v1** clients are refused outright; a v2 client still connects with the legacy binary+handshake path, and a v3 client gets the Noise session. Raise the floor to `3` to require Noise from every client. The `ProtocolVersion` enum is `ZERO`/`ONE` (handshake) / `TWO` (binary) / `THREE` (Noise).
-
-The floor is enforced twice. The server advertises it at connect time. It checks again when the handshake completes, and it judges the version the client actually performed, not the version the client said it supports. A client that can speak v3 but sends a v2 password handshake against a floor of `3` is refused. Earlier releases let that client in and ignored the raised floor. At the default floor of `2` the same rule refuses a legacy v1 pubkey handshake. Both rejections are log-only: they emit no bus event, so watch the logs for `rejecting <peer>:` lines (see [Operations](../server/operations.md)).
+The cipher used inside the Noise session is **negotiated, not fixed**: the client offers an
+ordered list of ciphers it supports, the server filters that list against its own config
+`allowed_ciphers` (default `["CHACHA20-POLY1305", "AES-GCM"]`, with ChaCha20-Poly1305 listed
+first), and the server picks the client's most-preferred surviving choice. Both
+**ChaCha20-Poly1305** and **AES-GCM** are supported. Each message carries a unique nonce and an
+authentication tag.
 
 ### Weak-password refusal
 
@@ -163,7 +140,7 @@ A `HELLO` only asserts a public key. It does not prove the sender holds the matc
 
 **Verification is fail-closed.** The target node checks the origin signature on an INTERCOM before it does anything with the content. It rejects the message when the signature does not verify, when the payload carries no signature, and when no pinned key exists for the originator. It no longer processes an unverifiable INTERCOM for the sake of confidentiality alone. A rejected message stops at the node that rejected it. That node does not fan it out to peers and does not escalate it upstream.
 
-**Plaintext INTERCOM needs `require_crypto=False`.** An INTERCOM payload that is not a signed, encrypted envelope carries no origin proof at all. A node with `require_crypto` set drops it. `require_crypto` is an attribute of `HiveMindListenerProtocol` and it is `True` by default, so a stock server drops plaintext INTERCOM. If you rely on that feature, construct the listener protocol with `require_crypto=False`.
+**Plaintext INTERCOM is always dropped.** An INTERCOM payload that is not a signed, encrypted envelope carries no origin proof at all. Every session on the node is encrypted, so an unsigned or unencrypted INTERCOM message is unconditionally dropped, not relayed and not escalated. There is no opt-out.
 
 ---
 
@@ -405,9 +382,9 @@ internet call for very different care.
 Validated against the HiveMind source:
 
 - [`hivemind_core/policy.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/policy.py) — `MessageTypeACLPolicy` and the fail-closed policy chain; admins are bound by `allowed_types`
+- [`hivemind_core/protocol.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/protocol.py) — `ProtocolVersion` enum, `max_protocol_version` in the `HANDSHAKE` payload, the `close(1008, ...)` refusal for a non-v3 client, and the unconditional plaintext-INTERCOM drop
 - [`poorman_handshake/noise/__init__.py`](https://github.com/JarbasHiveMind/poorman_handshake/blob/HEAD/poorman_handshake/noise/__init__.py) — v3 Noise suites (`XXpsk2`/`KKpsk0`, ChaChaPoly/AES-GCM), `derive_psk = argon2id(password, SHA-256(node_id))`
 - [`poorman_handshake/symmetric/strength.py`](https://github.com/JarbasHiveMind/poorman_handshake/blob/HEAD/poorman_handshake/symmetric/strength.py) — `WeakPasswordError`, zxcvbn-based 40-bit floor
-- [`hivemind_core/config.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/config.py) — `min_protocol_version` (default 2), `min_password_bits`, `runtime_password_strength_check`
-- [`poorman_handshake/symmetric/__init__.py`](https://github.com/JarbasHiveMind/poorman_handshake/blob/HEAD/poorman_handshake/symmetric/__init__.py) — legacy password handshake, salt = IV XOR IV, PBKDF2-HMAC-SHA256 100k iters
+- [`hivemind_core/config.py`](https://github.com/JarbasHiveMind/HiveMind-core/blob/HEAD/hivemind_core/config.py) — `min_password_bits`, `runtime_password_strength_check`
 - [`poorman_handshake/asymmetric/utils.py`](https://github.com/JarbasHiveMind/poorman_handshake/blob/HEAD/poorman_handshake/asymmetric/utils.py) — hybrid RSA + AES-256-GCM INTERCOM encryption
 - [`hivemind_bus_client/identity.py`](https://github.com/JarbasHiveMind/hivemind-websocket-client/blob/HEAD/hivemind_bus_client/identity.py) — identity file fields and `trusted_keys`
