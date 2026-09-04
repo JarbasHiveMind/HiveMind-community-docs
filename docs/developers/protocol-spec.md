@@ -34,147 +34,104 @@ them tightly once you do.
 
 ---
 
-## Protocol versions
+## Protocol version
 
-The first thing two nodes settle is *which* protocol they're speaking, because it decides
-everything downstream — the handshake, the encryption, whether frames are JSON or binary.
-The `ProtocolVersion` enum (`ZERO`/`ONE`/`TWO`/`THREE`, in `hivemind_core/protocol.py`) is
-that dial, negotiated the moment a connection opens:
+Every connection speaks a single protocol version: **v3**, the Noise handshake. The
+`ProtocolVersion` enum (`ZERO`/`ONE`/`TWO`/`THREE`, in `hivemind_core/protocol.py`) still
+enumerates the historical rungs on the wire, but only `THREE` is ever accepted — there is no
+negotiable floor, and no v0/v1/v2 fallback path. A connection that cannot complete the v3
+Noise handshake (no Noise primitive available, or no password presented) is refused: the
+server closes it with WebSocket code `1008` and the reason `this node requires protocol v3
+(the Noise handshake)`.
 
-- The server advertises `max_protocol_version` = **`THREE`** when the Noise primitive is available *and* the client has a password configured (`v3_capable`); otherwise `TWO` when `binarize` is enabled, else `ONE`. It advertises `min_protocol_version` = `max(config floor, crypto-derived minimum)`, where the config floor defaults to **`2`** (`min_protocol_version` in `server.json`). A client that cannot reach the advertised minimum is disconnected. The server also checks the floor a second time, when the handshake completes, against the version the client actually performed. A client that declares v3 capability but sends a v1 or v2 handshake envelope below the floor is disconnected before the legacy path runs.
-- The legacy serialization-layer `PROTOCOL_VERSION` constant in `serialization.py` is `1`; that binary-framing version is distinct from this session `ProtocolVersion` and is not bumped for v3.
+The legacy serialization-layer `PROTOCOL_VERSION` constant in `serialization.py` is `1`; that
+binary-framing version is a distinct thing from this session `ProtocolVersion` and is not
+bumped for v3.
 
-One subtlety trips up every first implementation, so read it before the table: within the
-**v1/v2** family, binary framing is **not** a version bump — it's switched on by the
-`binarize` boolean negotiated during the handshake (see [Negotiation & defaults](#negotiation-defaults)). **v3** is a different animal entirely (Noise), always encrypted and always binary-capable. With that in mind, here's the full ladder:
-
-| Version | Transport encoding | Key exchange | Compression |
-|---|---|---|---|
-| **v0** | JSON | Pre-shared AES key only (legacy, deprecated) | None |
-| **v1** | JSON (and binary framing when `binarize` is negotiated) | Handshake: PBKDF2 password **or** RSA | Optional zlib |
-| **v2** | JSON + binary framing | Handshake: PBKDF2 password **or** RSA | Optional zlib |
-| **v3** | Binary framing, always encrypted | **Noise** (`Noise_XXpsk2_25519_ChaChaPoly_SHA256` default — negotiated by browser/JS clients too via `@noble`; `AESGCM` suite as a fallback for minimal Web-Crypto-only peers; `KKpsk0` when the static key is pinned). PSK = `argon2id(password, SHA-256(node_id))`, derived in-browser | Optional zlib |
-
-!!! note "v3 Noise wire format"
-    The v1/v2 state machine below is the authoritative byte-level reference for the legacy handshake. The v3 Noise wire format — message tokens, prologue binding of the `HELLO`/`HANDSHAKE` payloads, PSK slot, and the provisioned-PSK path for constrained devices — is defined by the `hivemind_bus_client/noise.py` and `poorman_handshake/noise/` source modules; the [Security](../concepts/security.md#protocol-v3-the-noise-handshake-current-default) page covers its model.
+| Version | Transport encoding | Key exchange |
+|---|---|---|
+| **v3** (the only accepted version) | Binary framing, always encrypted | **Noise** (`Noise_XXpsk2_25519_ChaChaPoly_SHA256` default — negotiated by browser/JS clients too via `@noble`; `AESGCM` suite as a fallback for minimal Web-Crypto-only peers; `KKpsk0` once the client's static key is pinned). PSK = `argon2id(password, SHA-256(node_id))` |
 
 ---
 
 ## Handshake state machine
 
 This is the heart of the page — the exact choreography that takes a fresh socket to an
-encrypted session. If you get one thing byte-for-byte right, make it this. Follow it
-literally: the field names below are lifted straight from the reference implementation, and
-hivemind-core is unforgiving about them.
-
-This section is the authoritative connection-setup sequence for the **legacy v1/v2 handshake** (password or RSA). If the server's step-2 `HANDSHAKE` includes a `noise` object and your client supports it, run the Noise (v3) handshake instead (see the [v3 note above](#protocol-versions)); otherwise take this branch. Field names are taken verbatim from the reference implementation (`hivemind_core/protocol.py` server side; `hivemind_bus_client/protocol.py` `HiveMindSlaveProtocol` client side). Implement it exactly.
+encrypted session. Field names below are lifted straight from the reference implementation
+(`hivemind_core/protocol.py` server side; `hivemind_bus_client` client side).
 
 ### Framing rules that hold for the whole handshake
 
-- **`HELLO` and `HANDSHAKE` messages always travel in PLAINTEXT JSON**, even after the session key has been established. This includes the client's *second* `HELLO` (the one carrying session data), which is emitted **after** `crypto_key` is set but is still sent unencrypted. Only the post-handshake `BUS`/`QUERY`/etc. traffic is encrypted. A client must therefore be able to send/receive `HELLO` and `HANDSHAKE` as plain `HiveMessage` JSON regardless of crypto state.
+- **`HELLO` and `HANDSHAKE` messages travel in plaintext JSON only until the Noise session
+  is established.** Once the handshake completes and `noise_transport` is set, every later
+  message — including the client's second `HELLO` — is Noise-encrypted like everything
+  else. Any cleartext frame outside that pre-handshake window is rejected and the connection
+  closed with code `1008`.
 - The transport-layer JSON for any `HiveMessage` is the object returned by `HiveMessage.as_dict`: `{"msg_type", "payload", "metadata", "route", "node", "target_site_id", "target_pubkey", "source_peer"}`. For `HELLO`/`HANDSHAKE` only `msg_type` and `payload` matter.
 - `msg_type` values are the **string** enum values, not the binary integers: `HELLO = "hello"`, `HANDSHAKE = "shake"`. Two of the strings are not the lowercased enum name (`HANDSHAKE = "shake"`, `BINARY = "bin"`), so copy those two from the [Quick reference](../reference/message-types.md#quick-reference) table instead of deriving them.
-- **A `HANDSHAKE` is a REQUEST vs a RESPONSE distinguished ONLY by the presence of the `envelope` field.** There is no separate type or flag. The client decides which branch of its `HANDSHAKE` handler to run purely by `if "envelope" in payload`. A server→client `HANDSHAKE` *without* `envelope` is the "please start the handshake" request advertising capabilities; a message *with* `envelope` is the response that completes the exchange.
+- The Noise handshake itself rides inside `HANDSHAKE` messages carrying a `noise` object: `{"pattern": ..., "suite": ..., "msg": "<hex>"}`. The client is always the Noise initiator; the server is the responder.
 
 ### Connection setup sequence
 
 Authentication to the WebSocket itself happens first, before any HiveMessage — that is outside this state machine. The client puts the access key in the connect URL as an `authorization` query parameter, base64 of `useragent:access_key`, so the URL reads `ws://host:port?authorization=<b64>`. The client sends its `site_id` later, in the second `HELLO`. Once the socket is open:
 
-1. **Server → Client `HELLO`** (plaintext). Announces the server identity.
-2. **Server → Client `HANDSHAKE`** (plaintext, **no `envelope`**). Advertises server capabilities and asks the client to start the handshake.
-3. **Client → Server `HANDSHAKE`** (plaintext, **with `envelope`**). Carries the client's handshake material plus its cipher/encoding/binarize selections.
-4. **Server → Client `HANDSHAKE`** (plaintext, **with `envelope`**). Carries the server's handshake material and the final selected `encoding`/`cipher`. After this, **both sides can derive the same `crypto_key`.**
-5. **Client → Server `HELLO`** (plaintext, but sent *after* crypto is established). Carries the client's session, site_id, and public key.
-6. From here on, all other message types are encrypted with the negotiated `crypto_key`/`cipher`/`encoding`.
+1. **Server → Client `HELLO`** (plaintext). Announces the server identity, bound into the Noise handshake prologue.
+2. **Server → Client `HANDSHAKE`** (plaintext, **no `noise.msg`**). Advertises `max_protocol_version` (always `THREE`), `binarize`, allowed `encodings`/`ciphers`, and the Noise `patterns`/`suites` on offer.
+3. **Client → Server `HANDSHAKE`** (plaintext, **Noise message 1**). Names the selected pattern/suite and starts the Noise handshake, embedding the client's `binarize`/`encodings` choice inside the encrypted Noise payload.
+4. **Server → Client `HANDSHAKE`** (plaintext, **Noise message 2**). Continues the handshake, embedding the server's selected `encoding`. For `KKpsk0` (both static keys already known) the handshake is complete here.
+5. **Client → Server `HANDSHAKE`** (plaintext, **Noise message 3**, `XXpsk2` only). Authenticates the client's static key and completes the handshake.
+6. **Client → Server `HELLO`** (Noise-encrypted, sent *after* the transport is established). Carries the client's session, site_id, and public key.
+7. From here on, all other message types are Noise-encrypted.
 
 ```
 Server                                  Client
   |  HELLO {pubkey, peer, node_id}        |   (1) plaintext
   | ------------------------------------> |
-  |  HANDSHAKE {handshake, min/max_proto, |   (2) plaintext, NO envelope = REQUEST
-  |   binarize, preshared_key, password,  |
-  |   crypto_required, encodings, ciphers}|
+  |  HANDSHAKE {max_protocol_version,     |   (2) plaintext, advertises capabilities
+  |   binarize, encodings, ciphers,       |
+  |   noise: {patterns, suites}}          |
   | ------------------------------------> |
-  |                                       |   client picks branch on `password`
-  |  HANDSHAKE {envelope, encodings,      |   (3) plaintext, HAS envelope
-  |   ciphers, binarize [, pubkey]}       |
+  |  HANDSHAKE {noise: {pattern, suite,   |   (3) plaintext, Noise message 1
+  |   msg: <hex>}}                        |
   | <------------------------------------ |
-  |  HANDSHAKE {envelope, encoding,       |   (4) plaintext, HAS envelope = RESPONSE
-  |   cipher}                             |       both sides now hold crypto_key
+  |  HANDSHAKE {noise: {msg: <hex>}}      |   (4) plaintext, Noise message 2
   | ------------------------------------> |
-  |  HELLO {pubkey, session, site_id}     |   (5) plaintext, sent AFTER crypto set
+  |  HANDSHAKE {noise: {msg: <hex>}}      |   (5) plaintext, Noise message 3 (XXpsk2 only)
   | <------------------------------------ |
-  |  <encrypted BUS / QUERY / ... >       |   (6) encrypted
+  |  HELLO {pubkey, session, site_id}     |   (6) Noise-encrypted
+  | <------------------------------------ |
+  |  <encrypted BUS / QUERY / ... >       |   (7) Noise-encrypted
   |<====================================>|
 ```
 
-That diagram is the whole dance at a glance. The rest of this section zooms into each of
-those six frames and names every field it carries — this is the part you keep open in a
-second window while you code. Taking them in order:
+The wire-level Noise handshake tokens, the prologue binding of the `HELLO`/`HANDSHAKE`
+payloads, and the PSK derivation (including the provisioned-PSK path for constrained
+devices) live in `hivemind_bus_client/noise.py` and `poorman_handshake/noise/`; the
+[Security](../concepts/security.md) page covers the model at a higher level.
 
-#### (1) Server → Client `HELLO` — `payload` fields
+#### Server → Client `HELLO` — `payload` fields
 
 | Field | Type | Meaning |
 |---|---|---|
-| `pubkey` | str (PEM) | Server's RSA public key. The client stores this as `mpubkey` and uses it to authenticate the server in RSA mode. Only honored on the first HELLO (before `node_id` is set). |
+| `pubkey` | str (PEM) | Server's public key, bound into the Noise prologue. |
 | `peer` | str | Identifies this client in OVOS `message.context` (server's view of the connection). |
 | `node_id` | str | The server's peer id; becomes the client's `node_id` (how the local bus refers to the master). |
 
-#### (2) Server → Client `HANDSHAKE` (request) — `payload` capability fields
+#### Server → Client `HANDSHAKE` (capability advertisement) — `payload` fields
 
 | Field | Type | Meaning |
 |---|---|---|
-| `handshake` | bool | `True` ⇒ client MUST complete a handshake or the connection is dropped. (`needs_handshake = not client.crypto_key and self.handshake_enabled`.) |
-| `min_protocol_version` | int | Minimum acceptable `ProtocolVersion`: `max(the server.json min_protocol_version floor, the crypto-derived minimum)`. The shipped floor is `2`, so a default server advertises `2`. |
-| `max_protocol_version` | int | Maximum acceptable `ProtocolVersion` the server can offer: `THREE` when Noise + password are available, else `TWO` when `binarize` is on, else `ONE`. |
-| `noise` | object | Present only when the server offers **v3**: `{"patterns": [...], "suites": [...]}` in preference order (`XXpsk2`/`KKpsk0`, `25519_ChaChaPoly_SHA256`/`25519_AESGCM_SHA256`). Absent ⇒ take the legacy branch below. |
+| `max_protocol_version` | int | Always `THREE`. What a v3 client reads to select the Noise handshake. |
+| `noise` | object | `{"patterns": [...], "suites": [...]}` in preference order (`XXpsk2`/`KKpsk0`, `25519_ChaChaPoly_SHA256`/`25519_AESGCM_SHA256`). `KKpsk0` is offered only once this client's static key has been pinned by a prior `XXpsk2` handshake. |
 | `binarize` | bool | Server supports the binary framing scheme. From `cfg["binarize"]`, default `False`. |
-| `preshared_key` | bool | Server already holds a pre-shared crypto key for this client (legacy V0 path). |
-| `password` | bool | Server has a password configured for this client ⇒ password handshake is available (V1). If `True` and the client also has a password, the client takes the **password branch**. |
-| `crypto_required` | bool | Server rejects unencrypted payloads. |
 | `encodings` | list[str] | Server-allowed `SupportedEncodings`, server preference order. Defaults to **all** encodings. |
 | `ciphers` | list[str] | Server-allowed `SupportedCiphers`, server preference order. The shipped default is `["CHACHA20-POLY1305", "AES-GCM"]`. The server falls back to `["AES-GCM"]` only when `allowed_ciphers` is empty. |
 
-#### (3) Client → Server `HANDSHAKE` (with `envelope`) — `payload` fields
-
-The client always sends:
+#### Client → Server `HELLO` — `payload` fields (sent Noise-encrypted, after the transport is established)
 
 | Field | Type | Meaning |
 |---|---|---|
-| `binarize` | bool | Client's choice (it echoes the server's advertised value in the reference client). |
-| `encodings` | list[str] | Client's **preference-ordered** acceptable encodings (reference client sends `list(SupportedEncodings)`). |
-| `ciphers` | list[str] | Client's **preference-ordered** acceptable ciphers (reference client sends `optimal_ciphers()`, i.e. AES first if the CPU has AES-NI, else ChaCha20 first). |
-
-Plus exactly one of:
-
-| Field | Type | When |
-|---|---|---|
-| `envelope` | str (hex) | **Password branch.** Present when the client uses a `PasswordHandShake`. This is the field that marks the message as carrying handshake material. |
-| `pubkey` | str (PEM) | **RSA branch.** Present when no password is used; the client sends its RSA public key instead and there is **no** `envelope` in *this* client message. |
-
-!!! warning "The RSA branch negotiates v1 and a default server refuses it"
-    A `pubkey` payload is classified as `ProtocolVersion.ONE`. The server checks the configured floor again at handshake time and disconnects the client when the attempted version is below it. The shipped floor is `2`, so the RSA branch fails against a default server with no error frame and only a `rejecting <peer>: legacy handshake at protocol v1 is below the configured minimum` log line. Use the password branch (v2) or the Noise handshake (v3).
-
-> Selection ownership: the client *proposes* `encodings`/`ciphers` in preference order. The **server** intersects them with its own allowed sets and then selects the client's element `[0]` of each filtered list (`client.cipher = ciphers[0]`, `client.encoding = encodings[0]`). If the intersection is empty for either, the server disconnects the client. **This negotiation runs ONLY on the password branch.** On the RSA-pubkey branch the server never reads the client's `encodings`/`ciphers`, so the encoding/cipher silently stay at the server defaults (see [Negotiation & defaults](#negotiation-defaults)).
-
-#### (4) Server → Client `HANDSHAKE` (response, with `envelope`) — `payload` fields
-
-| Field | Type | Meaning |
-|---|---|---|
-| `envelope` | str (hex) | Server handshake material. In password mode this is `PasswordHandShake.generate_handshake()` (an hSub). In RSA mode it is `HandShake.generate_handshake(client_pubkey)` = `hexlify(signature + ciphertext)`. |
-| `encoding` | str | **Final** selected encoding (the value the client must use for all encrypted JSON from now on). The client reads `payload.get("encoding") or JSON_HEX`. |
-| `cipher` | str | **Final** selected cipher. The client reads `payload.get("cipher") or AES_GCM`. |
-
-On receipt the client derives `crypto_key`:
-
-- **Password mode:** `pswd_handshake.receive_and_verify(envelope)` validates the server proved the same password, then `crypto_key = pswd_handshake.secret` (see PBKDF2 math below).
-- **RSA mode:** if the client knows the server pubkey (`mpubkey`, from HELLO) it calls `handshake.receive_and_verify(envelope, mpubkey)` (verifies the PSS signature over the ciphertext, then decrypts); otherwise `handshake.receive_handshake(envelope)` (trust-on-first-use). Then `crypto_key = handshake.secret`.
-
-#### (5) Client → Server `HELLO` — `payload` fields (sent plaintext, after crypto_key is set)
-
-| Field | Type | Meaning |
-|---|---|---|
-| `pubkey` | str (PEM) | The client's own RSA public key (`identity.public_key`). |
+| `pubkey` | str (PEM) | The client's own public key. |
 | `session` | str (JSON) | Serialized OVOS `Session` for `session_id`. The server deserializes this as the client's session. |
 | `site_id` | str | The client's site id (used for `BROADCAST`/`PROPAGATE` `target_site_id` filtering). |
 
@@ -199,7 +156,7 @@ Several helper functions (`encrypt_as_json`, `decrypt_from_json`) carry a Python
 - The client's handshake handler falls back to `SupportedEncodings.JSON_HEX` when the server response omits `encoding`.
 - The server's handshake handler falls back to `[SupportedEncodings.JSON_HEX]` when the client omits `encodings`.
 
-So an independent client that never negotiates an encoding (e.g. RSA branch) must encode encrypted JSON using **hex** (`JSON-HEX`), and the cipher default is **`AES-GCM`**.
+So an independent client that omits `encodings` from its Noise-handshake payload must encode encrypted JSON using **hex** (`JSON-HEX`), and the cipher default is **`AES-GCM`**.
 
 ### Encrypted-JSON envelope shape
 
@@ -241,35 +198,13 @@ The string value on the wire is the right column.
 
 The session key math lives in the external **`poorman_handshake`** package, not in `hivemind-bus-client`. A non-Python client must reimplement it.
 
-**Password mode (`PasswordHandShake`):**
-
-- **Handshake envelope = an hSub** (hashed subject), NOT PBKDF2. `generate_handshake()` produces `hsub = iv + SHA256(iv + password)`, hex-encoded and **truncated to 48 hex chars** (`create_hsub(..., hsublen=48)`). The `iv` is 8 random bytes (16 hex chars).
-- **Verification:** the receiver re-derives the hSub using the `iv` parsed from the first 16 hex chars of the peer's hSub and checks for collision (`match_hsub`) — this proves both ends share the password without transmitting it.
-- **Shared salt:** `salt = iv_client XOR iv_server` (byte-wise XOR of the two 8-byte IVs; `receive_handshake` does `bytes(a ^ b for a, b in zip(self.iv, iv_from_hsub(peer_shake)))`).
-- **Session key:** `secret = PBKDF2-HMAC-SHA256(password, salt, iterations=100000)` → 32 bytes. This is the AES/ChaCha key (`crypto_key`).
-- Note the HSUB uses a **plain salted SHA-256**, while the session key uses **PBKDF2 (100000 iters)** — they are different primitives; do not conflate them.
-
-**RSA mode (`HandShake`):**
-
-- The mechanism is mutual: each side calls `generate_handshake(peer_pubkey)`, which picks
-  its own random 32-byte `secret`, RSA-encrypts it for the peer with **PKCS#1 OAEP**, and
-  prepends a **PSS-over-SHA-256** signature of the ciphertext. The wire envelope is
-  `hexlify(signature + ciphertext)`; the signature length equals the signer's RSA key size
-  in bytes.
-- The receiver strips the signature (first `key_size_in_bytes` bytes), RSA-decrypts the
-  remainder with its private key, and XORs the result against its own previously-generated
-  `secret` to produce the shared value. `receive_and_verify` first verifies the PSS
-  signature against the known peer public key.
-- The XORed result becomes `crypto_key`. No PBKDF2 is involved in RSA mode.
-
-!!! danger "Broken in the reference client"
-    `hivemind-websocket-client`'s RSA branch only calls `generate_handshake()` on the
-    **server** side; the client's `HandShake` object never generates its own secret before
-    calling `receive_handshake`/`receive_and_verify`, so the XOR step above raises
-    `TypeError: 'NoneType' object is not iterable` — reproduced live against current
-    `origin/dev`. RSA mode does not work end-to-end today; this is separate from (and
-    deeper than) the protocol-floor rejection already noted elsewhere on this page.
-    Tracked as [hivemind-websocket-client#209](https://github.com/JarbasHiveMind/hivemind-websocket-client/issues/209).
+The Noise transport key comes from the handshake itself (`XXpsk2`/`KKpsk0` over X25519). The
+pre-shared key mixed into that handshake is `PSK = argon2id(password, salt = SHA-256(node_id))`
+— salting with the server's `node_id` makes the PSK server-specific. A pre-provisioned
+32-byte `psk` remains an option for constrained devices that cannot run argon2id on-device
+(`hivemind-core derive-psk`); PBKDF2 remains an explicit fallback when a server advertises
+it. See [Security → Handshake and encryption](../concepts/security.md#handshake-and-encryption)
+for the full model, including forward secrecy and static-key pinning.
 
 ---
 
