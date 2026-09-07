@@ -265,7 +265,7 @@ can't invoke the skills you blacklisted for it? The answer is a bundle of metada
 quietly staples onto every message before handing it to OVOS. You rarely set these
 yourself, but knowing they're there explains a lot of "how did it know that?" moments.
 For the `Session` object and `IntentService` themselves, see the
-[OVOS technical manual](https://tigregotico.github.io/ovos-technical-manual/session/):
+[OVOS technical manual](https://openvoiceos.github.io/beta-technical-manual/session/):
 
 | Key | Value | Purpose |
 |---|---|---|

@@ -62,7 +62,7 @@ ovos-messagebus
 ovos-core
 ```
 
-See the [OVOS documentation](https://tigregotico.github.io/ovos-technical-manual) for a full OVOS setup.
+See the [OVOS documentation](https://openvoiceos.github.io/beta-technical-manual) for a full OVOS setup.
 
 ---
 
