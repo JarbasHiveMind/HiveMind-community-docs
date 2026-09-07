@@ -15,4 +15,4 @@ The HiveMind protocol also has safety measures. Just as you follow rules to stay
 So the HiveMind protocol is a set of rules and a shared language that voice assistants use to talk to each other, understand each other, and work together, safely.
 
 ---
-[← Libraries](11_devs.md) · [Home](index.md)
+[← Testing Mesh](testing_mesh.md) · [Home](index.md)
