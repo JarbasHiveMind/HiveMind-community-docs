@@ -144,6 +144,23 @@ Without this the satellite still connects and the connection test in Step 7 stil
 but every utterance is denied and you get silence. Grant one type per command. To see what
 a client may send, run `hivemind-core list-clients`.
 
+The whitelist works in both directions. It decides what the satellite may send **and** what
+it may be sent, so a client granted only `recognizer_loop:utterance` is heard and never
+answered: it never receives the reply, and it sits silent without reporting an error of its
+own. Grant the types your satellite needs to receive as well, `speak` among them:
+
+```bash
+hivemind-core allow-msg "speak" 2
+```
+
+The two directions fail differently, which is what makes this hard to diagnose. A message
+the satellite sends and may not send is refused loudly: the server logs
+`<message type> not in allowed_types`. A message the satellite may not receive is dropped
+without a word on either side. So the send direction can be fixed by reading the log, while
+the receive direction cannot, and a satellite that has gone quiet after you granted the
+utterance type is telling you nothing at all. Grant the receive types before you test, and
+treat silence as an ungranted type rather than a broken satellite.
+
 ---
 
 ## Step 6 — Install and configure the satellite (ON THE SATELLITE)
@@ -228,6 +245,10 @@ plus Steps 6 to 8 (connect) again.
   message types. An empty list denies everything. Grant one with
   `hivemind-core allow-msg "recognizer_loop:utterance" <NODE_ID>` (Step 5). This is the most
   common cause of a satellite that connects but stays silent.
+- Confirm it may also **receive**. The same whitelist covers what reaches the satellite, so
+  an utterance can be accepted and understood while the reply never arrives. This direction
+  is dropped silently and never appears in the log, so check the granted list against what
+  your satellite expects to receive rather than waiting for an error (Step 5).
 - Check the satellite's terminal logs for connection or audio errors.
 - Re-run `hivemind-client test-identity` on the satellite to confirm it still reaches the server.
 - `hivemind-voice-sat`'s **default STT and TTS are remote services** at `*.openvoiceos.pt` (with a `tts.smartgic.io/piper` TTS fallback), so the satellite needs internet access on first run. To go fully local, install local STT/TTS plugins on the satellite — see [Voice Satellite](satellites/voice-sat.md).
