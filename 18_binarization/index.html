@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/18_binarization/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Binarization - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Binarization";
+        var mkdocs_page_input_path = "18_binarization.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/18_binarization/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">OVOS Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing devices</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Configuration</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../config/">Server config</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database backends</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto discovery</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../satellites/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Plugins</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugin Manager</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../agents/">Agents</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../binary_plugins/">Binary</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../network_plugins/">Network</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db_plugins/">Database</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../pipeline/">OpenVoiceOS Pipeline</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona / LLM hub</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_bridges/">Bridges overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../chatroom/">Chatroom & Translator</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Topologies</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../14_localhive/">LocalHive</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">Mycroft compatibility</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Binarization</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#protocol-versions">Protocol versions</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#message-types">Message types</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#compression">Compression</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#metadata-hivemeta">Metadata (HiveMeta)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#binary-message-structure">Binary message structure</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#header">Header</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#metadata">Metadata</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#payload">Payload</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#padding">Padding</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#encoding-process">Encoding process</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#decoding-process">Decoding process</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#binary-payloads">Binary payloads</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#serialized-message">Serialized message</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#binary-data">Binary data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#more-examples">More examples</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#compression-metrics">Compression metrics</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../testing_mesh/">Testing Mesh</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Protocol</li>
+      <li class="breadcrumb-item active">Binarization</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="binarization-protocol">Binarization Protocol</h1>
+<blockquote>
+<p><strong>Experimental</strong>: subject to change without warning.</p>
+</blockquote>
+<p>The HiveMind Binarization Protocol serializes and deserializes structured messages into compact binary formats for network transmission. This page describes the protocol's structure, encoding rules, and the reasoning behind key design decisions. The binary format carries a protocol version, to support backward compatibility and future extensions.</p>
+<h2 id="protocol-versions">Protocol versions</h2>
+<p>The protocol uses an integer version number to signal supported features and ensure compatibility between clients and servers. The current protocol version is <code>1</code>. Any change in functionality or structure requires a new version number.</p>
+<p>Version-specific functionality:</p>
+<ul>
+<li><strong>Version 0</strong>: the original protocol design. No binarization, no handshake, only a pre-shared <code>crypto_key</code>.</li>
+<li><strong>Version 1</strong>: adds support for handshakes and binary payloads.</li>
+</ul>
+<h3 id="message-types">Message types</h3>
+<p>The HiveMind protocol groups messages into types, each with a specific role. These types are encoded as 5-bit unsigned integers, which allows up to 32 distinct types. Examples include:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>HANDSHAKE</td>
+<td>Initial connection handshake.</td>
+</tr>
+<tr>
+<td>1</td>
+<td>BUS</td>
+<td>Standard message bus.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>SHARED_BUS</td>
+<td>Shared bus for multiple nodes.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>BROADCAST</td>
+<td>Global message broadcast.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>PROPAGATE</td>
+<td>Directed message propagation.</td>
+</tr>
+<tr>
+<td>12</td>
+<td>BINARY</td>
+<td>Raw binary payload.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="compression">Compression</h3>
+<p>Payloads can optionally use zlib compression. A single bit in the header shows whether compression is applied. Compressed payloads reduce transmission size but add a small computational cost during encoding and decoding.</p>
+<h3 id="metadata-hivemeta">Metadata (HiveMeta)</h3>
+<p>HiveMeta is a reserved field for attaching arbitrary metadata to a message. The metadata is encoded as a byte array, prefixed by its size in bytes. This allows extensible features such as routing hints or debug information.</p>
+<h2 id="binary-message-structure">Binary message structure</h2>
+<p>The serialized binary message consists of a header and a payload. All fields are packed to save space. The structure is as follows.</p>
+<h3 id="header">Header</h3>
+<p>The header holds the protocol version, message type, compression flag, and metadata length.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Size (bits)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Start Marker</td>
+<td>1</td>
+<td>Always <code>1</code>. Helps align message boundaries.</td>
+</tr>
+<tr>
+<td>Versioned Flag</td>
+<td>1</td>
+<td>Indicates if protocol version is specified.</td>
+</tr>
+<tr>
+<td>Protocol Version</td>
+<td>8</td>
+<td>Protocol version (if <code>Versioned Flag</code> is <code>1</code>).</td>
+</tr>
+<tr>
+<td>Message Type</td>
+<td>5</td>
+<td>Encoded message type.</td>
+</tr>
+<tr>
+<td>Compressed Flag</td>
+<td>1</td>
+<td>Indicates if payload is compressed.</td>
+</tr>
+<tr>
+<td>Metadata Length</td>
+<td>8</td>
+<td>Length of metadata in bytes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="metadata">Metadata</h3>
+<p>Metadata is optional and encodes key-value pairs or other information. If present, it follows the header. Its length is set in the header.</p>
+<h3 id="payload">Payload</h3>
+<p>The payload holds the core message data. Its format depends on the message type:</p>
+<ul>
+<li><strong>Standard messages</strong>: encoded as a UTF-8 JSON string.</li>
+<li><strong>Binary messages</strong>: encoded as raw bytes, with an additional 4-bit unsigned integer that indicates the binary payload type.</li>
+</ul>
+<h3 id="padding">Padding</h3>
+<p>To keep byte alignment, the protocol adds padding bits (<code>0</code>) as needed. The total message length must be a multiple of 8 bits.</p>
+<h2 id="encoding-process">Encoding process</h2>
+<ol>
+<li>Add a single bit set to <code>1</code> for the start marker.</li>
+<li>Add the header fields:<ul>
+<li>a 1-bit flag for whether the protocol version is included.</li>
+<li>if included, the 8-bit protocol version number.</li>
+<li>a 5-bit message type field.</li>
+<li>a 1-bit compression flag.</li>
+<li>an 8-bit metadata length field.</li>
+</ul>
+</li>
+<li>Add the metadata:<ul>
+<li>serialize metadata as a JSON object, if any.</li>
+<li>compress the metadata if compression is enabled.</li>
+<li>append the serialized metadata.</li>
+</ul>
+</li>
+<li>Add the payload:<ul>
+<li>serialize the payload according to the message type.</li>
+<li>compress the payload if compression is enabled.</li>
+<li>append the serialized payload.</li>
+</ul>
+</li>
+<li>Add <code>0</code> padding bits as needed, so the total length is a multiple of 8 bits.</li>
+</ol>
+<h2 id="decoding-process">Decoding process</h2>
+<ol>
+<li>Read bits until you reach the start marker (<code>1</code>).</li>
+<li>Read the header fields:<ul>
+<li>read the <code>Versioned Flag</code> to check if the protocol version is specified.</li>
+<li>if specified, read the 8-bit protocol version number.</li>
+<li>read the 5-bit message type field.</li>
+<li>read the <code>Compressed Flag</code>.</li>
+<li>read the 8-bit metadata length field.</li>
+</ul>
+</li>
+<li>Read the metadata:<ul>
+<li>read the specified number of bytes for metadata.</li>
+<li>decompress it if the <code>Compressed Flag</code> is set.</li>
+<li>deserialize the metadata.</li>
+</ul>
+</li>
+<li>Read the payload:<ul>
+<li>read the remaining bits as the payload.</li>
+<li>decompress it if the <code>Compressed Flag</code> is set.</li>
+<li>deserialize the payload based on the message type.</li>
+</ul>
+</li>
+</ol>
+<h2 id="binary-payloads">Binary payloads</h2>
+<p>The protocol supports binary payloads, so it can transmit non-textual data. It handles binary payloads based on their designated types, which tell HiveMind how to process the binary content.</p>
+<p>The header carries the binary payload type as a 4-bit unsigned integer, after the metadata and before the payload.</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>UNDEFINED</td>
+<td>No information provided about the binary contents.</td>
+</tr>
+<tr>
+<td>1</td>
+<td>RAW_AUDIO</td>
+<td>Binary content is raw audio.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>NUMPY_IMAGE</td>
+<td>Binary content is an image represented as a numpy array (e.g., webcam picture).</td>
+</tr>
+<tr>
+<td>3</td>
+<td>FILE</td>
+<td>Binary is a file to be saved; additional metadata is provided elsewhere.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>STT_AUDIO_TRANSCRIBE</td>
+<td>Full audio sentence to perform Speech-to-Text (STT) and return transcripts.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>STT_AUDIO_HANDLE</td>
+<td>Full audio sentence to perform STT and handle transcription immediately.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>TTS_AUDIO</td>
+<td>Synthesized Text-to-Speech (TTS) audio to be played.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>This is how the microphone satellite streams audio to <code>hivemind-listener</code>.</p>
+</blockquote>
+<h2 id="examples">Examples</h2>
+<h3 id="serialized-message">Serialized message</h3>
+<p>For a simple message with:</p>
+<ul>
+<li>protocol version: 1</li>
+<li>message type: <code>BUS</code></li>
+<li>no compression</li>
+<li>metadata: <code>{}</code></li>
+<li>payload: <code>{"type": "speak", "data":{"utterance": "Hello"}}</code></li>
+</ul>
+<p>The binary representation looks like this, in bit groups:</p>
+<pre><code>1 | 1 | 00000001 | 00001 | 0 | 00000000 | &lt;metadata&gt; | &lt;payload&gt;
+</code></pre>
+<p>Where:</p>
+<ul>
+<li><code>1</code> (Start Marker)</li>
+<li><code>1</code> (Versioned Flag)</li>
+<li><code>00000001</code> (Protocol Version)</li>
+<li><code>00001</code> (Message Type: <code>BUS</code>)</li>
+<li><code>0</code> (Compressed Flag)</li>
+<li><code>00000000</code> (Metadata Length: 0 bytes)</li>
+<li><code>&lt;metadata&gt;</code>: serialized metadata bytes.</li>
+<li><code>&lt;payload&gt;</code>: serialized payload bytes.</li>
+</ul>
+<h3 id="binary-data">Binary data</h3>
+<p>For a binary payload with:</p>
+<ul>
+<li>protocol version: 1</li>
+<li>message type: <code>BINARY</code></li>
+<li>no compression</li>
+<li>metadata: <code>{}</code></li>
+<li>a binary payload</li>
+</ul>
+<p>The binary representation looks like this, in bit groups:</p>
+<pre><code>1 | 1 | 00000001 | 00001 | 0 | 00000000 | &lt;metadata&gt; | 0001 | &lt;binary_payload&gt;
+</code></pre>
+<p>Where:</p>
+<ul>
+<li><code>1</code> (Start Marker)</li>
+<li><code>1</code> (Versioned Flag)</li>
+<li><code>00000001</code> (Protocol Version)</li>
+<li><code>01100</code> (Message Type: <code>BINARY</code>)</li>
+<li><code>0</code> (Compressed Flag)</li>
+<li><code>00000000</code> (Metadata Length: 0 bytes)</li>
+<li><code>&lt;metadata&gt;</code>: serialized metadata bytes.</li>
+<li><code>0001</code> (Binary Type: Raw audio)</li>
+<li><code>&lt;payload&gt;</code>: audio bytes.</li>
+</ul>
+<h3 id="more-examples">More examples</h3>
+<pre><code>&lt;uint:1=start_marker&gt; | &lt;uint:1=versioned_bit&gt; | &lt;uint:8=protocol_version&gt; | &lt;uint:5=msg_type&gt; | &lt;uint:1=compression_bit&gt; | &lt;uint:8=metadata_len&gt; | &lt;metadata&gt; | &lt;payload&gt;
+</code></pre>
+<p>A binarized, uncompressed message:</p>
+<pre><code>1 | 1 | XXXXXXXX | XXXXX | 0 | XXXXXXXX | &lt;metadata&gt; | &lt;payload&gt;
+</code></pre>
+<p>An unversioned, compressed binarized message:</p>
+<pre><code>1 | 0 | XXXXX | 1 | XXXXXXXX | &lt;metadata&gt; | &lt;payload&gt;
+</code></pre>
+<p>A binary, uncompressed payload message:</p>
+<pre><code>1 | 1 | XXXXXXXX | 01100 | 0 | XXXXXXXX | &lt;metadata&gt; | XXXX | &lt;payload&gt;
+</code></pre>
+<p>An unversioned, compressed binary payload message:</p>
+<pre><code>1 | 0 | 01100 | 1 | XXXXXXXX | &lt;metadata&gt; | XXXX | &lt;payload&gt;
+</code></pre>
+<blockquote>
+<p>The binarization scheme is simple enough that the protocol could, in principle, be implemented by flashing a light.</p>
+</blockquote>
+<h2 id="compression-metrics">Compression metrics</h2>
+<p>Compression cuts payload size significantly for larger messages, but is not always efficient for small ones. Benchmarks show a reduction of up to 50% for text-heavy payloads, while small payloads see little benefit.</p>
+<hr />
+<p><a href="../04_protocol/">← Transport</a> · <a href="../">Home</a> · <a href="../03_pairing/">Pairing →</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../04_protocol/" class="btn btn-neutral float-left" title="Transport"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../16_permissions/" class="btn btn-neutral float-right" title="Permissions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../04_protocol/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../16_permissions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
