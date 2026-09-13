@@ -88,7 +88,17 @@ Connection parameters can be set at launch time, but this file lets you reuse th
 
 ### Contents of the identity file
 
-The identity file is usually at `~/.config/hivemind/_identity.json` and contains:
+A node is one application acting as a peer, not the user or the host that runs
+it. Each application holds its own identity. Two applications run by the same
+user on the same host are two separate nodes, and each application's identity
+file lives in a location keyed on that application's own name, not in one path
+shared by every application the user runs.
+
+The shipped client does not yet follow that rule: today, a client that does
+not set its own storage location writes the identity file to the same
+`~/.config/hivemind/_identity.json` path for every application. CRYPTO-1 §2
+requires a per-application location instead; the client has not caught up.
+The identity file contains:
 
 | Field           | Description                                                                                  |
 |-----------------|----------------------------------------------------------------------------------------------|
