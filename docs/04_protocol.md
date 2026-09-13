@@ -33,6 +33,22 @@ Example: allow the "speak" message type:
 hivemind-core allow-msg "speak"
 ```
 
+## HTTP transport
+
+A node that connects over HTTP sends its credential on every request,
+session open included, as a URL query parameter named `authorization`. The
+value is `base64(useragent + ":" + access_key)`, the same value the
+WebSocket transport carries. No header and no body field carries it.
+
+The access key in it is an identifier, not a secret: it names which node
+connected, and it does not by itself open a session.
+
+A query parameter can end up in a proxy log or a browser history. The
+WebSocket transport carries the same query parameter and the same exposure,
+so switching transport does not remove it. Put the connection behind TLS
+(`https://`/`wss://`) or a trusted overlay network such as Tailscale
+instead.
+
 ---
 
 ## Payload messages
