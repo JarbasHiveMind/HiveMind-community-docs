@@ -52,8 +52,13 @@ hivemind-core is a gateway to an assistant, not the assistant itself, so the ass
 goes up first. The default backend is OpenVoiceOS, which runs as two pieces — a message
 bus and the skills core — that must be running before HiveMind can reach them:
 
+The commands below use [uv](https://docs.astral.sh/uv/) with prereleases allowed. The
+current HiveMind and OVOS line ships as prereleases: `hivemind-core` is at 5.2.8a1 while
+the newest plain release is 4.0.0. Without `--prerelease=allow` you install the older
+line. With `pip` the same flag is `--pre`: `pip install --pre hivemind-core`.
+
 ```bash
-pip install ovos-core ovos-messagebus
+uv pip install --prerelease=allow ovos-core ovos-messagebus
 
 # start the OVOS messagebus (keep it running, e.g. in its own terminal)
 ovos-messagebus
@@ -71,7 +76,7 @@ See the [OVOS documentation](https://openvoiceos.github.io/beta-technical-manual
 With the assistant running, add the gateway in front of it:
 
 ```bash
-pip install hivemind-core
+uv pip install --prerelease=allow hivemind-core
 ```
 
 ---
@@ -141,8 +146,17 @@ hivemind-core allow-msg "recognizer_loop:utterance" 2
 ```
 
 Without this the satellite still connects and the connection test in Step 7 still passes,
-but every utterance is denied and you get silence. Grant one type per command. To see what
+but every utterance is denied and you get no answer. Grant one type per command. To see what
 a client may send, run `hivemind-core list-clients`.
+
+A denial is reported on both sides. The server logs a `policy denied` line at INFO
+level and sends the client a `hive.policy.denied` bus message with the denied type, a
+code and a reason. This holds for every denial, a denied binary payload included.
+
+`HiveMind-voice-sat` 2.2.4a1 and later logs each denial at WARNING. If the denied type
+is an utterance, `recognizer_loop:utterance` or `ovos.utterance.handle`, it also plays
+the error sound, so you hear that the hub refused instead of getting silence. A denial
+of any other type is in the satellite log only. Read both logs.
 
 ---
 
@@ -155,7 +169,7 @@ voice satellite:
 # Linux audio dependencies
 sudo apt-get install -y libpulse-dev libasound2-dev
 
-pip install HiveMind-voice-sat
+uv pip install --prerelease=allow HiveMind-voice-sat
 ```
 
 Not sure which satellite fits your hardware? See [Choosing a Satellite](satellites/index.md).
@@ -227,11 +241,32 @@ plus Steps 6 to 8 (connect) again.
 - Confirm the satellite may send utterances: `hivemind-core list-clients` shows its allowed
   message types. An empty list denies everything. Grant one with
   `hivemind-core allow-msg "recognizer_loop:utterance" <NODE_ID>` (Step 5). This is the most
-  common cause of a satellite that connects but stays silent.
+  common cause of a satellite that connects but gives no answer. On 2.2.4a1 and later the
+  satellite plays the error sound and logs the denial at WARNING.
 - Check the satellite's terminal logs for connection or audio errors.
 - Re-run `hivemind-client test-identity` on the satellite to confirm it still reaches the server.
 - `hivemind-voice-sat`'s **default STT and TTS are remote services** at `*.openvoiceos.pt` (with a `tts.smartgic.io/piper` TTS fallback), so the satellite needs internet access on first run. To go fully local, install local STT/TTS plugins on the satellite — see [Voice Satellite](satellites/voice-sat.md).
 - Confirm `ovos-core` and `ovos-messagebus` are still running on the server (Step 1).
+
+---
+
+## Legacy and spec message type names
+
+OVOS is renaming its bus topics to an `ovos.*` namespace, and both spellings are on the
+wire during the move. A client record keeps the type exactly as you typed it, so
+`allow-msg` with one spelling does not grant the other. Grant the spelling your satellite
+sends, or grant both.
+
+| Legacy name | Spec name |
+| --- | --- |
+| `recognizer_loop:utterance` | `ovos.utterance.handle` |
+| `speak` | `ovos.utterance.speak` |
+| `recognizer_loop:record_begin` | `ovos.listener.record.started` |
+| `recognizer_loop:record_end` | `ovos.listener.record.ended` |
+| `mycroft.mic.listen` | `ovos.mic.listen` |
+| `mycroft.audio.play_sound` | `ovos.audio.play_sound` |
+
+The full list is `MIGRATION_MAP` in `ovos_spec_tools`.
 
 ---
 
