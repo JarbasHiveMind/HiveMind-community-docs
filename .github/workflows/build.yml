@@ -1,11 +1,18 @@
 name: Build Page
 
+# The live site is gh-pages, and `mkdocs gh-deploy` rewrites it. Only a push
+# to master (or a manual dispatch) deploys; a pull request builds the site
+# with --strict and deploys nothing. Before this filter every branch push
+# deployed: on 2026-09-18 two pushes of docs/quickstart-verified-master
+# published an unmerged branch, and master was redeployed by hand each time.
 on:
   push:
+    branches: [master]
+  pull_request:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -15,4 +22,6 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - run: mkdocs build --strict
-      - run: mkdocs gh-deploy --force --clean --verbose
+      - name: Deploy to gh-pages
+        if: github.event_name != 'pull_request'
+        run: mkdocs gh-deploy --force --clean --verbose
