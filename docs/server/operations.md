@@ -106,9 +106,23 @@ mode this is `ovos-messagebus`). Rejected connections raise an error event:
 
 | Event                          | Emitted when                                                                 |
 |--------------------------------|------------------------------------------------------------------------------|
-| `hive.client.connect`          | A client connects (payload carries `key`, `session_id`).                     |
-| `hive.client.disconnect`       | A client disconnects (payload carries `key`).                                |
+| `hive.client.connect`          | A client connects (payload carries `key`, `peer`, `session_id`).             |
+| `hive.client.disconnect`       | A client disconnects (payload carries `key`, `peer`).                        |
 | `hive.client.connection.error` | A connection is rejected for an invalid access key, or for failing to offer the v3 Noise handshake. |
+
+`key` names the CLIENT and `peer` names the CONNECTION. Two satellites can hold the same
+access key, so a consumer that keys on `key` alone cannot tell their connect and disconnect
+events apart.
+
+The two events of one connection carry no field that pairs them. `peer` is built from the
+session, and the client's `HELLO` installs a new session after the connect event is sent, so
+the disconnect event names a different `peer`. Measured on one master, one satellite and one
+connection: connect `S0::b05adcc0-…`, disconnect `S0::e7f08e44-…`, with `key` the only equal
+field. The disconnect event also carries a session in its message CONTEXT, not in its
+payload, and that value is translated for a non-admin, so it does not match the connect
+event's `session_id` either.
+
+Correlate on `key` for the client, and treat each event on its own for the connection.
 
 `handle_invalid_key_connected` (a client presented an unknown or disallowed API key) emits
 `{"error": "invalid access key", "peer": <peer>}` and logs
