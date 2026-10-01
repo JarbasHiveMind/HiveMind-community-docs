@@ -271,7 +271,7 @@ For the `Session` object and `IntentService` themselves, see the
 |---|---|---|
 | `context["peer"]` | Satellite peer ID, e.g. `"HiveMindV0.0@127.0.0.1:8222/0"` | Identifies the originating satellite |
 | `context["source"]` | Same as `peer` | OVOS origin identifier |
-| `context["destination"]` | `"skills"` by default | Prevents message being treated as a broadcast |
+| `context["destination"]` | The entry-point name of the agent plugin, or `"hivemind"` | Names the agent that acts on the message. The node writes this key and a peer never does. It carries no routing meaning on the way in |
 | `context["session"]` | Serialized `Session` dict | Per-satellite session state |
 | `context["session"]["session_id"]` | Stable UUID per satellite connection | Maintains conversational state across utterances |
 | `context["session"]["blacklisted_skills"]` | List of skill IDs | Enforced by `IntentService` |
