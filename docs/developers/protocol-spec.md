@@ -330,7 +330,7 @@ OVOS `Message` objects are the standard payload for `BUS` messages. The structur
   "context": {
     "session": {...},
     "source": "hive",
-    "destination": "skills"
+    "destination": "hivemind"
   }
 }
 ```
