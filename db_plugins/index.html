@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/db_plugins/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Database - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Database";
+        var mkdocs_page_input_path = "db_plugins.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/db_plugins/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">OVOS Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing devices</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Configuration</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../config/">Server config</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database backends</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto discovery</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../satellites/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Plugins</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugin Manager</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../agents/">Agents</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../binary_plugins/">Binary</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../network_plugins/">Network</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Database</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#what-is-a-database-plugin">What is a Database Plugin?</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#available-database-plugins">Available database plugins</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#json-plugin-default">JSON Plugin (default)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#redis-plugin-recommended-for-production">Redis Plugin (recommended for production)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#sqlite-plugin-experimental">SQLite Plugin (experimental)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#why-database-plugins-matter">Why database plugins matter</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#recommendations">Recommendations</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../pipeline/">OpenVoiceOS Pipeline</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona / LLM hub</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_bridges/">Bridges overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../chatroom/">Chatroom & Translator</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Topologies</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../14_localhive/">LocalHive</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">Mycroft compatibility</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../16_permissions/">Permissions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../testing_mesh/">Testing Mesh</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Plugins</li>
+      <li class="breadcrumb-item active">Database</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="database-plugins-for-hivemind">Database Plugins for HiveMind</h1>
+<p>HiveMind uses database plugins to provide persistent storage for client credentials, permissions, and other node state.</p>
+<p>Network and agent plugins handle message transport and behavior. Database plugins let HiveMind nodes remember clients, authorization, and configuration across restarts.</p>
+<hr />
+<h2 id="what-is-a-database-plugin">What is a Database Plugin?</h2>
+<p>A Database Plugin defines how and where HiveMind stores persistent data, including:</p>
+<ul>
+<li>client credentials, such as API keys and certificates.</li>
+<li>permissions and access control.</li>
+</ul>
+<p>Each node loads a single database plugin, which acts as the persistent backend for that HiveMind instance.</p>
+<hr />
+<h2 id="available-database-plugins">Available database plugins</h2>
+<h3 id="json-plugin-default">JSON Plugin (default)</h3>
+<ul>
+<li>Provided natively by the <a href="https://github.com/TigreGotico/json_database"><code>json-database</code></a> package.</li>
+<li>Stores all data as local JSON files.</li>
+<li>Simple to configure.</li>
+<li>Suitable for testing, small deployments, or single-node setups.</li>
+<li>Limitations: not ideal for multi-node environments, and lacks advanced caching and scaling.</li>
+</ul>
+<h3 id="redis-plugin-recommended-for-production">Redis Plugin (recommended for production)</h3>
+<ul>
+<li>Provided by the <a href="https://github.com/JarbasHiveMind/hivemind-redis-database"><code>hivemind-redis-database</code></a> package.</li>
+<li>Uses Redis as the backend.</li>
+<li>Provides fast, in-memory storage with optional persistence.</li>
+<li>Suited for multi-node HiveMind deployments, where all nodes share credentials and permissions.</li>
+<li>Supports high-throughput scenarios and distributed systems.</li>
+</ul>
+<h3 id="sqlite-plugin-experimental">SQLite Plugin (experimental)</h3>
+<ul>
+<li>Provided by the <a href="https://github.com/JarbasHiveMind/hivemind-sqlite-database"><code>hivemind-sqlite-database</code></a> package.</li>
+<li>Stores data in a local SQLite database instead of JSON files.</li>
+<li>Aims to provide a lightweight, transactional alternative to JSON for single-node setups.</li>
+<li>Currently experimental, suitable for testing or small-scale deployments.</li>
+</ul>
+<hr />
+<h2 id="why-database-plugins-matter">Why database plugins matter</h2>
+<ul>
+<li><strong>Security</strong>: store client credentials and permissions safely.</li>
+<li><strong>Persistence</strong>: keep state across node restarts.</li>
+<li><strong>Scalability</strong>: Redis or similar backends let HiveMind operate in multi-node or cloud environments.</li>
+</ul>
+<hr />
+<h2 id="recommendations">Recommendations</h2>
+<ul>
+<li>Use the JSON plugin for local testing or single-node setups.</li>
+<li>Use the SQLite plugin as a lightweight, experimental alternative to JSON.</li>
+<li>Use the Redis plugin for production environments, multi-node networks, or setups that need fast, shared access to client credentials.</li>
+</ul>
+<hr />
+<p><a href="../network_plugins/">← Network</a> · <a href="../">Home</a> · <a href="../satellites/">Satellites →</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../network_plugins/" class="btn btn-neutral float-left" title="Network"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../pipeline/" class="btn btn-neutral float-right" title="OpenVoiceOS Pipeline">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../network_plugins/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../pipeline/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

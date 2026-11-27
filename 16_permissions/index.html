@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jarbashivemind.github.io/HiveMind-community-docs/16_permissions/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Permissions - Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Permissions";
+        var mkdocs_page_input_path = "16_permissions.md";
+        var mkdocs_page_url = "/HiveMind-community-docs/16_permissions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01_quickstart/">Quick start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_skills_server/">OVOS Skills Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03_pairing/">Pairing devices</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02_terminology/">Terminology</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Configuration</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../config/">Server config</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../17_database/">Database backends</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05_presence/">Auto discovery</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Satellites</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../satellites/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voicesat/">Voice Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_voice_relay/">Voice Relay</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_micsat/">Mic Satellite</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06_sound_server/">Sound Server</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Plugins</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_plugins/">Plugin Manager</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../agents/">Agents</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../binary_plugins/">Binary</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../network_plugins/">Network</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../db_plugins/">Database</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../pipeline/">OpenVoiceOS Pipeline</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../08_persona/">Persona / LLM hub</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_bridges/">Bridges overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../09_matrix/">Matrix</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../10_deltachat/">DeltaChat</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07_homeassistant/">Home Assistant</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../chatroom/">Chatroom & Translator</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Topologies</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_nested/">Nested Hives</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../14_localhive/">LocalHive</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_mycroft/">Mycroft compatibility</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Protocol</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../04_protocol/">Transport</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../18_binarization/">Binarization</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Security</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Permissions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#key-concepts">Key concepts</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#comparison-to-traditional-rbac">Comparison to traditional RBAC</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_handshake/">Handshake</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../19_crypto/">Encryption</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_devs/">Libraries</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../testing_mesh/">Testing Mesh</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ChatGPT was here</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../gpt_eli5/">ELI5</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Security</li>
+      <li class="breadcrumb-item active">Permissions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="hivemind-permission-system">HiveMind Permission System</h1>
+<p>HiveMind's permission system gives fine-grained control over access to resources, such as bus messages, skills, and intents, on a per-client basis. Unlike traditional Role-Based Access Control (RBAC), HiveMind configures each client individually, rather than assigning it a predefined role. This allows dynamic, flexible access management.</p>
+<h3 id="key-concepts">Key concepts</h3>
+<ol>
+<li>
+<p><strong>Client-specific permissions</strong>: HiveMind assigns permissions to individual clients, such as users, devices, or applications. Each client can have a unique set of permissions based on its needs or restrictions. Permissions control access to bus messages, skills, and intents, and can be configured more granularly than in a typical RBAC system.</p>
+</li>
+<li>
+<p>One predefined role: admin. A client may be marked admin with <code>--admin true</code>, or with <code>make-admin</code> and <code>revoke-admin</code> later. Admin grants the reserved <code>default</code> session and the right to originate <code>BROADCAST</code>, and only while <code>can_broadcast</code> is not revoked. It does not exempt a client from <code>allowed_types</code>.</p>
+</li>
+<li>
+<p><strong>Routing permissions</strong>: <code>can_broadcast</code>, <code>can_escalate</code> and <code>can_propagate</code> gate a client's right to originate <code>BROADCAST</code>, <a href="../04_protocol/#query-message"><code>QUERY</code></a>/<code>ESCALATE</code>, and <a href="../04_protocol/#cascade-message"><code>CASCADE</code></a>/<code>PROPAGATE</code> respectively. They are set with the <code>allow-broadcast</code>, <code>allow-escalate</code> and <code>allow-propagate</code> commands (and their <code>blacklist-</code> counterparts). For <code>QUERY</code> and <code>CASCADE</code>, this check runs before a frame claiming to be a response is routed, so a client without the matching permission cannot forge a response and deliver arbitrary content to another peer. See <a href="../04_protocol/#query-message">Response routing</a> for the limit of that guarantee.</p>
+</li>
+<li>
+<p><strong>HTTP and WebSocket parity</strong>: <code>can_broadcast</code>, <code>intent_blacklist</code> and <code>skill_blacklist</code> from a client's record apply the same way over the HTTP transport as over WebSocket. See <a href="../network_plugins/">Network Plugins</a>.</p>
+</li>
+<li>
+<p><strong>Fine-grained access control</strong>: Permissions are not just "allowed" or "denied." You can configure access at a fine-grained level, down to individual bus messages, skills, and intents.</p>
+</li>
+<li>
+<p><strong>Emergent roles</strong>: HiveMind has no formal roles, but roles can emerge from client-specific configuration. A client with broad access can function like an "admin," while another client with limited access can serve as a "guest." These roles are not predefined; they follow from each client's permission settings.</p>
+</li>
+</ol>
+<h3 id="comparison-to-traditional-rbac">Comparison to traditional RBAC</h3>
+<table>
+<thead>
+<tr>
+<th><strong>Feature</strong></th>
+<th><strong>Traditional RBAC</strong></th>
+<th><strong>HiveMind Permission System</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Role Definition</strong></td>
+<td>Predefined roles (e.g., admin, user, guest)</td>
+<td>No predefined roles; permissions are assigned per client</td>
+</tr>
+<tr>
+<td><strong>Permissions</strong></td>
+<td>Roles are granted permissions to access resources</td>
+<td>Permissions are configured on a per-client basis</td>
+</tr>
+<tr>
+<td><strong>Granularity</strong></td>
+<td>Roles typically have broad access to resources</td>
+<td>Permissions are fine-grained, allowing access control over individual resources (messages, skills, intents)</td>
+</tr>
+<tr>
+<td><strong>Flexibility</strong></td>
+<td>Less flexible, roles are static</td>
+<td>Highly flexible, permissions can be adjusted per client at any time</td>
+</tr>
+<tr>
+<td><strong>Emergent Roles</strong></td>
+<td>Predefined roles based on job function or hierarchy</td>
+<td>Roles emerge based on client-specific configuration</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-it-works">How it works</h3>
+<ol>
+<li>
+<p><strong>Client configuration</strong>: each client in the HiveMind ecosystem has a custom configuration that determines which actions it can perform. You can adjust this configuration at any time.</p>
+</li>
+<li>
+<p><strong>Dynamic permission assignment</strong>: HiveMind assigns permissions per client, so an administrator can specify which bus messages, skills, and intents each client can access or perform.</p>
+</li>
+<li>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>A trusted client might get access to a wide range of skills and intents, including ones that need elevated privileges.</li>
+<li>A restricted client can have specific actions or skills blacklisted, to keep it within a tightly controlled scope.</li>
+</ul>
+</li>
+</ol>
+<p>By configuring each client independently, HiveMind's permission system gives administrators a customizable, secure way to manage access across the ecosystem, tailored to each client's needs.</p>
+<hr />
+<p><a href="../03_pairing/">← Pairing</a> · <a href="../">Home</a> · <a href="../12_handshake/">Handshake →</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../18_binarization/" class="btn btn-neutral float-left" title="Binarization"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../12_handshake/" class="btn btn-neutral float-right" title="Handshake">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../18_binarization/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../12_handshake/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
