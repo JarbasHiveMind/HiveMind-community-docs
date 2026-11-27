@@ -71,14 +71,16 @@ Run `hivemind-core print-config` to see the effective configuration.
 Run these commands on the satellite device. The repository is named HiveMind-websocket-client, and the distribution it publishes is `hivemind-bus-client`:
 
 ```bash
-pip install hivemind-bus-client
+pip install --pre "hivemind-bus-client>=1.3.0a1"
 
-hivemind-client set-identity \
+hivemind-client --shared set-identity \
   --key <ACCESS_KEY> --password <PASSWORD> \
   --host <HUB_IP> --port 5678 --siteid kitchen
 
 hivemind-client test-identity
 ```
+
+The `--shared` option exists from version 1.3.0a1, so the install command uses a prerelease. `--shared` writes the identity to `~/.config/hivemind/_identity.json`, the file that every HiveMind client reads when it has no application name of its own. The commands on this page use it, because the clients that they set up have no application name. An application that keeps its own key uses `hivemind-client --app <name> set-identity` instead.
 
 The message `== Identity successfully connected to HiveMind!` means the satellite is paired. Then run `hivemind-client terminal` to open a chat against the hub.
 

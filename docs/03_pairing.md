@@ -18,9 +18,11 @@ Encryption Key: 4185240103de0770
 WARNING: Encryption Key is deprecated, only use if your client does not support password
 ```
 
-Then set the identity file on the satellite device:
+Then set the identity file on the satellite device. `--shared` writes the identity to `~/.config/hivemind/_identity.json`, the file that every HiveMind client reads when it has no application name of its own. The commands on this page use it, because the clients that they set up have no application name. An application that keeps its own key uses `hivemind-client --app <name> set-identity` instead. The `--shared` option exists from `hivemind-bus-client` 1.3.0a1, so install the prerelease first:
 ```bash
-hivemind-client set-identity --key 5a9e580a2773a262cbb23fe9759881ff --password 9b247ca66c7cd2b6388ad49ca504279d --host 0.0.0.0 --port 5678 --siteid test
+pip install --pre "hivemind-bus-client>=1.3.0a1"
+
+hivemind-client --shared set-identity --key 5a9e580a2773a262cbb23fe9759881ff --password 9b247ca66c7cd2b6388ad49ca504279d --host 0.0.0.0 --port 5678 --siteid test
 identity saved: /home/miro/.config/hivemind/_identity.json
 ```
 
