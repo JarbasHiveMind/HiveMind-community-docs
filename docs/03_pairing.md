@@ -20,7 +20,7 @@ WARNING: Encryption Key is deprecated, only use if your client does not support 
 
 Then set the identity file on the satellite device:
 ```bash
-hivemind-client set-identity --key 5a9e580a2773a262cbb23fe9759881ff --password 9b247ca66c7cd2b6388ad49ca504279d --host 0.0.0.0 --port 5678 --siteid test
+hivemind-client --shared set-identity --key 5a9e580a2773a262cbb23fe9759881ff --password 9b247ca66c7cd2b6388ad49ca504279d --host 0.0.0.0 --port 5678 --siteid test
 identity saved: /home/miro/.config/hivemind/_identity.json
 ```
 

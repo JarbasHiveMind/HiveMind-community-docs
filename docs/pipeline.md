@@ -71,7 +71,7 @@ WARNING: Encryption Key is deprecated
 2. Set identity on the OVOS device:
 
 ```bash
-hivemind-client set-identity \
+hivemind-client --shared set-identity \
   --key 5a9e580a2773a262cbb23fe9759881ff \
   --password 9b247ca66c7cd2b6388ad49ca504279d \
   --host 0.0.0.0 \

@@ -73,7 +73,7 @@ Run these commands on the satellite device. The repository is named HiveMind-web
 ```bash
 pip install hivemind-bus-client
 
-hivemind-client set-identity \
+hivemind-client --shared set-identity \
   --key <ACCESS_KEY> --password <PASSWORD> \
   --host <HUB_IP> --port 5678 --siteid kitchen
 
