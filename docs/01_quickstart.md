@@ -80,7 +80,7 @@ hivemind-client --shared set-identity \
 hivemind-client test-identity
 ```
 
-The `--shared` option exists from version 1.3.0a1, so the install command uses a prerelease.
+The `--shared` option exists from version 1.3.0a1, so the install command uses a prerelease. `--shared` writes the identity to `~/.config/hivemind/_identity.json`, the file that every HiveMind client reads when it has no application name of its own.
 
 The message `== Identity successfully connected to HiveMind!` means the satellite is paired. Then run `hivemind-client terminal` to open a chat against the hub.
 

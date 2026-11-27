@@ -18,7 +18,7 @@ Encryption Key: 4185240103de0770
 WARNING: Encryption Key is deprecated, only use if your client does not support password
 ```
 
-Then set the identity file on the satellite device. The `--shared` option exists from `hivemind-bus-client` 1.3.0a1, so install the prerelease first:
+Then set the identity file on the satellite device. `--shared` writes the identity to `~/.config/hivemind/_identity.json`, the file that every HiveMind client reads when it has no application name of its own. The `--shared` option exists from `hivemind-bus-client` 1.3.0a1, so install the prerelease first:
 ```bash
 pip install --pre "hivemind-bus-client>=1.3.0a1"
 
