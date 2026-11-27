@@ -71,7 +71,7 @@ Run `hivemind-core print-config` to see the effective configuration.
 Run these commands on the satellite device. The repository is named HiveMind-websocket-client, and the distribution it publishes is `hivemind-bus-client`:
 
 ```bash
-pip install hivemind-bus-client
+pip install --pre "hivemind-bus-client>=1.3.0a1"
 
 hivemind-client --shared set-identity \
   --key <ACCESS_KEY> --password <PASSWORD> \
@@ -79,6 +79,8 @@ hivemind-client --shared set-identity \
 
 hivemind-client test-identity
 ```
+
+The `--shared` option exists from version 1.3.0a1, so the install command uses a prerelease.
 
 The message `== Identity successfully connected to HiveMind!` means the satellite is paired. Then run `hivemind-client terminal` to open a chat against the hub.
 
